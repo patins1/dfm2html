@@ -1,0 +1,59 @@
+package dhcomps;
+
+{$R *.res}
+{$R 'dhPanel.dcr'}
+{$R 'dhHTMLForm.dcr'}
+{$R 'dhSelect.dcr'}
+{$ALIGN 8}
+{$ASSERTIONS ON}
+{$BOOLEVAL OFF}
+{$DEBUGINFO ON}
+{$EXTENDEDSYNTAX ON}
+{$IMPORTEDDATA ON}
+{$IOCHECKS ON}
+{$LOCALSYMBOLS ON}
+{$LONGSTRINGS ON}
+{$OPENSTRINGS ON}
+{$OPTIMIZATION ON}
+{$OVERFLOWCHECKS ON}
+{$RANGECHECKS ON}
+{$REFERENCEINFO ON}
+{$SAFEDIVIDE OFF}
+{$STACKFRAMES ON}
+{$TYPEDADDRESS ON}
+{$VARSTRINGCHECKS ON}
+{$WRITEABLECONST OFF}
+{$MINENUMSIZE 1}
+{$IMAGEBASE $400000}
+{$DESCRIPTION 'DFM2HTML'}
+{$IMPLICITBUILD ON}
+
+requires
+  designide,
+  pngpack,
+  GR32_D7,
+  pgifimage,
+  vcljpg;
+
+contains
+  dhHTMLForm in 'dhHTMLForm.pas',
+  dhDesign in 'dhDesign.pas',
+  dhMenu in 'dhMenu.pas',
+  dhStyleSheet in 'dhStyleSheet.pas',
+  dhLabel in 'dhLabel.pas',
+  dhPageControl in 'dhPageControl.pas',
+  dhRadioButton in 'dhRadioButton.pas',
+  dhCheckBox in 'dhCheckBox.pas',
+  dhEdit in 'dhEdit.pas',
+  dhFileField in 'dhFileField.pas',
+  dhMemo in 'dhMemo.pas',
+  dhSelect in 'dhSelect.pas',
+  dhOleContainer in 'dhOleContainer.pas',
+  dhHiddenField in 'dhHiddenField.pas',
+  BinList in 'BinList.pas',
+  BinTree in 'BinTree.pas',
+  dhPanel in 'dhPanel.pas',
+  dhDirectHTML in 'dhDirectHTML.pas',
+  BasicHTMLElements in 'BasicHTMLElements.pas' {BasicHTMLElements: TFrame};
+
+end.

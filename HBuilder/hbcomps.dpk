@@ -1,0 +1,63 @@
+package hbcomps;
+
+{$R *.res}
+{$ALIGN 8}
+{$ASSERTIONS ON}
+{$BOOLEVAL OFF}
+{$DEBUGINFO ON}
+{$EXTENDEDSYNTAX ON}
+{$IMPORTEDDATA ON}
+{$IOCHECKS ON}
+{$LOCALSYMBOLS ON}
+{$LONGSTRINGS ON}
+{$OPENSTRINGS ON}
+{$OPTIMIZATION ON}
+{$OVERFLOWCHECKS OFF}
+{$RANGECHECKS OFF}
+{$REFERENCEINFO ON}
+{$SAFEDIVIDE OFF}
+{$STACKFRAMES OFF}
+{$TYPEDADDRESS OFF}
+{$VARSTRINGCHECKS ON}
+{$WRITEABLECONST OFF}
+{$MINENUMSIZE 1}
+{$IMAGEBASE $400000}
+{$IMPLICITBUILD ON}
+
+requires
+  rtl,
+  vcl,
+  VclSmp,
+  vcljpg,
+  pngpack,
+  GR32_D7,
+  dhcomps,
+  dklang7,
+  TntUnicodeVcl_R70,
+  vclactnband,
+  vclx,
+  dsnap,
+  dbrtl,
+  vcldb;
+
+contains
+  MyToolButton in 'MyToolButton.pas',
+  dhColorPicker in 'dhColorPicker.pas',
+  hComboBox in 'hComboBox.pas',
+  hEdit in 'hEdit.pas',
+  hMemo in 'hMemo.pas',
+  MySpeedButton in 'MySpeedButton.pas',
+  MyTabControl in 'MyTabControl.pas',
+  MyPageControl in 'MyPageControl.pas',
+  MyFontDialog in 'MyFontDialog.pas',
+  MyMaskEdit in 'MyMaskEdit.pas',
+  MySpinEdit in 'MySpinEdit.pas',
+  MyTrackBar in 'MyTrackBar.pas',
+  OpenSave in 'OpenSave.pas',
+  hCheckBox in 'hCheckBox.pas',
+  uColorPicker in 'uColorPicker.pas' {ColorPicker},
+  MyGroupBox in 'MyGroupBox.pas',
+  MyPanel in 'MyPanel.pas',
+  MyForm in 'MyForm.pas';
+
+end.

@@ -34,19 +34,19 @@
 	</Company_Info>
 	<Program_Info>
 		<Program_Name>DFM2HTML</Program_Name>
-		<Program_Version>1.8</Program_Version>
+		<Program_Version>1.9</Program_Version>
 		<Program_Type>Freeware</Program_Type>
 		<Program_Release_Status>Major Update</Program_Release_Status>
 		<Program_Category_Class>Web Development::HTML Tools</Program_Category_Class>
 		<Program_Release_Year>2007</Program_Release_Year>
-		<Program_Release_Month>04</Program_Release_Month>
-		<Program_Release_Day>01</Program_Release_Day>
+		<Program_Release_Month>09</Program_Release_Month>
+		<Program_Release_Day>12</Program_Release_Day>
 		<Program_Cost_Other>0.00</Program_Cost_Other>
 		<Program_Cost_Other_Code />
 		<Program_Cost_Dollars>0.00</Program_Cost_Dollars>
 		<Program_Categories />
 		<Program_Specific_Category>Development Tools</Program_Specific_Category>
-		<Program_Change_Info>New object type; German localisation</Program_Change_Info>
+		<Program_Change_Info>DHTML menus</Program_Change_Info>
 		<Program_Language>German,English</Program_Language>
 		<Program_OS_Support>Win98,WinXP,Windows2000</Program_OS_Support>
 		<Program_Install_Support>Install and Uninstall</Program_Install_Support>
@@ -59,9 +59,9 @@
 			<Filename_Generic>dfm2html.exe</Filename_Generic>
 			<Filename_Versioned>dfm2v1_3.exe</Filename_Versioned>
 			<Filename_Previous>dfm2v1_3.exe</Filename_Previous>
-			<File_Size_Bytes>910994</File_Size_Bytes>
-			<File_Size_K>889</File_Size_K>
-			<File_Size_MB>0.87</File_Size_MB>
+			<File_Size_Bytes>882690</File_Size_Bytes>
+			<File_Size_K>862</File_Size_K>
+			<File_Size_MB>0.84</File_Size_MB>
 		</File_Info>
 		<Expire_Info>
 			<Has_Expire_Info>N</Has_Expire_Info>
@@ -76,19 +76,21 @@
 	<Program_Descriptions>
 		<German>
 			<Keywords>HTML editor, web page maker, web design creator, anti aliasing effects, mouse over buttons, WYSIWYG, site management, publishing, web designer, round corners, free, freeware, favorite, templates, CSS, FTP, drag and drop, Webseitenerstellung</Keywords>
-			<Char_Desc_45>Mächtiger WYSIWYG HTML Editor</Char_Desc_45>
+			<Char_Desc_45>Guter WYSIWYG HTML Editor</Char_Desc_45>
 			<Char_Desc_80>Mächtiger WYSIWYG HTML Editor zum Erstellen von Webseiten</Char_Desc_80>
-			<Char_Desc_250>DFM2HTML ist ein WYSIWYG HTML-Editor, mit dem man per Drag&amp;Drop Webseiten ohne Kenntnisse von HTML professionell erstellen kann. Effekte wie Schatten/Rotation/Anti-Aliasing/Runde Ecken  machen Bildbearbeitungsprogramme überflüssig.</Char_Desc_250>
-			<Char_Desc_450>DFM2HTML ist ein WYSIWYG HTML-Editor, mit dem man per Drag&amp;Drop Webseiten ohne Kenntnisse von HTML professionell erstellen kann. Effekte wie Schatten/Rotation/Anti-Aliasing/Runde Ecken  machen Bildbearbeitungsprogramme überflüssig. Mit dem integrierten FTP-Upload-Manager können Webseiten auf Knopfdruck auf einen Server geladen werden. DFM2HTML stellt viele fertige Webseiten-Schablonen und Mouse-Over-Buttons bereit.</Char_Desc_450>
-			<Char_Desc_2000>DFM2HTML ist ein WYSIWYG HTML-Editor, mit dem man per Drag&amp;Drop Webseiten ohne Kenntnisse von HTML professionell erstellen kann. Effekte wie Schatten/Rotation/Anti-Aliasing/Runde Ecken  machen Bildbearbeitungsprogramme überflüssig. Mit dem integrierten FTP-Upload-Manager können Webseiten auf Knopfdruck auf einen Server geladen werden. DFM2HTML stellt viele fertige Webseiten-Schablonen und Mouse-Over-Buttons bereit. HTML-Formulare und HTML-Frames können WYSIWYG-mäßig erstellt werden. Der Stylesheet-Mechanismus unterstützt ein systematisches Design von Webseiten. Mit dem neuen Unicode-Feature können Webseiten in jeder Sprache erstellt werden.</Char_Desc_2000>
+			<Char_Desc_250>DFM2HTML ist ein WYSIWYG HTML-Editor, mit dem man per Drag&amp;Drop Webseiten ohne HTML-Kenntnisse professionell erstellen kann. Nutze Effekte wie Anti-Aliasing / Runde Ecken / DHTML-Menüs.</Char_Desc_250>
+			<Char_Desc_450>DFM2HTML ist ein WYSIWYG HTML-Editor, mit dem man per Drag&amp;Drop Webseiten ohne HTML-Kenntnisse professionell erstellen kann. Nutze Effekte wie Anti-Aliasing / Runde Ecken / DHTML-Menüs. Mit dem integrierten FTP-Upload-Manager können Webseiten auf Knopfdruck auf einen Server geladen werden. DFM2HTML stellt viele fertige Webseiten-Schablonen und Mouse-Over-Buttons bereit.</Char_Desc_450>
+			<Char_Desc_2000>DFM2HTML ist ein WYSIWYG HTML-Editor, mit dem man per Drag&amp;Drop Webseiten ohne HTML-Kenntnisse professionell erstellen kann. Nutze Effekte wie Anti-Aliasing / Runde Ecken / DHTML-Menüs. Mit dem integrierten FTP-Upload-Manager können Webseiten auf Knopfdruck auf einen Server geladen werden. DFM2HTML stellt viele fertige Webseiten-Schablonen und Mouse-Over-Buttons bereit. HTML-Formulare und HTML-Frames können WYSIWYG-mäßig erstellt werden. Der Stylesheet-Mechanismus unterstützt ein systematisches Design von Webseiten. Mit dem neuen Unicode-Feature können Webseiten in jeder Sprache erstellt werden.</Char_Desc_2000>
 		</German>
 		<English>
 			<Keywords>HTML editor, web page maker, web design creator, anti aliasing effects, mouse over buttons, WYSIWYG, site management, publishing, web designer, round corners, free, freeware, favorite, templates, CSS, FTP, drag and drop, Webseitenerstellung</Keywords>
-			<Char_Desc_45>An easy to use drag&amp;drop WYSIWYG HTML editor</Char_Desc_45>
+			<Char_Desc_45>WYSIWYG HTML editor supporting DHTML menus.</Char_Desc_45>
 			<Char_Desc_80>Create and publish professional Web pages without knowing HTML.</Char_Desc_80>
-			<Char_Desc_250>Create and publish professional Web pages without knowing HTML. Effects like shadow, anti-aliasing, rotation and rounded corners are supported.</Char_Desc_250>
-			<Char_Desc_450>DFM2HTML is an easy to use WYSIWYG HTML editor. Sophisticated web sites can be composed within minutes using drag&amp;drop and the nesting feature unique to DFM2HTML. With effects like shadow, anti-aliasing, rotation and rounded corners, you don't need an image editor to create professional looking web sites. DFM2HTML comes with many templates and a wide range of mouse-over buttons. HTML forms and HTML frames can be easily created in a WYSIWYG way.</Char_Desc_450>
-			<Char_Desc_2000>DFM2HTML is an easy to use WYSIWYG HTML editor. Sophisticated web sites can be composed within minutes using drag&amp;drop and the nesting feature unique to DFM2HTML. With effects like shadow, anti-aliasing, rotation and rounded corners, you don't need an image editor to create professional looking web sites. You can publish your site with the build-in FTP Upload manager in an instant. DFM2HTML comes with many templates and a wide range of mouse-over buttons. HTML forms and HTML frames can be easily created in a WYSIWYG way. The stylesheet mechanism allows a systematic page design. You can create web pages in any language with the new Unicode feature.</Char_Desc_2000>
+			<Char_Desc_250>Create and publish professional Web pages without knowing HTML. Use features like anti-aliasing, rounded corners or DHTML menus.</Char_Desc_250>
+			<Char_Desc_450>DFM2HTML is an easy to use WYSIWYG HTML editor. Create professional web sites in a drag &amp; drop way! Use features like anti-aliasing, rounded corners or DHTML menus. DFM2HTML comes with many templates and a wide range of mouse-over buttons. HTML forms and HTML frames are best supported.</Char_Desc_450>
+			<Char_Desc_2000>DFM2HTML is an easy to use WYSIWYG HTML editor. Create professional web sites in a drag &amp; drop way! Use features like anti-aliasing, rounded corners or DHTML menus. DFM2HTML comes with many templates and a wide range of mouse-over buttons. HTML forms and HTML frames are best supported. 
+
+You can publish your site with the build-in FTP Upload manager in an instant. The stylesheet mechanism allows a systematic page design. One DFM2HTML document will result in carefully generated HTML files and images.</Char_Desc_2000>
 		</English>
 	</Program_Descriptions>
 	<Web_Info>
@@ -109,10 +111,10 @@
 	<Permissions>
 		<Distribution_Permissions />
 		<EULA>DFM2HTML
-Copyright (c) 2003-2005 Joerg Kiegeland
+Copyright (c) 2003-2007 Joerg Kiegeland
 All Rights Reserved
 
-For ordering information, please visit our
+For more information, please visit our
 web page: http://www.dfm2html.com
 
 
@@ -124,20 +126,8 @@ before using this software. Your use of this software indicates
 your acceptance of this license agreement and warranty stipulation.
 
 
-Registered Version
+DFM2HTML is freeware, so no registration is required.
 
-One registered copy of DFM2HTML may either be used
-by a single person who uses the software personally on one or more
-computers, or installed on a single workstation used nonsimultaneously
-by multiple people, but not both.
-
-You may access the registered version of DFM2HTML
-through a network, provided that you have obtained individual
-licenses for the software covering all workstations that will access
-the software through the network.  For instance, if 8 different
-workstations will access DFM2HTML on the network, each
-workstation must have its own license, regardless of whether they use
-DFM2HTML at different times or concurrently.
 
 
 Disclaimer of Warranty
@@ -158,14 +148,11 @@ REPLACEMENT OR REFUND OF PURCHASE PRICE.
 
 Distribution
 
-Provided that you verify that you are distributing the not registered
-version (see the About dialog) you are hereby
-licensed to make as many copies of the evaluation version of
+You are hereby licensed to make as many copies of 
 this software and documentation as you wish; give exact copies of
-the original evaluation version to anyone; and distribute the
-evaluation version of the software and documentation in its
-unmodified form via electronic means.  There is no charge for any
-of the above.
+the original version to anyone; and distribute the
+software and documentation in its unmodified form via electronic means.  
+There is no charge for any of the above.
 
 You are specifically prohibited from charging, or requesting
 donations, for any such copies, however made; and from

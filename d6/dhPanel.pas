@@ -1152,6 +1152,7 @@ type
     //FBaseOverOnDown{,FBaseDownOnOverDown}:boolean;
     //LogMsg:string;
 
+    procedure GetChildren(Proc: TGetChildProc; Root: TComponent); override;
 
     function PreventFull(Cause:TTransformations):boolean; virtual;
 
@@ -15021,6 +15022,18 @@ begin
   ParentWidth:=(Right-Left);
  Writer.WriteInteger(ParentWidth-(Left+Width)); }
  Writer.WriteInteger(CSSRight);
+end;
+
+procedure TdhCustomPanel.GetChildren(Proc: TGetChildProc; Root: TComponent);
+var
+  I: Integer;
+  Control: TControl;
+begin
+  for I := 0 to ControlCount - 1 do
+  begin
+    Control := Controls[I];
+    if (Control.Owner = Root) and (GetVirtualParent(Control) = Self) then Proc(Control);
+  end;
 end;
 
 function TdhCustomPanel.IsRightStored:boolean;

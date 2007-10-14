@@ -31,14 +31,35 @@ unit DKLang;
 
 interface
 uses
-  Windows, SysUtils, Classes, Contnrs, Masks, TntClasses,
+{$IFDEF CLX}Types,{$ENDIF}{$IFDEF WIN32}Windows,{$ENDIF} SysUtils, Classes, Contnrs, Masks{$IFNDEF CLX}, TntClasses,
    // TntWideStrings shouldn't be used in BDS 2006+ as those IDEs correctly implement default WideStrings
   {$IFDEF COMPILER_10_UP}
   WideStrings
   {$ELSE}
   TntWideStrings
   {$ENDIF}
-  ;
+  {$ENDIF};
+
+{$IFDEF CLX}
+type LANGID = Word;        
+     LCID = DWORD;
+     TWideStrings=TStrings;
+     TTntStringList=class(TStringList)
+      public
+        procedure LoadFromStream(Stream: TStream); override;
+     end;
+     TTntFileStream=TFileStream;
+     TTntResourceStream=TResourceStream;
+     //PWideChar=PChar;
+const
+  RT_RCDATA       = Types.RT_RCDATA; //MakeIntResource(10);
+
+
+
+{$ENDIF}
+
+
+
 
 type
    // Error
@@ -435,7 +456,7 @@ type
     procedure LSO_StoreLangSource(Strings: TWideStrings; StateFilter: TDKLang_TranslationStates);
      // Forces component entries to update their entries. If bModifyList=False, only default property values are
      //   initialized, no entry additions/removes are allowed
-    procedure UpdateComponents(bModifyList: Boolean);
+public    procedure UpdateComponents(bModifyList: Boolean); private
      // Prop handlers
     function  GetActualSectionName: WideString;
     procedure SetIgnoreList(Value: TStrings);
@@ -668,7 +689,99 @@ resourcestring
   SDKLangErrMsg_StreamVersionTooHigh   = 'Stream version (%d) is greater than the current one (%d)';
 
 implementation
-uses TypInfo, Math, TntSysUtils, TntSystem;
+
+uses TypInfo, Math{$IFNDEF CLX}, TntSysUtils, TntSystem{$ENDIF};
+
+
+{$IFDEF CLX}
+
+type
+  TSearchRecW = TSearchRec;
+
+function FindResourceW(hModule: HMODULE; lpName, lpType: PWideChar): HRSRC;
+begin
+ Result:=FindResource(hModule,PChar(String(WideString(lpName))),PChar(lpType));
+end;
+
+  
+procedure TTntStringList.LoadFromStream(Stream: TStream);
+var
+  DataLeft: Integer;
+  SW: WideString;
+begin
+      DataLeft := Stream.Size - Stream.Position;
+      // BOM indicates Unicode text stream
+      if DataLeft < SizeOf(WideChar) then
+        SW := ''
+      else begin
+        SetLength(SW, DataLeft div SizeOf(WideChar));
+        Stream.Read(PWideChar(SW)^, DataLeft);
+      end;
+      SetTextStr(SW);
+end;
+
+
+function WideFileExists(const Name: WideString): Boolean;
+begin
+  Result := FileExists(Name);
+end;
+
+function LCIDToCodePage(ALcid: LCID): Cardinal;
+begin
+  Result:=0;
+end;
+
+function WideStringToStringEx(const WS: WideString; CodePage: Cardinal): AnsiString;
+begin
+ Result:=WS;
+end;
+
+function StringToWideStringEx(const S: AnsiString; CodePage: Cardinal): WideString;
+begin
+  Result:=S;
+end;
+
+function WideGetLocaleStr(LocaleID: LCID; LocaleType: Integer; const Default: WideString): WideString;
+begin
+ if LocaleID=1031 then
+  Result := 'Deutsch'
+ else
+ if LocaleID=1033 then
+  Result := 'English'
+ else
+ Result := Default;
+end;
+
+function WideFindFirst(const Path: WideString; Attr: Integer; var F: TSearchRecW): Integer;
+begin
+ Result:=FindFirst(Path,Attr,F);
+end;
+
+function WideFindNext(var F: TSearchRecW): Integer;
+begin
+ Result:=SysUtils.FindNext(F);
+end;
+
+procedure WideFindClose(var F: TSearchRecW);
+begin
+ FindClose(F);
+end;
+
+function WideIncludeTrailingPathDelimiter(const S: WideString): WideString;
+begin
+ Result:=IncludeTrailingPathDelimiter(S);
+end;
+
+
+const
+  { Each Unicode stream should begin with the code U+FEFF,  }
+  {   which the standard defines as the *byte order mark*.  }
+  UNICODE_BOM = WideChar($FEFF);
+
+  LOCALE_SLANGUAGE                = $00000002;   { localized name of language }
+
+
+{$ENDIF}
 
 var
   _LangManager: TDKLanguageManager = nil;
@@ -1129,7 +1242,7 @@ var
   procedure TDKLang_CompTranslations.Text_LoadFromResource(Instance: HINST; const wsResName: WideString; bParamsOnly: Boolean = False);
   var Stream: TStream;
   begin
-    Stream := TTntResourceStream.Create(Instance, wsResName, PWideChar(RT_RCDATA));
+    Stream := TTntResourceStream.Create(Instance, wsResName, {$IFDEF CLX}PChar{$ELSE}PWideChar{$ENDIF}(RT_RCDATA));
     try
       Text_LoadFromStream(Stream, bParamsOnly);
     finally
@@ -1140,7 +1253,7 @@ var
   procedure TDKLang_CompTranslations.Text_LoadFromResource(Instance: HINST; iResID: Integer; bParamsOnly: Boolean = False);
   var Stream: TStream;
   begin
-    Stream := TTntResourceStream.CreateFromID(Instance, iResID, PWideChar(RT_RCDATA));
+    Stream := TTntResourceStream.CreateFromID(Instance, iResID, {$IFDEF CLX}PChar{$ELSE}PWideChar{$ENDIF}(RT_RCDATA));
     try
       Text_LoadFromStream(Stream, bParamsOnly);
     finally
@@ -1188,7 +1301,7 @@ var
        // Remember the original stream position
       i64Pos := Stream.Position;
        // Determine whether this is an Unicode source (BEFORE any reading is done)
-      FIsStreamUnicode := AutoDetectCharacterSet(Stream)=csUnicode;
+      FIsStreamUnicode := {$IFDEF CLX}True{$ELSE}AutoDetectCharacterSet(Stream)=csUnicode{$ENDIF};
       Stream.Position := i64Pos;
        // Load the stream contents into the list
       List.LoadFromStream(Stream);
@@ -1198,7 +1311,9 @@ var
         cCodePage := LCIDToCodePage(RetrieveLangID(List));
          // Reload the list using this correct code page
         Stream.Position := i64Pos;
-        List.AnsiStrings.LoadFromStreamEx(Stream, cCodePage);
+        {$IFDEF CLX}List.LoadFromStream(Stream);
+        {$ELSE}List.AnsiStrings.LoadFromStreamEx(Stream, cCodePage);
+        {$ENDIF}
       end;
     end;
 
@@ -2082,7 +2197,7 @@ var
     Result := FindResourceW(Instance, PWideChar(wsResName), PWideChar(RT_RCDATA))<>0;
      // If succeeded, load the list from resource
     if Result then begin
-      Stream := TTntResourceStream.Create(Instance, wsResName, PWideChar(RT_RCDATA));
+      Stream := TTntResourceStream.Create(Instance, wsResName, {$IFDEF CLX}PChar{$ELSE}PWideChar{$ENDIF}(RT_RCDATA));
       try
         LoadFromStream(Stream);
       finally

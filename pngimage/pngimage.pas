@@ -207,8 +207,113 @@ interface
 
 
 uses
- Windows {$IFDEF UseDelphi}, Classes, Graphics, SysUtils{$ENDIF},
- zlibpas, pnglang;
+{$IFDEF CLX}
+ Qt,
+{$ELSE}
+ Windows,
+{$ENDIF}
+ Types {$IFDEF UseDelphi}, Classes, {$IFDEF CLX}QGraphics,{$ELSE}Graphics,{$ENDIF} SysUtils{$ENDIF} {$IFDEF Debug},
+ dialogs{$ENDIF}, {$IFDEF MSWINDOWS}zlibpas,{zlibex,} {$ELSE}ZLib,{$ENDIF} pnglang;
+
+{$IFDEF CLX}
+type ColorRef=TColorRef;
+
+  HPALETTE=type HANDLE;
+
+  PRGBTriple = ^TRGBTriple;
+  tagRGBTRIPLE = packed record
+    rgbtBlue: Byte;
+    rgbtGreen: Byte;
+    rgbtRed: Byte;
+    //alpha: Byte; //24 bits not allowed, only 32 bits, see c24
+  end;
+  TRGBTriple = tagRGBTRIPLE;
+
+  PRGBQuad = ^TRGBQuad;
+  tagRGBQUAD = packed record
+    rgbBlue: Byte;
+    rgbGreen: Byte;
+    rgbRed: Byte;
+    rgbReserved: Byte;
+  end;
+  TRGBQuad = tagRGBQUAD;
+  RGBQUAD = tagRGBQUAD;
+
+
+  PBitmapInfo = ^TBitmapInfo;
+  {$EXTERNALSYM tagBITMAPINFO}
+  tagBITMAPINFO = packed record
+    bmiHeader: TBitmapInfoHeader;
+    bmiColors: array[0..0] of TRGBQuad;
+  end;
+  TBitmapInfo = tagBITMAPINFO;
+  {$EXTERNALSYM BITMAPINFO}
+  BITMAPINFO = tagBITMAPINFO;
+
+  { Bitmap Header Definition }
+  PBitmap = ^_TBitmap;
+  {$EXTERNALSYM tagBITMAP}
+  tagBITMAP = packed record
+    bmType: Longint;
+    bmWidth: Longint;
+    bmHeight: Longint;
+    bmWidthBytes: Longint;
+    bmPlanes: Word;
+    bmBitsPixel: Word;
+    bmBits: Pointer;
+  end;
+  _TBitmap = tagBITMAP;
+
+  HBITMAP = QImageH;
+  HDC = QPainterH;
+  HFont = QFontH;
+
+const
+  { constants for the biCompression field }
+  {$EXTERNALSYM BI_RGB}
+  BI_RGB = 0;
+
+  {$EXTERNALSYM DIB_RGB_COLORS}
+  DIB_RGB_COLORS = 0;     { color table in RGBs  }
+
+  SRCCOPY=RasterOp_CopyROP;
+
+type                              
+  tagPALETTEENTRY = packed record
+    peRed: Byte;
+    peGreen: Byte;
+    peBlue: Byte;
+    peFlags: Byte;
+  end;
+  TPaletteEntry = tagPALETTEENTRY;
+  TMaxLogPalette = packed record
+    palVersion: Word;
+    palNumEntries: Word;
+    palPalEntry: array [Byte] of TPaletteEntry;
+  end;
+           
+  tagLOGPALETTE = packed record
+    palVersion: Word;
+    palNumEntries: Word;
+    palPalEntry: array[0..0] of TPaletteEntry;
+  end;
+  TLogPalette = tagLOGPALETTE;  
+  PLogPalette = ^TLogPalette;
+{$ENDIF}
+
+{$IFDEF CLX}
+const c0=nil;
+{$ELSE}
+const c0=0;
+{$ENDIF}
+
+{$IFDEF CLX}
+const c24=32; //24 not allowed in CreateDIBSection
+{$ELSE}
+const c24=24;
+{$ENDIF}
+
+
 
 const
   LibraryVersion = '1.564';
@@ -490,8 +595,8 @@ type
     {Being created}
     BeingCreated: Boolean;
     {Returns / set the image palette}
-    function GetPalette: HPALETTE; {$IFDEF UseDelphi}override;{$ENDIF}
-    procedure SetPalette(Value: HPALETTE); {$IFDEF UseDelphi}override;{$ENDIF}
+    function GetPalette: HPALETTE; {$IFDEF UseDelphi}{$IFNDEF CLX}override;{$ENDIF}{$ENDIF}
+    procedure SetPalette(Value: HPALETTE); {$IFDEF UseDelphi}{$IFNDEF CLX}override;{$ENDIF}{$ENDIF}
     procedure DoSetPalette(Value: HPALETTE; const UpdateColors: Boolean);
     {Returns/sets image width and height}
     function GetWidth: Integer; {$IFDEF UseDelphi}override;{$ENDIF}
@@ -529,11 +634,13 @@ type
     procedure AddtEXt(const Keyword, Text: String);
     procedure AddzTXt(const Keyword, Text: String);
     {$IFDEF UseDelphi}
+{$IFNDEF CLX}
     {Saves to clipboard format (thanks to Antoine Pottern)}
     procedure SaveToClipboardFormat(var AFormat: Word; var AData: THandle;
       var APalette: HPalette); override;
     procedure LoadFromClipboardFormat(AFormat: Word; AData: THandle;
       APalette: HPalette); override;
+{$ENDIF}
     {$ENDIF}
     {Calling errors}
     procedure RaiseError(ExceptionClass: ExceptClass; Text: String);
@@ -547,7 +654,9 @@ type
     property PixelInformation: TChunkpHYs read GetPixelInformation;
     property AlphaScanline[const Index: Integer]: pByteArray read
       GetAlphaScanline;
+{$IFNDEF CLX}
     procedure DrawUsingPixelInformation(Canvas: TCanvas; Point: TPoint);
+{$ENDIF}
 
     {Canvas}
     {$IFDEF UseDelphi}property Canvas: TCanvas read fCanvas;{$ENDIF}
@@ -686,11 +795,15 @@ type
     BytesPerRow: Integer;
     {Creates a grayscale palette}
     function CreateGrayscalePalette(Bitdepth: Integer): HPalette;
+{$IFNDEF CLX}
     {Copies the palette to the Device Independent bitmap header}
     procedure PaletteToDIB(Palette: HPalette);
+{$ENDIF}
     {Resizes the image data to fill the color type, bit depth, }
     {width and height parameters}
+  public
     procedure PrepareImageData;
+  protected
     {Release allocated ImageData memory}
     procedure FreeImageData;
   public
@@ -995,7 +1108,166 @@ function update_crc(crc: {$IFNDEF DelphiBuilder3Less}Cardinal{$ELSE}Integer
 {Invert bytes using assembly}
 function ByteSwap(const a: integer): integer;
 
+var PaletteColorCount:integer=-1;//°!°
+
 implementation
+
+{$IFDEF CLX}
+
+procedure CopyMemory(Destination: Pointer; Source: Pointer; Length: DWORD);
+begin
+  Move(Source^, Destination^, Length);
+end;
+
+procedure DeleteObject(var Handle: HBitmap);
+begin
+    if Assigned(Handle) then QImage_destroy(Handle);
+    Handle:=nil;
+end;
+
+procedure DeleteDC(var Handle: HDC);
+begin
+    if Assigned(Handle) then QPainter_destroy(Handle);
+    Handle:=nil;
+end;
+
+function CreateCompatibleDC(i:integer):HDC; overload;
+begin
+ result:=QPainter_create;
+end;
+
+function CreateCompatibleDC(i:HDC):HDC; overload;
+begin
+ result:=QPainter_create;
+end;
+              {
+procedure FillLongword(var X; Count: Integer; Value: Longword);
+asm
+// EAX = X
+// EDX = Count
+// ECX = Value
+        PUSH    EDI
+
+        MOV     EDI,EAX  // Point EDI to destination
+        MOV     EAX,ECX
+        MOV     ECX,EDX
+        TEST    ECX,ECX
+        JS      @exit
+
+        REP     STOSD    // Fill count dwords
+@exit:
+        POP     EDI
+end;          }
+
+function CreateDIBSection(DC: HDC; const pbmi: TBitmapInfo; iUsage: UINT;
+  var ppvBits: Pointer; hSection: THandle; dwOffset: DWORD): HBITMAP;
+begin
+      Result := QImage_create(pbmi.bmiHeader.biWidth, pbmi.bmiHeader.biHeight, pbmi.bmiHeader.biBitCount, 1, QImageEndian_IgnoreEndian);
+      if Result <> nil then
+      begin
+        ppvBits := Pointer(QImage_bits(Result));
+        // clear it since QT doesn't initialize the image data:
+        QImage_fill(Result,0);
+        //FillLongword(ppvBits[0], pbmi.bmiHeader.biWidth*pbmi.bmiHeader.biHeight, clBlack32);
+      end;
+end;
+
+
+procedure ZeroMemory(Destination: Pointer; Length: DWORD);
+begin
+  FillChar(Destination^, Length, 0);
+end;
+
+function GetRValue(rgb: DWORD): Byte;
+begin
+  Result := Byte(rgb);
+end;
+
+function GetGValue(rgb: DWORD): Byte;
+begin
+  Result := Byte(rgb shr 8);
+end;
+
+function GetBValue(rgb: DWORD): Byte;
+begin
+  Result := Byte(rgb shr 16);
+end;
+
+function RGB(r, g, b: Byte): COLORREF;
+begin
+  Result := (r or (g shl 8) or (b shl 16));
+end;
+
+
+procedure stretchBlt(dst: QPainterH; dx, dy, dw, dh: Integer;
+  src: QPainterH; sx, sy, sw, sh: Integer;
+  rop: RasterOp); overload;
+begin
+{$IFDEF MSWINDOWS}
+ assert(false);
+{
+ QGraphics.stretchBlt(QPainter_device(dst), dx, dy, dw, dh,
+  QPainter_device(src), sx, sy, sw, sh,
+  rop,false);        }
+{$ENDIF}
+end;
+
+
+function StretchPixmap(DestPainter: QPainterH; DestX, DestY, DestWidth, DestHeight,
+  SrcX, SrcY, SrcWidth, SrcHeight: Integer; SrcPixmap: QPixmapH): Integer;
+var
+  NewMatrix: QWMatrixH;
+begin
+  QPainter_saveWorldMatrix(DestPainter);
+  try
+    NewMatrix:= QWMatrix_create(DestWidth / SrcWidth, 0, 0, DestHeight / SrcHeight, DestX, DestY);
+    try
+      QPainter_setWorldMatrix(DestPainter, NewMatrix, True);
+      QPainter_drawPixmap(DestPainter, 0, 0, SrcPixmap, SrcX, SrcY, SrcWidth, SrcHeight);
+    finally
+      QWMatrix_destroy(NewMatrix);
+    end;
+  finally
+    QPainter_restoreWorldMatrix(DestPainter);
+  end;
+  Result := 0;
+end;
+
+procedure GetObject(Handle: HBitmap; size:integer; BI:PBitmap);
+begin
+ BI.bmWidth:=QImage_width(Handle);
+ BI.bmHeight:=QImage_height(Handle);
+ BI.bmBitsPixel:=QImage_depth(Handle);
+ BI.bmBits:=QImage_bits(Handle);
+ BI.bmWidthBytes:=QImage_bytesPerLine(Handle);
+ BI.bmType:=0;
+ BI.bmPlanes:=1;
+end;
+
+//dummy
+function BitBlt(DestDC: HDC; X, Y, Width, Height: Integer; SrcDC: HDC;
+  XSrc, YSrc: Integer; Rop: RasterOp): BOOLEAN;
+begin
+ assert(false,'BitBlt called');
+ result:=false;
+end;
+
+//dummy
+function CreatePalette(const LogPalette: TLogPalette): HPalette;
+begin
+ Result:=0;
+end;
+
+//dummy
+function SelectObject(DC: HDC; p2: HBitmap): HBitmap;
+begin
+ Result:=nil;
+end;
+
+
+
+{$ENDIF}
+
 
 var
   ChunkClasses: TPngPointerList;
@@ -1004,6 +1276,7 @@ var
   {Flag: has the table been computed? Initially false}
   crc_table_computed: Boolean;
 
+{$IFNDEF CLX}
 {Draw transparent image using transparent color}
 procedure DrawTransparentBitmap(dc: HDC; srcBits: Pointer;
   var srcHeader: TBitmapInfoHeader;
@@ -1096,6 +1369,7 @@ begin
   DeleteDC(hdcObject);
   DeleteDC(hdcTemp);
 end;
+{$ENDIF}
 
 {Make the table for a fast CRC.}
 procedure make_crc_table;
@@ -2182,9 +2456,9 @@ end;
 constructor TChunkIHDR.Create(Owner: TPngObject);
 begin
   {Prepare pointers}
-  ImageHandle := 0;
+  ImageHandle := c0;
   ImagePalette := 0;
-  ImageDC := 0;
+  ImageDC := c0;
 
   {Call inherited}
   inherited Create(Owner);
@@ -2206,12 +2480,14 @@ var
   PaletteSize: Integer;
   Entries: Array[Byte] of TPaletteEntry;
 begin
+{$IFNDEF CLX}
   PaletteSize := 0;
   if GetObject(Source, SizeOf(PaletteSize), @PaletteSize) = 0 then Exit;
   if PaletteSize = 0 then Exit;
   ResizePalette(Destination, PaletteSize);
   GetPaletteEntries(Source, 0, PaletteSize, Entries);
   SetPaletteEntries(Destination, 0, PaletteSize, Entries);
+{$ENDIF}
 end;
 
 {Assigns from another IHDR chunk}
@@ -2246,14 +2522,16 @@ end;
 procedure TChunkIHDR.FreeImageData;
 begin
   {Free old image data}
-  if ImageHandle <> 0  then DeleteObject(ImageHandle);
-  if ImageDC     <> 0  then DeleteDC(ImageDC);
+  if ImageHandle <> c0  then DeleteObject(ImageHandle);
+  if ImageDC     <> c0  then DeleteDC(ImageDC);
   if ImageAlpha <> nil then FreeMem(ImageAlpha);
+{$IFNDEF CLX}
   if ImagePalette <> 0 then DeleteObject(ImagePalette);
+{$ENDIF}
   {$IFDEF Store16bits}
   if ExtraImageData <> nil then FreeMem(ExtraImageData);
   {$ENDIF}
-  ImageHandle := 0; ImageDC := 0; ImageAlpha := nil; ImageData := nil;
+  ImageHandle := c0; ImageDC := c0; ImageAlpha := nil; ImageData := nil;
   ImagePalette := 0; ExtraImageData := nil;
 end;
 
@@ -2353,6 +2631,7 @@ begin
   Result := CreatePalette(pLogPalette(@palEntries)^);
 end;
 
+{$IFNDEF CLX}
 {Copies the palette to the Device Independent bitmap header}
 procedure TChunkIHDR.PaletteToDIB(Palette: HPalette);
 var
@@ -2369,6 +2648,7 @@ begin
     BitmapInfo.bmiColors[j].rgbGreen := palEntries.palPalEntry[j].peGreen;
   end;
 end;
+{$ENDIF}
 
 {Resizes the image data to fill the color type, bit depth, }
 {width and height parameters}
@@ -2409,7 +2689,7 @@ begin
         16     : SetInfo(8, TRUE);
       end;
     {Only 1 byte (8 bits) is supported}
-    COLOR_RGB, COLOR_RGBALPHA:  SetInfo(24, FALSE);
+    COLOR_RGB, COLOR_RGBALPHA:  SetInfo(c24, FALSE);
   end {case ColorType};
   {Number of bytes for each scanline}
   BytesPerRow := (((BitmapInfo.bmiHeader.biBitCount * Width) + 31)
@@ -2435,7 +2715,7 @@ begin
   {work in allocating necessary memory}
   ImageDC := CreateCompatibleDC(0);
   {$IFDEF UseDelphi}Self.Owner.Canvas.Handle := ImageDC;{$ENDIF}
-
+{$IFNDEF CLX}
   {In case it is a palette image, create the palette}
   if HasPalette then
   begin
@@ -2450,6 +2730,7 @@ begin
     RealizePalette(ImageDC);
     PaletteTODIB(ImagePalette);
   end;
+{$ENDIF}
 
   {Create the device independent bitmap}
   ImageHandle := CreateDIBSection(ImageDC, pBitmapInfo(@BitmapInfo)^,
@@ -4293,7 +4574,9 @@ begin
   ResizeData(fCount * 3);
   {Get all the palette entries}
   fillchar(palEntries, sizeof(palEntries), #0);
+{$IFNDEF CLX}
   GetPaletteEntries(Header.ImagePalette, 0, 256, palEntries.palPalEntry[0]);
+{$ENDIF}
   {Copy pointer to data}
   DataPtr := fData;
 
@@ -4409,9 +4692,13 @@ begin
     AssignPNG(Source as TPNGObject)
   {Copy contents from a TBitmap}
   {$IFDEF UseDelphi}else if Source is TBitmap then
+{$IFDEF CLX}
+ assert(False)
+{$ELSE}
     with Source as TBitmap do
       AssignHandle(Handle, Transparent,
         ColorToRGB(TransparentColor)){$ENDIF}
+{$ENDIF}
   {Unknown source, let ancestor deal with it}
   else
     inherited;
@@ -4575,6 +4862,7 @@ begin
     fMaxIdatSize := High(Word) else fMaxIdatSize := Value;
 end;
 
+{$IFNDEF CLX}
 {Draws the image using pixel information from TChunkpHYs}
 procedure TPNGObject.DrawUsingPixelInformation(Canvas: TCanvas; Point: TPoint);
   function Rect(Left, Top, Right, Bottom: Integer): TRect;
@@ -4608,6 +4896,7 @@ begin
       Point.Y + NewSizeY));
     end;
 end;
+{$ENDIF}
 
 {$IFNDEF UseDelphi}
   {Creates a file stream reading from the filename in the parameter and load}
@@ -4763,13 +5052,13 @@ begin
   {alpha blending and then will be painted on the background}
   BufferDC := CreateCompatibleDC(0);
   {In case BufferDC could not be created}
-  if (BufferDC = 0) then RaiseError(EPNGOutMemory, EPNGOutMemoryText);
+  if (BufferDC = c0) then RaiseError(EPNGOutMemory, EPNGOutMemoryText);
   BufferBitmap := CreateDIBSection(BufferDC, BitmapInfo, DIB_RGB_COLORS,
     BufferBits, 0, 0);
   {In case buffer bitmap could not be created}
-  if (BufferBitmap = 0) or (BufferBits = Nil) then
+  if (BufferBitmap = c0) or (BufferBits = Nil) then
   begin
-    if BufferBitmap <> 0 then DeleteObject(BufferBitmap);
+    if BufferBitmap <> c0 then DeleteObject(BufferBitmap);
     DeleteDC(BufferDC);
     RaiseError(EPNGOutMemory, EPNGOutMemoryText);
   end;
@@ -4796,7 +5085,7 @@ begin
 
   case Header.BitmapInfo.bmiHeader.biBitCount of
     {R, G, B images}
-    24:
+    c24:
       FOR j := 1 TO H DO
       begin
         {Process all the pixels in this line}
@@ -4912,6 +5201,9 @@ end;
 procedure TPngObject.Draw(ACanvas: TCanvas; const Rect: TRect);
 var
   Header: TChunkIHDR;
+{$IFDEF CLX}
+  FPixmap: QPixmapH;
+{$ENDIF}
 begin
   {Quit in case there is no header, otherwise obtain it}
   if Empty then Exit;
@@ -4923,12 +5215,25 @@ begin
     ptmPartial:
       DrawPartialTrans(ACanvas{$IFDEF UseDelphi}.Handle{$ENDIF}, Rect);
   {$ENDIF}
+{$IFNDEF CLX}
     ptmBit: DrawTransparentBitmap(ACanvas{$IFDEF UseDelphi}.Handle{$ENDIF},
       Header.ImageData, Header.BitmapInfo.bmiHeader,
       pBitmapInfo(@Header.BitmapInfo), Rect,
       {$IFDEF UseDelphi}ColorToRGB({$ENDIF}TransparentColor)
       {$IFDEF UseDelphi}){$ENDIF}
+{$ENDIF}
     else
+{$IFDEF CLX}
+    begin
+     FPixmap := QPixmap_create;
+     QPixmap_convertFromImage(FPixmap, Header.ImageHandle, QPixmapColorMode(QPixmapColorMode_Auto));
+     StretchPixmap(ACanvas{$IFDEF UseDelphi}.Handle{$ENDIF}, Rect.Left,
+        Rect.Top, Rect.Right - Rect.Left, Rect.Bottom - Rect.Top, 0, 0,
+        Header.Width, Header.Height,
+        FPixmap);
+     QPixmap_destroy(FPixmap);
+    end
+{$ELSE}
     begin
       SetStretchBltMode(ACanvas{$IFDEF UseDelphi}.Handle{$ENDIF}, COLORONCOLOR);
       StretchDiBits(ACanvas{$IFDEF UseDelphi}.Handle{$ENDIF}, Rect.Left,
@@ -4936,6 +5241,7 @@ begin
         Header.Width, Header.Height, Header.ImageData,
         pBitmapInfo(@Header.BitmapInfo)^, DIB_RGB_COLORS, SRCCOPY)
     end
+{$ENDIF}
   end {case}
 end;
 
@@ -5056,6 +5362,7 @@ begin
 end;
 
 {$IFDEF UseDelphi}
+{$IFNDEF CLX}
 {Saves to clipboard format (thanks to Antoine Pottern)}
 procedure TPNGObject.SaveToClipboardFormat(var AFormat: Word;
   var AData: THandle; var APalette: HPalette);
@@ -5083,6 +5390,7 @@ begin
       Free;
     end {try}
 end;
+{$ENDIF}
 
 {Returns if the image is transparent}
 function TPngObject.GetTransparent: Boolean;
@@ -5126,8 +5434,14 @@ begin
   Header.PrepareImageData();
   {Copy image data}
   DC := CreateCompatibleDC(0);
+{$IFDEF CLX}
+  assert(QImage_numBytes(Header.ImageHandle)=QImage_numBytes(Handle));
+  CopyMemory(Header.ImageData,Pointer(QImage_bits(Handle)),QImage_numBytes(Header.ImageHandle));
+//  for i:=0 to
+{$ELSE}
   GetDIBits(DC, Handle, 0, Header.Height, Header.ImageData,
     pBitmapInfo(@Header.BitmapInfo)^, DIB_RGB_COLORS);
+{$ENDIF}
 
   DeleteDC(DC);
 end;
@@ -5160,6 +5474,7 @@ end;
 {Assigns this tpngobject to another object}
 procedure TPngObject.AssignTo(Dest: TPersistent);
 {$IFDEF UseDelphi}
+{$IFNDEF CLX}
   function DetectPixelFormat: TPixelFormat;
   begin
     with Header do
@@ -5183,6 +5498,7 @@ procedure TPngObject.AssignTo(Dest: TPersistent);
         end {case BitDepth of}
     end {with Header}
   end;
+{$ENDIF}
 var
   TRNS: TChunkTRNS;
 {$ENDIF}
@@ -5194,6 +5510,9 @@ begin
   {$IFDEF UseDelphi}
   {In case the destination is a bitmap}
   else if (Dest is TBitmap) and HeaderPresent then
+{$IFDEF CLX}
+ assert(False)
+{$ELSE}
   begin
     {Copies the handle using CopyImage API}
     TBitmap(Dest).PixelFormat := DetectPixelFormat;
@@ -5210,6 +5529,7 @@ begin
     end {if (TransparencyMode = ptmBit)}
 
   end
+{$ENDIF}
   else
     {Unknown destination kind}
     inherited AssignTo(Dest);
@@ -5220,7 +5540,11 @@ end;
 procedure TPngObject.AssignHandle(Handle: HBitmap; Transparent: Boolean;
   TransparentColor: ColorRef);
 var
+{$IFDEF CLX}
+  BitmapInfo: _TBitmap;
+{$ELSE}
   BitmapInfo: Windows.TBitmap;
+{$ENDIF}
   {Chunks}
   Header: TChunkIHDR;
   PLTE: TChunkPLTE;
@@ -5260,6 +5584,8 @@ begin
   if Header.HasPalette then
   begin
     PLTE.fCount := 1 shl BitmapInfo.bmBitsPixel;
+
+    if PaletteColorCount<>-1 then PLTE.fCount := PaletteColorCount;//°!°
 
     {Create and set palette}
     fillchar(palEntries, sizeof(palEntries), 0);
@@ -5557,6 +5883,9 @@ var
   DataDepth: Byte;
   ValEntry: Byte;
 begin
+{$IFDEF CLX}
+ assert(False);
+{$ELSE}
   with png.Header do
   begin
     {Map into a palette entry}
@@ -5575,6 +5904,7 @@ begin
     ByteData^ := ByteData^ or (ValEntry shl ((8 - DataDepth) -
       (X mod (8 div DataDepth)) * DataDepth));
   end {with png.Header}
+{$ENDIF}
 end;
 
 {Returns pixel when png uses RGB}
@@ -5774,6 +6104,7 @@ end;
 
 procedure TPngObject.DoSetPalette(Value: HPALETTE; const UpdateColors: boolean);
 begin
+{$IFNDEF CLX}
   if (Header.HasPalette)  then
   begin
     {Update the palette entries}
@@ -5788,6 +6119,7 @@ begin
     DeleteObject(Header.ImagePalette);
     Header.ImagePalette := Value;
   end
+{$ENDIF}
 end;
 
 {Set palette based on a windows palette handle}

@@ -4,7 +4,7 @@ interface
 
 uses Messages;
 
-const ClassName={$ifdef QS}'TuQuickMain'{$elseif WC}'TuWWWCMain'{$elseif AH}'TuHideMain'{$elseif sdl}'TuSDLMain'{$else}'TdhMainForm'{$endif};
+const ClassName={$ifdef QS}'TuQuickMain'{$elseif WC}'TuWWWCMain'{$elseif AH}'TuHideMain'{$elseif sdl}'TuSDLMain'{$else}'TdhMainForm'{$ifend};
 
 const wmMainInstanceOpenFile = WM_USER+ 101;
 

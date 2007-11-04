@@ -14864,9 +14864,11 @@ var
 begin
   //If we would check on HandleAllocated, not visible containers would not align there children! Thats the only reason for MyAlignControl.
   if {not HandleAllocated or }(csDestroying in ComponentState) then Exit;
+{$IFNDEF CLX}
   if AlignDisabled then
     ControlState := ControlState + [csAlignmentNeeded]
   else
+{$ENDIF}
   begin
     DisableAlign;
     try

@@ -13,7 +13,7 @@ uses
   Controls, Windows, Messages, Graphics, Forms, ComCtrls, Dialogs,
   ShellAPI, ExtCtrls, StdCtrls,CommCtrl,
 {$ENDIF}
-  SysUtils, Classes, uShowInfo,
+  SysUtils, Classes, 
 {$IFDEF CLX}
   DesignIntf,DesignEditors,ClxEditors,DesignMenus,RTLConsts,
 {$ELSE}
@@ -1025,10 +1025,10 @@ begin
     if (Component is TdhCustomPanel) then
      begin
       pn:=TdhCustomPanel(Component);
-      if ShowInfo=nil then
+      {if ShowInfo=nil then
        ShowInfo:=TShowInfo.Create(Application);
       ShowInfo.LoadInfo(pn);
-      ShowInfo.ShowModal;
+      ShowInfo.ShowModal;}
       //showmessage((Component as TdhCustomPanel).ActStyle.GetInfo);
      end;
  6:;

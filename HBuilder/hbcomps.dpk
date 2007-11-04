@@ -29,7 +29,6 @@ requires
   vcl,
   VclSmp,
   vcljpg,
-  pngpack,
   GR32_D7,
   dhcomps,
   dklang7,

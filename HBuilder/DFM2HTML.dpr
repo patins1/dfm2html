@@ -30,7 +30,7 @@ uses
   uFind in 'uFind.pas' {FindText},
   UIConstants in 'UIConstants.pas',
   dhMultilineCaptionEdit in 'dhMultilineCaptionEdit.pas' {dhMultilineCaptionEdit2},
-  BasicHTMLElements in '../dfm2html/D6/BasicHTMLElements.pas' {BasicHTMLElements: TFrame},
+  BasicHTMLElements {BasicHTMLElements: TFrame},
   uChooseWide in 'uChooseWide.pas' {ChooseUnicode};
 
 {$ELSE}

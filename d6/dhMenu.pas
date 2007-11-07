@@ -24,6 +24,8 @@ const RelMenuPosIsNoExtraMenuStyle=true;
 const DisableMenuPos=false;
 const ShareMenuPos=true;
 
+var INVALIDMENUNESTING_STR:WideString= 'Menu % cannot be opened by the link % because the link is a child of the menu.';
+
 type
   TdhMenu=class;
 
@@ -2194,6 +2196,10 @@ end;
 procedure TdhMenu.SetParentMenuItem(Value:TdhLink);
 var OldVisible:boolean;
 begin
+ if (Value<>nil) and ContainsControl(Value) then
+ begin
+  raise WException.Create(WFormat(INVALIDMENUNESTING_STR,[Name,Value.Name]));
+ end;
  if FParentMenuItem<>Value then
  begin
   OldVisible:=Visible;

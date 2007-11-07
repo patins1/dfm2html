@@ -2633,6 +2633,7 @@ procedure TdhMainForm.UpdateOtherConstants;
 begin
  QUOTEINVALIDVALUE_STR:=DKLangConstW(QUOTEINVALIDVALUE);
  REFOBJECT_STR:=DKLangConstW(REFOBJECT);
+ INVALIDMENUNESTING_STR:=DKLangConstW(INVALIDMENUNESTING);
 end;
 
 procedure TdhMainForm.UpdateStatusBar;

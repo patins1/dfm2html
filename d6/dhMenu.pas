@@ -2196,7 +2196,7 @@ end;
 procedure TdhMenu.SetParentMenuItem(Value:TdhLink);
 var OldVisible:boolean;
 begin
- if (Value<>nil) and ContainsControl(Value) then
+ if (Value<>nil) and IsVirtualParentOf(Value) then
  begin
   raise WException.Create(WFormat(INVALIDMENUNESTING_STR,[Name,Value.Name]));
  end;

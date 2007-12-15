@@ -712,7 +712,7 @@ end;
 
 function ContainsPHPTag(const s:HypeString):boolean;
 begin
- result:=Pos('<?',s)<>0;
+ result:=UseFastStrings.Pos('<?',s)<>0;
 end;
 
 {function IsPHPTag(const s:HypeString):boolean;

@@ -1857,7 +1857,7 @@ begin
     S:='';
   end else
    S:='';}
-  if (FindStr='') or (S<>'') and (Pos(UpperCaseIf(FindStr,not FindCaseSensitive),UpperCaseIf(S,not FindCaseSensitive))>0) then
+  if (FindStr='') or (S<>'') and (UseFastStrings.Pos(UpperCaseIf(FindStr,not FindCaseSensitive),UpperCaseIf(S,not FindCaseSensitive))>0) then
   begin
    SetControlTo(c,true,true);
    result:=true;

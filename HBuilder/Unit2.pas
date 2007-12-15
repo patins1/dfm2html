@@ -1004,8 +1004,8 @@ begin
  SplitBackgroundPixels(Cascaded.BackgroundPosition,v1,v2);
  spBGX.SetDetailedStoredValue(ActStyle.BackgroundPosition=EmptyStr,res.X);
  spBGY.SetDetailedStoredValue(ActStyle.BackgroundPosition=EmptyStr,res.Y);
- IGNORE_dhComboBoxX.SetDetailedStoredItemIndex(ActStyle.BackgroundPosition=EmptyStr,_if(pos('px',v1)<>0,0,1));
- IGNORE_dhComboBoxY.SetDetailedStoredItemIndex(ActStyle.BackgroundPosition=EmptyStr,_if(pos('px',v2)<>0,0,1));
+ IGNORE_dhComboBoxX.SetDetailedStoredItemIndex(ActStyle.BackgroundPosition=EmptyStr,_if(System.Pos('px',v1)<>0,0,1));
+ IGNORE_dhComboBoxY.SetDetailedStoredItemIndex(ActStyle.BackgroundPosition=EmptyStr,_if(System.Pos('px',v2)<>0,0,1));
  dhComboBox4.SetDetailedStoredItemIndex(ActStyle.BackgroundRepeat=Low(TCSSBackgroundRepeat),max(0,Integer(ActPn.BackgroundRepeat)-1));
  cBGFixed.SetDetailedStoredValue(ActStyle.BackgroundAttachment=Low(TCSSBackgroundAttachment),ActPn.BackgroundAttachment=cbaFixed);
  ComboBox1.SetDetailedStoredItemIndex((TObject(Selection[0]) as TdhCustomPanel).ImageType=Low(TImageType),max(0,Integer((TObject(Selection[0]) as TdhCustomPanel).GetImageType)-1));
@@ -4192,7 +4192,7 @@ end;
 procedure TTabs.mSaveImageToFileClick(Sender: TObject);
 var i,FilterIndex:integer;
 begin
- i:=Pos(GetGraphicExtension(dhPanel1.Style.BackgroundImage.Graphic),IGNORE_SavePictureDialog1.Filter);
+ i:=System.Pos(GetGraphicExtension(dhPanel1.Style.BackgroundImage.Graphic),IGNORE_SavePictureDialog1.Filter);
  FilterIndex:=0;
  for i:=i downto 1 do
  if IGNORE_SavePictureDialog1.Filter[i]='|' then

@@ -1,10 +1,10 @@
 object dhMainForm: TdhMainForm
   Tag = 777789
-  Left = 46
-  Top = 271
-  Width = 924
-  Height = 468
+  Left = 248
+  Top = 206
   Caption = 'DFM2HTML'
+  ClientHeight = 422
+  ClientWidth = 1029
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -15,7 +15,6 @@ object dhMainForm: TdhMainForm
   Menu = MainMenu1
   OldCreateOrder = False
   ShowHint = True
-  WindowState = wsMaximized
   OnActivate = FormActivate
   OnClose = FormClose
   OnCreate = FormCreate
@@ -27,7 +26,7 @@ object dhMainForm: TdhMainForm
   object dhPanel1: TdhPanel
     Left = 0
     Top = 0
-    Height = 36
+    Height = 34
     Style.BorderTop.Width = 1
     Style.BorderTop.Color = AppWorkSpace
     Style.BorderTop.Style = cbsSolid
@@ -39,14 +38,17 @@ object dhMainForm: TdhMainForm
     AutoSizeXY = asNone
     Align = alTop
     Right = 0
+    ExplicitWidth = 0
     object ToolBar1: TTntToolBar
       Left = 0
       Top = 2
-      Width = 916
-      Height = 33
+      Width = 1029
+      Height = 31
       ButtonHeight = 30
       ButtonWidth = 31
       Color = clBtnFace
+      EdgeInner = esNone
+      EdgeOuter = esNone
       Images = ImageList1
       Indent = 2
       ParentColor = False
@@ -54,7 +56,7 @@ object dhMainForm: TdhMainForm
       Wrapable = False
       object compPageControl: TTntToolButton
         Left = 2
-        Top = 2
+        Top = 0
         Hint = 'Page control'
         AllowAllUp = True
         AutoSize = True
@@ -65,7 +67,7 @@ object dhMainForm: TdhMainForm
       end
       object compPage: TTntToolButton
         Left = 33
-        Top = 2
+        Top = 0
         Hint = 'Page'
         AllowAllUp = True
         AutoSize = True
@@ -76,7 +78,7 @@ object dhMainForm: TdhMainForm
       end
       object compPanel: TTntToolButton
         Left = 64
-        Top = 2
+        Top = 0
         Hint = 'Panel'
         AllowAllUp = True
         AutoSize = True
@@ -87,7 +89,7 @@ object dhMainForm: TdhMainForm
       end
       object compText: TTntToolButton
         Left = 95
-        Top = 2
+        Top = 0
         Hint = 'Label'
         AllowAllUp = True
         AutoSize = True
@@ -98,7 +100,7 @@ object dhMainForm: TdhMainForm
       end
       object compAnchor: TTntToolButton
         Left = 126
-        Top = 2
+        Top = 0
         Hint = 'Link'
         AllowAllUp = True
         ImageIndex = 16
@@ -108,7 +110,7 @@ object dhMainForm: TdhMainForm
       end
       object compImg: TTntToolButton
         Left = 157
-        Top = 2
+        Top = 0
         Hint = 'Image'
         AllowAllUp = True
         AutoSize = True
@@ -119,7 +121,7 @@ object dhMainForm: TdhMainForm
       end
       object compStyleSheet: TTntToolButton
         Left = 188
-        Top = 2
+        Top = 0
         Hint = 'Stylesheet'
         AllowAllUp = True
         AutoSize = True
@@ -130,7 +132,7 @@ object dhMainForm: TdhMainForm
       end
       object compDirectHTML: TTntToolButton
         Left = 219
-        Top = 2
+        Top = 0
         Hint = 'Direct HTML/Script'
         AllowAllUp = True
         AutoSize = True
@@ -141,7 +143,7 @@ object dhMainForm: TdhMainForm
       end
       object compMenu: TTntToolButton
         Left = 250
-        Top = 2
+        Top = 0
         Hint = 'DHTML Menu'
         AllowAllUp = True
         AutoSize = True
@@ -152,7 +154,7 @@ object dhMainForm: TdhMainForm
       end
       object compOle: TTntToolButton
         Left = 281
-        Top = 2
+        Top = 0
         Hint = 'OLE Container'
         AllowAllUp = True
         ImageIndex = 27
@@ -162,7 +164,7 @@ object dhMainForm: TdhMainForm
       end
       object compFile: TTntToolButton
         Left = 312
-        Top = 2
+        Top = 0
         Hint = 'External File'
         AllowAllUp = True
         ImageIndex = 32
@@ -171,7 +173,7 @@ object dhMainForm: TdhMainForm
       end
       object compForm: TMyToolButton
         Left = 343
-        Top = 2
+        Top = 0
         AllowAllUp = True
         Style = tbsCheck
         OnClick = compImgClick
@@ -179,11 +181,12 @@ object dhMainForm: TdhMainForm
       end
       object SpeedButton1: TMySpeedButton
         Left = 374
-        Top = 2
+        Top = 0
         Width = 15
         Height = 30
         AllowAllUp = True
         GroupIndex = 1
+        Flat = True
         Glyph.Data = {
           8A000000424D8A00000000000000760000002800000005000000050000000100
           0400000000001400000000000000000000001000000000000000000000000000
@@ -196,7 +199,7 @@ object dhMainForm: TdhMainForm
       end
       object Panel1: TPanel
         Left = 389
-        Top = 2
+        Top = 0
         Width = 160
         Height = 30
         BevelOuter = bvNone
@@ -217,25 +220,25 @@ object dhMainForm: TdhMainForm
       end
       object bBack: TTntToolButton
         Left = 549
-        Top = 2
+        Top = 0
         Hint = 'Go back'
         ImageIndex = 25
         OnClick = bBackClick
       end
       object bForward: TTntToolButton
         Left = 580
-        Top = 2
+        Top = 0
         Hint = 'Go forward'
         ImageIndex = 26
         OnClick = bForwardClick
       end
       object dhPanel2: TdhPanel
         Left = 611
-        Top = 2
-        Width = 285
+        Top = 0
+        Width = 295
         Height = 30
         Style.BackgroundColor = ButtonFace
-        AutoSizeXY = asX
+        AutoSizeXY = asNone
         object stateNormal: TdhLink
           Left = 58
           Top = 0
@@ -331,7 +334,7 @@ object dhMainForm: TdhMainForm
   object StatusBar: TStatusBar
     Left = 0
     Top = 403
-    Width = 916
+    Width = 1029
     Height = 19
     Panels = <
       item

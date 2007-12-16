@@ -891,6 +891,8 @@ begin
  }
  _RuntimeMode:=false;
 
+ ToolBar1.Flat:=true; //default is "false" in Delphi7 and "true" in Delphi2006, so set it explicitely to true!
+
 {$IFDEF FINALV}
  DEBUG_mDebug.Visible:=false;
  SpeedButton1.Transparent:=false;
@@ -2414,6 +2416,7 @@ procedure TdhMainForm.FormActivate(Sender: TObject);
 begin
  if AlreadyCalled then exit;
  AlreadyCalled:=true;
+ WindowState := wsMaximized; // late setting of WindowState to work with Delphi2006
  DoStartUp;
 end;
 

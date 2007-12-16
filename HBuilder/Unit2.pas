@@ -5429,7 +5429,7 @@ begin
  cbCursor.Style:=csOwnerDrawVariable;
 
  //PageControl1.OwnerDraw:=true;
- PageControl1.DoubleBuffered:=true;
+ //PageControl1.DoubleBuffered:=true; //DoubleBuffered=true not works for Delphi2006/WinXP-Style
  //PageControl1.OnDrawTab:=PageControl1DrawTab;
  TabSheet7.DoubleBuffered:=true;
  //bBorderRadius.WordWrap:=true;

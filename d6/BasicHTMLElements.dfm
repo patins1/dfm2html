@@ -4,6 +4,7 @@ object BasicHTMLElements: TBasicHTMLElements
   Width = 200
   Height = 374
   VertScrollBar.Tracking = True
+  AutoScroll = True
   TabOrder = 0
   object dhStyleSheet1: TdhPage
     Left = 0

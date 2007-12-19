@@ -16818,7 +16818,7 @@ end;
 
 
 
-function SaveImg(Opaque:TBitmap32; Transparent:TBitmap32; var RasteringFile:string; CheckBaseRasteringFile:boolean; BaseRasteringFile:string; GenerateGIF:boolean):boolean;
+function SaveImg(Opaque:TBitmap32; Transparent:TBitmap32; var RasteringFile:string; CheckBaseRasteringFile:boolean; BaseRasteringFile:string; GenerateGIF,AllowCutWhiteSpace:boolean):boolean;
 var gif_pre:TBitmap32;
     i,w,h:integer;
     _crc:DWORD;
@@ -16838,7 +16838,14 @@ begin
    FreeAndNil(gif_pre); }
    RasteringFile:=RasteringFile+ext[GenerateGIF];
    _crc:=calc_crc32_String(ext[GenerateGIF]);
-   TrimRightBottom(Transparent,w,h);
+   if AllowCutWhiteSpace then
+   begin
+    TrimRightBottom(Transparent,w,h);
+   end else
+   begin           
+    w:=Transparent.Width;
+    h:=Transparent.Height;
+   end;
    if GenerateGIF then
    begin
     _crc:=GetCRCFromBitmap32(Transparent,Opaque,w,h,_crc);
@@ -17093,7 +17100,7 @@ begin
        pn.TopGraph.DrawTo(pnTopGraph,pnTopGraph.BoundsRect,EqSize);
        pn.{TopGraph}TransparentTop.DrawTo(pnTransparentTop,pnTransparentTop.BoundsRect,EqSize);
        RasteringFile:=FinalID(pn)+PostFix+EqNaming[EqY,EqX];
-       result:=SaveImg(pnTopGraph,pnTransparentTop,RasteringFile,OwnState<>hsNormal,BaseRasteringFile,(pn.GetImageFormat=ifSimple){true});
+       result:=SaveImg(pnTopGraph,pnTransparentTop,RasteringFile,OwnState<>hsNormal,BaseRasteringFile,(pn.GetImageFormat=ifSimple){true},false);
       end;
       RasteringFiles:=RasteringFiles+ExtractFileName(RasteringFile)+'|';
      end;        
@@ -17108,7 +17115,7 @@ begin
    end;
   end;
   RasteringFile:=FinalID(pn)+PostFix+sst[OwnState];
-  result:=SaveImg(pn.TopGraph,pn.TransparentTop,RasteringFile,OwnState<>hsNormal,BaseRasteringFile,pn.GetImageFormat=ifSimple);
+  result:=SaveImg(pn.TopGraph,pn.TransparentTop,RasteringFile,OwnState<>hsNormal,BaseRasteringFile,pn.GetImageFormat=ifSimple,true);
   end else
    result:=false;
   end;

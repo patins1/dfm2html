@@ -5431,7 +5431,7 @@ begin
  //PageControl1.OwnerDraw:=true;
  //PageControl1.DoubleBuffered:=true; //DoubleBuffered=true not works for Delphi2006/WinXP-Style
  //PageControl1.OnDrawTab:=PageControl1DrawTab;
- TabSheet7.DoubleBuffered:=true;
+ //TabSheet7.DoubleBuffered:=true; //DoubleBuffered=true not works for Delphi2006/WinXP-Style
  //bBorderRadius.WordWrap:=true;
  //bMoreMisc.WordWrap:=true;
 

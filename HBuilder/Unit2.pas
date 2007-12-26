@@ -650,6 +650,7 @@ type
     procedure mCopyOverStylesToDownStylesClick(Sender: TObject);
   private
     FAdjusting:boolean;
+    function DoNotUpdateDisplay:boolean;
     procedure SetAdjusting(Value:boolean);
 //    gpc:TdhPageControl;
     procedure ActFontChanged;
@@ -991,7 +992,7 @@ var res:TPoint;
     v1,v2:string;
     FPicture:TPicture;
 begin
- if not _Showing then exit;
+ if DoNotUpdateDisplay then exit;
  if Adjusting then exit;
  Adjusting:=true;
  if ActPn.HasBackgroundImage(FPicture) then
@@ -1099,7 +1100,7 @@ end;
 procedure TTabs.UpdatePositionDisplay;
 var pn:TControl;
 begin
- if not _Showing then exit;
+ if DoNotUpdateDisplay then exit;
  Adjusting:=true;
 
  pn:=TObject(Selection[0]) as TControl;
@@ -1163,7 +1164,7 @@ procedure TTabs.UpdateBorderDisplay;
 var i:integer;
 //const guiEdgesS:array[TEdgeAlign] of string = ('Reset','Reset top','Reset right','Reset bottom','Reset left');
 begin
- if not _Showing then exit;
+ if DoNotUpdateDisplay then exit;
  {if EdgeAlignBut=nil then
   cEdgeAllClick(cEdgeAll);}
  Adjusting:=true;
@@ -1283,11 +1284,16 @@ end;
 
 {$ENDIF}
 
+function TTabs.DoNotUpdateDisplay:boolean;
+begin
+ result:=not _Showing or (Selection.Count=0);
+end;
+
 procedure TTabs.UpdateFontDisplay;
 var Font:TFont;
     ScreenFonts:TStrings;
 begin
- if not _Showing then exit;
+ if DoNotUpdateDisplay then exit;
  if Adjusting then exit;
  Adjusting:=true;
  if cFontFamily.Items.Count=0 then
@@ -1735,7 +1741,8 @@ var c:TControl;
     cc:TComponent;
     ImageIndex:integer;
     Image:TIcon;
-begin
+begin           
+ if DoNotUpdateDisplay then exit;
 
  if TObject(Selection[0]) is TdhCustomPanel then
   eTooltip.StoredText:=TdhCustomPanel(Selection[0]).Tooltip else
@@ -2179,7 +2186,8 @@ var i:integer;
     //Node:PVirtualNode;
     WasFocused:boolean;
 var gpc:TdhPageControl;
-begin
+begin            
+ if DoNotUpdateDisplay then exit;
  Adjusting:=true;
  gpc:=ChooseTwice(0,TdhPageControl) as TdhPageControl;
  //WasFocused:=vs.FocusedNode<>nil;
@@ -2304,7 +2312,8 @@ end;
 
 procedure TTabs.UpdateLinkDisplay;
 var c:TdhLink;
-begin
+begin               
+ if DoNotUpdateDisplay then exit;
  Adjusting:=true;
  c:=TObject(Selection[0]) as TdhLink;
 
@@ -2558,7 +2567,7 @@ procedure TTabs.UpdateEffectsDisplay;
 var tt:TTransformations;
     ShadowExt,GlowExt:boolean;
 begin
- if not _Showing then exit;
+ if DoNotUpdateDisplay then exit;
  //AnchorEffects.Color:=clRed;
  Adjusting:=true;
  tt:=ActStyle.Effects;                 
@@ -2917,8 +2926,8 @@ begin
 end;
 
 procedure TTabs.UpdateMoreDisplay;
-begin            
- if not _Showing then exit;
+begin
+ if DoNotUpdateDisplay then exit;
  cbTextAlign.StoredItemIndex:=GoodIndex(Integer(ActStyle.TextAlign));
  cbWhiteSpace.StoredItemIndex:=GoodIndex(Integer(ActStyle.WhiteSpace));
  cbCursor.StoredItemIndex:=GoodIndex(Integer(ActStyle.Cursor));
@@ -3079,8 +3088,8 @@ end;
 
 procedure TTabs.UpdateMenuDisplay();
 var c:TdhMenu;
-begin
- if not _Showing then exit;
+begin         
+ if DoNotUpdateDisplay then exit;
  Adjusting:=true;
  c:= ChooseTwice(0,TdhMenu) as TdhMenu;
  cHorizontalLayout.Checked:=moHorizontalLayout in c.MenuOptions;
@@ -3175,7 +3184,8 @@ begin
 end;
 
 procedure TTabs.UpdateEditDisplay;
-begin
+begin         
+  if DoNotUpdateDisplay then exit;
   Adjusting:=true;
   eEdit.StoredText:=(TObject(Selection[0]) as TdhEdit).Text;
   cReadOnly.Checked:=(TObject(Selection[0]) as TdhEdit).ReadOnly;
@@ -3185,6 +3195,7 @@ end;
 
 procedure TTabs.UpdateMemoDisplay;
 begin
+  if DoNotUpdateDisplay then exit;
   Adjusting:=true;
   eMemo.StoredText:=(TObject(Selection[0]) as TdhMemo).Text;
   cMemoReadOnly.Checked:=(TObject(Selection[0]) as TdhMemo).ReadOnly;
@@ -3200,7 +3211,8 @@ end;
 
 procedure TTabs.UpdateCheckboxDisplay;
 var checkbox:TdhCheckBox;
-begin
+begin         
+ if DoNotUpdateDisplay then exit;
  Adjusting:=True;
  checkbox:=TdhCheckBox(TObject(Selection[0]));
  if checkbox is TdhRadioButton then
@@ -3395,7 +3407,8 @@ begin
 end;
 
 procedure TTabs.UpdateTextDisplay;
-begin
+begin                      
+ if DoNotUpdateDisplay then exit;
  eText.Font.Name:=(TObject(Selection[0]) as TdhLabel).NearestFontFamily;
  eText.StoredText:=(TObject(Selection[0]) as TdhLabel).Text;
  //Edit1.Text:=(TObject(Selection[0]) as TdhLabel).Text;
@@ -3460,7 +3473,8 @@ end;
 procedure TTabs.UpdatePageDisplay;
 var IsVis:boolean;
     page:TdhPage;
-begin
+begin            
+ if DoNotUpdateDisplay then exit;
  Adjusting:=true;
  page:=(ActPn as TdhPage);
  eTitle.StoredText:=page.Title;
@@ -3611,6 +3625,7 @@ end;
 procedure TTabs.UpdateFormDisplay;
 var form:TdhHTMLForm;
 begin
+ if DoNotUpdateDisplay then exit;
  adjusting:=true;
  form:=TObject(Selection[0]) as TdhHTMLForm;
  eAction.StoredText:=form.Action;
@@ -4056,7 +4071,8 @@ begin
 end;
 
 procedure TTabs.UpdateHiddenFieldDisplay;
-begin
+begin       
+  if DoNotUpdateDisplay then exit;
   eHiddenField.StoredText:=(TObject(Selection[0]) as TdhHiddenField).Value;
 end;
 
@@ -4176,7 +4192,8 @@ begin
 end;
 
 procedure TTabs.UpdateOLEDisplay;
-begin
+begin        
+ if DoNotUpdateDisplay then exit;
 {$IFNDEF CLX}                                      
  cTransparentWhite.Checked:=(TObject(Selection[0]) as TdhOleContainer).TransparentWhite;
  IGNORE_cUsage.ItemIndex:=Integer((TObject(Selection[0]) as TdhOleContainer).Usage);
@@ -4822,7 +4839,8 @@ end;
 procedure TTabs.UpdateSelectDisplay;
 var index:integer;
     select:TdhSelect;
-begin
+begin                    
+ if DoNotUpdateDisplay then exit;
  if Adjusting then exit;
  select:=(ActPn as TdhSelect);
 
@@ -5099,7 +5117,7 @@ end;
 
 procedure TTabs.UpdatePureHTMLDisplay;
 begin
- if not _Showing then exit;
+ if DoNotUpdateDisplay then exit;
  Adjusting:=true;
  ePureHTML.StoredText:=(ActPn as TdhDirectHTML).InnerHTML;
  cGenerateContainingElement.Checked:=(ActPn as TdhDirectHTML).GenerateContainer;
@@ -5325,7 +5343,8 @@ var f:TdhFile;
     fileInfo:WideString;
     fsize:integer;
     sfsize:String;
-begin
+begin               
+ if DoNotUpdateDisplay then exit;
  Adjusting:=true;
  f:=(TObject(Selection[0]) as TdhFile);
  //bGoToFile.Enabled:=f.HasFile;

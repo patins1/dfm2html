@@ -7,10 +7,8 @@ uses
   QForms, QControls, QGraphics, QStdCtrls, QMask, Qt, QDialogs, QTntStdCtrls,
   {$ELSE}
   Forms, Controls, Windows, Messages, Graphics, StdCtrls, ShellAPI, Mask, Dialogs, TntStdCtrls,
-  {$ENDIF}  
+  {$ENDIF}
   SysUtils, Classes,UIConstants,uWException,dhPanel;
-                 
-//const WM_REVISE_UA=WM_USER+6;
 
 type IhCommitable=interface
  ['{12C954E2-1883-46E2-A923-67DE1CC22DC8}']
@@ -51,9 +49,6 @@ type
     function DoSelect(LogChange:TLogChange):boolean;
     procedure KeyPress(var Key: Char); override;
     procedure DoExit; override;
-{$IFNDEF CLX}
-    procedure WMEraseBkgnd(var Message: TWmEraseBkgnd); message WM_ERASEBKGND;
-{$ENDIF}
 
   public
     { Public declarations }
@@ -258,14 +253,6 @@ begin
   end{ else
    if Supports(Owner,IhLogReceiver) then (Owner as IhLogReceiver).LogChange(Self,lcAbort)};
 end;
-
-{$IFNDEF CLX}
-procedure ThComboBox.WMEraseBkgnd(var Message: TWmEraseBkgnd);
-begin
-  Message.Result := 1;
-end;
-{$ENDIF}
-
 
 procedure ThComboBox.Abort;
 begin            

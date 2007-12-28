@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <XML_DIZ_INFO>
 	<MASTER_PAD_VERSION_INFO>
 		<MASTER_PAD_EDITOR>DeuPAD 2.0.2.50 (http://www.deupad.org)</MASTER_PAD_EDITOR>
@@ -34,7 +34,7 @@
 	</Company_Info>
 	<Program_Info>
 		<Program_Name>DFM2HTML</Program_Name>
-		<Program_Version>1.9</Program_Version>
+		<Program_Version>1.901</Program_Version>
 		<Program_Type>Freeware</Program_Type>
 		<Program_Release_Status>Major Update</Program_Release_Status>
 		<Program_Category_Class>Web Development::HTML Tools</Program_Category_Class>
@@ -59,9 +59,9 @@
 			<Filename_Generic>dfm2html.exe</Filename_Generic>
 			<Filename_Versioned>dfm2v1_3.exe</Filename_Versioned>
 			<Filename_Previous>dfm2v1_3.exe</Filename_Previous>
-			<File_Size_Bytes>881640</File_Size_Bytes>
-			<File_Size_K>860</File_Size_K>
-			<File_Size_MB>0.84</File_Size_MB>
+			<File_Size_Bytes>912430</File_Size_Bytes>
+			<File_Size_K>891</File_Size_K>
+			<File_Size_MB>0.87</File_Size_MB>
 		</File_Info>
 		<Expire_Info>
 			<Has_Expire_Info>N</Has_Expire_Info>
@@ -76,19 +76,19 @@
 	<Program_Descriptions>
 		<German>
 			<Keywords>HTML editor, web page maker, web design creator, anti aliasing effects, mouse over buttons, WYSIWYG, site management, publishing, web designer, round corners, free, freeware, favorite, templates, CSS, FTP, drag and drop, Webseitenerstellung</Keywords>
-			<Char_Desc_45>Guter WYSIWYG HTML Editor</Char_Desc_45>
-			<Char_Desc_80>Mächtiger WYSIWYG HTML Editor zum Erstellen von Webseiten</Char_Desc_80>
-			<Char_Desc_250>DFM2HTML ist ein WYSIWYG HTML-Editor, mit dem man per Drag&amp;Drop Webseiten ohne HTML-Kenntnisse professionell erstellen kann. Nutze Effekte wie Anti-Aliasing / Runde Ecken / DHTML-Menüs.</Char_Desc_250>
-			<Char_Desc_450>DFM2HTML ist ein WYSIWYG HTML-Editor, mit dem man per Drag&amp;Drop Webseiten ohne HTML-Kenntnisse professionell erstellen kann. Nutze Effekte wie Anti-Aliasing / Runde Ecken / DHTML-Menüs. Mit dem integrierten FTP-Upload-Manager können Webseiten auf Knopfdruck auf einen Server geladen werden. DFM2HTML stellt viele fertige Webseiten-Schablonen und Mouse-Over-Buttons bereit.</Char_Desc_450>
-			<Char_Desc_2000>DFM2HTML ist ein WYSIWYG HTML-Editor, mit dem man per Drag&amp;Drop Webseiten ohne HTML-Kenntnisse professionell erstellen kann. Nutze Effekte wie Anti-Aliasing / Runde Ecken / DHTML-Menüs. Mit dem integrierten FTP-Upload-Manager können Webseiten auf Knopfdruck auf einen Server geladen werden. DFM2HTML stellt viele fertige Webseiten-Schablonen und Mouse-Over-Buttons bereit. HTML-Formulare und HTML-Frames können WYSIWYG-mäßig erstellt werden. Der Stylesheet-Mechanismus unterstützt ein systematisches Design von Webseiten. Mit dem neuen Unicode-Feature können Webseiten in jeder Sprache erstellt werden.</Char_Desc_2000>
+			<Char_Desc_45>Drag&amp;Drop HTML Editor</Char_Desc_45>
+			<Char_Desc_80>Drag&amp;Drop HTML Editor zum Erstellen von Webseiten mit integrierten DHTML-Menüs</Char_Desc_80>
+			<Char_Desc_250>DFM2HTML ist ein Drag&amp;Drop HTML-Editor mit integriertem DHTML-Menü-Designer. Effekte wie Anti-Aliasing / Schatten / Runde Ecken können beliebig kombiniert werden.</Char_Desc_250>
+			<Char_Desc_450>DFM2HTML ist ein Drag&amp;Drop HTML-Editor mit integriertem DHTML-Menü-Designer. Effekte wie Anti-Aliasing / Schatten / Runde Ecken können beliebig kombiniert werden. Mit dem integrierten FTP-Upload-Manager können Webseiten auf Knopfdruck auf einen Server geladen werden. DFM2HTML stellt viele fertige Webseiten-Schablonen und Mouse-Over-Buttons bereit.</Char_Desc_450>
+			<Char_Desc_2000>DFM2HTML ist ein Drag&amp;Drop HTML-Editor mit integriertem DHTML-Menü-Designer. Effekte wie Anti-Aliasing / Schatten / Runde Ecken können beliebig kombiniert werden. Mit dem integrierten FTP-Upload-Manager können Webseiten auf Knopfdruck auf einen Server geladen werden. DFM2HTML stellt viele fertige Webseiten-Schablonen und Mouse-Over-Buttons bereit. HTML-Formulare und HTML-Frames können WYSIWYG-mäßig erstellt werden. Der Stylesheet-Mechanismus unterstützt ein systematisches Design von Webseiten. Mit dem neuen Unicode-Feature können Webseiten in jeder Sprache erstellt werden.</Char_Desc_2000>
 		</German>
 		<English>
 			<Keywords>HTML editor, web page maker, web design creator, anti aliasing effects, mouse over buttons, WYSIWYG, site management, publishing, web designer, round corners, free, freeware, favorite, templates, CSS, FTP, drag and drop, Webseitenerstellung</Keywords>
-			<Char_Desc_45>WYSIWYG HTML editor supporting DHTML menus.</Char_Desc_45>
-			<Char_Desc_80>Create and publish professional Web pages without knowing HTML.</Char_Desc_80>
-			<Char_Desc_250>Create and publish professional Web pages without knowing HTML. Use features like anti-aliasing, rounded corners or DHTML menus.</Char_Desc_250>
-			<Char_Desc_450>DFM2HTML is an easy to use WYSIWYG HTML editor. Create professional web sites in a drag &amp; drop way! Use features like anti-aliasing, rounded corners or DHTML menus. DFM2HTML comes with many templates and a wide range of mouse-over buttons. HTML forms and HTML frames are best supported.</Char_Desc_450>
-			<Char_Desc_2000>DFM2HTML is an easy to use WYSIWYG HTML editor. Create professional web sites in a drag &amp; drop way! Use features like anti-aliasing, rounded corners or DHTML menus. DFM2HTML comes with many templates and a wide range of mouse-over buttons. HTML forms and HTML frames are best supported. 
+			<Char_Desc_45>Drag&amp;Drop HTML Editor</Char_Desc_45>
+			<Char_Desc_80>Create and publish professional Web pages with integrated DHTML menus.</Char_Desc_80>
+			<Char_Desc_250>DFM2HTML is a Drag&amp;Drop HTML-Editor with an integrated DHTML menü designer. Effekts like anti-aliasing / shadow / rounded corners can be freely combined.</Char_Desc_250>
+			<Char_Desc_450>DFM2HTML is a Drag&amp;Drop HTML-Editor with an integrated DHTML menü designer. Effekts like anti-aliasing / shadow / rounded corners can be freely combined. DFM2HTML comes with many templates and a wide range of mouse-over buttons. HTML forms and HTML frames are best supported.</Char_Desc_450>
+			<Char_Desc_2000>DFM2HTML is a Drag&amp;Drop HTML-Editor with an integrated DHTML menü designer. Effekts like anti-aliasing / shadow / rounded corners can be freely combined. DFM2HTML comes with many templates and a wide range of mouse-over buttons. HTML forms and HTML frames are best supported. 
 
 You can publish your site with the build-in FTP Upload manager in an instant. The stylesheet mechanism allows a systematic page design. One DFM2HTML document will result in carefully generated HTML files and images.</Char_Desc_2000>
 		</English>
@@ -162,16 +162,114 @@ distributing the software and/or documentation with other products
 	<DeuPAD>
 		<DeuPAD_Extension_Version>2.00</DeuPAD_Extension_Version>
 		<DeuPAD_Extension_Info>For information on the DeuPAD Extensions please go to http://www.deupad.org</DeuPAD_Extension_Info>
-		<SAVE_Member>Y</SAVE_Member>
-		<SAVE_Member_Number>JKD</SAVE_Member_Number>
-		<Company_Unique_ID>{A3DADBC7-D0EA-4AB3-A1D3-3AEB7E999282}</Company_Unique_ID>
-		<Save_Prog_Num>DFM</Save_Prog_Num>
-		<Program_Unique_ID>{5B01A648-3008-4D80-A825-B8D59682E4F9}</Program_Unique_ID>
+		<SAVE_Member>N</SAVE_Member>
+		<SAVE_Member_Number />
+		<Company_Unique_ID />
+		<Save_Prog_Num />
+		<Program_Unique_ID />
 		<Program_Cost_EUR>0.00</Program_Cost_EUR>
-		<Program_Categories_German />
-		<Program_System_Requirements_German />
-		<Expire_Other_Info_German />
-		<EULA_German />
-		<Program_Change_Info_German />
 	</DeuPAD>
+	<Affiliates>
+		<Affiliates_FORM>Y</Affiliates_FORM>
+		<Affiliates_VERSION>1.2</Affiliates_VERSION>
+		<Affiliates_URL>http://www.asp-shareware.org/pad/extensions/Affiliates.htm</Affiliates_URL>
+		<Affiliates_Information_Page />
+		<Affiliates_Avangate_Order_Page />
+		<Affiliates_Avangate_Vendor_ID />
+		<Affiliates_Avangate_Product_ID />
+		<Affiliates_Avangate_Maximum_Commission_Rate />
+		<Affiliates_BMTMicro_Order_Page />
+		<Affiliates_BMTMicro_Vendor_ID />
+		<Affiliates_BMTMicro_Product_ID />
+		<Affiliates_BMTMicro_Maximum_Commission_Rate />
+		<Affiliates_clixGalore_Order_Page />
+		<Affiliates_clixGalore_Vendor_ID />
+		<Affiliates_clixGalore_Product_ID />
+		<Affiliates_clixGalore_Maximum_Commission_Rate />
+		<Affiliates_CommissionJunction_Order_Page />
+		<Affiliates_CommissionJunction_Vendor_ID />
+		<Affiliates_CommissionJunction_Product_ID />
+		<Affiliates_CommissionJunction_Maximum_Commission_Rate />
+		<Affiliates_DigiBuy_Order_Page />
+		<Affiliates_DigiBuy_Vendor_ID />
+		<Affiliates_DigiBuy_Product_ID />
+		<Affiliates_DigiBuy_Maximum_Commission_Rate />
+		<Affiliates_DigitalCandle_Order_Page />
+		<Affiliates_DigitalCandle_Vendor_ID />
+		<Affiliates_DigitalCandle_Product_ID />
+		<Affiliates_DigitalCandle_Maximum_Commission_Rate />
+		<Affiliates_Emetrix_Order_Page />
+		<Affiliates_Emetrix_Vendor_ID />
+		<Affiliates_Emetrix_Product_ID />
+		<Affiliates_Emetrix_Maximum_Commission_Rate />
+		<Affiliates_eSellerate_Order_Page />
+		<Affiliates_eSellerate_Vendor_ID />
+		<Affiliates_eSellerate_Product_ID />
+		<Affiliates_eSellerate_Maximum_Commission_Rate />
+		<Affiliates_Kagi_Order_Page />
+		<Affiliates_Kagi_Vendor_ID />
+		<Affiliates_Kagi_Product_ID />
+		<Affiliates_Kagi_Maximum_Commission_Rate />
+		<Affiliates_LinkShare_Order_Page />
+		<Affiliates_LinkShare_Vendor_ID />
+		<Affiliates_LinkShare_Product_ID />
+		<Affiliates_LinkShare_Maximum_Commission_Rate />
+		<Affiliates_NorthStarSol_Order_Page />
+		<Affiliates_NorthStarSol_Vendor_ID />
+		<Affiliates_NorthStarSol_Product_ID />
+		<Affiliates_NorthStarSol_Maximum_Commission_Rate />
+		<Affiliates_Order1_Order_Page />
+		<Affiliates_Order1_Vendor_ID />
+		<Affiliates_Order1_Product_ID />
+		<Affiliates_Order1_Maximum_Commission_Rate />
+		<Affiliates_Osolis_Order_Page />
+		<Affiliates_Osolis_Vendor_ID />
+		<Affiliates_Osolis_Product_ID />
+		<Affiliates_Osolis_Maximum_Commission_Rate />
+		<Affiliates_Plimus_Order_Page />
+		<Affiliates_Plimus_Vendor_ID />
+		<Affiliates_Plimus_Product_ID />
+		<Affiliates_Plimus_Maximum_Commission_Rate />
+		<Affiliates_Regnet_Order_Page />
+		<Affiliates_Regnet_Vendor_ID />
+		<Affiliates_Regnet_Product_ID />
+		<Affiliates_Regnet_Maximum_Commission_Rate />
+		<Affiliates_Regnow_Order_Page />
+		<Affiliates_Regnow_Vendor_ID />
+		<Affiliates_Regnow_Product_ID />
+		<Affiliates_Regnow_Maximum_Commission_Rate />
+		<Affiliates_Regsoft_Order_Page />
+		<Affiliates_Regsoft_Vendor_ID />
+		<Affiliates_Regsoft_Product_ID />
+		<Affiliates_Regsoft_Maximum_Commission_Rate />
+		<Affiliates_ShareIt_Order_Page />
+		<Affiliates_ShareIt_Vendor_ID />
+		<Affiliates_ShareIt_Product_ID />
+		<Affiliates_ShareIt_Maximum_Commission_Rate />
+		<Affiliates_Shareasale_Order_Page />
+		<Affiliates_Shareasale_Vendor_ID />
+		<Affiliates_Shareasale_Product_ID />
+		<Affiliates_Shareasale_Maximum_Commission_Rate />
+		<Affiliates_SWReg_Order_Page />
+		<Affiliates_SWReg_Vendor_ID />
+		<Affiliates_SWReg_Product_ID />
+		<Affiliates_SWReg_Maximum_Commission_Rate />
+		<Affiliates_V-Share_Order_Page />
+		<Affiliates_V-Share_Vendor_ID />
+		<Affiliates_V-Share_Product_ID />
+		<Affiliates_V-Share_Maximum_Commission_Rate />
+		<Affiliates_VFree_Order_Page />
+		<Affiliates_VFree_Vendor_ID />
+		<Affiliates_VFree_Product_ID />
+		<Affiliates_VFree_Maximum_Commission_Rate />
+		<Affiliates_Yaskifo_Order_Page />
+		<Affiliates_Yaskifo_Vendor_ID />
+		<Affiliates_Yaskifo_Product_ID />
+		<Affiliates_Yaskifo_Maximum_Commission_Rate />
+	</Affiliates>
+	<ASP>
+		<ASP_FORM>Y</ASP_FORM>
+		<ASP_Member>N</ASP_Member>
+		<ASP_Member_Number />
+	</ASP>
 </XML_DIZ_INFO>

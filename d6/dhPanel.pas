@@ -10145,6 +10145,26 @@ begin
    ppn.SpecialBg(ref_scrolled,ref_fixed,Self.BackGraph,GetOffsetRect(CutR,-SelfCBound.Left,-SelfCBound.Top),ppn.BackgroundAttachment=cbaFixed);
 end;
 
+function GetItemAreas(const mainRect,itemRect:TRect): TAnchors;
+begin
+ Result:=[];
+ if itemRect.Top<=(mainRect.Top+mainRect.Bottom) div 2 then
+ begin
+   Result:=Result+[akTop];
+ end;
+ if itemRect.Bottom>=(mainRect.Top+mainRect.Bottom) div 2 then
+ begin
+   Result:=Result+[akBottom];
+ end;
+ if itemRect.Left<=(mainRect.Left+mainRect.Right) div 2 then
+ begin
+   Result:=Result+[akLeft];
+ end;
+ if itemRect.Right>=(mainRect.Left+mainRect.Right) div 2 then
+ begin
+   Result:=Result+[akRight];
+ end;
+end;
 
 procedure ParentPaintTo(Self:TdhCustomPanel; _Parent:TWinControl; IsTop:boolean; CutR:TRect; const SelfCBound:TRect; addheight:integer; SelfZOrder:integer{=-5555});
 
@@ -10174,7 +10194,8 @@ var i:integer;
     ObjHolder:TBinList;
     FilledByChildren:boolean;
     cCutR:TRect;
-    scrolledInParent,DoCopyTop:boolean;
+    scrolledInParent,DoCopyTop:boolean;  
+    ActiveAnchors:TAnchors;
 begin
 
  if IsRectEmpty(CutR) then exit;
@@ -10223,7 +10244,23 @@ begin
    ppn.AssertTop(addheight);
    OriCutR:=CutR;
    IntersectRect(CutR,CutR,R);
-   DoCopyTop:=not (WithMeta and ppn.VariableSize);
+   DoCopyTop:=True;
+   if WithMeta and (Self.Parent=_Parent) then
+   begin
+     ActiveAnchors:=[];
+     if ppn.VariableHeightSize then
+     begin
+      ActiveAnchors:=ActiveAnchors+[akTop,akBottom];
+     end;
+     if ppn.VariableWidthSize then
+     begin
+      ActiveAnchors:=ActiveAnchors+[akLeft,akRight];
+     end;
+     if Self.SimplifiedAnchors*GetItemAreas(R,CutR)*ActiveAnchors<>Self.SimplifiedAnchors*ActiveAnchors then
+     begin
+      DoCopyTop:=False;
+     end;
+   end;
    if (not DoCopyTop or not EqualRect(CutR,OriCutR)) and (Self.Parent=_Parent) then
    begin
     //wichtig für HTML-Generierung, da dort auch noch nicht sichtbare Elemente Graphiken haben müssen

@@ -1,6 +1,6 @@
 object Tabs: TTabs
-  Left = 110
-  Top = 593
+  Left = 207
+  Top = 554
   Width = 933
   Height = 233
   Caption = 'Object Properties'
@@ -41,7 +41,7 @@ object Tabs: TTabs
       Top = 2
       Width = 925
       Height = 204
-      ActivePage = AnchorMisc
+      ActivePage = AnchorFont
       TabOrder = 0
       TabStop = False
       TabWidth = 43
@@ -52,12 +52,6 @@ object Tabs: TTabs
       object AnchorFont: TTntTabSheet
         Hint = 'Font'
         Caption = 'Font'
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -11
-        Font.Name = 'MS Sans Serif'
-        Font.Style = []
-        ParentFont = False
         OnShow = AnchorFontShow
         object GroupBox3: TMyGroupBox
           Left = 16
@@ -233,13 +227,7 @@ object Tabs: TTabs
       object AnchorBorder: TTntTabSheet
         Hint = 'Edge'
         Caption = 'Edge'
-        Font.Charset = ANSI_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -12
-        Font.Name = 'MS Sans Serif'
-        Font.Style = []
         ImageIndex = 1
-        ParentFont = False
         OnShow = AnchorBorderShow
         object EdgeNavigation: TdhPanel
           Left = 8
@@ -409,8 +397,8 @@ object Tabs: TTabs
               Style.Effects.Alpha = 30
               AutoSizeXY = asNone
               Align = alClient
-              Right = 2147483647
-              Bottom = 2147483647
+              Right = 0
+              Bottom = 0
               object dhPanel5: TdhPanel
                 Left = 0
                 Top = 0
@@ -420,8 +408,8 @@ object Tabs: TTabs
                   81EE5C951E0000000049454E44AE426082}
                 AutoSizeXY = asNone
                 Align = alClient
-                Right = 2147483647
-                Bottom = 2147483647
+                Right = 0
+                Bottom = 0
               end
             end
           end
@@ -628,7 +616,7 @@ object Tabs: TTabs
             Style.BorderRadius.All = '100 100'
             AutoSizeXY = asNone
             Align = alTop
-            Right = 2147483647
+            Right = 24
             StyleDown.Effects.Enabled = True
             StyleDown.Effects.AntiAliasing = False
             StyleDown.Effects.Text = etInclude
@@ -667,7 +655,7 @@ object Tabs: TTabs
             Style.BorderRadius.All = '115'
             AutoSizeXY = asXY
             Align = alTop
-            Right = 2147483647
+            Right = 20
             StyleDown.BorderTop.Color = ThreeDDarkShadow
             StyleDown.BorderBottom.Color = White
             StyleDown.BorderLeft.Color = ThreeDDarkShadow
@@ -712,7 +700,7 @@ object Tabs: TTabs
             Style.BorderRadius.All = '5'
             AutoSizeXY = asXY
             Align = alTop
-            Right = 2147483647
+            Right = 20
             StyleDown.Border.Color = ThreeDShadow
             StyleDown.Border.Style = cbsSolid
             StyleDown.BackgroundImage.Data = {
@@ -731,13 +719,7 @@ object Tabs: TTabs
       object AnchorBackground: TTntTabSheet
         Hint = 'Image'
         Caption = 'Image'
-        Font.Charset = ANSI_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -12
-        Font.Name = 'MS Sans Serif'
-        Font.Style = []
         ImageIndex = 2
-        ParentFont = False
         OnShow = AnchorBackgroundShow
         object GroupBox9: TMyGroupBox
           Left = 8
@@ -979,13 +961,7 @@ object Tabs: TTabs
       object AnchorEffects: TTntTabSheet
         Hint = 'Effect'
         Caption = 'Effect'
-        Font.Charset = ANSI_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -12
-        Font.Name = 'MS Sans Serif'
-        Font.Style = []
         ImageIndex = 4
-        ParentFont = False
         OnShow = AnchorEffectsShow
         object cEffectsEnabled: TTntCheckBox
           Left = 8
@@ -2195,13 +2171,7 @@ object Tabs: TTabs
       object AnchorMisc: TTntTabSheet
         Hint = 'Misc'
         Caption = 'Misc'
-        Font.Charset = ANSI_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -12
-        Font.Name = 'MS Sans Serif'
-        Font.Style = []
         ImageIndex = 3
-        ParentFont = False
         OnShow = AnchorMiscShow
         object GroupBox26: TMyGroupBox
           Left = 8
@@ -2507,13 +2477,7 @@ object Tabs: TTabs
       end
       object AnchorName: TTntTabSheet
         Caption = 'Object'
-        Font.Charset = ANSI_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -12
-        Font.Name = 'MS Sans Serif'
-        Font.Style = []
         ImageIndex = -1
-        ParentFont = False
         OnShow = AnchorNameShow
         object GroupBox21: TMyGroupBox
           Left = 8
@@ -2686,13 +2650,7 @@ object Tabs: TTabs
       end
       object AnchorPosition: TTntTabSheet
         Caption = 'Pos.'
-        Font.Charset = ANSI_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -12
-        Font.Name = 'MS Sans Serif'
-        Font.Style = []
         ImageIndex = -1
-        ParentFont = False
         OnShow = AnchorPositionShow
         object GroupBox4: TMyGroupBox
           Left = 8
@@ -2945,13 +2903,7 @@ object Tabs: TTabs
       end
       object AnchorText: TTntTabSheet
         Caption = 'Text'
-        Font.Charset = ANSI_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -12
-        Font.Name = 'MS Sans Serif'
-        Font.Style = []
         ImageIndex = -1
-        ParentFont = False
         OnShow = AnchorTextShow
         object Label31: TdhLabel
           Left = 24
@@ -2982,13 +2934,7 @@ object Tabs: TTabs
       end
       object AnchorPageControl: TTntTabSheet
         Caption = 'Pages'
-        Font.Charset = ANSI_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -12
-        Font.Name = 'MS Sans Serif'
-        Font.Style = []
         ImageIndex = -1
-        ParentFont = False
         OnShow = AnchorPageControlShow
         object Label36: TdhLabel
           Left = 0
@@ -3080,13 +3026,7 @@ object Tabs: TTabs
       end
       object AnchorPage: TTntTabSheet
         Caption = 'Page'
-        Font.Charset = ANSI_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -12
-        Font.Name = 'MS Sans Serif'
-        Font.Style = []
         ImageIndex = -1
-        ParentFont = False
         OnShow = AnchorPageShow
         object GroupBox22: TMyGroupBox
           Left = 16
@@ -3169,13 +3109,7 @@ object Tabs: TTabs
       end
       object AnchorEdit: TTntTabSheet
         Caption = 'Edit'
-        Font.Charset = ANSI_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -12
-        Font.Name = 'MS Sans Serif'
-        Font.Style = []
         ImageIndex = -1
-        ParentFont = False
         OnShow = AnchorEditShow
         object GroupBox15: TMyGroupBox
           Left = 8
@@ -3223,13 +3157,7 @@ object Tabs: TTabs
       end
       object AnchorMemo: TTntTabSheet
         Caption = 'Memo'
-        Font.Charset = ANSI_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -12
-        Font.Name = 'MS Sans Serif'
-        Font.Style = []
         ImageIndex = -1
-        ParentFont = False
         OnShow = AnchorMemoShow
         object Label35: TdhLabel
           Left = 8
@@ -3279,13 +3207,7 @@ object Tabs: TTabs
       end
       object AnchorCheckBox: TTntTabSheet
         Caption = 'Check'
-        Font.Charset = ANSI_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -12
-        Font.Name = 'MS Sans Serif'
-        Font.Style = []
         ImageIndex = -1
-        ParentFont = False
         OnShow = AnchorCheckBoxShow
         object IGNORE_cRightJustify: TTntCheckBox
           Left = 512
@@ -3330,13 +3252,7 @@ object Tabs: TTabs
       end
       object AnchorForm: TTntTabSheet
         Caption = 'Form'
-        Font.Charset = ANSI_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -12
-        Font.Name = 'MS Sans Serif'
-        Font.Style = []
         ImageIndex = -1
-        ParentFont = False
         OnShow = AnchorFormShow
         object cbMethod: TTntRadioGroup
           Left = 8
@@ -3408,13 +3324,7 @@ object Tabs: TTabs
       end
       object AnchorMenu: TTntTabSheet
         Caption = 'Menu'
-        Font.Charset = ANSI_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -12
-        Font.Name = 'MS Sans Serif'
-        Font.Style = []
         ImageIndex = -1
-        ParentFont = False
         OnShow = AnchorMenuShow
         object CheckGroupBox1: TMyGroupBox
           Left = 296
@@ -3588,13 +3498,7 @@ object Tabs: TTabs
       end
       object AnchorLink: TTntTabSheet
         Caption = 'Link'
-        Font.Charset = ANSI_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -12
-        Font.Name = 'MS Sans Serif'
-        Font.Style = []
         ImageIndex = -1
-        ParentFont = False
         OnShow = AnchorLinkShow
         object GroupBox11: TMyGroupBox
           Left = 8

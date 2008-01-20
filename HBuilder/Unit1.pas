@@ -1452,25 +1452,30 @@ begin
  result:=false;
 end;
 
+Function GetTMPDir: String;
+var
+   SysDir: array[0..MAX_PATH] Of Char;
+begin
+     if (GetTempPath(MAX_PATH, SysDir) > 0)
+     then Result:= StrPas(SysDir)
+     else Result:= '';
+End;
+
 procedure TdhMainForm.SetSaveDir;
-var f:string;
 begin
  Tabs.CommitChanges;
-
+ BaseDir:=GetTMPDir;
+ if BaseDir='' then
  if Act.IsUntitled then
-  f:=ExtractFilePath(Application.ExeName)+DKFormat(UNTITLED) else
-  f:=Act.FileName;
- BaseDir:=ExtractFilePath(f);
- RasteringSaveDir:=BaseDir+'DFM2HTML_'+{ExtractPureFileName(f)}Act.Name+PathDelim;
- //PureFileName:=Act.Name+'.html';
+   BaseDir:=ExtractFilePath(Application.ExeName) else
+   BaseDir:=ExtractFilePath(Act.FileName);
+ RasteringSaveDir:=BaseDir+'DFM2HTML_'+Act.Name+PathDelim;
  if Act.MySiz.FindBody<>nil then
  begin
   if isAbsolute(Act.MySiz.FindBody.OutputDirectory) then
    RasteringSaveDir:=Act.MySiz.FindBody.OutputDirectory else
    RasteringSaveDir:=BaseDir+Act.MySiz.FindBody.OutputDirectory;
-  //PureFileName:=Act.MySiz.FindBody.Name+'.html';
  end;
-// RasteringSaveDir:=SaveDir;
  ForceDirectories(RasteringSaveDir);
 end;
 
@@ -1880,11 +1885,8 @@ begin
  propspc.PageControl1.EnableAlign;
                               }
 
- with Tabs do
- for i:=0 to PageControl1.PageCount-1 do
- begin
-  PageControl1.Pages[i].Caption:=PageControl1.Pages[i].Caption;
- end;
+ funcutils.StringToFile(RootDir('tryx.txt'),'blabla');
+
 // MessageDlg('X', mtWarning,[mbAbort, mbRetry, mbIgnore], 0);
 // (Act.MySiz.FindBody as TdhPage).FCommon.IsScrollArea:=not (Act.MySiz.FindBody as TdhPage).FCommon.IsScrollArea;
  //act.ScrollBy(0,30);

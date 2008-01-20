@@ -1,7 +1,7 @@
 object dhMainForm: TdhMainForm
   Tag = 777789
-  Left = 248
-  Top = 206
+  Left = -124
+  Top = 292
   Caption = 'DFM2HTML'
   ClientHeight = 422
   ClientWidth = 1029
@@ -14,6 +14,7 @@ object dhMainForm: TdhMainForm
   FormStyle = fsMDIForm
   Menu = MainMenu1
   OldCreateOrder = False
+  Scaled = False
   ShowHint = True
   OnActivate = FormActivate
   OnClose = FormClose

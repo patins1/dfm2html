@@ -43,7 +43,6 @@ var REFOBJECT_STR:WideString= '% is referenced by %';
 type HypeString=WideString;
      HypeChar=WideChar;
 
-var CollectGraphs:TList;
 var glSaveBin:function(_crc:DWORD; var RasteringFile:string; CheckBaseRasteringFile:boolean; BaseRasteringFile:string; var NeedSave:boolean; NeedSameFileName:boolean):boolean;
 var glAfterSaveBin:procedure;
 //NeedSameFileName
@@ -432,16 +431,7 @@ type
 
   TPictureID=class(TPicture)
   private
-   CRC:DWORD;
-   Listeners:TList;
-   procedure DefineProperties(Filer: TFiler); override;
-   procedure Changed(Sender: TObject); override;
   public
-   procedure AddListener(c:TObject);
-   procedure RemoveListener(c:TObject);
-   constructor Create;
-   destructor Destroy; override;
-   function ReferenceCount:integer;
   end;
 
   TLocationImage=class(TPersistent)
@@ -451,8 +441,6 @@ type
     Owner:TStyle;
     procedure DefineProperties(Filer: TFiler); override;
     procedure Changed(Sender: TObject);
-    procedure ReadCRC(Reader: TReader);
-    procedure WriteCRC(Writer: TWriter); 
     function ImgIsT1X1:boolean;
   public
     destructor Destroy; override;
@@ -1927,8 +1915,6 @@ function GetBorderRadiusPixels(Value:string; var res:TPoint):boolean;overload;
 function GetBorderRadiusString(al:TEdgeAlign):string;
 function GetBorderRadiusStringMoz(al:TEdgeAlign):string;
 
-function GraphicsIDCompare(Item1, Item2: Pointer): Integer;
-
 
 function _GetNotClipped(Self: TControl; OnlyOneParent:boolean=False):TRect;
 
@@ -2010,7 +1996,6 @@ uses QJpegLoader;
 {$ENDIF}
 
 var PreventAdjustMargin:boolean=false;
-var GraphicsRepository:TBinTree;
 
 {
 var CollectChanges:TWhatChanged;
@@ -2092,18 +2077,6 @@ end;
 
 
 
-function GraphicsIDCompare(Item1, Item2: Pointer): Integer;
-var i1,i2:DWORD;
-begin
- i1:=TPictureID(Item1).CRC;
- i2:=TPictureID(Item2).CRC;
- //result:=i1-i2;// is not the same: if i1-i2>2^31, Integer(i1-i2) is negative!
- if i1>i2 then
-  result:=1 else
- if i1=i2 then
-  result:=0 else
-  result:=-1;
-end;
 
 procedure TProxyReader.DefineBinaryProperty(const Name: string;
   ReadData, WriteData: TStreamProc; HasData: Boolean);
@@ -2114,49 +2087,20 @@ end;
 
 procedure TProxyReader.MyReadData(Stream: TStream);
 var GraphicsID2:TPictureID;
-    GraphicClassName_Offset:integer;
     DummyResult:boolean;
 begin
  if Stream is TMemoryStream then
  begin
-  GraphicClassName_Offset:=Integer(PChar(TMemoryStream(Stream).Memory)^)+1;
-  LocationImage.FPictureID.CRC:=calc_crc32(TMemoryStream(Stream).Size-GraphicClassName_Offset,PChar(TMemoryStream(Stream).Memory)+GraphicClassName_Offset);
-  GraphicsID2:=TPictureID(GraphicsRepository.HasItem(GraphicsIDCompare,LocationImage.FPictureID));
-  if GraphicsID2<>nil then
-  begin
-   FreeAndNil(LocationImage.FPictureID);
-   LocationImage.FPictureID:=GraphicsID2;
-  end else
-  begin
    OriReadData(Stream);
 
    if LocationImage.FPictureID.Graphic=nil then   
    if Assigned(OriReader.OnError) then
     OriReader.OnError(OriReader,LocationImage.Owner.Owner.Name+': Unknown graphics format', DummyResult);
-   Assert(not GraphicsRepository.AddItem(GraphicsIDCompare,LocationImage.FPictureID));
-   Assert(GraphicsRepository.HasItem(GraphicsIDCompare,LocationImage.FPictureID)<>nil);
-  end;
  end else
   Assert(false);
 end;
 
 type THackGraphic=class(TGraphic);
-
-procedure TLocationImage.ReadCRC(Reader: TReader);
-var img:TPictureID;
-begin
-  img:=TPictureID.Create;
-  img.CRC:=DWORD(Reader.ReadInteger);
-  FPictureID:=TPictureID(GraphicsRepository.HasItem(GraphicsIDCompare,img));
-  FPictureID.AddListener(Self);
-  img.Free;
-end;
-
-procedure TLocationImage.WriteCRC(Writer: TWriter);
-begin
- Writer.WriteInteger(Integer(FPictureID.CRC));
-end;
-
 
 
 procedure TProxyReader.DefineProperty(const Name: string;
@@ -2184,11 +2128,6 @@ begin
  begin
   if FPictureID<>nil then
   begin
-   if CollectGraphs<>nil then
-   begin
-    CollectGraphs.Add(FPictureID); 
-    Filer.DefineProperty('CRC', ReadCRC, WriteCRC, true);
-   end else
    if DoWrite then
     FPictureID.DefineProperties(Filer);
   end;
@@ -2203,7 +2142,7 @@ begin
   //assert(FPictureID=nil);
 //  FreeAndNil(FPictureID);
   end;}
-  Filer.DefineProperty('CRC', ReadCRC, WriteCRC, true);
+  //Filer.DefineProperty('Path', ReadCRC, WriteCRC, true);
   if FPictureID=nil then
   begin
    ProxyReader:=TProxyReader.Create(nil,0);
@@ -2213,7 +2152,7 @@ begin
     FPictureID:=TPictureID.Create;
     try
      FPictureID.DefineProperties(ProxyReader);
-     FPictureID.AddListener(Self);
+     FPictureID.OnChange:=Changed;
     except
      FreeAndNil(FPictureID);
     end;
@@ -2259,13 +2198,8 @@ begin
 
   if FPictureID<>nil then
   begin
-   FPictureID.RemoveListener(Self);
-   FPictureID:=nil;
-  end;
-
-  if (Source is TPicture) and not (Source is TPictureID) then
-  begin
-   Source:=TPicture(Source).Graphic;
+   FPictureID.OnChange:=nil;
+   FreeAndNil(FPictureID);
   end;
 
   if (Source is TLocationImage) then
@@ -2273,37 +2207,17 @@ begin
    Source:=TLocationImage(Source).FPictureID;
   end;
 
-  if Source <> nil then
-  if Source is TPictureID then
+  if (Source is TPicture) then
   begin
-   FPictureID:=TPictureID(Source);
-   FPictureID.AddListener(Self);
-  end else
+   Source:=TPicture(Source).Graphic;
+  end;
+
+  if Source <> nil then
   if Source is TGraphic then
   begin
     FPictureID:=TPictureID.Create;
-
-
-    GraphicsImage := TMemoryStream.Create;
-    try
-      THackGraphic(Source).WriteData(GraphicsImage);
-      FPictureID.CRC:=calc_crc32(GraphicsImage.Size,GraphicsImage.Memory);
-    finally
-      GraphicsImage.Free;
-    end;
-
-    GraphicsID2:=TPictureID(GraphicsRepository.HasItem(GraphicsIDCompare,FPictureID));
-    if GraphicsID2<>nil then
-    begin
-     FreeAndNil(FPictureID);
-     FPictureID:=GraphicsID2;
-    end else
-    begin
-     FPictureID.Graphic:=TGraphic(Source);
-     Assert(not GraphicsRepository.AddItem(GraphicsIDCompare,FPictureID));
-    end;
-    
-    FPictureID.AddListener(Self);
+    FPictureID.Graphic:=TGraphic(Source);
+    FPictureID.OnChange:=Self.Changed;
   end else
     inherited Assign(Source);
 
@@ -2315,60 +2229,6 @@ end;
 procedure TLocationImage.Changed(Sender: TObject);
 begin
   if Assigned(FOnChange) then FOnChange(Self);
-end;
-
-
-procedure TPictureID.AddListener(c:TObject);
-begin
- if GraphicsRepository.HasItem(GraphicsIDCompare,Self)=nil then
- Assert(GraphicsRepository.HasItem(GraphicsIDCompare,Self)<>nil);
- if Listeners.IndexOf(c)<>-1 then
- Assert(Listeners.IndexOf(c)=-1);
- Listeners.Add(c);
-end;
-
-procedure TPictureID.RemoveListener(c:TObject);
-begin
- Assert(GraphicsRepository.HasItem(GraphicsIDCompare,Self)<>nil);
- Assert(Listeners.Remove(c)<>-1);
- if Listeners.Count=0 then
- begin
-  Assert(GraphicsRepository.DeleteItem(GraphicsIDCompare,Self));
-  Free;
- end;
-end;
-
-
-function TPictureID.ReferenceCount:integer;
-begin
- result:=Listeners.Count;
-end;
-
-constructor TPictureID.Create;
-begin
- Inherited;
- Listeners:=TList.Create;
-end;
-
-destructor TPictureID.Destroy;
-begin
- FreeAndNil(Listeners);
- Inherited;
-end;
-
-
-procedure TPictureID.DefineProperties(Filer: TFiler);
-begin
- Inherited;
-end;
-        
-procedure TPictureID.Changed(Sender: TObject);
-var i:integer;
-begin
- if Listeners<>nil then
- for i:=0 to Listeners.Count-1 do
- if TObject(Listeners[i]) is TLocationImage then
-  TLocationImage(Listeners[i]).Changed(Self);
 end;
 
 var ImageBitmap:TBitmap=nil;
@@ -10311,7 +10171,6 @@ begin
      if not ((c is TWinControl) and FinalVisible(c) and not (csDestroying in c.ComponentState)) or (_Parent=Self.Parent) and (Self.Align in [alTop,alLeft,alBottom,alRight]) and (Self.Align=c.Align) then continue;
      cZOrder:=GetZOrder(c,i);
      if ({(Controls[I].Parent=Self.Parent)}(SelfZOrder<>-5555) and (cZOrder>=SelfZOrder)) then continue;
-     //ObjHolder.AddItemIfNotContained(GraphicsIDCompare,CollectGraphs[i])AddItemGetIndex(@PointerCompare,Pointer(cZOrder)),c);
      ObjHolder.Insert(glBinList.AddItemGetIndex(@PointerCompare,Pointer(cZOrder)),c);
     end;
     for i:=0 to ObjHolder.Count-1 do
@@ -18435,8 +18294,6 @@ initialization
  Exclude(GIFImageDefaultDrawOptions,goAnimate); //gif-animations has problems at CLX
 {$ENDIF}
 
- GraphicsRepository:=TBinTree.Create;
-
 
 {$IFDEF NEED_LINEAR_ANTIALIASING}
  SetGamma(1);
@@ -18502,8 +18359,6 @@ finalization
   TPicture(GraphicsRepository.MinItem).savetofile('c:\t.bmp');
   GraphicsRepository.DeleteMin(GraphicsIDCompare);
  end;   }           
- Assert(GraphicsRepository.MinItem=nil);
- FreeAndNil(GraphicsRepository);
 
 //http://www.matlus.com/scripts/website.dll
 //http://devedge.netscape.com/library/xref/2003/css-support/css2/selectors.html

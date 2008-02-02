@@ -24,14 +24,12 @@ uses
 type
   TModifyStep=class
     Reason:String;
-    CollectGraphs:TList;
     left_ok,right_ok:integer;
     repl_block:string;
   private
   public
     procedure SetRepl(const OldDFM: string);
     function GetOriginal(const NewDFM: string): string;
-    destructor Destroy; override;
   end;
   THistoryStep=class
     page,selection:string;
@@ -45,7 +43,6 @@ type
     FFileName:String;
     FUndo,FRedo,FBackHistory,FForwardHistory:TObjectList;
     NewDFM,PreDFM:string;
-    FormCollectGraphs:TBinTree;
 //    procedure ReaderSetName(Reader: TReader; Component: TComponent; var Name: string);
 //    procedure ReaderReferenceName(Reader: TReader; var Name: string);
     procedure ComponentRead(Component: TComponent);
@@ -78,7 +75,6 @@ type
     procedure DefineProperties(Filer: TFiler); override;
     procedure SkipValue(Reader: TReader);
     procedure WriteTrue(Writer: TWriter);
-    procedure OrganizeImages;
     function PhysicalSave(FileName:string; DeleteHistory:boolean):boolean;
     procedure UpdateActiveMDI(Deactivate:boolean=false);
     procedure SetControlDesigning(c:TComponent; Designing,Transient:boolean);
@@ -1187,42 +1183,6 @@ begin
  end;
 end;
 
-procedure TPageContainer.OrganizeImages;
-
-procedure FormCollect(CollectGraphs:TList; AllowDelete:boolean);
-var i:integer;
-begin
- for i:=CollectGraphs.Count-1 downto 0 do
- if FormCollectGraphs.AddItemIfNotContained(GraphicsIDCompare,CollectGraphs[i]) then
- if AllowDelete then
-  CollectGraphs.Delete(i) else
-  Assert(false,'AllowDelete');
-end;
-
-var i:integer;
-    NeedRebuild:boolean;
-begin
- NeedRebuild:=false;
- for i:=0 to FRedo.Count-1 do
- if TModifyStep(FRedo[i]).CollectGraphs.Count<>0 then
- begin
-  NeedRebuild:=true;
-  break;
- end;
- if NeedRebuild or (FUndo.Count=0) then
- begin
-  FormCollectGraphs.Clear;
-  for i:=0 to FUndo.Count-1 do
-   FormCollect(TModifyStep(FUndo[i]).CollectGraphs,false);
- end;
- FormCollect(CollectGraphs,true);
- for i:=0 to CollectGraphs.Count-1 do
- if FormCollectGraphs.HasItem(GraphicsIDCompare,CollectGraphs[i])<>nil then
-  TPictureID(CollectGraphs[i]).AddListener(CollectGraphs);
-end;
-
-
-
 procedure TPageContainer.SetModified(const Reason:String; LogChange:TLogChange);
 var OldDFM:String;
     NewStep:TModifyStep;
@@ -1254,21 +1214,14 @@ begin
 
  OldDFM:=NewDFM;
 
- Assert(CollectGraphs=nil);
- CollectGraphs:=TList.Create;
  ActDFM;
  if OldDFM=NewDFM then
  begin
-  FreeAndNil(CollectGraphs);
   exit;
  end;
 
- OrganizeImages;
-
  FRedo.Clear;
  NewStep:=TModifyStep.Create;
- NewStep.CollectGraphs:=CollectGraphs;
- CollectGraphs:=nil;
  NewStep.Reason:=Reason;
  NewStep.left_ok:=min(length(NewDFM),length(OldDFM));
  for left_ok:=0 to NewStep.left_ok-1 do
@@ -1309,7 +1262,7 @@ end;
 
 procedure TPageContainer.Undo;
 var OldDFM:String;
-    NewStep:TModifyStep;    
+    NewStep:TModifyStep;
 begin
  if IsLiveModified then
  begin
@@ -1453,7 +1406,6 @@ begin
   FreeAndNil(FRedo);
   FreeAndNil(FBackHistory);
   FreeAndNil(FForwardHistory);
-  FreeAndNil(FormCollectGraphs);
   inherited;
   {if NeedUpdate and not (csDestroying in dhMainForm.ComponentState) then
    dhMainForm.UpdateCommands(true,true);  }
@@ -1852,7 +1804,6 @@ begin
   Visible:=false;
   //Name:='PageContainer';//_GetUniqueName(Self,'PageContainer');//'PageContainer_1';
 
-  FormCollectGraphs:=TBinTree.Create;
   FUndo:=TObjectList.Create;
   FRedo:=TObjectList.Create;
   FBackHistory:=TObjectList.Create;
@@ -2199,22 +2150,6 @@ begin
  inherited;
  MySiz.DesignMouseMove; //clear name and pos statusbar fields
 end;
-
-destructor TModifyStep.Destroy;
-var i:integer;
-begin
-  if CollectGraphs<>nil then
-  for i:=0 to CollectGraphs.Count-1 do
-  begin
-   TPictureID(CollectGraphs.Last).RemoveListener(CollectGraphs);
-   CollectGraphs.Delete(CollectGraphs.Count-1);
-  end;
-  CollectGraphs.Free;
-  inherited;
-end;
-
-
-
 
 end.
 

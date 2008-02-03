@@ -990,13 +990,13 @@ var _Showing:boolean=true;
 procedure TTabs.UpdateBackgroundDisplay;
 var res:TPoint;
     v1,v2:string;
-    FPicture:TPicture;
+    BackgroundImage:TLocationImage;
 begin
  if DoNotUpdateDisplay then exit;
  if Adjusting then exit;
  Adjusting:=true;
- if ActPn.HasBackgroundImage(FPicture) then
-  dhPanel1.Style.BackgroundImage.Assign(FPicture) else
+ if ActPn.HasBackgroundImage(BackgroundImage) then
+  dhPanel1.Style.BackgroundImage.Assign(BackgroundImage) else
   dhPanel1.Style.BackgroundImage.Assign(nil);
  res:=Point(0,0);
  if ActPn.GetVal(pcBackgroundPosition) then
@@ -4111,7 +4111,7 @@ begin
  //if dhPanel1.Style.BackgroundImage.Graphic<>nil then
  if Button=mbRight then
  begin
-  mSaveImageToFile.Enabled:=dhPanel1.Style.BackgroundImage.Graphic<>nil;
+  mSaveImageToFile.Enabled:=dhPanel1.Style.BackgroundImage.HasPicture;
   mChangeColors.Enabled:=mSaveImageToFile.Enabled;
   PopupMenu1.Popup(Mouse.CursorPos.X,Mouse.CursorPos.Y);
  end;
@@ -4120,7 +4120,7 @@ end;
 procedure TTabs.mChangeColorsClick(Sender: TObject);
 begin
  LateCreateForm(TColorizeImg,ColorizeImg);
- if ColorizeImg.Prepare(dhPanel1.Style.BackgroundImage.Graphic,(TObject(Selection[0]) as TdhCustomPanel).GetVirtualBGColor) then
+ if ColorizeImg.Prepare(dhPanel1.Style.BackgroundImage.RequestGraphic,(TObject(Selection[0]) as TdhCustomPanel).GetVirtualBGColor) then
  begin                           
   if not CommitChanges then exit;
   with TObject(Selection[0]) as TdhCustomPanel do
@@ -4209,7 +4209,7 @@ end;
 procedure TTabs.mSaveImageToFileClick(Sender: TObject);
 var i,FilterIndex:integer;
 begin
- i:=System.Pos(GetGraphicExtension(dhPanel1.Style.BackgroundImage.Graphic),IGNORE_SavePictureDialog1.Filter);
+ i:=System.Pos(dhPanel1.Style.BackgroundImage.GraphicExtension,IGNORE_SavePictureDialog1.Filter);
  FilterIndex:=0;
  for i:=i downto 1 do
  if IGNORE_SavePictureDialog1.Filter[i]='|' then
@@ -4218,7 +4218,7 @@ begin
 
  if IGNORE_SavePictureDialog1.Execute then
  begin
-  SaveGraphic(dhPanel1.Style.BackgroundImage.Graphic,IGNORE_SavePictureDialog1.FileName);
+  SaveGraphic(dhPanel1.Style.BackgroundImage.RequestGraphic,IGNORE_SavePictureDialog1.FileName);
  end;
 end;
 
@@ -5560,7 +5560,7 @@ var bmp32:TBitmap32;
 begin
  bmp32:=nil;
  try
-  if GetAs32(dhPanel1.Style.BackgroundImage.Graphic,bmp32) and not bmp32.Empty then
+  if GetAs32(dhPanel1.Style.BackgroundImage.RequestGraphic,bmp32) and not bmp32.Empty then
   begin
    col32:=bmp32.Pixel[0,bmp32.Height-1];
    for x:=0 to bmp32.Width-1 do

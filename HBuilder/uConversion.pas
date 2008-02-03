@@ -3347,6 +3347,11 @@ begin
   //if not IsRastered(false) then
   begin
   if HasProp(sty+'BackgroundColor',s) then AddStyleBgcolor(s);
+  if HasProp(sty+'BackgroundImage.Path',s) then
+  if not HasProp(sty+'BackgroundImage.State') then
+  begin
+   AddWarning(id,': Linked image file '''+s+''' cannot be found!');
+  end;
   if HasProp(sty+{'BackgroundImage.Data'}'BackgroundImageUrl',s) then
   begin
   {if (sty='Style.') and HasProp('AsImage') then

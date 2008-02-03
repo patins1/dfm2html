@@ -14,7 +14,7 @@ uses
   QImgList, QMenus, QClipbrd, QStyle,
 {$ELSE}
   {uMutex,}Controls, Forms, Windows, Messages, Graphics, Dialogs, ExtCtrls, clipbrd, Buttons, GIFImage, JPeg,
-  ComCtrls, CommCtrl, StdCtrls, ShellAPI, RTLConsts,  Menus,
+  ComCtrls, CommCtrl, StdCtrls, ShellAPI, RTLConsts,  Menus, FileCtrl,
   {Mask, }ToolWin, ImgList,   AppEvnts, {IECache,} URLDropTarget, XPMan, TntStdCtrls,TntSysUtils,TntSystem, TntMenus, TntComCtrls,//XPdesign,
 {$ENDIF}
   Unit2, dhDirectHTML,
@@ -25,7 +25,7 @@ uses
   MySiz, Unit3, uConversion,
   dhRadioButton, dhMemo, dhFileField,  MyToolButton,
   dhColorPicker,IniFiles,gr32, uOptions, menuhelper,
-  pngimage, Contnrs,hEdit,hComboBox,hMemo, UIConstants,DKLang;
+  pngimage, Contnrs,hEdit,hComboBox,hMemo, UIConstants,DKLang, OpenSave;
 
 //const WM_PUSHUP=WM_USER+33;
 
@@ -183,6 +183,10 @@ type
     DEBUG_PosIE1: TTntMenuItem;
     DEBUG_PosFF1: TTntMenuItem;
     MenuTutorial1: TTntMenuItem;
+    N15: TTntMenuItem;
+    mExternalizeImages: TTntMenuItem;
+    IGNORE_SaveDraggedPictureDialog: TMySavePictureDialog;
+    procedure mExternalizeImagesClick(Sender: TObject);
     procedure Exit1Click(Sender: TObject);
     procedure Button1Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -344,6 +348,9 @@ var FuncSettings:TFuncSettings;
 //    ActForm:TForm=nil;
 
 type TFakeWinControl=class(TWinControl);
+
+
+function ExtractUrlAimedFilenameToWindowsFilename(const URL: string): string;
 
 var
   CF_COMPONENTS: Word;
@@ -789,6 +796,8 @@ begin
  mFind.Enabled:=(Act<>nil) and not _RuntimeMode;
  mSearchAgain.Enabled:=mFind.Enabled;
  mReplace.Enabled:=mFind.Enabled;
+ 
+ mExternalizeImages.Enabled:=(Act<>nil);
 
  if SiteChange then
   UpdateNames(nil);
@@ -1641,6 +1650,74 @@ begin
  Close;
 end;
 
+procedure TdhMainForm.mExternalizeImagesClick(Sender: TObject);
+var Directory:{$IFDEF CLX}widestring{$ELSE}string{$ENDIF};
+    sw:string;
+    I: Integer;
+    pn:TdhCustomPanel;  
+    State:TState;
+    FileName:String;
+    anyFilesToWrite:Boolean;
+begin
+ anyFilesToWrite:=false;
+ for I := 0 to Act.ComponentCount - 1 do
+ begin
+   if Act.Components[i] is TdhCustomPanel then
+   begin
+     pn:=TdhCustomPanel(Act.Components[i]);
+     for state:=low(TState) to high(TState) do
+     if pn.StyleArr[state]<>nil then
+     if pn.StyleArr[state].BackgroundImage.HasPicture and not pn.StyleArr[state].BackgroundImage.HasPath then
+     begin
+      anyFilesToWrite:=true;
+     end;
+   end;
+ end;
+ if not anyFilesToWrite then
+ begin
+  ShowMessage(DKFormat(NOIMAGETOEXTERNALIZE));
+  exit;
+ end;
+ if SelectDirectory('','',Directory) then
+ begin
+   sw:=GoodLocalPath(Directory);
+   for I := 0 to Act.ComponentCount - 1 do
+   begin
+     if Act.Components[i] is TdhCustomPanel then
+     begin
+       pn:=TdhCustomPanel(Act.Components[i]);
+       for state:=low(TState) to high(TState) do
+       if pn.StyleArr[state]<>nil then
+       if pn.StyleArr[state].BackgroundImage.HasPicture and not pn.StyleArr[state].BackgroundImage.HasPath then
+       begin
+        FileName:=sw+pn.StyleArr[state].ProposedBackgroundFilename;
+        if FileExists(FileName) then
+        begin
+          if MessageDlg(DKFormat(EXTERNALIZEDIMAGEALREADYEXISTS,FileName),mtConfirmation,[mbYes, mbNo], 0)<>mrYes then exit;
+        end;
+       end;
+     end;
+   end;      
+   Tabs.CommitChanges;
+   for I := 0 to Act.ComponentCount - 1 do
+   begin
+     if Act.Components[i] is TdhCustomPanel then
+     begin
+       pn:=TdhCustomPanel(Act.Components[i]);
+       for state:=low(TState) to high(TState) do
+       if pn.StyleArr[state]<>nil then
+       if pn.StyleArr[state].BackgroundImage.HasPicture and not pn.StyleArr[state].BackgroundImage.HasPath then
+       begin
+        FileName:=sw+pn.StyleArr[state].ProposedBackgroundFilename;;
+        SaveGraphic(pn.StyleArr[state].BackgroundImage.RequestGraphic,FileName);
+        pn.StyleArr[state].LoadImage(FileName);
+       end;
+     end;
+   end;
+   Tabs.Changed('Externalize Images');
+ end;
+end;
+
 procedure TdhMainForm.compFormClick(Sender: TObject);
 begin
 (*
@@ -2191,7 +2268,18 @@ begin
       Bitmap:=EntryInfo.LocalFileName;
      Free;
     end; }
+    if Bitmap<>URL then
+    begin
+     IGNORE_SaveDraggedPictureDialog.FileName:= ExtractUrlAimedFilenameToWindowsFilename(URL);
+     if IGNORE_SaveDraggedPictureDialog.Execute then
+     begin
+      funcutils.StringToFile(IGNORE_SaveDraggedPictureDialog.FileName,funcutils.StringFromFile(Bitmap));
+      Bitmap:=IGNORE_SaveDraggedPictureDialog.FileName;
+     end else
+      exit;
+    end;
     ImageFromURL(Bitmap,c);
+
    end;
    result:=true;
   end;
@@ -2281,7 +2369,12 @@ begin
     HttpCli1.OnRequestDone:=HttpCli1RequestDone;
     HttpCli1.RcvdStream:=TStringStream.Create(EmptyStr);
     HttpCli1.URL:=DragURL;
-    DragURL:=ExtractFilePath(Application.ExeName)+ExtractUrlAimedFilenameToWindowsFilename(DragURL);
+    IGNORE_SaveDraggedPictureDialog.FileName:= ExtractUrlAimedFilenameToWindowsFilename(DragURL);
+    if IGNORE_SaveDraggedPictureDialog.Execute then
+    begin
+     DragURL:=IGNORE_SaveDraggedPictureDialog.FileName;
+    end else
+     exit;
     HttpCli1.GetASync;
     exit;
    end;

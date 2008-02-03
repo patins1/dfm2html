@@ -1,9 +1,9 @@
 object dhMainForm: TdhMainForm
   Tag = 777789
-  Left = -124
-  Top = 292
+  Left = 316
+  Top = 460
   Caption = 'DFM2HTML'
-  ClientHeight = 422
+  ClientHeight = 441
   ClientWidth = 1029
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -334,7 +334,7 @@ object dhMainForm: TdhMainForm
   end
   object StatusBar: TStatusBar
     Left = 0
-    Top = 403
+    Top = 422
     Width = 1029
     Height = 19
     Panels = <
@@ -3395,6 +3395,13 @@ object dhMainForm: TdhMainForm
         Caption = 'Options'
         OnClick = mOptionsClick
       end
+      object N15: TTntMenuItem
+        Caption = '-'
+      end
+      object mExternalizeImages: TTntMenuItem
+        Caption = 'Externalize Images'
+        OnClick = mExternalizeImagesClick
+      end
       object N10: TTntMenuItem
         Caption = '-'
       end
@@ -3674,7 +3681,7 @@ object dhMainForm: TdhMainForm
     Left = 472
     Top = 152
     LangData = {
-      0A0064684D61696E466F726D0001930000000800646850616E656C3100000800
+      0A0064684D61696E466F726D0001960000000800646850616E656C3100000800
       546F6F6C4261723100000F00636F6D7050616765436F6E74726F6C0101000000
       03000000040048696E74000800636F6D70506167650101000000050000000400
       48696E74000900636F6D7050616E656C010100000007000000040048696E7400
@@ -3781,7 +3788,12 @@ object dhMainForm: TdhMainForm
       7465436F64655061676500000D0047656E657261746554696D6572000002004E
       3800000C0044454255475F506F7349453100000C0044454255475F506F734646
       3100000D004D656E755475746F7269616C310101000000870000000700436170
-      74696F6E00}
+      74696F6E0003004E3135000012006D45787465726E616C697A65496D61676573
+      010100000088000000070043617074696F6E001F0049474E4F52455F53617665
+      44726167676564506963747572654469616C6F670001050000000C0050696374
+      75726550616E656C00000C00506963747572654C6162656C00000D0050726576
+      696577427574746F6E00000A005061696E7450616E656C000008005061696E74
+      426F780000}
   end
   object GenerateTimer: TTimer
     Enabled = False
@@ -3789,5 +3801,11 @@ object dhMainForm: TdhMainForm
     OnTimer = GenerateTimerTimer
     Left = 736
     Top = 112
+  end
+  object IGNORE_SaveDraggedPictureDialog: TMySavePictureDialog
+    DefaultExt = '*'
+    Options = [ofOverwritePrompt, ofHideReadOnly, ofPathMustExist, ofEnableSizing]
+    Left = 528
+    Top = 144
   end
 end

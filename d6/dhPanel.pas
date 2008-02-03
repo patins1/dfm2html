@@ -434,21 +434,47 @@ type
   public
   end;
 
+  TImageState=(isUninitialized,isAnalyzed,isOnePixel,isSemiTransparent,isAnimatedGIF);
+
   TLocationImage=class(TPersistent)
   private
     FOnChange:TNotifyEvent;
     FPictureID:TPictureID;
+    FPath:String;
+    FImageState:TImageState;
+    FWidth,FHeight:Integer;
     Owner:TStyle;
     procedure DefineProperties(Filer: TFiler); override;
     procedure Changed(Sender: TObject);
+    function CalculateImgCanT1X1:boolean;
+    function CalculateImgCouldBeRastered:boolean;
+    function CalculateAnimatedGIF:boolean;
     function ImgIsT1X1:boolean;
+    function ImgNeedBeRastered:boolean;
+    function IsAnimatedGIF:boolean;
+    procedure UpdateCalculations(CanReleaseResources:Boolean);
+    procedure RequestCalculations;
+    function StoreCalculations:boolean;
+    procedure ReleaseResources;
+    function CachingIsUseful:Boolean;
+    property PictureID:TPictureID read FPictureID;
+    procedure Clear;
   public
+    function HasPath: Boolean;
+    function GraphicExtension:String;
+    function GetGraphic:TGraphic;
+    function RequestGraphic:TGraphic;
+    function HasPicture:boolean;
     destructor Destroy; override;
+    constructor Create;
     procedure LoadFromFile(const Filename: string);
     procedure Assign(Source: TPersistent); override;
-    function Graphic:TGraphic;
     property OnChange: TNotifyEvent read FOnChange write FOnChange;
-    property PictureID:TPictureID read FPictureID;
+  published
+    property Path:String read FPath write FPath;
+    property State:TImageState read FImageState write FImageState stored StoreCalculations;
+    property Width:Integer read FWidth write FWidth stored StoreCalculations;
+    property Height:Integer read FHeight write FHeight stored StoreCalculations;
   end;
 
   TCascaded = record
@@ -666,7 +692,7 @@ type
 
 //    procedure ReadBool(Reader: TReader);
     procedure WriteTrue(Writer: TWriter);
-    procedure DefineProperties(Filer: TFiler); override;  
+    procedure DefineProperties(Filer: TFiler); override;
     function UndefFilter(IsRastered:boolean):boolean;
 
     procedure PictureChange(Sender: TObject);
@@ -676,6 +702,8 @@ type
   public
     Owner:IChangeReceiver;//TCommon;
     RasteringFile:string;
+    
+    function ProposedBackgroundFilename: String;
     function PrepareRastering(addheight:integer; const PostFix:string): boolean;
     function IsMarginCleared(Align:TEdgeAlign):boolean;
     function IsBGImageCleared: boolean;
@@ -860,6 +888,18 @@ type
     procedure LockDefinedCSS(var sStyleArr:TStyleArray);
     procedure UnlockDefinedCSS(var sStyleArr:TStyleArray);
 
+    function HasImage(var FPicture: TGraphic): boolean; overload;
+
+
+  protected
+    function HasBackgroundImage:boolean; overload;
+    function HasImage: boolean; overload;
+    function HasImage(var PicWidth, PicHeight: integer): boolean; overload;
+
+  public
+    function HasBackgroundImage(var FPicture: TGraphic): boolean; overload;
+    function HasBackgroundImage(var FPicture:TLocationImage):boolean; overload;
+
   public
     IsVertScrollBarVisible,IsHorzScrollBarVisible:boolean;
     FVertScrollbarAlwaysVisible,FHorzScrollbarAlwaysVisible:boolean;
@@ -935,15 +975,9 @@ type
     procedure GetStylesFromUse;
     procedure GetStylesFromElement(Use:ICon);
     function HasTransformations(var tt: TTransformations): boolean;
-    function HasBackgroundImage(var FPicture: TGraphic): boolean; overload;
-    function HasBackgroundImage(var FPicture:TPicture):boolean; overload;
-    function HasBackgroundImage(var FPicture:TLocationImage):boolean; overload;
-    //function HasImage(var FPicture: TPicture): boolean;
-    function HasImage(var FPicture: TGraphic; var PicWidth, PicHeight: integer): boolean; overload;
-    function HasImage(var PicWidth, PicHeight: integer): boolean; overload;
-    function HasImage: boolean; overload;
 //    function IsImage:boolean;
     procedure DoDefineProperties(Filer: TFiler);
+    procedure ReleaseResources;
 //    procedure ReadBool(Reader: TReader);
     procedure CheckDesignState(inv:boolean=true);
     procedure WriteTrue(Writer: TWriter);
@@ -2022,6 +2056,19 @@ type TProxyReader=class(TFiler)
   ReadData, WriteData: TStreamProc; HasData: Boolean); override;
 end;
 
+var ImageBitmap:TBitmap=nil;
+
+function GetImageBitmap:TGraphic;
+begin
+   if (ImageBitmap=nil) then
+   begin
+    ImageBitmap := TBitmap.Create;
+    ImageBitmap.LoadFromResourceName(HInstance, 'TIMAGEBITMAP');
+    ImageBitmap.TransparentColor:=clWhite;
+    ImageBitmap.Transparent:=false;
+   end;
+   result:=ImageBitmap;
+end;
 
 
 
@@ -2128,7 +2175,7 @@ begin
  begin
   if FPictureID<>nil then
   begin
-   if DoWrite then
+   if DoWrite and not HasPath then
     FPictureID.DefineProperties(Filer);
   end;
  end else
@@ -2152,10 +2199,10 @@ begin
     FPictureID:=TPictureID.Create;
     try
      FPictureID.DefineProperties(ProxyReader);
-     FPictureID.OnChange:=Changed;
     except
      FreeAndNil(FPictureID);
     end;
+    UpdateCalculations(true);
    finally
     ProxyReader.Free;
    end;
@@ -2163,11 +2210,42 @@ begin
  end;
 end;
 
-function TLocationImage.Graphic:TGraphic;
+function TLocationImage.GetGraphic:TGraphic;
 begin
  if FPictureID<>nil then
   result:=FPictureID.Graphic else
   result:=nil;
+end;
+
+function TLocationImage.RequestGraphic:TGraphic;
+begin
+ if GetGraphic<>nil then
+ begin
+  result:=GetGraphic;
+ end else
+ if HasPath then
+ begin
+  FreeAndNil(FPictureID);
+  FPictureID:=TPictureID.Create;
+  try
+    FPictureID.LoadFromFile(FPath);
+    FPictureID.OnChange:=Changed;
+  except
+    FreeAndNil(FPictureID);
+  end;
+  result:=GetGraphic;
+  if result=nil then
+  begin
+    result:=GetImageBitmap;
+  end;
+  UpdateCalculations(false);
+ end;
+end;
+
+constructor TLocationImage.Create;
+begin
+ FWidth:=24;
+ FHeight:=24;
 end;
 
 destructor TLocationImage.Destroy;
@@ -2177,16 +2255,19 @@ begin
 end;
 
 
-procedure TLocationImage.LoadFromFile(const Filename: string);
-var Pic:TPicture;
+procedure TLocationImage.Clear;
 begin
- Pic:=TPicture.Create;
- try
-  Pic.LoadFromFile(Filename);
-  Assign(Pic.Graphic);
- finally
-  Pic.Free;
- end;
+ FreeAndNil(FPictureID);
+ FPath:='';
+ FImageState:=isUninitialized;
+end;
+
+
+procedure TLocationImage.LoadFromFile(const Filename: string);
+begin
+ Clear;
+ FPath:=Filename;
+ Changed(Self);
 end;
 
 
@@ -2194,16 +2275,19 @@ procedure TLocationImage.Assign(Source: TPersistent);
 var GraphicsImage : TMemoryStream;
 var GraphicsID2:TPictureID;
 begin
-  if (Source=FPictureID) or (Source<>nil{FPictureID.Source can be nil}) and (Source=Graphic) then exit;
+  if (Source=FPictureID) or (Source<>nil{FPictureID.Source can be nil}) and (Source=GetGraphic) then exit;
 
   if FPictureID<>nil then
   begin
-   FPictureID.OnChange:=nil;
-   FreeAndNil(FPictureID);
+   Clear;
   end;
 
   if (Source is TLocationImage) then
   begin
+   if TLocationImage(Source).HasPath then
+   begin
+    Path:=TLocationImage(Source).Path;
+   end;
    Source:=TLocationImage(Source).FPictureID;
   end;
 
@@ -2217,9 +2301,10 @@ begin
   begin
     FPictureID:=TPictureID.Create;
     FPictureID.Graphic:=TGraphic(Source);
-    FPictureID.OnChange:=Self.Changed;
   end else
     inherited Assign(Source);
+
+  UpdateCalculations(true);
 
   Changed(Self);
 
@@ -2230,8 +2315,6 @@ procedure TLocationImage.Changed(Sender: TObject);
 begin
   if Assigned(FOnChange) then FOnChange(Self);
 end;
-
-var ImageBitmap:TBitmap=nil;
 
 var
     glBinList:TBinList;
@@ -3773,6 +3856,15 @@ begin
 
 end;
 
+procedure TdhCustomPanel.ReleaseResources;
+var State:TState;
+begin
+ for state:=low(TState) to high(TState) do
+  if StyleArr[state]<>nil then
+   StyleArr[state].BackgroundImage.ReleaseResources;
+end;
+
+
 function TdhCustomPanel.VariableSize:boolean;
 begin
  result:=VariableHeightSize or VariableWidthSize;
@@ -3844,10 +3936,10 @@ begin
   exit;
  end;
  result:=false;
-end;               
+end;
 
 function IsSemi(png:TPNGObject):boolean;
-var X,Y:integer;     
+var X,Y:integer;
     bp:pByteArray;
 begin
    if png.TransparencyMode=ptmPartial then
@@ -3864,15 +3956,16 @@ begin
    result:=false;
 end;
 
+function TLocationImage.CalculateImgCanT1X1:boolean;
+begin
+ result:=(GetGraphic is TPNGObject) and (TPNGObject(GetGraphic).Width=1) and (TPNGObject(GetGraphic).Height=1) and IsSemi(TPNGObject(GetGraphic));
+end;
+
 function TLocationImage.ImgIsT1X1:boolean;
 var i:timage;
 begin
- //i.Picture.Graphic
-{.$IFDEF CLX}
-// result:=(Graphic is TBitmap) and (TBitmap(Graphic).Format='PNG') and (Graphic.Width=1) and (Graphic.Height=1);
-{.$ELSE}
- result:=(Graphic is TPNGObject) and (TPNGObject(Graphic).Width=1) and (TPNGObject(Graphic).Height=1) and (Owner.Owner.GetImageFormat=ifSemiTransparent) and IsSemi(TPNGObject(Graphic));
-{.$ENDIF}
+ RequestCalculations;
+ result:=(FImageState=isOnePixel) and (Owner.Owner.GetImageFormat=ifSemiTransparent);
 end;
 
 function HasSemi(Graphic:TGraphic):boolean;
@@ -3906,25 +3999,46 @@ begin
 end;
 
 
-function ImgNeedBeRastered(Image:TLocationImage):boolean;
+function TLocationImage.ImgNeedBeRastered:boolean;
 begin
- result:=(Image.Graphic is TPNGObject) and IsSemi(TPNGObject(Image.Graphic)) and  not Image.ImgIsT1X1{ and HasSemi(Graphic)};
+ RequestCalculations;
+ result:=(FImageState in [isOnePixel,isSemiTransparent]) and not ImgIsT1X1;
 end;
 
+function TLocationImage.IsAnimatedGIF:boolean;
+begin                  
+ RequestCalculations;
+ result:=FImageState=dhPanel.isAnimatedGIF;
+end;                                     
+
+function TLocationImage.CalculateImgCouldBeRastered:boolean;
+begin
+ result:=(GetGraphic is TPNGObject) and IsSemi(TPNGObject(GetGraphic));
+end;
+
+
+function TLocationImage.CalculateAnimatedGIF:boolean;
+begin
+ result:=(GetGraphic is TGIFImage) and (TGIFImage(GetGraphic).Images.Count>=2);
+end;
 
 
 function TStyle.UndefFilter(IsRastered:boolean):boolean;
 var _FPictureID:TPictureID;
+    _FPath:String;
     FPicture:TLocationImage;
 begin
-  if (BackgroundImage.Graphic<>nil) or IsRastered then
+  if BackgroundImage.HasPicture or IsRastered then
   begin
    _FPictureID:=BackgroundImage.FPictureID;
+   _FPath:=BackgroundImage.FPath;
    try
     BackgroundImage.FPictureID:=nil;
+    BackgroundImage.FPath:='';
     result:=Owner.HasBackgroundImage(FPicture) and FPicture.ImgIsT1X1;
    finally
     BackgroundImage.FPictureID:=_FPictureID;
+    BackgroundImage.FPath:=_FPath;
    end;
   end else
    result:=false;
@@ -4009,8 +4123,7 @@ procedure TStyle.DefineProperties(Filer: TFiler);
 var HasRastering:TRasterType;
 
 
-var  PicWidth, PicHeight: integer;
-     FPicture:TGraphic;
+var
      R,R2:TRect;
 var
     ReallyRastering,ReallyBGImage:boolean;
@@ -4137,7 +4250,7 @@ begin
     ShrinkWH(true);
    end;
   end else
-  if {HasBGRastering and Owner.HasImage(FPicture)}Owner.HasImage(FPicture,PicWidth,PicHeight) then
+  if {HasBGRastering and Owner.HasImage(FPicture)}Owner.HasImage then
   with Owner do
   begin
    _ContentWidthHeight:=GetWantedSize;
@@ -4330,7 +4443,7 @@ begin
     exit;
    end;
    else
-   if ImgNeedBeRastered(FPicture) then
+   if FPicture.ImgNeedBeRastered then
    begin
     result:=rsSemi;
     exit;
@@ -5224,14 +5337,140 @@ end;
 
 function TStyle.IsPictureStored:boolean;
 begin
- result:=FBackgroundImage.Graphic<>nil;//fpic//(FBackgroundImage.Width>0) and (FBackgroundImage.Height>0);
+ result:=FBackgroundImage.HasPicture;
 end;
 
-{function TStyle.IsItStored:boolean;
+function TLocationImage.HasPicture:boolean;
 begin
- result:=IsStyleStored or (Owner.UseStyle(OwnState)<>nil) and (Owner.UseStyle(OwnState).IsItStored);
+ result:=(GetGraphic<>nil) or HasPath;
 end;
- }
+
+procedure TLocationImage.UpdateCalculations;
+begin
+ if GetGraphic=nil then
+ begin
+  FImageState:=isUninitialized;
+ end else
+ begin
+  FPictureID.OnChange:=Changed;
+  FWidth:=GetGraphic.Width;
+  FHeight:=GetGraphic.Height;
+  if CalculateImgCanT1X1 then
+  begin
+   FImageState:=isOnePixel;
+  end else
+  if CalculateImgCouldBeRastered then
+  begin
+   FImageState:=isSemiTransparent;
+  end else
+  if CalculateAnimatedGIF then
+  begin
+   FImageState:=dhPanel.isAnimatedGIF;
+  end else
+  begin
+   FImageState:=isAnalyzed;
+  end;
+ end;
+ if CanReleaseResources then
+ begin
+  ReleaseResources;
+ end;
+end;
+
+procedure TLocationImage.RequestCalculations;
+begin
+ if FImageState=isUninitialized then
+ begin
+  RequestGraphic;
+  UpdateCalculations(true);
+ end;
+end;
+
+
+function TLocationImage.StoreCalculations:boolean;
+begin
+ result:=(FImageState<>isUninitialized) and HasPath;
+end;
+
+procedure TLocationImage.ReleaseResources;
+begin
+ if (FPictureID<>nil) and HasPath and not CachingIsUseful then
+ begin
+  FreeAndNil(FPictureID);
+ end;
+end;
+
+function TLocationImage.HasPath: Boolean;
+begin
+ result:=FPath<>'';
+end;
+
+function TLocationImage.GraphicExtension:String;
+var i:integer;
+begin
+ result:='';
+ if HasPath then
+ begin
+  result:=ExtractFileExt(FPath);
+  if result<>'' then exit;
+ end;
+ if GetGraphic<>nil then
+ begin
+  result:=GetGraphicExtension(GetGraphic);
+ end;
+end;
+
+
+function TLocationImage.CachingIsUseful:Boolean;
+
+function ParentsVisible(control:TWinControl):boolean;
+begin
+ while (control<>nil) do
+ begin
+   if not control.Visible then
+   begin
+     result:=false;
+     exit;
+   end;
+   control:=control.Parent;
+ end;
+ result:=true;
+end;
+
+function RecursiveShowing(panel:TdhCustomPanel):Boolean;
+var pn:TdhCustomPanel;
+    i:integer;
+begin
+ if ParentsVisible(panel) then
+ begin
+  result:=true;
+  exit;
+ end;
+ for i:=panel.UsedByList.Count-1 downto 0 do
+ begin
+  pn:=TdhCustomPanel(panel.UsedByList[i]);
+  if RecursiveShowing(pn) then
+  begin
+   result:=true;
+   exit;
+  end;
+ end;
+ for i:=panel.InlineUsedByList.Count-1 downto 0 do
+ begin
+  pn:=TdhCustomPanel(panel.InlineUsedByList[i]);
+  if ParentsVisible(pn) then
+  begin
+   result:=true;
+   exit;
+  end;
+ end;
+ result:=false;
+end;
+
+begin
+ result:=RecursiveShowing(self.Owner.Owner);
+end;
+
 function TStyle.IsStyleStored:boolean;
 var PropChoose:TPropChoose;
 begin
@@ -5374,7 +5613,7 @@ begin
 
        if c is TdhCustomPanel then
        begin
-        pn:=TdhCustomPanel(c);       
+        pn:=TdhCustomPanel(c);
         mar:=pn.MarginPure;
         if (all in [alTop,alBottom,alClient]) then
          ClientAllowModifyX:=AllowModifyX else
@@ -5917,15 +6156,13 @@ end;
 
 
 function TdhCustomPanel.SomethingIsFixed:boolean;
-var Picture:TGraphic;
 begin
- result:=IsScrollArea and (not NCScrollbars or not Opaque or (BackgroundAttachment=cbaFixed) and HasBackgroundImage(Picture));
+ result:=IsScrollArea and (not NCScrollbars or not Opaque or (BackgroundAttachment=cbaFixed) and HasBackgroundImage);
 end;
 
 function TdhCustomPanel.SomethingIsScrolled:boolean;
-var Picture:TGraphic;
 begin
- result:=(BackgroundAttachment=cbaScroll) and HasBackgroundImage(Picture);
+ result:=(BackgroundAttachment=cbaScroll) and HasBackgroundImage;
 end;
 
 
@@ -8011,7 +8248,9 @@ begin
  pcEffects:
   result:='(defined)';
  pcBackgroundImage{,pcImage,pcEdgeImage,pcStretchImage}:
-  result:='('+UpperCase(Copy(GetGraphicExtension(Cascaded.Picture.Graphic),2,maxint))+' image)'{+_if(Cascaded.Picture.PictureID.ReferenceCount>0,'['+inttostr(Cascaded.Picture.PictureID.ReferenceCount)+' occurences]',EmptyStr)};
+ if Cascaded.Picture.HasPath then
+  result:='('+Cascaded.Picture.Path+')'{+_if(Cascaded.Picture.PictureID.ReferenceCount>0,'['+inttostr(Cascaded.Picture.PictureID.ReferenceCount)+' occurences]',EmptyStr)} else
+  result:='('+UpperCase(Copy(Cascaded.Picture.GraphicExtension,2,maxint))+' image)'{+_if(Cascaded.Picture.PictureID.ReferenceCount>0,'['+inttostr(Cascaded.Picture.PictureID.ReferenceCount)+' occurences]',EmptyStr)};
   //result:='('+Cascaded.Picture.Graphic.ClassName+')';
  pcBorderColor,pcBackgroundColor,pcColor:
   result:=dhPanel.ColorToIntString(Cascaded.Color);
@@ -10192,14 +10431,7 @@ function TdhCustomPanel.HasBackgroundImage(var FPicture:TGraphic):boolean;
 begin
  result:=GetVal(pcBackgroundImage){ and not CSSProp.AsImage};
  if result then
-  FPicture:=Cascaded.Picture.Graphic;
-end;
-
-function TdhCustomPanel.HasBackgroundImage(var FPicture:TPicture):boolean;
-begin
- result:=GetVal(pcBackgroundImage){ and not CSSProp.AsImage};
- if result then
-  FPicture:=Cascaded.Picture.PictureID;
+  FPicture:=Cascaded.Picture.RequestGraphic;
 end;
 
 function TdhCustomPanel.HasBackgroundImage(var FPicture:TLocationImage):boolean;
@@ -10207,6 +10439,11 @@ begin
  result:=GetVal(pcBackgroundImage);
  if result then
   FPicture:=Cascaded.Picture;
+end;
+
+function TdhCustomPanel.HasBackgroundImage:boolean;
+begin
+ result:=GetVal(pcBackgroundImage);
 end;
      (*
 function TdhCustomPanel.HasEdgeImage(var FPicture:TPicture):boolean;
@@ -10289,12 +10526,26 @@ begin
 end;
 
 
-function TdhCustomPanel.HasImage(var FPicture:TGraphic; var PicWidth,PicHeight:integer):boolean;
+function TdhCustomPanel.HasImage(var FPicture:TGraphic):boolean;
 begin
  result:=Referer.GetImageType=bitImage;
  if result then
  if HasBackgroundImage(FPicture) then
  begin
+ end else
+ begin
+  FPicture:=nil;
+ end;
+end;
+
+function TdhCustomPanel.HasImage(var PicWidth,PicHeight:integer):boolean;
+var FPicture:TLocationImage;
+begin
+ result:=Referer.GetImageType=bitImage;
+ if result then
+ if HasBackgroundImage(FPicture) then
+ begin
+  FPicture.RequestCalculations;
   PicWidth:=FPicture.Width;
   PicHeight:=FPicture.Height;
  end else
@@ -10305,17 +10556,11 @@ begin
  end;
 end;
 
-function TdhCustomPanel.HasImage(var PicWidth,PicHeight:integer):boolean;
-var FPicture:TGraphic;
-begin
- result:=HasImage(FPicture,PicWidth,PicHeight);
-end;
 
 function TdhCustomPanel.HasImage:boolean;
-var FPicture:TGraphic;
 var PicWidth,PicHeight:integer;
 begin
- result:=HasImage(FPicture,PicWidth,PicHeight);
+ result:=HasImage(PicWidth,PicHeight);
 end;
         {
 
@@ -10876,7 +11121,7 @@ var
   FBackgroundRepeat:TCSSBackgroundRepeat;
   BPos:TPoint;
   //MyRgn: HRGN ;
-  SaveIndex,PicWidth,PicHeight: Integer;
+  SaveIndex: Integer;
   x1,x2,y1,y2,i:integer;
   Strech32,Strech32Mult:TBitmap32;
   R,R2,ref:TRect;
@@ -10958,25 +11203,17 @@ begin
  //for i:=bgs.Count-1 downto 0 do
 
 
- if HasImage(FPicture,PicWidth,PicHeight) or (Referer.GetImageType=bitStretch) and HasBackgroundImage(FPicture) then
+ if HasImage(FPicture) or (Referer.GetImageType=bitStretch) and HasBackgroundImage(FPicture) then
  begin
   if FPicture<>nil then
    StretchDraw;
   if FPicture=nil then
   begin
-   if (ImageBitmap=nil) then
+   if (GetImageBitmap<>nil) then
    begin
-    ImageBitmap := TBitmap.Create;
-    ImageBitmap.LoadFromResourceName(HInstance, 'TIMAGEBITMAP');
-    ImageBitmap.TransparentColor:=clWhite;
-    ImageBitmap.Transparent:=false;
-   end;
-   if (ImageBitmap<>nil) then
-   begin
-    StretchDrawEx(ImageBitmap);
+    StretchDrawEx(GetImageBitmap);
    end;
   end;
-
 
  end else
  if HasBackgroundImage(FPicture) then
@@ -17067,6 +17304,11 @@ begin
 end;
 
 
+function TStyle.ProposedBackgroundFilename: String;
+begin
+ result:=FinalID(Owner)+sst[OwnState]+FBackgroundImage.GraphicExtension
+end;
+
 procedure StringToFile(const FileName,s:string);
 begin
  with TFileStream.create(FileName,fmCreate) do
@@ -17089,8 +17331,8 @@ begin
  ss:=TStringStream.Create(EmptyStr);
  try
  pn:=Owner;
- FBackgroundImage.Graphic.SaveToStream(ss);
- BGImageFile:={RasteringSaveDir+}FinalID(pn)+sst[OwnState]+GetGraphicExtension(FBackgroundImage.Graphic);
+ FBackgroundImage.RequestGraphic.SaveToStream(ss);
+ BGImageFile:=ProposedBackgroundFilename;
 
   //GetAs32(FBackgroundImage.Graphic,Strech32);
  result:=glSaveBin(calc_crc32_String(ss.DataString),BGImageFile,false,EmptyStr,NeedSave,false);

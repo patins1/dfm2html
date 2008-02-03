@@ -477,6 +477,17 @@ begin
   //(GetTopForm(Self) as TForm).Caption:=FTitle;
 end;
 
+procedure ReleaseResourcesRecursively(pn:TdhCustomPanel);
+var
+  I: Integer;
+begin
+  pn.ReleaseResources;
+  for I := 0 to pn.ControlCount - 1 do
+  begin
+   if pn.Controls[i] is TdhCustomPanel then
+    ReleaseResourcesRecursively(TdhCustomPanel(pn.Controls[i]));
+  end;
+end;
 
 procedure TdhPageControl.SetActivePage(Value: TdhPage);
 var diff:integer;
@@ -517,6 +528,7 @@ begin
     GetParentForm(Self).ActiveControl:=nil;
    end; }
    OldActivePage.Visible:=false;
+   ReleaseResourcesRecursively(OldActivePage);
    //make old unvisible before making new visible, to keep scroll position in a parent scrollable object
   end;
 

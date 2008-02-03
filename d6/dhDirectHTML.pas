@@ -92,7 +92,6 @@ end;    }
 
 
 procedure TdhDirectHTML.DoTopPainting;
-var FPicture:TGraphic;
 begin
 
  if (csDesigning in ComponentState) then
@@ -108,7 +107,7 @@ begin
    end;
 
   if (TempBitmap<>nil) then
-  if not IsRasterized and not HasBackgroundImage(FPicture) then
+  if not IsRasterized and not HasBackgroundImage then
   //with self.FCommon.AllEdgesPure do GetCanvas.Draw(Top,Left,TempBitmap);
   //GetCanvas.Draw(Max(0,(Width-TempBitmap.Width) div 2),Max(0,(Height-TempBitmap.Height) div 2),TempBitmap);
   with Self.AllEdgesPure do

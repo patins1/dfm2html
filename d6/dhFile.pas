@@ -167,6 +167,7 @@ begin
   Filer.DefineProperty('HTMLFileName', SkipValue, WriteHTMLFileName, ReallyFile);
   Filer.DefineProperty('InvalidFile', SkipValue, WriteTrue, InvalidFile);
 end;
+
 destructor TdhFile.Destroy;
 begin
   inherited;
@@ -242,8 +243,7 @@ begin
 end;                            }
 
 procedure TdhFile.DoTopPainting;
-var rct:TRect; 
-var FPicture:TGraphic;
+var rct:TRect;
 begin
  if (csDesigning in ComponentState) then
  begin
@@ -256,7 +256,7 @@ begin
    end;
 
   if (PageControlBitmap<>nil) then
-  if not IsRasterized and not HasBackgroundImage(FPicture) then
+  if not IsRasterized and not HasBackgroundImage then
   //with self.FCommon.AllEdgesPure do GetCanvas.Draw(Top,Left,TempBitmap);
   //GetCanvas.Draw(Max(0,(Width-TempBitmap.Width) div 2),Max(0,(Height-TempBitmap.Height) div 2),TempBitmap);
   with Self.AllEdgesPure do

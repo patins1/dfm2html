@@ -5389,6 +5389,10 @@ end;
 
 function TLocationImage.StoreCalculations:boolean;
 begin
+ if WithMeta then
+ begin
+  RequestCalculations;
+ end;
  result:=(FImageState<>isUninitialized) and HasPath;
 end;
 

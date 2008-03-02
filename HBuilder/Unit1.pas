@@ -1658,22 +1658,28 @@ var Directory:{$IFDEF CLX}widestring{$ELSE}string{$ENDIF};
     State:TState;
     FileName:String;
     anyFilesToWrite:Boolean;
+    anyFilesToShift:Boolean;
 begin
  anyFilesToWrite:=false;
+ anyFilesToShift:=false;
  for I := 0 to Act.ComponentCount - 1 do
  begin
    if Act.Components[i] is TdhCustomPanel then
    begin
      pn:=TdhCustomPanel(Act.Components[i]);
      for state:=low(TState) to high(TState) do
-     if pn.StyleArr[state]<>nil then
-     if pn.StyleArr[state].BackgroundImage.HasPicture and not pn.StyleArr[state].BackgroundImage.HasPath then
+     if pn.StyleArr[state]<>nil then with pn.StyleArr[state] do
+     if BackgroundImage.HasPicture then
+     if not BackgroundImage.HasPath then
      begin
       anyFilesToWrite:=true;
+     end else
+     begin
+      anyFilesToShift:=true;
      end;
    end;
  end;
- if not anyFilesToWrite then
+ if not anyFilesToWrite and not anyFilesToShift then
  begin
   ShowMessage(DKFormat(NOIMAGETOEXTERNALIZE));
   exit;
@@ -1681,23 +1687,51 @@ begin
  if SelectDirectory('','',Directory) then
  begin
    sw:=GoodLocalPath(Directory);
+   anyFilesToShift:=false;
    for I := 0 to Act.ComponentCount - 1 do
    begin
      if Act.Components[i] is TdhCustomPanel then
      begin
        pn:=TdhCustomPanel(Act.Components[i]);
        for state:=low(TState) to high(TState) do
-       if pn.StyleArr[state]<>nil then
-       if pn.StyleArr[state].BackgroundImage.HasPicture and not pn.StyleArr[state].BackgroundImage.HasPath then
+       if pn.StyleArr[state]<>nil then with pn.StyleArr[state] do
+       if BackgroundImage.HasPicture then
        begin
-        FileName:=sw+pn.StyleArr[state].ProposedBackgroundFilename;
-        if FileExists(FileName) then
+        FileName:=sw+ProposedBackgroundFilename;
+        if BackgroundImage.HasPath and (LowerCase(BackgroundImage.Path)<>LowerCase(FileName)) then
+        begin
+         anyFilesToShift:=true;
+         break;
+        end;
+       end;
+     end;
+   end;  
+   if anyFilesToShift then
+   begin
+    anyFilesToShift:=MessageDlg(DKFormat(COPYEXISTINGFILES,FileName),mtConfirmation,[mbYes, mbNo], 0)=mrYes;
+   end;            
+   if not anyFilesToWrite and not anyFilesToShift then
+   begin
+    ShowMessage(DKFormat(NOIMAGETOEXTERNALIZE));
+    exit;
+   end;
+   for I := 0 to Act.ComponentCount - 1 do
+   begin
+     if Act.Components[i] is TdhCustomPanel then
+     begin
+       pn:=TdhCustomPanel(Act.Components[i]);
+       for state:=low(TState) to high(TState) do
+       if pn.StyleArr[state]<>nil then with pn.StyleArr[state] do
+       if BackgroundImage.HasPicture then
+       begin
+        FileName:=sw+ProposedBackgroundFilename;
+        if not BackgroundImage.HasPath and FileExists(FileName) or anyFilesToShift and BackgroundImage.HasPath and (LowerCase(BackgroundImage.Path)<>LowerCase(FileName)) and FileExists(FileName) then
         begin
           if MessageDlg(DKFormat(EXTERNALIZEDIMAGEALREADYEXISTS,FileName),mtConfirmation,[mbYes, mbNo], 0)<>mrYes then exit;
         end;
        end;
      end;
-   end;      
+   end;
    Tabs.CommitChanges;
    for I := 0 to Act.ComponentCount - 1 do
    begin
@@ -1705,12 +1739,20 @@ begin
      begin
        pn:=TdhCustomPanel(Act.Components[i]);
        for state:=low(TState) to high(TState) do
-       if pn.StyleArr[state]<>nil then
-       if pn.StyleArr[state].BackgroundImage.HasPicture and not pn.StyleArr[state].BackgroundImage.HasPath then
+       if pn.StyleArr[state]<>nil then with pn.StyleArr[state] do
+       if BackgroundImage.HasPicture then
        begin
-        FileName:=sw+pn.StyleArr[state].ProposedBackgroundFilename;;
-        SaveGraphic(pn.StyleArr[state].BackgroundImage.RequestGraphic,FileName);
-        pn.StyleArr[state].LoadImage(FileName);
+        FileName:=sw+ProposedBackgroundFilename;;
+        if not BackgroundImage.HasPath then
+        begin
+         SaveGraphic(BackgroundImage.RequestGraphic,FileName);
+         LoadImage(FileName);
+        end else
+        if anyFilesToShift and (LowerCase(BackgroundImage.Path)<>LowerCase(FileName)) then
+        begin
+         funcutils.StringToFile(FileName,StringFromFile(BackgroundImage.Path));
+         LoadImage(FileName);
+        end;
        end;
      end;
    end;

@@ -17107,7 +17107,7 @@ begin
 
   if (pn.GetImageFormat=ifSimple) and Owner.HasBackgroundImage(graph) and (graph is TGIFImage) and (TGIFImage(graph).Images.Count>=2) then
   begin
-   _crc:=calc_crc32_String('.png');
+   _crc:=calc_crc32_String('.gif');
    Assert(not PreventGraphicOnChange);
    PreventGraphicOnChange:=true;
    //TGIFImage(graph).Painters.LockList;

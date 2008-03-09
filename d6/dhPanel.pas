@@ -17100,11 +17100,10 @@ var //_BackIsValid,_TopIsValid:boolean;
     RasteringFiles:String;
 begin
 
- pn:=Owner;
+  pn:=Owner;
 
   //Src:=(Owner.Control as TdhCustomPanel).TransPainting(tt);
   //MixColor(Src,ColorToColor32((Owner.Control as TdhCustomPanel).GetVirtualBGColor));
-
 
   if (pn.GetImageFormat=ifSimple) and Owner.HasBackgroundImage(graph) and (graph is TGIFImage) and (TGIFImage(graph).Images.Count>=2) then
   begin
@@ -17114,68 +17113,66 @@ begin
    //TGIFImage(graph).Painters.LockList;
    //TGIFImage(graph).PaintStop;
    try
-   OldAnimate:=TGIFImage(graph).Animate;
-   TGIFImage(graph).SetAnimateSilent(false);
-   for imageIndex:=0 to TGIFImage(graph).Images.Count-1 do
-   begin
-    //PreventGraphicOnChange:=true;
-    TGIFImage(graph).ForceFrame:=imageIndex;
-    pn.TopIsValid:=false;
-    pn.AssertTop(addheight,true);
-    if HasSomething(pn.TransparentTop) then
-    begin
-     TrimRightBottom(pn.TransparentTop,w,h);
-     _crc:=GetCRCFromBitmap32(pn.TransparentTop,pn.TopGraph,w,h,_crc);
-    end;
-   end;
-
-
-   RasteringFile:=FinalID(pn)+PostFix+sst[OwnState];
-   RasteringFile:=RasteringFile+'.gif';
-   result:=glSaveBin(_crc,RasteringFile,OwnState<>hsNormal,BaseRasteringFile,NeedSave,false);
-
-
-  if NeedSave then
-  begin
-   fingif:=GetNewGif;
-   try
-   try
-    PrevSubImage:=nil;
+    OldAnimate:=TGIFImage(graph).Animate;
+    TGIFImage(graph).SetAnimateSilent(false);
     for imageIndex:=0 to TGIFImage(graph).Images.Count-1 do
     begin
      //PreventGraphicOnChange:=true;
      TGIFImage(graph).ForceFrame:=imageIndex;
-     si:=TGIFSubImage(TGIFImage(graph).Images[imageIndex]);
      pn.TopIsValid:=false;
      pn.AssertTop(addheight,true);
      if HasSomething(pn.TransparentTop) then
      begin
-     {if fingif.Images.Count-1>=0 then
-      PrevSubImage:=fingif.Images[fingif.Images.Count-1];}
-{     GCE:=si.GraphicControlExtension;
-     if GCE<>nil then
-      AddGIFSubImageFromBitmap32(pn.TransparentTop,pn.TopGraph,fingif,GCE.Delay,PrevSubImage) else
- }
-      PrevSubImage:=AddGIFSubImageFromBitmap32(pn.TransparentTop,pn.TopGraph,fingif,true,si,PrevSubImage);
+      TrimRightBottom(pn.TransparentTop,w,h);
+      _crc:=GetCRCFromBitmap32(pn.TransparentTop,pn.TopGraph,w,h,_crc);
      end;
     end;
-    CloseGif(fingif);
-    //fingif.OptimizeColorMap; //saves many kb at many frames
-    ForceDirectories(ExtractFilePath(RasteringFile));
-    fingif.SaveToFile(RasteringFile);
-    glAfterSaveBin;
-   except
-   end;
+
+    RasteringFile:=FinalID(pn)+PostFix+sst[OwnState];
+    RasteringFile:=RasteringFile+'.gif';
+    result:=glSaveBin(_crc,RasteringFile,OwnState<>hsNormal,BaseRasteringFile,NeedSave,false);
+
+    if NeedSave then
+    begin
+     fingif:=GetNewGif;
+     try
+     try
+      PrevSubImage:=nil;
+      for imageIndex:=0 to TGIFImage(graph).Images.Count-1 do
+      begin
+       //PreventGraphicOnChange:=true;
+       TGIFImage(graph).ForceFrame:=imageIndex;
+       si:=TGIFSubImage(TGIFImage(graph).Images[imageIndex]);
+       pn.TopIsValid:=false;
+       pn.AssertTop(addheight,true);
+       if HasSomething(pn.TransparentTop) then
+       begin
+       {if fingif.Images.Count-1>=0 then
+        PrevSubImage:=fingif.Images[fingif.Images.Count-1];}
+ {      GCE:=si.GraphicControlExtension;
+       if GCE<>nil then
+        AddGIFSubImageFromBitmap32(pn.TransparentTop,pn.TopGraph,fingif,GCE.Delay,PrevSubImage) else
+  }
+        PrevSubImage:=AddGIFSubImageFromBitmap32(pn.TransparentTop,pn.TopGraph,fingif,true,si,PrevSubImage);
+       end;
+      end;
+      CloseGif(fingif);
+      //fingif.OptimizeColorMap; //saves many kb at many frames
+      ForceDirectories(ExtractFilePath(RasteringFile));
+      fingif.SaveToFile(RasteringFile);
+      glAfterSaveBin;
+     except
+     end;
+     finally
+      fingif.Free;
+     end;
+    end;
+    TGIFImage(graph).ForceFrame:=-1;
+    TGIFImage(graph).SetAnimateSilent(OldAnimate);
    finally
-    fingif.Free;
+    PreventGraphicOnChange:=false;
+   //TGIFImage(graph).Painters.UnlockList;
    end;
-  end;
-  TGIFImage(graph).ForceFrame:=-1;
-  TGIFImage(graph).SetAnimateSilent(OldAnimate);
-  finally
-  PreventGraphicOnChange:=false;
-  //TGIFImage(graph).Painters.UnlockList;
-  end;
    //TGIFImage(graph).PaintStart;
 
    {fingif.SaveToFile('c:\asa.gif');
@@ -17183,78 +17180,78 @@ begin
    //result:=false;
   end else
   begin
-  pn.AssertTop(addheight,true);
+   pn.AssertTop(addheight,true);
 
-  //pn.BackGraph.SaveToFile('c:\b.bmp');
-  if HasSomething(pn.TransparentTop) then
-  begin
-  if (csAcceptsControls in pn.ControlStyle) and (pn.EqArea.Left<>InvalidEqArea){ and (pn.GetImageFormat<>ifSemiTransparent)} then
-  begin
-   pn.TopGraph.ResetAlpha; //transparency value is undefined for opaque image, so make it defined for GetEqArea to work correctly
-   EqArea:=GetEqArea(pn.TopGraph,(pn.EqArea.Left+pn.EqArea.Right) div 2,(pn.EqArea.Top+pn.EqArea.Bottom) div 2);
-   if not pn.VariableHeightSize and (EqArea.Bottom-EqArea.Top<pn.TransparentTop.Height div _if(pn.VariableHeightSize,4,2)) then
+   //pn.BackGraph.SaveToFile('c:\b.bmp');
+   if HasSomething(pn.TransparentTop) then
    begin
-    //EqArea.Top:=pn.EqArea.Top; //then, alternative pages with different heights can reuse the same top three graphics
-    EqArea.Top:=0;
-    EqArea.Bottom:=EqArea.Top;
-   end;
-   if not pn.VariableWidthSize and (EqArea.Right-EqArea.Left<pn.TransparentTop.Width div _if(pn.VariableWidthSize,4,2)) then
-   begin
-    EqArea.Left:=0;
-    EqArea.Right:=EqArea.Left;
-   end;
-   if (EqArea.Right<>EqArea.Left) and (EqArea.Bottom<>EqArea.Top) or (pn.VariableWidthSize and (EqArea.Right<>EqArea.Left)) or (pn.VariableHeightSize and (EqArea.Top<>EqArea.Bottom)){ or (EqArea.Right-EqArea.Left>=1) and (EqArea.Bottom-EqArea.Top>=1) and pn.VariableSize} then
-   begin
-    pnTopGraph:=TBitmap32.Create;
-    pnTransparentTop:=TBitmap32.Create;
-    pnTransparentTop.DrawMode:=pn.TransparentTop.DrawMode;
-    try
-
-     EqSizing[0,0]:=Rect(0,0,EqArea.Left,EqArea.Top);
-     EqSizing[1,0]:=Rect(EqArea.Left,0,Min(EqArea.Left+1,EqArea.Right),EqArea.Top);
-     EqSizing[2,0]:=Rect(EqArea.Right,0,pn.TransparentTop.Width,EqArea.Top);
-
-     EqSizing[0,1]:=Rect(0,EqArea.Top,EqArea.Left,Min(EqArea.Top+1,EqArea.Bottom));
-     EqSizing[1,1]:=Rect(EqArea.Left,EqArea.Top,Min(EqArea.Left+1,EqArea.Right),Min(EqArea.Top+1,EqArea.Bottom));
-     EqSizing[2,1]:=Rect(EqArea.Right,EqArea.Top,pn.TransparentTop.Width,Min(EqArea.Top+1,EqArea.Bottom));
-
-     EqSizing[0,2]:=Rect(0,EqArea.Bottom,EqArea.Left,pn.TransparentTop.Height);
-     EqSizing[1,2]:=Rect(EqArea.Left,EqArea.Bottom,Min(EqArea.Left+1,EqArea.Right),pn.TransparentTop.Height);
-     EqSizing[2,2]:=Rect(EqArea.Right,EqArea.Bottom,pn.TransparentTop.Width,pn.TransparentTop.Height);
-
-     RasteringFiles:=EmptyStr;
-     for EqY:=0 to 2 do
-     for EqX:=0 to 2 do
+    if (csAcceptsControls in pn.ControlStyle) and (pn.EqArea.Left<>InvalidEqArea){ and (pn.GetImageFormat<>ifSemiTransparent)} then
+    begin
+     pn.TopGraph.ResetAlpha; //transparency value is undefined for opaque image, so make it defined for GetEqArea to work correctly
+     EqArea:=GetEqArea(pn.TopGraph,(pn.EqArea.Left+pn.EqArea.Right) div 2,(pn.EqArea.Top+pn.EqArea.Bottom) div 2);
+     if not pn.VariableHeightSize and (EqArea.Bottom-EqArea.Top<pn.TransparentTop.Height div _if(pn.VariableHeightSize,4,2)) then
      begin
-      EqSize:=EqSizing[EqX,EqY];
-      if (EqSize.Left=EqSize.Right) or (EqSize.Bottom=EqSize.Top) then
-      begin
-       RasteringFile:=EmptyStr;
-      end else
-      begin
-       pnTopGraph.SetSize(EqSize.Right-EqSize.Left,EqSize.Bottom-EqSize.Top);
-       pnTransparentTop.SetSize(pnTopGraph.Width,pnTopGraph.Height);
-       pn.TopGraph.DrawTo(pnTopGraph,pnTopGraph.BoundsRect,EqSize);
-       pn.{TopGraph}TransparentTop.DrawTo(pnTransparentTop,pnTransparentTop.BoundsRect,EqSize);
-       RasteringFile:=FinalID(pn)+PostFix+EqNaming[EqY,EqX];
-       result:=SaveImg(pnTopGraph,pnTransparentTop,RasteringFile,OwnState<>hsNormal,BaseRasteringFile,(pn.GetImageFormat=ifSimple){true},false);
+      //EqArea.Top:=pn.EqArea.Top; //then, alternative pages with different heights can reuse the same top three graphics
+      EqArea.Top:=0;
+      EqArea.Bottom:=EqArea.Top;
+     end;
+     if not pn.VariableWidthSize and (EqArea.Right-EqArea.Left<pn.TransparentTop.Width div _if(pn.VariableWidthSize,4,2)) then
+     begin
+      EqArea.Left:=0;
+      EqArea.Right:=EqArea.Left;
+     end;
+     if (EqArea.Right<>EqArea.Left) and (EqArea.Bottom<>EqArea.Top) or (pn.VariableWidthSize and (EqArea.Right<>EqArea.Left)) or (pn.VariableHeightSize and (EqArea.Top<>EqArea.Bottom)){ or (EqArea.Right-EqArea.Left>=1) and (EqArea.Bottom-EqArea.Top>=1) and pn.VariableSize} then
+     begin
+      pnTopGraph:=TBitmap32.Create;
+      pnTransparentTop:=TBitmap32.Create;
+      pnTransparentTop.DrawMode:=pn.TransparentTop.DrawMode;
+      try
+
+       EqSizing[0,0]:=Rect(0,0,EqArea.Left,EqArea.Top);
+       EqSizing[1,0]:=Rect(EqArea.Left,0,Min(EqArea.Left+1,EqArea.Right),EqArea.Top);
+       EqSizing[2,0]:=Rect(EqArea.Right,0,pn.TransparentTop.Width,EqArea.Top);
+
+       EqSizing[0,1]:=Rect(0,EqArea.Top,EqArea.Left,Min(EqArea.Top+1,EqArea.Bottom));
+       EqSizing[1,1]:=Rect(EqArea.Left,EqArea.Top,Min(EqArea.Left+1,EqArea.Right),Min(EqArea.Top+1,EqArea.Bottom));
+       EqSizing[2,1]:=Rect(EqArea.Right,EqArea.Top,pn.TransparentTop.Width,Min(EqArea.Top+1,EqArea.Bottom));
+
+       EqSizing[0,2]:=Rect(0,EqArea.Bottom,EqArea.Left,pn.TransparentTop.Height);
+       EqSizing[1,2]:=Rect(EqArea.Left,EqArea.Bottom,Min(EqArea.Left+1,EqArea.Right),pn.TransparentTop.Height);
+       EqSizing[2,2]:=Rect(EqArea.Right,EqArea.Bottom,pn.TransparentTop.Width,pn.TransparentTop.Height);
+
+       RasteringFiles:=EmptyStr;
+       for EqY:=0 to 2 do
+       for EqX:=0 to 2 do
+       begin
+        EqSize:=EqSizing[EqX,EqY];
+        if (EqSize.Left=EqSize.Right) or (EqSize.Bottom=EqSize.Top) then
+        begin
+         RasteringFile:=EmptyStr;
+        end else
+        begin
+         pnTopGraph.SetSize(EqSize.Right-EqSize.Left,EqSize.Bottom-EqSize.Top);
+         pnTransparentTop.SetSize(pnTopGraph.Width,pnTopGraph.Height);
+         pn.TopGraph.DrawTo(pnTopGraph,pnTopGraph.BoundsRect,EqSize);
+         pn.{TopGraph}TransparentTop.DrawTo(pnTransparentTop,pnTransparentTop.BoundsRect,EqSize);
+         RasteringFile:=FinalID(pn)+PostFix+EqNaming[EqY,EqX];
+         result:=SaveImg(pnTopGraph,pnTransparentTop,RasteringFile,OwnState<>hsNormal,BaseRasteringFile,(pn.GetImageFormat=ifSimple){true},false);
+        end;
+        RasteringFiles:=RasteringFiles+ExtractFileName(RasteringFile)+'|';
+       end;
+       RasteringFiles:=RasteringFiles+inttostr(EqArea.Top)+'|'+inttostr(pn.TransparentTop.Height-EqArea.Bottom)+'|'+inttostr(EqArea.Left)+'|'+inttostr(pn.TransparentTop.Width-EqArea.Right)+'|';
+       RasteringFile:=RasteringFiles;
+      finally
+       pnTopGraph.Free;
+       pnTransparentTop.Free;
       end;
-      RasteringFiles:=RasteringFiles+ExtractFileName(RasteringFile)+'|';
-     end;        
-     RasteringFiles:=RasteringFiles+inttostr(EqArea.Top)+'|'+inttostr(pn.TransparentTop.Height-EqArea.Bottom)+'|'+inttostr(EqArea.Left)+'|'+inttostr(pn.TransparentTop.Width-EqArea.Right)+'|';
-     RasteringFile:=RasteringFiles;
-    finally
-     pnTopGraph.Free;
-     pnTransparentTop.Free;
+      result:=true;
+      exit;
+     end;
     end;
-    result:=true;
-    exit;
-   end;
-  end;
-  RasteringFile:=FinalID(pn)+PostFix+sst[OwnState];
-  result:=SaveImg(pn.TopGraph,pn.TransparentTop,RasteringFile,OwnState<>hsNormal,BaseRasteringFile,pn.GetImageFormat=ifSimple,true);
-  end else
-   result:=false;
+    RasteringFile:=FinalID(pn)+PostFix+sst[OwnState];
+    result:=SaveImg(pn.TopGraph,pn.TransparentTop,RasteringFile,OwnState<>hsNormal,BaseRasteringFile,pn.GetImageFormat=ifSimple,true);
+   end else
+    result:=false;
   end;
      {
   png:=GetPNGObjectFromBitmap32(TdhCustomPanel(Owner.Control).TopGraph,false);

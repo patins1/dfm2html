@@ -107,6 +107,7 @@ type
   wcZIndex, //update Win Z-Order
   wcSize, //update Width/Height, including realign
   wcNoOwnCSS, //no CSS was changed
+  wcNoComputedCSS, //no computed CSS was changed
   wcText, //invalidate TdhLabel.ParseHTML
   wcText2, //invalidate TdhLabel.BuildLines
   wcTemplate, //deprecated
@@ -115,13 +116,14 @@ type
   );
   TWhatChanged=set of TOneChanged;
 
-  //wcText implies wcText2, all other changes are independent
+  //wcText implies wcText2, wcNoComputedCSS implies wcNoOwnCSS, all other changes are independent
 
 const
   AllChanged=        [wcFont,wcColor,wcCursor,wcText,wcText2,wcSize,wcChild,wcZIndex,wcState];
-  InheritableChanges=[wcFont,wcColor,wcCursor,wcText,wcText2,wcSize,wcChild];
+  InheritableChanges=[wcFont,wcColor,wcCursor,wcText,wcText2,wcSize,wcChild,wcNoOwnCSS,wcNoComputedCSS];
   ActStyleChanged=   [wcFont,wcColor,wcCursor,wcText,wcText2,wcSize,wcChild,wcZIndex,wcState,wcNoOwnCSS];
-  ReqInvals=         [wcFont,wcText,wcText2,wcName,wcState];
+  ActStyleLoaded=    [wcFont,wcColor,wcCursor,wcText,wcText2,wcSize,wcChild,wcZIndex,wcState,wcNoOwnCSS,wcNoComputedCSS];
+  ReqInvals=         [wcFont,wcText,wcText2,wcName,wcState,wcNoOwnCSS];
   //VisualChanges=[wcFont,wcColor,wcText,wcSize];
 
   MarginDefault=EmptyStr;
@@ -801,6 +803,8 @@ type
 
     property Effects:TTransformations read FTransformations write FTransformations;
     property BorderRadius:TCSSBorderRadius read FBorderRadius write FBorderRadius;
+
+    //TODO: SpeedupGeneration property Generated:String read RasteringFile write RasteringFile;
 
   end;
 //  (n:'filter';b:bbFilter;v:'"Alpha(opacity=100, finishopacity=0, style=2)","Blur(direction=235, strength=6)",Chroma(color=#DDBB99),"DropShadow(color=#C0C0C0, offx=3, offy=3)",FlipH(),FlipV(),"Glow(color=#000000, strength=12)",Gray(),Invert(),'+'Mask(color=#000066),"Shadow(color=#000000, direction=45)","Wave(freq=5, light=20, phase=50, strength=6)",XRay()';m:[MGvisual]),
@@ -3087,6 +3091,8 @@ end;
 
 procedure TdhCustomPanel.CSSToWinControl(WhatChanged:TWhatChanged=[]);
 var i:integer;
+var _State:TState;
+
 //    pn:TdhCustomPanel;
 begin
  if Fetching then exit;
@@ -3164,6 +3170,10 @@ begin
   InvalBack(InvRect) else
 // if VisualChanges*WhatChanged<>[] then
   InvalTop({not(wcNoOwnCSS in WhatChanged)}true,false);
+
+ for _State:=low(TState) to high(TState) do
+ if StyleArr[_State]<>nil then 
+  StyleArr[_State].RasteringFile:='';
  finally
   InCSSToWinControl:=false;
  end;
@@ -5893,7 +5903,7 @@ begin
 
 // if {(csLoading in Control.ComponentState) and }(Control.Owner<>nil) and not (Control.Owner.Name='dhStrEditDlg') and not(csDesigning in Control.ComponentState) then
 //  RuntimeMode:=true;
- CSSToWinControl(ActStyleChanged);
+ CSSToWinControl(ActStyleLoaded);
 
 end;
 
@@ -8485,6 +8495,11 @@ begin
  begin
  sl.Add('Styles defined by element type:');
  sl.AddStrings(sl_byouter);
+ sl.Add(EmptyStr);
+ end;
+ if RasteringFile<>'' then
+ begin
+ sl.Add('Generated image: '+RasteringFile);
  sl.Add(EmptyStr);
  end;
 
@@ -17104,6 +17119,11 @@ begin
 
   //Src:=(Owner.Control as TdhCustomPanel).TransPainting(tt);
   //MixColor(Src,ColorToColor32((Owner.Control as TdhCustomPanel).GetVirtualBGColor));
+  {TODO: SpeedupGeneration if RasteringFile<>'' then
+  begin
+    result:=true;
+    exit;
+  end;}
 
   if (pn.GetImageFormat=ifSimple) and Owner.HasBackgroundImage(graph) and (graph is TGIFImage) and (TGIFImage(graph).Images.Count>=2) then
   begin

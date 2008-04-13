@@ -151,7 +151,7 @@ type
     //function GetClientAdjusting:TRect; override;
     procedure AdjustBackgroundColor(var Col: TCSSColor); override;
     procedure SetScrolling(Value:TScrolling);
-    procedure UpdateScrolling;
+    procedure UpdateScrolling(changed:Boolean=True);
     function AlwaysVisibleVisibility:boolean; override;
 
     procedure SetUseIFrame(value:boolean);
@@ -1252,7 +1252,7 @@ begin
  Top:=Top+PageControl.Top;
  end;
  Inherited;
- UpdateScrolling;
+ UpdateScrolling(false);
  if (PageControl<>nil) and (PageControl.ActivePage<>nil) and Visible then
   PageControl.ActivePage:=Self;
 end;
@@ -1673,7 +1673,7 @@ begin
  end;
 end;
 
-procedure TdhPage.UpdateScrolling;
+procedure TdhPage.UpdateScrolling(changed:Boolean=True);
 begin
    if csLoading in ComponentState then
    begin
@@ -1686,7 +1686,8 @@ begin
    FHorzScrollbarNeverVisible:=IsScrollable and (FScrolling=scNo);
    EdgesInScrolledArea:=IsHTMLBody;
    IsScrollArea:=IsScrollable;
-   ScrollingParametersChanged;
+   if changed then
+    ScrollingParametersChanged;
    {if IsTopScrollable then
    begin
     Align:=alClient;

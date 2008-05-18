@@ -1591,8 +1591,8 @@ type
     property OnDragDrop;
 
 
-    property Right:Integer read CSSRight write SetRight stored IsRightStored;
-    property Bottom:Integer read CSSBottom write SetBottom stored IsBottomStored;
+    property Right:Integer read CSSRight write SetRight stored IsRightStored default InvalidCSSPos;
+    property Bottom:Integer read CSSBottom write SetBottom stored IsBottomStored default InvalidCSSPos;
 
     //property Cursor write SetCursor stored false default crDefault;
     //property ParentColor stored false;
@@ -15284,14 +15284,16 @@ end;
 
 procedure TdhCustomPanel.DefineProperties(Filer: TFiler);
 begin
- inherited;
+ //inherited;           to not write ExlicitLeft etc. any longer
  Filer.DefineProperty('AutoSizeVerticalOnly', ReadAutoSizeVerticalOnly,nil, false);
  Filer.DefineProperty('AutoSize', ReadAutoSize,nil, false);
  Filer.DefineProperty('Center', SkipValue,nil, false);
  Filer.DefineProperty('SUse', ReadSUse, WriteSUse, SUse<>EmptyStr);
  Filer.DefineProperty('DesignSize', SkipValue, nil, false);
- //Filer.DefineProperty('Right', ReadRight, WriteRight, IsRightStored);
- //Filer.DefineProperty('Bottom', ReadBottom, WriteBottom, IsBottomStored);
+ Filer.DefineProperty('ExplicitLeft', SkipValue, nil, false);
+ Filer.DefineProperty('ExplicitTop', SkipValue, nil, false);
+ Filer.DefineProperty('ExplicitWidth', SkipValue, nil, false);
+ Filer.DefineProperty('ExplicitHeight', SkipValue, nil, false);
  DoDefineProperties(Filer);
 end;
 

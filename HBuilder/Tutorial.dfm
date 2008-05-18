@@ -2939,7 +2939,7 @@ object PageContainer1: TPageContainer1
       Text = 
         'You can use PHP tags in textual content or e.g. in a <b>DirectHT' +
         'ML</b> object.'#10'<br/><br/>A sample PHP tag printing out <code>hel' +
-        'lo</code> is<br/>'#10#10'<code>&lt;$php echo "hello"; $&gt;</code>'#10'<br' +
+        'lo</code> is<br/>'#10#10'<code>&lt;?php echo "hello"; ?&gt;</code>'#10'<br' +
         '/><br/>'#10#10'PHP tags are processed by the server and '#10'are invisible' +
         ' to the clients. With PHP you can'#10'e.g. create a visitor counter ' +
         'or a contact form.'#10'These two examples are included in the PHP se' +

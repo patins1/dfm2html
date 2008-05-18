@@ -1,4 +1,4 @@
-object PageContainer2: TPageContainer2
+object PageContainer3: TPageContainer3
   Left = -4
   Top = -23
   Caption = 'TutorialGerman.dfm'
@@ -1875,10 +1875,10 @@ object PageContainer2: TPageContainer2
     object Label17: TdhLabel
       Left = 6
       Top = 19
-      Width = 650
-      Height = 71
+      Width = 571
+      Height = 73
       Text = 
-        'Deutsches DFM2HTML Tutorial <small><small>(Stand: 01.04.2007)</s' +
+        'Deutsches DFM2HTML Tutorial <small><small>(Stand: 18.05.2008)</s' +
         'mall></small>'
       Style.Padding = 17
       Style.FontSize = '32'
@@ -3027,8 +3027,8 @@ object PageContainer2: TPageContainer2
       Text = 
         'PHP-Tags k'#246'nnen in textuellem Inhalt oder in <b>DirectHTML</b>-O' +
         'bjekten eingesetzt werden.'#10'<br/><br/> Ein beispielhaftes PHP-Tag' +
-        ', das den Text <code>hallo</code> generiert:<br/>'#10#10'<code>&lt;$ph' +
-        'p echo "hallo"; $&gt;</code>'#10'<br/><br/>'#10#10'PHP-Tags werden durch d' +
+        ', das den Text <code>hallo</code> generiert:<br/>'#10#10'<code>&lt;?ph' +
+        'p echo "hallo"; ?&gt;</code>'#10'<br/><br/>'#10#10'PHP-Tags werden durch d' +
         'en Server verarbeitet, also im Gegensatz zu JavaScript nicht dur' +
         'ch den Webbrowser.'#10'Mit PHP l'#228#223't sich z.B. ein Besucherz'#228'hler ode' +
         'r ein Kontaktformular, das die Formulardaten an eine Emailadress' +

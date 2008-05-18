@@ -1,9 +1,9 @@
 object PageContainer3: TPageContainer3
   Left = -4
   Top = -23
-  Width = 1032
-  Height = 518
-  Caption = 'Links(1).dfm'
+  Caption = 'Links.dfm'
+  ClientHeight = 726
+  ClientWidth = 1600
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clBlack
   Font.Height = -16
@@ -11,6 +11,7 @@ object PageContainer3: TPageContainer3
   Font.Style = []
   KeyPreview = True
   OldCreateOrder = False
+  Position = poDesigned
   Scaled = False
   ShowHint = True
   Visible = True
@@ -20,14 +21,12 @@ object PageContainer3: TPageContainer3
   object Page1: TdhPage
     Left = 0
     Top = 0
-    Width = 1024
-    Height = 491
     Style.FontSize = '13'
     Style.BackgroundColor = Silver
     AutoSizeXY = asNone
-    DesignSize = (
-      1024
-      491)
+    Right = 0
+    Bottom = 0
+    UseIFrame = False
     object Link1: TdhLink
       Top = 48
       Width = 88
@@ -72,7 +71,7 @@ object PageContainer3: TPageContainer3
       Style.FontWeight = cfwBold
       Style.Effects.Enabled = True
       Style.Effects.AntiAliasing = True
-      Style.Effects.TextOnly = False
+      Style.Effects.Text = etInclude
       AutoSizeXY = asXY
       Anchors = [akTop]
       StyleOver.BackgroundImage.Data = {
@@ -164,7 +163,7 @@ object PageContainer3: TPageContainer3
       Style.FontWeight = cfwBold
       Style.Effects.Enabled = True
       Style.Effects.AntiAliasing = True
-      Style.Effects.TextOnly = False
+      Style.Effects.Text = etInclude
       AutoSizeXY = asXY
       Anchors = [akTop]
       StyleOver.BackgroundImage.Data = {
@@ -259,7 +258,7 @@ object PageContainer3: TPageContainer3
       Style.FontWeight = cfwBold
       Style.Effects.Enabled = True
       Style.Effects.AntiAliasing = True
-      Style.Effects.TextOnly = False
+      Style.Effects.Text = etInclude
       AutoSizeXY = asXY
       Anchors = [akTop]
       StyleOver.BackgroundImage.Data = {
@@ -354,7 +353,7 @@ object PageContainer3: TPageContainer3
       Style.FontWeight = cfwBold
       Style.Effects.Enabled = True
       Style.Effects.AntiAliasing = True
-      Style.Effects.TextOnly = False
+      Style.Effects.Text = etInclude
       AutoSizeXY = asXY
       Anchors = [akTop]
       StyleOver.BackgroundImage.Data = {
@@ -508,7 +507,7 @@ object PageContainer3: TPageContainer3
       Style.FontWeight = cfwBold
       Style.Effects.Enabled = True
       Style.Effects.AntiAliasing = True
-      Style.Effects.TextOnly = False
+      Style.Effects.Text = etInclude
       AutoSizeXY = asXY
       Anchors = [akTop]
       StyleOver.BackgroundImage.Data = {
@@ -633,7 +632,7 @@ object PageContainer3: TPageContainer3
       Style.FontWeight = cfwBold
       Style.Effects.Enabled = True
       Style.Effects.AntiAliasing = True
-      Style.Effects.TextOnly = False
+      Style.Effects.Text = etInclude
       AutoSizeXY = asXY
       Anchors = [akTop]
       StyleOver.BackgroundImage.Data = {
@@ -705,7 +704,7 @@ object PageContainer3: TPageContainer3
       Style.FontWeight = cfwBold
       Style.Effects.Enabled = True
       Style.Effects.AntiAliasing = True
-      Style.Effects.TextOnly = False
+      Style.Effects.Text = etInclude
       AutoSizeXY = asXY
       Anchors = [akTop]
       StyleOver.BackgroundImage.Data = {
@@ -801,7 +800,7 @@ object PageContainer3: TPageContainer3
       Style.FontWeight = cfwBold
       Style.Effects.Enabled = True
       Style.Effects.AntiAliasing = True
-      Style.Effects.TextOnly = False
+      Style.Effects.Text = etInclude
       AutoSizeXY = asXY
       Anchors = [akTop]
       StyleOver.BackgroundImage.Data = {
@@ -887,7 +886,7 @@ object PageContainer3: TPageContainer3
       Style.FontWeight = cfwBold
       Style.Effects.Enabled = True
       Style.Effects.AntiAliasing = True
-      Style.Effects.TextOnly = False
+      Style.Effects.Text = etInclude
       AutoSizeXY = asXY
       Anchors = [akTop]
       StyleOver.BackgroundImage.Data = {
@@ -951,7 +950,7 @@ object PageContainer3: TPageContainer3
       Style.FontWeight = cfwBold
       Style.Effects.Enabled = True
       Style.Effects.AntiAliasing = True
-      Style.Effects.TextOnly = False
+      Style.Effects.Text = etInclude
       AutoSizeXY = asXY
       Anchors = [akTop]
       StyleOver.BackgroundImage.Data = {
@@ -1012,7 +1011,7 @@ object PageContainer3: TPageContainer3
       Style.FontWeight = cfwBold
       Style.Effects.Enabled = True
       Style.Effects.AntiAliasing = True
-      Style.Effects.TextOnly = False
+      Style.Effects.Text = etInclude
       AutoSizeXY = asXY
       Anchors = [akTop]
       StyleOver.BackgroundImage.Data = {
@@ -1089,7 +1088,7 @@ object PageContainer3: TPageContainer3
       Style.FontWeight = cfwBold
       Style.Effects.Enabled = True
       Style.Effects.AntiAliasing = True
-      Style.Effects.TextOnly = False
+      Style.Effects.Text = etInclude
       AutoSizeXY = asXY
       Anchors = [akTop]
       StyleOver.BackgroundImage.Data = {
@@ -1173,7 +1172,7 @@ object PageContainer3: TPageContainer3
       Style.FontWeight = cfwBold
       Style.Effects.Enabled = True
       Style.Effects.AntiAliasing = True
-      Style.Effects.TextOnly = False
+      Style.Effects.Text = etInclude
       AutoSizeXY = asXY
       Anchors = [akTop]
       StyleOver.BackgroundImage.Data = {
@@ -1256,7 +1255,7 @@ object PageContainer3: TPageContainer3
       Style.FontWeight = cfwBold
       Style.Effects.Enabled = True
       Style.Effects.AntiAliasing = True
-      Style.Effects.TextOnly = False
+      Style.Effects.Text = etInclude
       AutoSizeXY = asXY
       Anchors = [akTop]
       StyleOver.BackgroundImage.Data = {
@@ -1337,7 +1336,7 @@ object PageContainer3: TPageContainer3
       Style.FontWeight = cfwBold
       Style.Effects.Enabled = True
       Style.Effects.AntiAliasing = True
-      Style.Effects.TextOnly = False
+      Style.Effects.Text = etInclude
       AutoSizeXY = asXY
       Anchors = [akTop]
       StyleOver.BackgroundImage.Data = {
@@ -1432,7 +1431,7 @@ object PageContainer3: TPageContainer3
       Style.FontWeight = cfwBold
       Style.Effects.Enabled = True
       Style.Effects.AntiAliasing = True
-      Style.Effects.TextOnly = False
+      Style.Effects.Text = etInclude
       AutoSizeXY = asXY
       Anchors = [akTop]
       StyleOver.BackgroundImage.Data = {
@@ -1551,7 +1550,7 @@ object PageContainer3: TPageContainer3
       Style.FontWeight = cfwBold
       Style.Effects.Enabled = True
       Style.Effects.AntiAliasing = True
-      Style.Effects.TextOnly = False
+      Style.Effects.Text = etInclude
       AutoSizeXY = asXY
       Anchors = [akTop]
       StyleOver.BackgroundImage.Data = {
@@ -1638,7 +1637,7 @@ object PageContainer3: TPageContainer3
       Style.FontWeight = cfwBold
       Style.Effects.Enabled = True
       Style.Effects.AntiAliasing = True
-      Style.Effects.TextOnly = False
+      Style.Effects.Text = etInclude
       AutoSizeXY = asXY
       Anchors = [akTop]
       StyleOver.BackgroundImage.Data = {
@@ -1686,7 +1685,7 @@ object PageContainer3: TPageContainer3
       Style.FontWeight = cfwBold
       Style.Effects.Enabled = True
       Style.Effects.AntiAliasing = True
-      Style.Effects.TextOnly = False
+      Style.Effects.Text = etInclude
       AutoSizeXY = asXY
       Anchors = [akTop]
       StyleOver.BackgroundImage.Data = {
@@ -1731,7 +1730,7 @@ object PageContainer3: TPageContainer3
       Style.FontWeight = cfwBold
       Style.Effects.Enabled = True
       Style.Effects.AntiAliasing = True
-      Style.Effects.TextOnly = False
+      Style.Effects.Text = etInclude
       AutoSizeXY = asXY
       Anchors = [akTop]
       StyleOver.BackgroundImage.Data = {
@@ -1754,9 +1753,10 @@ object PageContainer3: TPageContainer3
     object PresetsHelper1: TdhLabel
       Left = 0
       Top = 0
-      Width = 1008
       Height = 24
-      Text = 'Links with mouse-over effect:'
+      Text = 
+        '<en_links>Links with mouse-over effect:</en_links><de_links>Link' +
+        's mit Maus-'#220'ber-Effekt:</de_links>'
       Style.Padding = 4
       Style.TextAlign = ctaCenter
       Style.FontFamily = 'Arial'
@@ -1764,6 +1764,7 @@ object PageContainer3: TPageContainer3
       Style.FontWeight = cfwBold
       AutoSizeXY = asY
       Align = alTop
+      Right = 0
     end
     object Link21: TdhLink
       Top = 208
@@ -1870,7 +1871,9 @@ object PageContainer3: TPageContainer3
       Top = 840
       Width = 116
       Height = 32
-      Text = 'You can find more buttons here'
+      Text = 
+        '<en_links>You can find more buttons here</en_links><de_links>Hie' +
+        'r findest du weitere Grafiken</de_links>'
       Style.TextAlign = ctaCenter
       Style.FontFamily = 'Arial'
       Style.Color = Red
@@ -1880,6 +1883,36 @@ object PageContainer3: TPageContainer3
       PreferDownStyles = True
       Options = [loDownIfMenu, loDownIfMouseDown, loDownIfURL]
       Link = 'http://www.dfm2html.com/launch/presets.html'
+    end
+    object StyleSheet8: TdhStyleSheet
+      Left = 88
+      Top = 16
+      Width = 28
+      Height = 28
+      Expanded = False
+      ExpandedWidth = 232
+      ExpandedHeight = 296
+      Expanded = False
+      object de_links: TdhLabel
+        Left = 0
+        Top = 0
+        Height = 16
+        Text = 'de'
+        Style.Display = cdsNone
+        AutoSizeXY = asY
+        Align = alTop
+        Right = 0
+      end
+      object en_links: TdhLabel
+        Left = 0
+        Top = 16
+        Height = 16
+        Text = 'en'
+        Style.Display = cdsInline
+        AutoSizeXY = asY
+        Align = alTop
+        Right = 0
+      end
     end
   end
 end

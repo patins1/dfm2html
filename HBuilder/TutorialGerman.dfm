@@ -41,10 +41,6 @@ object PageContainer3: TPageContainer3
     OutputDirectory = 'tutorial\'
     MetaAuthor = 'J'#246'rg Kiegeland'
     MetaDescription = 'DFM2HTML Tutorial'
-    ExplicitHeight = 856
-    DesignSize = (
-      1600
-      726)
     object Panel6: TdhPanel
       Left = 16
       Top = 88
@@ -361,7 +357,6 @@ object PageContainer3: TPageContainer3
         Style.FontWeight = cfwBold
         AutoSizeXY = asXY
         Align = alTop
-        Right = 2147483647
         PreferDownStyles = True
         Options = [loDownIfMenu, loDownIfMouseDown, loDownIfURL]
       end
@@ -383,7 +378,6 @@ object PageContainer3: TPageContainer3
         Style.Color = Red
         AutoSizeXY = asY
         Align = alTop
-        Right = 2147483647
       end
       object Link2: TdhLink
         Left = 0
@@ -1335,7 +1329,6 @@ object PageContainer3: TPageContainer3
         Text = 'Link22'
         AutoSizeXY = asXY
         Align = alTop
-        Right = 2147483647
         PreferDownStyles = True
         Options = [loDownIfMenu, loDownIfMouseDown, loDownIfURL]
         LinkAnchor = Anchor11
@@ -2141,7 +2134,6 @@ object PageContainer3: TPageContainer3
           Style.TextAlign = ctaRight
           AutoSizeXY = asY
           Align = alTop
-          Right = 2147483647
         end
         object Label2: TdhLabel
           Left = 0
@@ -2420,7 +2412,6 @@ object PageContainer3: TPageContainer3
         Style.BorderRadius.All = '14'
         AutoSizeXY = asNone
         Align = alTop
-        Right = 2147483647
       end
     end
     object Anchor2: TdhLink
@@ -2543,7 +2534,6 @@ object PageContainer3: TPageContainer3
         Text = 'googlelink'
         AutoSizeXY = asXY
         Align = alTop
-        Right = 2147483647
         PreferDownStyles = True
         Options = [loDownIfMenu, loDownIfMouseDown, loDownIfURL]
         Link = 'http://www.google.de'
@@ -2555,7 +2545,6 @@ object PageContainer3: TPageContainer3
         Text = 'nav_example'
         AutoSizeXY = asXY
         Align = alTop
-        Right = 2147483647
         PreferDownStyles = True
         Options = [loDownIfMenu, loDownIfMouseDown, loDownIfURL]
         LinkAnchor = TdhAnchor8
@@ -2684,7 +2673,6 @@ object PageContainer3: TPageContainer3
         Style.BackgroundColor = Red
         AutoSizeXY = asY
         Align = alTop
-        Right = 2147483647
       end
     end
     object Label29: TdhLabel
@@ -3070,7 +3058,6 @@ object PageContainer3: TPageContainer3
         Text = 'Link21'
         AutoSizeXY = asXY
         Align = alTop
-        Right = 2147483647
         PreferDownStyles = True
         Options = [loDownIfMenu, loDownIfMouseDown, loDownIfURL]
         LinkAnchor = Label45
@@ -3092,7 +3079,6 @@ object PageContainer3: TPageContainer3
         Text = 'Link23'
         AutoSizeXY = asXY
         Align = alTop
-        Right = 2147483647
         PreferDownStyles = True
         Options = [loDownIfMenu, loDownIfMouseDown, loDownIfURL]
         LinkAnchor = Anchor5

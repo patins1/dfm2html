@@ -362,6 +362,7 @@ const
  StatusBar_ObjName=2;
  StatusBar_ObjPos=3;
 
+var _LANGID:LANGID;
 
 implementation
 
@@ -370,7 +371,6 @@ uses uWarnings, uPublishLog, uPublishFTP, uTemplates, uPresets, uStartUp,
 
 {$R *.dfm}
 
-var _LANGID:LANGID;
 
 var RasteringSaveDir:string;
 
@@ -2767,6 +2767,8 @@ begin
  Tabs.UpdateTabImages;
  UpdateStatusBar;
  UpdateOtherConstants;
+ if Presets<>nil then
+  Presets.UpdateLanguage;
 end;
 
 procedure TdhMainForm.UpdateOtherConstants;

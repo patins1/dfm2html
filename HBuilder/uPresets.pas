@@ -40,6 +40,7 @@ type
     { Public declarations }
     procedure InsertCompo(Sender: TObject);
     procedure Prepare;
+    procedure UpdateLanguage;
   end;
 
 var
@@ -184,12 +185,13 @@ begin
   Top:=dhMainForm.Height-Height-40;
   Left:=dhMainForm.Width-Width-20;
  end;
+
  Show;
 end;
 
 procedure TPresets.ChangePresetsPage(Sender:TObject);
 var link:TdhLink;
-    page:TdhPage;  
+    page:TdhPage;
     Content,filename:string;
     i1,i2:integer;
 begin
@@ -204,6 +206,7 @@ begin
    TFakeComponent(page.Controls[0]).GetChildren(SetInsertClick,page.Controls[0].Owner);
    page.Controls[0].Align:=alClient;
    link.OnClick:=nil;
+   UpdateLanguage;
   end else
    ShowMessage('Cannot open '+filename);
 end;
@@ -257,5 +260,32 @@ begin
  PopupMenu1.Popup(X,Y);
 end;
 
+procedure TPresets.UpdateLanguage;
+var
+  I: Integer;
+  Component:TComponent;
+  lng:TdhLabel;
+begin
+ for I := 0 to ComponentCount - 1 do
+ begin
+  Component:=Components[I];
+  if Component is TdhLabel then
+  begin
+   lng:=TdhLabel(Component);
+   if copy(lng.Name,1,2)='de' then
+   begin
+     if _LANGID=LANGID_GERMAN then
+     lng.Style.Display:=cdsInline else
+     lng.Style.Display:=cdsNone;
+   end else
+   if copy(lng.Name,1,2)='en' then
+   begin
+     if _LANGID=LANGID_GERMAN then
+     lng.Style.Display:=cdsNone else
+     lng.Style.Display:=cdsInline;
+   end;
+  end;
+ end;
+end;
 
 end.

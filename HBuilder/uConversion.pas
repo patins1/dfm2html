@@ -2479,6 +2479,7 @@ var page_info,ForwardingDelay,BackgroundSoundForever,BackgroundSoundLoop,NsLoop,
 
 begin
 // if not nest.IsPC or nest.HasSubTS then
+ if not nest.NeverVisible then 
  for i:=0 to nest.Count-1 do
   savenested(nest[i]);
  if not(nest.IsPC and not nest.HasSubTS) then exit;

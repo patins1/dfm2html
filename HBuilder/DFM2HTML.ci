@@ -63,6 +63,7 @@
 <_><src>C:\HBuilder\Templates\Frames\*.dfm</><dest>custom</><custom>#setuppath#\Templates\Frames</><ifexist>overnewer</><recurs></></>
 <_><src>C:\HBuilder\Templates\No Frames\*.dfm</><dest>custom</><custom>#setuppath#\Templates\No Frames</><ifexist>overnewer</><recurs></></>
 <_><src>C:\HBuilder\Language\German.lng</><dest>custom</><custom>#setuppath#\Language</><ifexist>overnewer</><recurs></></>
+<_><src>C:\HBuilder\Language\Slovak.lng</><dest>custom</><custom>#setuppath#\Language</><ifexist>overnewer</><recurs>0</></>
 
    </files>
    <runx listview >

@@ -1,5 +1,5 @@
 DFM2HTML
-Copyright (c) 2003-2007 Joerg Kiegeland
+Copyright (c) 2003-2008 Joerg Kiegeland
 All Rights Reserved
 
 For more information, please visit our
@@ -15,6 +15,8 @@ your acceptance of this license agreement and warranty stipulation.
 
 
 DFM2HTML is freeware, so no registration is required.
+
+All web pages generated with DFM2HTML can of course be used for commercial purposes. However it is not allowed to sell DFM2HTML itself.
 
 
 

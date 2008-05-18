@@ -1,6 +1,6 @@
                  DFM2HTML
                  =========================================
-                                Version 1.901
+                                Version 3.0
 
 
 DFM2HTML is a perfect easy to use HTML editor supporting WYSIWYG.
@@ -22,7 +22,7 @@ in License.txt.
 
 COPYRIGHT
 ~~~~~~~~~
-©2003-2007 by Jörg Kiegeland
+©2003-2008 by Jörg Kiegeland
 DFM2HTML is freeware. 
 
 

@@ -48,7 +48,7 @@
 		<Program_Specific_Category>Development Tools</Program_Specific_Category>
 		<Program_Change_Info>DHTML menus</Program_Change_Info>
 		<Program_Language>German,English</Program_Language>
-		<Program_OS_Support>Win98,WinXP,Windows2000</Program_OS_Support>
+		<Program_OS_Support>Win98,WinXP,Windows2000,Windows Vista Starter,Windows Vista Home Basic,Windows Vista Home Premium,Windows Vista Business,Windows Vista Enterprise,Windows Vista Ultimate,Windows Vista Home Basic x64,Windows Vista Home Premium x64,Windows Vista Business x64,Windows Vista Enterprise x64,Windows Vista Ultimate x64</Program_OS_Support>
 		<Program_Install_Support>Install and Uninstall</Program_Install_Support>
 		<Program_System_Requirements />
 		<Includes_VB_Runtime>N</Includes_VB_Runtime>
@@ -59,9 +59,9 @@
 			<Filename_Generic>dfm2html.exe</Filename_Generic>
 			<Filename_Versioned>dfm2v1_3.exe</Filename_Versioned>
 			<Filename_Previous>dfm2v1_3.exe</Filename_Previous>
-			<File_Size_Bytes>912430</File_Size_Bytes>
-			<File_Size_K>891</File_Size_K>
-			<File_Size_MB>0.87</File_Size_MB>
+			<File_Size_Bytes>920335</File_Size_Bytes>
+			<File_Size_K>898</File_Size_K>
+			<File_Size_MB>0.88</File_Size_MB>
 		</File_Info>
 		<Expire_Info>
 			<Has_Expire_Info>N</Has_Expire_Info>

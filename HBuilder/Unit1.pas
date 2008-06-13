@@ -548,7 +548,7 @@ begin
     begin
      SetLength(Files,Length(Files)+1);
      Files[High(Files)].FileName:=Copy(s,1,p-1);
-     Files[High(Files)].CRC:=StrToInt('$'+Copy(s,p+1,maxint));
+     Files[High(Files)].CRC:=StrToInt64('$'+Copy(s,p+1,maxint));
     end;
    end;
   end;

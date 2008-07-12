@@ -1,9 +1,9 @@
 object Tabs: TTabs
   Left = 207
-  Top = 554
-  Width = 933
-  Height = 233
+  Top = 622
   Caption = 'Object Properties'
+  ClientHeight = 138
+  ClientWidth = 925
   Color = clRed
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -35,13 +35,15 @@ object Tabs: TTabs
     Align = alClient
     Right = 0
     Bottom = 0
+    ExplicitWidth = 100
+    ExplicitHeight = 100
     object PageControl1: TMyPageControl
       Tag = 2
       Left = 0
       Top = 2
       Width = 925
       Height = 204
-      ActivePage = AnchorFont
+      ActivePage = AnchorName
       TabOrder = 0
       TabStop = False
       TabWidth = 43
@@ -53,6 +55,10 @@ object Tabs: TTabs
         Hint = 'Font'
         Caption = 'Font'
         OnShow = AnchorFontShow
+        ExplicitLeft = 0
+        ExplicitTop = 0
+        ExplicitWidth = 0
+        ExplicitHeight = 0
         object GroupBox3: TMyGroupBox
           Left = 16
           Top = 0
@@ -229,6 +235,10 @@ object Tabs: TTabs
         Caption = 'Edge'
         ImageIndex = 1
         OnShow = AnchorBorderShow
+        ExplicitLeft = 0
+        ExplicitTop = 0
+        ExplicitWidth = 0
+        ExplicitHeight = 0
         object EdgeNavigation: TdhPanel
           Left = 8
           Top = 1
@@ -616,7 +626,7 @@ object Tabs: TTabs
             Style.BorderRadius.All = '100 100'
             AutoSizeXY = asNone
             Align = alTop
-            Right = 24
+            Right = 2147483647
             StyleDown.Effects.Enabled = True
             StyleDown.Effects.AntiAliasing = False
             StyleDown.Effects.Text = etInclude
@@ -655,7 +665,7 @@ object Tabs: TTabs
             Style.BorderRadius.All = '115'
             AutoSizeXY = asXY
             Align = alTop
-            Right = 20
+            Right = 2147483647
             StyleDown.BorderTop.Color = ThreeDDarkShadow
             StyleDown.BorderBottom.Color = White
             StyleDown.BorderLeft.Color = ThreeDDarkShadow
@@ -700,7 +710,7 @@ object Tabs: TTabs
             Style.BorderRadius.All = '5'
             AutoSizeXY = asXY
             Align = alTop
-            Right = 20
+            Right = 2147483647
             StyleDown.Border.Color = ThreeDShadow
             StyleDown.Border.Style = cbsSolid
             StyleDown.BackgroundImage.Data = {
@@ -721,6 +731,10 @@ object Tabs: TTabs
         Caption = 'Image'
         ImageIndex = 2
         OnShow = AnchorBackgroundShow
+        ExplicitLeft = 0
+        ExplicitTop = 0
+        ExplicitWidth = 0
+        ExplicitHeight = 0
         object GroupBox9: TMyGroupBox
           Left = 8
           Top = 0
@@ -963,6 +977,10 @@ object Tabs: TTabs
         Caption = 'Effect'
         ImageIndex = 4
         OnShow = AnchorEffectsShow
+        ExplicitLeft = 0
+        ExplicitTop = 0
+        ExplicitWidth = 0
+        ExplicitHeight = 0
         object cEffectsEnabled: TTntCheckBox
           Left = 8
           Top = 8
@@ -1238,8 +1256,8 @@ object Tabs: TTabs
               Top = 1
               AutoSizeXY = asNone
               Align = alClient
-              Right = 1
-              Bottom = 1
+              Right = 2147483647
+              Bottom = 2147483647
               UseIFrame = False
               object cAntiAliasing: TTntCheckBox
                 Left = 16
@@ -1282,9 +1300,11 @@ object Tabs: TTabs
               Top = 1
               AutoSizeXY = asNone
               Align = alClient
-              Right = 1
-              Bottom = 1
+              Right = 2147483647
+              Bottom = 2147483647
               UseIFrame = False
+              ExplicitWidth = 100
+              ExplicitHeight = 100
               object dhPanel4: TdhPanel
                 Left = 3
                 Top = 4
@@ -1300,7 +1320,7 @@ object Tabs: TTabs
                   Use = STYLE_dhLink2
                   AutoSizeXY = asXY
                   Align = alTop
-                  Right = 2147483647
+                  Right = 20
                   OnClick = dhLink9Click
                   Layout = ltText
                   PreferDownStyles = False
@@ -1315,7 +1335,7 @@ object Tabs: TTabs
                   Use = STYLE_dhLink2
                   AutoSizeXY = asXY
                   Align = alTop
-                  Right = 2147483647
+                  Right = 20
                   OnClick = dhLink9Click
                   Layout = ltText
                   PreferDownStyles = False
@@ -1329,7 +1349,7 @@ object Tabs: TTabs
                   Use = STYLE_dhLink2
                   AutoSizeXY = asXY
                   Align = alTop
-                  Right = 2147483647
+                  Right = 20
                   OnClick = dhLink9Click
                   Layout = ltText
                   PreferDownStyles = False
@@ -1343,7 +1363,7 @@ object Tabs: TTabs
                   Use = STYLE_dhLink2
                   AutoSizeXY = asXY
                   Align = alTop
-                  Right = 2147483647
+                  Right = 20
                   OnClick = dhLink9Click
                   Layout = ltText
                   PreferDownStyles = False
@@ -1357,7 +1377,7 @@ object Tabs: TTabs
                   Use = STYLE_dhLink2
                   AutoSizeXY = asXY
                   Align = alTop
-                  Right = 2147483647
+                  Right = 20
                   OnClick = dhLink9Click
                   Layout = ltText
                   PreferDownStyles = False
@@ -1571,12 +1591,12 @@ object Tabs: TTabs
               end
             end
             object TabSheet7: TdhPage
-              Left = 1
-              Top = 1
+              Left = 0
+              Top = 0
               AutoSizeXY = asNone
               Align = alClient
-              Right = 1
-              Bottom = 1
+              Right = 0
+              Bottom = 0
               UseIFrame = False
               object Panel3: TMyPanel
                 Left = 256
@@ -1885,7 +1905,7 @@ object Tabs: TTabs
             Style.ZIndex = -1
             AutoSizeXY = asY
             Align = alTop
-            Right = 24
+            Right = 2147483647
           end
           object STYLE_Link1: TdhLink
             Left = 0
@@ -1899,7 +1919,7 @@ object Tabs: TTabs
             Use = STYLE_dhLink2
             AutoSizeXY = asXY
             Align = alTop
-            Right = 20
+            Right = 2147483647
             StyleDown.BorderBottom.Style = cbsNone
             StyleDown.ZIndex = 10
             StyleDown.BorderRadius.BottomRight = '0'
@@ -1921,7 +1941,7 @@ object Tabs: TTabs
             Use = STYLE_dhLink2
             AutoSizeXY = asXY
             Align = alTop
-            Right = 21
+            Right = 2147483647
             StyleDown.BorderRight.Style = cbsNone
             StyleDown.ZIndex = 10
             StyleDown.BorderRadius.BottomRight = '0'
@@ -1939,7 +1959,7 @@ object Tabs: TTabs
             Use = STYLE_dhLabel11
             AutoSizeXY = asY
             Align = alTop
-            Right = 24
+            Right = 2147483647
           end
           object STYLE_dhLabel11: TdhLabel
             Left = 0
@@ -1952,7 +1972,7 @@ object Tabs: TTabs
             Style.BorderRadius.All = '5'
             AutoSizeXY = asY
             Align = alTop
-            Right = 24
+            Right = 2147483647
           end
         end
         object IGNORE_dhDirectHTML1: TdhDirectHTML
@@ -2173,6 +2193,10 @@ object Tabs: TTabs
         Caption = 'Misc'
         ImageIndex = 3
         OnShow = AnchorMiscShow
+        ExplicitLeft = 0
+        ExplicitTop = 0
+        ExplicitWidth = 0
+        ExplicitHeight = 0
         object GroupBox26: TMyGroupBox
           Left = 8
           Top = 0
@@ -2479,6 +2503,10 @@ object Tabs: TTabs
         Caption = 'Object'
         ImageIndex = -1
         OnShow = AnchorNameShow
+        ExplicitLeft = 0
+        ExplicitTop = 0
+        ExplicitWidth = 0
+        ExplicitHeight = 0
         object GroupBox21: TMyGroupBox
           Left = 8
           Top = 0
@@ -2652,6 +2680,10 @@ object Tabs: TTabs
         Caption = 'Pos.'
         ImageIndex = -1
         OnShow = AnchorPositionShow
+        ExplicitLeft = 0
+        ExplicitTop = 0
+        ExplicitWidth = 0
+        ExplicitHeight = 0
         object GroupBox4: TMyGroupBox
           Left = 8
           Top = 0
@@ -3028,6 +3060,10 @@ object Tabs: TTabs
         Caption = 'Page'
         ImageIndex = -1
         OnShow = AnchorPageShow
+        ExplicitLeft = 0
+        ExplicitTop = 0
+        ExplicitWidth = 0
+        ExplicitHeight = 0
         object GroupBox22: TMyGroupBox
           Left = 16
           Top = 0
@@ -3209,6 +3245,10 @@ object Tabs: TTabs
         Caption = 'Check'
         ImageIndex = -1
         OnShow = AnchorCheckBoxShow
+        ExplicitLeft = 0
+        ExplicitTop = 0
+        ExplicitWidth = 0
+        ExplicitHeight = 0
         object IGNORE_cRightJustify: TTntCheckBox
           Left = 512
           Top = 32
@@ -3254,6 +3294,10 @@ object Tabs: TTabs
         Caption = 'Form'
         ImageIndex = -1
         OnShow = AnchorFormShow
+        ExplicitLeft = 0
+        ExplicitTop = 0
+        ExplicitWidth = 0
+        ExplicitHeight = 0
         object cbMethod: TTntRadioGroup
           Left = 8
           Top = 0
@@ -3326,6 +3370,10 @@ object Tabs: TTabs
         Caption = 'Menu'
         ImageIndex = -1
         OnShow = AnchorMenuShow
+        ExplicitLeft = 0
+        ExplicitTop = 0
+        ExplicitWidth = 0
+        ExplicitHeight = 0
         object CheckGroupBox1: TMyGroupBox
           Left = 296
           Top = 0
@@ -3500,6 +3548,10 @@ object Tabs: TTabs
         Caption = 'Link'
         ImageIndex = -1
         OnShow = AnchorLinkShow
+        ExplicitLeft = 0
+        ExplicitTop = 0
+        ExplicitWidth = 0
+        ExplicitHeight = 0
         object GroupBox11: TMyGroupBox
           Left = 8
           Top = 0
@@ -3749,6 +3801,10 @@ object Tabs: TTabs
         Caption = 'OLE '
         ImageIndex = -1
         OnShow = AnchorOleShow
+        ExplicitLeft = 0
+        ExplicitTop = 0
+        ExplicitWidth = 0
+        ExplicitHeight = 0
         object Button2: TTntButton
           Left = 8
           Top = 8
@@ -3803,6 +3859,10 @@ object Tabs: TTabs
         Caption = 'List'
         ImageIndex = -1
         OnShow = AnchorSelectShow
+        ExplicitLeft = 0
+        ExplicitTop = 0
+        ExplicitWidth = 0
+        ExplicitHeight = 0
         object GroupBox19: TMyGroupBox
           Left = 544
           Top = -1
@@ -3987,6 +4047,10 @@ object Tabs: TTabs
         Caption = 'File'
         ImageIndex = -1
         OnShow = AnchorFileShow
+        ExplicitLeft = 0
+        ExplicitTop = 0
+        ExplicitWidth = 0
+        ExplicitHeight = 0
         object Panel7: TPanel
           Left = 8
           Top = 8

@@ -2637,7 +2637,8 @@ object Tabs: TTabs
           Items.Strings = (
             'Automatic'
             'GIF'
-            'Semi-transparent PNG')
+            'Semi-transparent PNG'
+            'JPEG')
           TabOrder = 2
           OnClick = cImageFormatClick
         end

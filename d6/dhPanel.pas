@@ -17508,7 +17508,7 @@ begin
 // if ext='.png' then
 //  g:=GetPNGObjectPTFromBitmap32(TransparentTop,TopGraph) else
  if (ext='.jpg') or (ext='.jpeg') then
-  g:=GetJPEGImageFromBitmap32(Transparent) else 
+  g:=GetJPEGImageFromBitmap32(Opaque) else
 {$ENDIF}
  begin
   g:=TBitmap.Create;

@@ -191,7 +191,8 @@ type
   //TCSSAntiAliasing=(caaInherit,caaNone,caaKind1,caaKind2);
 
   TImageType=(bitInherit,bitTile,{bitLayered,}bitStretch,bitImage,bitSplit);
-  TImageFormat=(ifInherit,ifSimple,ifSemiTransparent);
+  TImageFormat=(ifInherit,ifSimple,ifSemiTransparent,ifJPEG);
+  TPhysicalImageFormat=(pifSaveAsGIF,pifSaveAsPNG,pifSaveAsJPEG);
 
   TEffectsOnText=(etInclude,etExclude,etOnly);
 
@@ -16972,14 +16973,14 @@ end;
 
 
 
-function SaveImg(Opaque:TBitmap32; Transparent:TBitmap32; var RasteringFile:string; CheckBaseRasteringFile:boolean; BaseRasteringFile:string; GenerateGIF,AllowCutWhiteSpace:boolean):boolean;
+function SaveImg(Opaque:TBitmap32; Transparent:TBitmap32; var RasteringFile:string; CheckBaseRasteringFile:boolean; BaseRasteringFile:string; PhysicalImageFormat:TPhysicalImageFormat; AllowCutWhiteSpace:boolean):boolean;
 var gif_pre:TBitmap32;
     i,w,h:integer;
     _crc:DWORD;
     //gif:TGifImage;
     graph:TGraphic;
     NeedSave:boolean;
-const ext:array[boolean] of string=('.png','.gif');
+const ext:array[TPhysicalImageFormat] of string=('.gif','.png','.jpg');
 begin
 
 
@@ -16990,8 +16991,8 @@ begin
    gif_pre:=GetGifTransparent(Opaque,Transparent);
    _crc:=GetCRCFromBitmap32(gif_pre);
    FreeAndNil(gif_pre); }
-   RasteringFile:=RasteringFile+ext[GenerateGIF];
-   _crc:=calc_crc32_String(ext[GenerateGIF]);
+   RasteringFile:=RasteringFile+ext[PhysicalImageFormat];
+   _crc:=calc_crc32_String(ext[PhysicalImageFormat]);
    if AllowCutWhiteSpace then
    begin
     TrimRightBottom(Transparent,w,h);
@@ -17000,14 +17001,17 @@ begin
     w:=Transparent.Width;
     h:=Transparent.Height;
    end;
-   if GenerateGIF then
+   if PhysicalImageFormat=pifSaveAsGIF then
    begin
     _crc:=GetCRCFromBitmap32(Transparent,Opaque,w,h,_crc);
-   end else
+   end else   
+   if PhysicalImageFormat=pifSaveAsPNG then
    begin
     _crc:=GetCRCFromBitmap32(Transparent,w,h,_crc);
+   end else
+   begin
+    _crc:=GetCRCFromBitmap32(Opaque,w,h,_crc);
    end;
-
 
    result:=glSaveBin(_crc,RasteringFile,CheckBaseRasteringFile,BaseRasteringFile,NeedSave,false);
 
@@ -17016,8 +17020,10 @@ begin
   if NeedSave then
   try
 {.$IFNDEF CLX}
-  if GenerateGIF then
+  if PhysicalImageFormat=pifSaveAsGIF then
    graph:=GetGifImageFromBitmap32(Transparent,Opaque) else
+  if PhysicalImageFormat=pifSaveAsJPEG then
+   graph:=GetJPEGImageFromBitmap32(Opaque) else
 {.$ENDIF}
    graph:=GetPNGObjectFromBitmap32(Transparent{,true});
 {.$ENDIF}
@@ -17090,6 +17096,16 @@ begin
   result:=b;
 end;
 
+function getPhysicalImageFormat(pn:TdhCustomPanel;TransparentTop:TBitmap32):TPhysicalImageFormat;
+const LogicalToPhysicalFileFormat:array[TImageFormat] of TPhysicalImageFormat=(pifSaveAsGIF,pifSaveAsGIF,pifSaveAsPNG,pifSaveAsJPEG);
+begin
+  result:=LogicalToPhysicalFileFormat[pn.GetImageFormat];
+  if (result=pifSaveAsJPEG) and ((TransparentTop.Height<=1) or (TransparentTop.Width<=1)) then
+  begin
+   //jpeg implementation requires at least height>1 when saving
+   result:=pifSaveAsGIF;
+  end;
+end;
 
 
 var EqSizing:array[0..2,0..2] of TRect;
@@ -17114,7 +17130,7 @@ var //_BackIsValid,_TopIsValid:boolean;
     EqArea:TRect;
     EqX,EqY:integer;
     EqSize:TRect;
-    RasteringFiles:String;
+    RasteringFiles:String;    
 begin
 
   pn:=Owner;
@@ -17256,7 +17272,7 @@ begin
          pn.TopGraph.DrawTo(pnTopGraph,pnTopGraph.BoundsRect,EqSize);
          pn.{TopGraph}TransparentTop.DrawTo(pnTransparentTop,pnTransparentTop.BoundsRect,EqSize);
          RasteringFile:=FinalID(pn)+PostFix+EqNaming[EqY,EqX];
-         result:=SaveImg(pnTopGraph,pnTransparentTop,RasteringFile,OwnState<>hsNormal,BaseRasteringFile,(pn.GetImageFormat=ifSimple){true},false);
+         result:=SaveImg(pnTopGraph,pnTransparentTop,RasteringFile,OwnState<>hsNormal,BaseRasteringFile,getPhysicalImageFormat(pn,pnTransparentTop),false);
         end;
         RasteringFiles:=RasteringFiles+ExtractFileName(RasteringFile)+'|';
        end;
@@ -17271,7 +17287,7 @@ begin
      end;
     end;
     RasteringFile:=FinalID(pn)+PostFix+sst[OwnState];
-    result:=SaveImg(pn.TopGraph,pn.TransparentTop,RasteringFile,OwnState<>hsNormal,BaseRasteringFile,pn.GetImageFormat=ifSimple,true);
+    result:=SaveImg(pn.TopGraph,pn.TransparentTop,RasteringFile,OwnState<>hsNormal,BaseRasteringFile,getPhysicalImageFormat(pn,pn.TransparentTop),true);
    end else
     result:=false;
   end;

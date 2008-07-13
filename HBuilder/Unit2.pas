@@ -194,7 +194,7 @@ type
     GroupBox21: TMyGroupBox;
     Label19: TdhLabel;
     eName: ThEdit;
-    GroupBox22: TMyGroupBox;
+    gPageProperties: TMyGroupBox;
     dhLabel16: TdhLabel;
     eTitle: ThEdit;
     eOutputDirectory: ThEdit;
@@ -296,7 +296,7 @@ type
     dhLabel7: TdhLabel;
     CODE_eFormTarget: ThComboBox;
     mPageProperties: TTntMenuItem;
-    Button3: TTntButton;
+    bPageProperties: TTntButton;
     mOle: TTntMenuItem;
     AnchorHidden: TTntTabSheet;
     GroupBox31: TMyGroupBox;
@@ -2096,11 +2096,12 @@ begin
     mGotoUse.Visible:=mGotoUse.Enabled;
     mGotoLink.Visible:=mGotoLink.Enabled;
     mGotoFragment.Visible:=mGotoFragment.Enabled;
-   end; 
+   end;
    mStyleInfo.Enabled:=(FirstCandidate is TdhCustomPanel);
+   mPageProperties.Enabled:=(FirstCandidate is TdhPage) and (TdhPage(FirstCandidate).IsHTMLBody or (TdhPage(FirstCandidate).PageControl<>nil));
  end;
  mStyles.Enabled:=AnchorBorder.TabVisible;
- 
+
  UpdateContainer;
 {$IFDEF CLX}
  PageControl1.Realign; //Font tab is hidden
@@ -3482,6 +3483,10 @@ begin
  gHTMLFrame.ItemIndex:=_if(page.UseIFrame,1,0);
  SetChildrenEnabled(gScrolling,page.IsScrollable);
  SetChildrenEnabled(gHTMLFrame,page.IsInternalScrollable);
+
+ bPageProperties.Enabled:=page.IsHTMLBody or (page.PageControl<>nil);
+ SetChildrenEnabled(gPageProperties,bPageProperties.Enabled);
+ mPageProperties.Enabled:=bPageProperties.Enabled;
 
  IsVis:=page.IsTopScrollable;
  eOutputDirectory.Visible:=IsVis;
@@ -5158,6 +5163,7 @@ begin
  if Adjusting then exit;
  for i:=0 to Selection.Count-1 do
   (TObject(Selection[i]) as TdhPage).UseIFrame:=gHTMLFrame.ItemIndex=1;
+ UpdatePageDisplay;
  Changed('Change Scrolling Implementation');
 end;
 

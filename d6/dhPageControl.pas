@@ -624,7 +624,7 @@ end;
 
 procedure TdhPage.AdjustBackgroundColor(var Col:TCSSColor);
 begin
- if IsHTMLBody and (Col=colTransparent) then
+ if IsHTMLBody and IsTopScrollable and (Col=colTransparent) then
  begin
   Col:=clWhite;
   if Parent is TdhCustomPanel then
@@ -1015,11 +1015,9 @@ begin
  s:='';
  for PropChoose:=low(TPropChoose) to high(TPropChoose) do
  begin
- if PropChoose=pcBackgroundColor then
-  Cascaded.Color:=BackgroundColor else
  if not (GetVal(PropChoose) and not IsInUseList(ValStyle)) then
   continue;
- if not((PropChoose=pcColor) and (Cascaded.Color=clWindowText) or (PropChoose=pcBackgroundColor) and (Cascaded.Color=clWhite) or (PropChoose=pcFontStyle) and (Cascaded.FontStyle=cfsNormal) or (PropChoose=pcFontWeight) and (Cascaded.FontWeight=cfwNormal)) then
+ if not((PropChoose=pcColor) and (Cascaded.Color=clWindowText) or (PropChoose=pcBackgroundColor) or (PropChoose=pcFontStyle) and (Cascaded.FontStyle=cfsNormal) or (PropChoose=pcFontWeight) and (Cascaded.FontWeight=cfwNormal)) then
   s:=s+GetCSSPropName(PropChoose)+':'+GetCSSPropValue(PropChoose)+';';
  end;
 

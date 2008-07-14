@@ -4179,7 +4179,7 @@ begin
       AddAttr('frameborder','0');
       //AddAttr('src',id+'.html');
       AddAttr('name',id);
-      AddStyle('background-color','white');
+      AddAttr('allowtransparency','true');
       if HasProp('ScrollbarsAlwaysVisible') then
        AddAttr('scrollbars','yes');
       if IsProp('Scrolling','scYes') then

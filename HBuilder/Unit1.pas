@@ -2312,7 +2312,7 @@ begin
     end; }
     if Bitmap<>URL then
     begin
-     IGNORE_SaveDraggedPictureDialog.FileName:= ExtractUrlAimedFilenameToWindowsFilename(URL);
+     IGNORE_SaveDraggedPictureDialog.FileName:= ExtractUrlAimedFilenameToWindowsFilename(Bitmap);
      if IGNORE_SaveDraggedPictureDialog.Execute then
      begin
       funcutils.StringToFile(IGNORE_SaveDraggedPictureDialog.FileName,funcutils.StringFromFile(Bitmap));

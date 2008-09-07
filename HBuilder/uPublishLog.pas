@@ -37,7 +37,7 @@ type
     function ExtractHostDirName(const path:String):String;
   public
     { Public declarations }
-    procedure DoUpload(const URL,RasteringSaveDir: string);
+    procedure DoUpload(const URL: string);
     property Busy:boolean read FBusy write SetBusy;
   end;
 
@@ -76,11 +76,10 @@ begin
  result:=ExtractWebFilePath(result);
 end;
 
-procedure TPublishLog.DoUpload(const URL,RasteringSaveDir: string);
+procedure TPublishLog.DoUpload(const URL: string);
 var Proto, Username, Password, Host, Port, Path : String;
     i:integer;
 begin
- Self.RasteringSaveDir:=RasteringSaveDir;
  if RichEdit1.Lines.Count<>0 then
   RichEdit1.Lines.Add(EmptyStr);
 
@@ -91,7 +90,7 @@ begin
   Log(DKFormat(FPTLOG_GENERATE));
 
  Update;
- dhMainForm.ViewHTML1Click(nil);
+ RasteringSaveDir:=dhMainForm.GeneratedHTML(False);
  Log(DKFormat(FTPLOG_GENERATED),clGreen);
 
  if GeneratedFiles.Count=0 then

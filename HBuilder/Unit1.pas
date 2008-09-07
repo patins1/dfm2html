@@ -339,6 +339,7 @@ type
     //function Act:TPageContainer;
     procedure Paint; override;
     procedure ApplyNewSettings(FontToCurrent:boolean; FontToAll:boolean);
+    function GeneratedHTML(View:Boolean):String;
   end;
 
 var
@@ -1600,6 +1601,11 @@ begin
 end;
 
 procedure TdhMainForm.ViewHTML1Click(Sender: TObject);
+begin
+ GeneratedHTML(True);
+end;
+
+function TdhMainForm.GeneratedHTML(View:Boolean):String;
 var pa,content,PureFileName:string;
     sStatus:string;
 begin
@@ -1619,7 +1625,7 @@ begin
  Content:=Act.GetDFMStr(false,true);
  StartConverting(BaseDir,FuncSettings.Compress,nil);
  DoConvertContent(PureFileName,content);
- if Sender<>nil then
+ if View then
  if Warnings.Count<>0 then
  begin
   LateCreateForm(TFormWarnings,FormWarnings);
@@ -1635,12 +1641,13 @@ begin
   StatusBar.Panels[StatusBar_Mode].Text:=sStatus;
  end;
  pa:=RasteringSaveDir+PureFileName;
- if Sender<>nil then
+ if View then
   Browse(pa,FViewer,true);
  except
  on A:Exception do
   showmessage(A.Message);
  end;
+ Result:=RasteringSaveDir;
 end;
 
 procedure TdhMainForm.Paint;
@@ -2226,7 +2233,7 @@ begin
   end else
    exit;
  end;
- PublishLog.DoUpload(Act.MySiz.FindBody.FTPURL,RasteringSaveDir);
+ PublishLog.DoUpload(Act.MySiz.FindBody.FTPURL);
 end;
 
 procedure AfterSaveBin;

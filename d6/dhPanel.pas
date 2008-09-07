@@ -43,7 +43,7 @@ var REFOBJECT_STR:WideString= '% is referenced by %';
 type HypeString=WideString;
      HypeChar=WideChar;
 
-var glSaveBin:function(_crc:DWORD; var RasteringFile:string; CheckBaseRasteringFile:boolean; BaseRasteringFile:string; var NeedSave:boolean; NeedSameFileName:boolean):boolean;
+var glSaveBin:function(_crc:DWORD; var RasteringFile,AbsoluteRasteringFile:string; CheckBaseRasteringFile:boolean; BaseRasteringFile:string; var NeedSave:boolean; NeedSameFileName:boolean):boolean;
 var glAfterSaveBin:procedure;
 //NeedSameFileName
 {$IFDEF VER160}
@@ -900,6 +900,7 @@ type
     function HasBackgroundImage:boolean; overload;
     function HasImage: boolean; overload;
     function HasImage(var PicWidth, PicHeight: integer): boolean; overload;
+    function GetImageDir:String; virtual;
 
   public
     function HasBackgroundImage(var FPicture: TGraphic): boolean; overload;
@@ -2015,6 +2016,8 @@ function WFormat(const c:WideString; const Args: array of const):WideString;
 function WideStringReplace(const S, OldPattern, NewPattern: WideString;
   Flags: TReplaceFlags): WideString;
 
+function CutCurrentDir(const path:string):string;
+function FinalImageFolder(c:TControl):string;
 
 type WException=class (Exception)
   public
@@ -2127,6 +2130,12 @@ begin
   end;
 end;
 
+function CutCurrentDir(const path:string):string;
+begin
+  result:=path;
+  while Copy(result,1,Length('./'))='./' do
+   result:=Copy(result,Length('./')+1,MaxInt);
+end;
 
 
 
@@ -3571,6 +3580,25 @@ begin
  begin
   result:=O.Name+result;
   O:=O.Owner;
+ end;
+end;
+
+function FinalImageID(c:TControl):string;
+begin
+ result:=FinalImageFolder(c)+FinalID(c);
+end;
+
+
+function FinalImageFolder(c:TControl):string;
+begin
+ result:='';
+ while (c<>nil) do
+ begin
+  if c is TdhCustomPanel then
+  begin
+    result:=CutCurrentDir(TdhCustomPanel(c).GetImageDir)+result;
+  end;
+  c:=c.Parent;
  end;
 end;
 
@@ -10582,6 +10610,11 @@ var PicWidth,PicHeight:integer;
 begin
  result:=HasImage(PicWidth,PicHeight);
 end;
+
+function TdhCustomPanel.GetImageDir:String;
+begin
+ result:='';
+end;
         {
 
 function TdhCustomPanel.HasImage(var FPicture:TPicture):boolean;
@@ -16868,12 +16901,12 @@ end;
 
 procedure TStyle.WriteRastering(Writer: TWriter);
 begin
- Writer.WriteString(ExtractFileName(RasteringFile));
+ Writer.WriteString(RasteringFile);
 end;
 
 procedure TStyle.WriteBackgroundImageUrl(Writer: TWriter);
 begin
- Writer.WriteString(ExtractFileName(BGImageFile));
+ Writer.WriteString(BGImageFile);
 end;
 
 
@@ -16888,11 +16921,6 @@ begin
   Writer.WriteString(inttostr(Top)+'px '+inttostr(Right)+'px '+inttostr(Bottom)+'px '+inttostr(Left)+'px');
 end;
 }
-            {
-procedure TStyle.WriteBGRastering(Writer: TWriter);
-begin
- Writer.WriteString(ExtractFileName(BGRasteringFile));
-end;           }
 
 
 procedure NormalizeTransparency(Transparent:TBitmap32);
@@ -16977,9 +17005,9 @@ function SaveImg(Opaque:TBitmap32; Transparent:TBitmap32; var RasteringFile:stri
 var gif_pre:TBitmap32;
     i,w,h:integer;
     _crc:DWORD;
-    //gif:TGifImage;
     graph:TGraphic;
     NeedSave:boolean;
+    AbsoluteRasteringFile:string;
 const ext:array[TPhysicalImageFormat] of string=('.gif','.png','.jpg');
 begin
 
@@ -17004,7 +17032,7 @@ begin
    if PhysicalImageFormat=pifSaveAsGIF then
    begin
     _crc:=GetCRCFromBitmap32(Transparent,Opaque,w,h,_crc);
-   end else   
+   end else
    if PhysicalImageFormat=pifSaveAsPNG then
    begin
     _crc:=GetCRCFromBitmap32(Transparent,w,h,_crc);
@@ -17013,7 +17041,7 @@ begin
     _crc:=GetCRCFromBitmap32(Opaque,w,h,_crc);
    end;
 
-   result:=glSaveBin(_crc,RasteringFile,CheckBaseRasteringFile,BaseRasteringFile,NeedSave,false);
+   result:=glSaveBin(_crc,RasteringFile,AbsoluteRasteringFile,CheckBaseRasteringFile,BaseRasteringFile,NeedSave,false);
 
 
 
@@ -17027,8 +17055,7 @@ begin
 {.$ENDIF}
    graph:=GetPNGObjectFromBitmap32(Transparent{,true});
 {.$ENDIF}
-   ForceDirectories(ExtractFilePath({RasteringSaveDir}RasteringFile));
-   graph.SaveToFile(RasteringFile);
+   graph.SaveToFile(AbsoluteRasteringFile);
    graph.Free;
    glAfterSaveBin;
   except
@@ -17130,7 +17157,8 @@ var //_BackIsValid,_TopIsValid:boolean;
     EqArea:TRect;
     EqX,EqY:integer;
     EqSize:TRect;
-    RasteringFiles:String;    
+    RasteringFiles:String;
+    AbsoluteRasteringFile:String;
 begin
 
   pn:=Owner;
@@ -17166,9 +17194,9 @@ begin
      end;
     end;
 
-    RasteringFile:=FinalID(pn)+PostFix+sst[OwnState];
+    RasteringFile:=FinalImageID(pn)+PostFix+sst[OwnState];
     RasteringFile:=RasteringFile+'.gif';
-    result:=glSaveBin(_crc,RasteringFile,OwnState<>hsNormal,BaseRasteringFile,NeedSave,false);
+    result:=glSaveBin(_crc,RasteringFile,AbsoluteRasteringFile,OwnState<>hsNormal,BaseRasteringFile,NeedSave,false);
 
     if NeedSave then
     begin
@@ -17196,8 +17224,7 @@ begin
       end;
       CloseGif(fingif);
       //fingif.OptimizeColorMap; //saves many kb at many frames
-      ForceDirectories(ExtractFilePath(RasteringFile));
-      fingif.SaveToFile(RasteringFile);
+      fingif.SaveToFile(AbsoluteRasteringFile);
       glAfterSaveBin;
      except
      end;
@@ -17271,10 +17298,10 @@ begin
          pnTransparentTop.SetSize(pnTopGraph.Width,pnTopGraph.Height);
          pn.TopGraph.DrawTo(pnTopGraph,pnTopGraph.BoundsRect,EqSize);
          pn.{TopGraph}TransparentTop.DrawTo(pnTransparentTop,pnTransparentTop.BoundsRect,EqSize);
-         RasteringFile:=FinalID(pn)+PostFix+EqNaming[EqY,EqX];
+         RasteringFile:=FinalImageID(pn)+PostFix+EqNaming[EqY,EqX];
          result:=SaveImg(pnTopGraph,pnTransparentTop,RasteringFile,OwnState<>hsNormal,BaseRasteringFile,getPhysicalImageFormat(pn,pnTransparentTop),false);
         end;
-        RasteringFiles:=RasteringFiles+ExtractFileName(RasteringFile)+'|';
+        RasteringFiles:=RasteringFiles+RasteringFile+'|';
        end;
        RasteringFiles:=RasteringFiles+inttostr(EqArea.Top)+'|'+inttostr(pn.TransparentTop.Height-EqArea.Bottom)+'|'+inttostr(EqArea.Left)+'|'+inttostr(pn.TransparentTop.Width-EqArea.Right)+'|';
        RasteringFile:=RasteringFiles;
@@ -17286,7 +17313,7 @@ begin
       exit;
      end;
     end;
-    RasteringFile:=FinalID(pn)+PostFix+sst[OwnState];
+    RasteringFile:=FinalImageID(pn)+PostFix+sst[OwnState];
     result:=SaveImg(pn.TopGraph,pn.TransparentTop,RasteringFile,OwnState<>hsNormal,BaseRasteringFile,getPhysicalImageFormat(pn,pn.TransparentTop),true);
    end else
     result:=false;
@@ -17345,7 +17372,7 @@ end;
 
 function TStyle.ProposedBackgroundFilename: String;
 begin
- result:=FinalID(Owner)+sst[OwnState]+FBackgroundImage.GraphicExtension
+ result:=FinalImageID(Owner)+sst[OwnState]+FBackgroundImage.GraphicExtension
 end;
 
 procedure StringToFile(const FileName,s:string);
@@ -17363,6 +17390,7 @@ function TStyle.PrepareBGImage:boolean;
 var pn:TdhCustomPanel;
     ss:TStringStream;
     NeedSave:boolean;
+    AbsoluteBGImageFile:string;
 begin
  result:=false;
  if not IsPictureStored then
@@ -17374,12 +17402,11 @@ begin
  BGImageFile:=ProposedBackgroundFilename;
 
   //GetAs32(FBackgroundImage.Graphic,Strech32);
- result:=glSaveBin(calc_crc32_String(ss.DataString),BGImageFile,false,EmptyStr,NeedSave,false);
+ result:=glSaveBin(calc_crc32_String(ss.DataString),BGImageFile,AbsoluteBGImageFile,false,EmptyStr,NeedSave,false);
 
  if NeedSave then
  try
-  ForceDirectories(ExtractFilePath({RasteringSaveDir}BGImageFile));
-  StringToFile(BGImageFile,ss.DataString);
+  StringToFile(AbsoluteBGImageFile,ss.DataString);
   glAfterSaveBin;
  except
  end;

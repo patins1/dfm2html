@@ -330,7 +330,7 @@ end;
 
 procedure TdhFile.WriteHTMLFileName(Writer: TWriter);
 begin
- Writer.WriteString(ExtractFileName(HTMLFileName));
+ Writer.WriteString(HTMLFileName);
 end;
 
 function TdhFile.ProposedFileName:String;
@@ -342,16 +342,16 @@ end;
 function TdhFile.PrepareHTMLFile:boolean;
 var NeedSave:boolean;
     FileData:String;
+    AbsoluteHTMLFileName:String;
 begin
  result:=false;
  if not GetData(FileData) then
   exit;
  HTMLFileName:=ProposedFileName;
- result:=glSaveBin(calc_crc32_String(FileData),HTMLFileName,false,'',NeedSave,false);
+ result:=glSaveBin(calc_crc32_String(FileData),HTMLFileName,AbsoluteHTMLFileName,false,'',NeedSave,false);
  if NeedSave then
  try
-  ForceDirectories(ExtractFilePath(HTMLFileName));
-  StringToFile(HTMLFileName,FileData);
+  StringToFile(AbsoluteHTMLFileName,FileData);
   glAfterSaveBin;
  except
   result:=false;

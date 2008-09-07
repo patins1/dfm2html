@@ -101,6 +101,9 @@ type
     FBackgroundSoundURL: string;
     FPublishURL: string;
     FHTTPURL: string;
+    FGeneratedImageFolder: string;
+    FGeneratedJavaScriptFile: string;
+    FGeneratedCSSFile: string;
     FScrolling:TScrolling;
     FUseIFrame:boolean;
     procedure SetTitle(const Value: HypeString);
@@ -156,6 +159,7 @@ type
 
     procedure SetUseIFrame(value:boolean);
     function CanBeTopPC:boolean; override;
+    function GetImageDir:String; override;
 
   public
     { Public declarations }
@@ -208,6 +212,9 @@ type
     //property PublishURL:string read FPublishURL write SetPublishURL stored false;
     property FTPURL:string read FPublishURL write SetFTPURL;
     property HTTPURL:string read FHTTPURL write FHTTPURL;
+    property GeneratedImageFolder:string read FGeneratedImageFolder write FGeneratedImageFolder;  
+    property GeneratedJavaScriptFile:string read FGeneratedJavaScriptFile write FGeneratedJavaScriptFile;
+    property GeneratedCSSFile:string read FGeneratedCSSFile write FGeneratedCSSFile;
     property PageIndex: Integer read GetPageIndex write SetPageIndex stored False;
     property Visible stored false;
 
@@ -240,8 +247,15 @@ var
 
 procedure Register;
 
-function GoodLocalPath(path:string):string;
+function GoodLocalPath(const path:string):string;
+function GoodPathDelimiters(const path:string):string;
+function GoodWebPathDelimiters(const path:string):string;
 function AdjustAlternativeRastering(const TopPC,ID:String; var Rastering:String):boolean;
+
+function FinalGeneratedJavaScriptFile(const GeneratedJavaScriptFile:String):String;
+function FinalGeneratedImageFolder(const GeneratedImageFolder:String):String;
+function FinalGeneratedCSSFile(const GeneratedCSSFile:String):String;
+
 
 implementation
 
@@ -972,7 +986,7 @@ begin
     begin
      TopPC:=Self.Name;
      ID:=pn.Name;
-     Rastering:=ExtractFileName(pn.Style.RasteringFile);
+     Rastering:=pn.Style.RasteringFile;
     end;
     //;f
    end;
@@ -1456,15 +1470,25 @@ begin
   result:='DFM2HTML_'+Name+PathDelim;
 end;
 
-function GoodLocalPath(path:string):string;
-begin
- if (path<>'') and not (path[length(path)] in ['/','\']) then
-  path:=path+PathDelim;
- path:=AnsiSubstText('/',PathDelim,path);
- path:=AnsiSubstText('\',PathDelim,path);
+function GoodLocalPath(const path:string):string;
+begin        
  result:=path;
+ if (result<>'') and not (result[length(result)] in ['/','\']) then
+  result:=result+PathDelim;
+ result:=GoodPathDelimiters(result);
 end;
 
+function GoodPathDelimiters(const path:string):string;
+begin
+ result:=path;
+ result:=AnsiSubstText('/',PathDelim,result);
+ result:=AnsiSubstText('\',PathDelim,result);
+end;
+
+function GoodWebPathDelimiters(const path:string):string;
+begin
+ result:=AnsiSubstText('\','/',path);
+end;
 
 procedure TdhPage.SetOutputDirectory(const Value: string);
 begin
@@ -1700,6 +1724,44 @@ end;
 function TdhPage.AlwaysVisibleVisibility:boolean;
 begin
  result:=IsHTMLBody;
+end;
+
+function TdhPage.GetImageDir:String;
+begin
+ result:=FinalGeneratedImageFolder(GeneratedImageFolder);
+end;
+
+function FinalGeneratedJavaScriptFile(const GeneratedJavaScriptFile:String):String;
+begin
+ if GeneratedJavaScriptFile='' then
+  result:='dfm2html.js' else
+  begin
+   result:=GeneratedJavaScriptFile;
+   if System.Pos('.js',LowerCase(result))=0 then
+    result:=result+'.js';
+  end;
+ result:=GoodWebPathDelimiters(result);
+end;
+
+function FinalGeneratedImageFolder(const GeneratedImageFolder:String):String;
+begin
+ result:=GeneratedImageFolder;
+ if result='' then
+  result:='.';
+ result:=GoodLocalPath(result);
+ result:=GoodWebPathDelimiters(result);
+end;
+
+function FinalGeneratedCSSFile(const GeneratedCSSFile:String):String;
+begin
+ if GeneratedCSSFile='' then
+  result:='' else
+  begin
+   result:=GeneratedCSSFile;
+   if System.Pos('.css',LowerCase(result))=0 then
+    result:=result+'.css';
+  end;                      
+ result:=GoodWebPathDelimiters(result);
 end;
 
 

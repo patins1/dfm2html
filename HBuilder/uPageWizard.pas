@@ -57,6 +57,20 @@ type
     eHead: TTntMemo;
     eBody: TTntMemo;
     eTop: TTntMemo;
+    TntTabSheet4: TTntTabSheet;
+    dhLabel1: TdhLabel;
+    eImageFolder: TTntEdit;
+    dhLabel2: TdhLabel;
+    eJavaScriptFile: TTntEdit;
+    dhLabel3: TdhLabel;
+    dhLabel4: TdhLabel;
+    dhLabel5: TdhLabel;
+    dhLabel6: TdhLabel;
+    eCSSFile: TTntEdit;
+    dhLabel7: TdhLabel;
+    procedure eCSSFileChange(Sender: TObject);
+    procedure eImageFolderChange(Sender: TObject);
+    procedure eJavaScriptFileChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure eBackgroundSoundForeverClick(Sender: TObject);
     procedure Button3Click(Sender: TObject);
@@ -66,6 +80,7 @@ type
   private
     { Private declarations }
     FPublishURL: string;
+    page:TdhPage;
     procedure SetPublishURL(const Value: string);
     property PublishURL:string read FPublishURL write SetPublishURL;
   public
@@ -86,8 +101,7 @@ uses uPublishFTP, Unit1;
 { TPageWizard }
 
 function TPageWizard.Prepare(pages:TList):boolean;
-var page:TdhPage;
-    i:integer;
+var i:integer;
 begin
  page:=TObject(pages[0]) as TdhPage;
  eTitle.Text:=page.Title;
@@ -105,6 +119,13 @@ begin
  eTop.Text:=page.HTMLTop;
  eForwardingDelay.Value:=page.ForwardingDelay;
  eForwardingURL.Text:=page.ForwardingURL;
+ eImageFolder.Text:=page.GeneratedImageFolder;
+ eJavaScriptFile.Text:=page.GeneratedJavaScriptFile;
+ eCSSFile.Text:=page.GeneratedCSSFile;
+ eJavaScriptFileChange(nil);
+ eImageFolderChange(nil);
+ eCSSFileChange(nil);
+
  {
  eBackgroundSoundURL.Text:=page.BackgroundSoundURL;
  eBackgroundSoundForever.Checked:=page.BackgroundSoundForever;
@@ -130,7 +151,7 @@ begin
   page.OutputDirectory:=eOutputDirectory.Text;
   page.FTPURL:=PublishURL;
   page.HTTPURL:=eHTTPURL.Text;
- end;                                   
+ end;
  page.MetaAuthor:=eAuthor.Text;
  page.MetaDescription:=eDescription.Text;
  page.MetaKeywords:=eKeywords.Text;
@@ -139,6 +160,10 @@ begin
  page.HTMLTop:=eTop.Text;
  page.ForwardingDelay:=eForwardingDelay.Value;
  page.ForwardingURL:=eForwardingURL.Text;
+
+ page.GeneratedImageFolder:=eImageFolder.Text;
+ page.GeneratedJavaScriptFile:=eJavaScriptFile.Text;
+ page.GeneratedCSSFile:=eCSSFile.Text;
  {
  page.BackgroundSoundURL:=eBackgroundSoundURL.Text;
  page.BackgroundSoundForever:=eBackgroundSoundForever.Checked;
@@ -155,6 +180,21 @@ end;
 procedure TPageWizard.eBackgroundSoundForeverClick(Sender: TObject);
 begin
  //eBackgroundSoundLoop.Enabled:=not eBackgroundSoundForever.Checked;
+end;
+
+procedure TPageWizard.eCSSFileChange(Sender: TObject);
+begin
+ dhLabel7.Text:='=> '+FinalGeneratedCSSFile(eCSSFile.Text);
+end;
+
+procedure TPageWizard.eImageFolderChange(Sender: TObject);
+begin
+ dhLabel4.Text:='=> '+FinalGeneratedImageFolder(FinalImageFolder(page.Parent)+CutCurrentDir(FinalGeneratedImageFolder(eImageFolder.Text)));
+end;
+
+procedure TPageWizard.eJavaScriptFileChange(Sender: TObject);
+begin
+ dhLabel5.Text:='=> '+FinalGeneratedJavaScriptFile(eJavaScriptFile.Text);
 end;
 
 procedure TPageWizard.Button3Click(Sender: TObject);

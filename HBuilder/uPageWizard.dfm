@@ -1,7 +1,6 @@
 object PageWizard: TPageWizard
-  Left = 205
-  Top = 145
-  AutoScroll = False
+  Left = 391
+  Top = 307
   Caption = 'Page Properties'
   ClientHeight = 287
   ClientWidth = 418
@@ -26,11 +25,15 @@ object PageWizard: TPageWizard
     Top = 8
     Width = 403
     Height = 238
-    ActivePage = TabSheet2
+    ActivePage = TntTabSheet4
     Anchors = [akLeft, akTop, akBottom]
     TabOrder = 0
     object TabSheet1: TTntTabSheet
       Caption = 'General'
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object Label6: TdhLabel
         Left = 8
         Top = 16
@@ -155,6 +158,10 @@ object PageWizard: TPageWizard
     object TabSheet2: TTntTabSheet
       Caption = 'Meta Tags'
       ImageIndex = 1
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object Label1: TdhLabel
         Left = 8
         Top = 16
@@ -226,6 +233,7 @@ object PageWizard: TPageWizard
           AutoSizeXY = asXY
           Anchors = [akTop, akRight]
           Right = 283
+          ExplicitLeft = 0
         end
         object eForwardingDelay: TMySpinEdit
           Left = 104
@@ -250,6 +258,10 @@ object PageWizard: TPageWizard
     object TabSheet3: TTntTabSheet
       Caption = 'Insert HTML'
       ImageIndex = 2
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object TntPageControl1: TTntPageControl
         Left = 8
         Top = 8
@@ -259,6 +271,10 @@ object PageWizard: TPageWizard
         TabOrder = 0
         object TntTabSheet1: TTntTabSheet
           Caption = 'Before </HEAD>'
+          ExplicitLeft = 0
+          ExplicitTop = 0
+          ExplicitWidth = 0
+          ExplicitHeight = 0
           object eHead: TTntMemo
             Left = 8
             Top = 8
@@ -270,6 +286,10 @@ object PageWizard: TPageWizard
         end
         object TntTabSheet2: TTntTabSheet
           Caption = 'After <BODY>'
+          ExplicitLeft = 0
+          ExplicitTop = 0
+          ExplicitWidth = 0
+          ExplicitHeight = 0
           object eBody: TTntMemo
             Left = 8
             Top = 8
@@ -281,6 +301,10 @@ object PageWizard: TPageWizard
         end
         object TntTabSheet3: TTntTabSheet
           Caption = 'At the very top'
+          ExplicitLeft = 0
+          ExplicitTop = 0
+          ExplicitWidth = 0
+          ExplicitHeight = 0
           object eTop: TTntMemo
             Left = 8
             Top = 8
@@ -290,6 +314,92 @@ object PageWizard: TPageWizard
             TabOrder = 0
           end
         end
+      end
+    end
+    object TntTabSheet4: TTntTabSheet
+      Caption = 'Paths'
+      object dhLabel1: TdhLabel
+        Left = 8
+        Top = 72
+        Width = 61
+        Height = 13
+        Text = 'Image folder:'
+        AutoSizeXY = asXY
+      end
+      object eImageFolder: TTntEdit
+        Left = 96
+        Top = 64
+        Width = 281
+        Height = 21
+        TabOrder = 1
+        OnChange = eImageFolderChange
+      end
+      object dhLabel2: TdhLabel
+        Left = 8
+        Top = 118
+        Width = 69
+        Height = 13
+        Text = 'JavaScript file:'
+        AutoSizeXY = asXY
+      end
+      object eJavaScriptFile: TTntEdit
+        Left = 96
+        Top = 110
+        Width = 281
+        Height = 21
+        TabOrder = 3
+        OnChange = eJavaScriptFileChange
+      end
+      object dhLabel3: TdhLabel
+        Left = 8
+        Top = 16
+        Width = 247
+        Height = 13
+        Text = 'You can define the names of generated files/folders:'
+        AutoSizeXY = asXY
+      end
+      object dhLabel4: TdhLabel
+        Left = 96
+        Top = 91
+        Width = 12
+        Height = 13
+        Text = '=>'
+        AutoSizeXY = asXY
+      end
+      object dhLabel5: TdhLabel
+        Left = 96
+        Top = 141
+        Width = 12
+        Height = 13
+        Text = '=>'
+        AutoSizeXY = asXY
+      end
+      object dhLabel6: TdhLabel
+        Left = 8
+        Top = 160
+        Width = 40
+        Height = 13
+        Text = 'CSS file:'
+        AutoSizeXY = asXY
+        Visible = False
+      end
+      object eCSSFile: TTntEdit
+        Left = 96
+        Top = 160
+        Width = 281
+        Height = 21
+        TabOrder = 8
+        Visible = False
+        OnChange = eCSSFileChange
+      end
+      object dhLabel7: TdhLabel
+        Left = 96
+        Top = 187
+        Width = 12
+        Height = 13
+        Text = '=>'
+        AutoSizeXY = asXY
+        Visible = False
       end
     end
   end
@@ -326,7 +436,7 @@ object PageWizard: TPageWizard
     Left = 320
     Top = 8
     LangData = {
-      0A005061676557697A617264010100000001000000070043617074696F6E0128
+      0A005061676557697A617264010100000001000000070043617074696F6E0133
       0000000C0050616765436F6E74726F6C31000009005461625368656574310101
       00000002000000070043617074696F6E0006004C6162656C3601010000001900
       0000040054657874000600655469746C650000060050616E656C31000006004C
@@ -353,6 +463,12 @@ object PageWizard: TPageWizard
       7074696F6E000C00546E7454616253686565743201010000002C000000070043
       617074696F6E000C00546E7454616253686565743301010000002D0000000700
       43617074696F6E00050065486561640000050065426F64790000040065546F70
-      0000}
+      00000C00546E7454616253686565743401010000002E00000007004361707469
+      6F6E00080064684C6162656C3101010000002F000000040054657874000C0065
+      496D616765466F6C6465720000080064684C6162656C32010100000030000000
+      040054657874000F00654A61766153637269707446696C650000080064684C61
+      62656C3301010000003100000004005465787400080064684C6162656C340000
+      080064684C6162656C350000080064684C6162656C3601010000003200000004
+      00546578740008006543535346696C650000080064684C6162656C370000}
   end
 end

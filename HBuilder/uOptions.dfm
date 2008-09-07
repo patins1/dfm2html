@@ -1,7 +1,6 @@
 object Options: TOptions
   Left = 225
   Top = 163
-  AutoScroll = False
   Caption = 'Options'
   ClientHeight = 241
   ClientWidth = 306
@@ -28,6 +27,10 @@ object Options: TOptions
     TabStop = False
     object TabSheet1: TTntTabSheet
       Caption = 'Grid'
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object Label2: TdhLabel
         Left = 8
         Top = 88
@@ -137,6 +140,10 @@ object Options: TOptions
     object TabSheet3: TTntTabSheet
       Caption = 'Output'
       ImageIndex = 2
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object Label4: TdhLabel
         Left = 8
         Top = 32
@@ -300,15 +307,19 @@ object Options: TOptions
       object lDirectoryCache: TdhLabel
         Left = 24
         Top = 88
-        Width = 100
+        Width = 75
         Height = 13
         Text = 'lDirectoryCache'
-        AutoSizeXY = asY
+        AutoSizeXY = asXY
       end
     end
     object TabSheet5: TTntTabSheet
       Caption = 'Appearance'
       ImageIndex = 4
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object RadioGroup1: TTntRadioGroup
         Left = 8
         Top = 8

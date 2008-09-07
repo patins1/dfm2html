@@ -26,16 +26,18 @@ type
     { Private declarations }
     ToUpload:TStringList;
     FBusy: boolean;
+    RootHostDirName,RasteringSaveDir:String;
 {$IFNDEF CLX}
     FtpClient1: TFtpClient;
     procedure FtpClient1RequestDone(Sender: TObject; RqType: TFtpRequest;
       Error: Word);
 {$ENDIF}
     procedure Log(Const Msg: WideString; Color: TColor=clBlack);
-    procedure SetBusy(const Value: boolean);
+    procedure SetBusy(const Value: boolean);     
+    function ExtractHostDirName(const path:String):String;
   public
     { Public declarations }
-    procedure DoUpload(URL:string);
+    procedure DoUpload(const URL,RasteringSaveDir: string);
     property Busy:boolean read FBusy write SetBusy;
   end;
 
@@ -59,12 +61,26 @@ begin
   result:=default;
 end;
 
+function ExtractWebFilePath(const FileName: string): string;
+var
+  I: Integer;
+begin
+  I := LastDelimiter('/', FileName);
+  Result := Copy(FileName, 1, I);
+end;
 
+function TPublishLog.ExtractHostDirName(const path:String):String;
+begin
+ result:=RootHostDirName+Copy(path,Length(RasteringSaveDir)+1,MaxInt);
+ result:=GoodWebPathDelimiters(result);
+ result:=ExtractWebFilePath(result);
+end;
 
-procedure TPublishLog.DoUpload(URL: string);
+procedure TPublishLog.DoUpload(const URL,RasteringSaveDir: string);
 var Proto, Username, Password, Host, Port, Path : String;
     i:integer;
 begin
+ Self.RasteringSaveDir:=RasteringSaveDir;
  if RichEdit1.Lines.Count<>0 then
   RichEdit1.Lines.Add(EmptyStr);
 
@@ -113,7 +129,8 @@ begin
  FtpClient1.Port:=DefaultS(Port,'21');
  FtpClient1.Username:=DefaultS(Username,'anonymous');
  FtpClient1.Password:=DefaultS(Password,'non@email.com');
- FtpClient1.HostDirName:=copy(Path,2,maxint);
+ RootHostDirName:=Path;
+ FtpClient1.HostDirName:=EmptyStr;
  FtpClient1.HostFileName:=EmptyStr;
  FtpClient1.ConnectAsync;
  Log(DKFormat(FTPLOG_CONNECTINGTO,Host));
@@ -151,65 +168,76 @@ end;
 procedure TPublishLog.FtpClient1RequestDone(Sender: TObject;
   RqType: TFtpRequest; Error: Word);
 var i:integer;
+    HostDirName:String;
 begin
  if (Error<>0) and (RqType<>ftpMkdAsync) then
  begin
-  if (RqType=ftpCwdAsync) and (FtpClient1.HostFileName=EmptyStr) then
+  if (RqType=ftpCwdAsync) then
   begin
-   FtpClient1.HostFileName:=Copy(FtpClient1.HostDirName,1,Pos('/',FtpClient1.HostDirName)-1);
+   FtpClient1.HostFileName:=Copy(FtpClient1.HostDirName,1,AdvPos('/',FtpClient1.HostDirName,2)-1);
    FtpClient1.MkdAsync;
-   exit;
-  end;      
+   Exit;
+  end;
   Log(FtpClient1.ErrorMessage,clRed);
   bStopTransfer.Click;
-  exit;
+  Exit;
  end;
+
  case RqType of
  ftpConnectAsync:
  begin
   Log(DKFormat(FTPLOG_LOGGEDIN),clGreen);
-  if FtpClient1.HostDirName<>EmptyStr then
-   FtpClient1.CwdAsync else
-   FtpClient1.TypeBinaryAsync;
- end;
- ftpCwdAsync:
- begin
-  FtpClient1.TypeBinaryAsync;
  end;
  ftpMkdAsync:
  begin
+  Log(DKFormat(FTPLOG_CREATEDDIR,FtpClient1.HostFileName));
   i:=AdvPos('/',FtpClient1.HostDirName,Length(FtpClient1.HostFileName)+2);
   if i<>0 then
   begin
    FtpClient1.HostFileName:=Copy(FtpClient1.HostDirName,1,i-1);
    FtpClient1.MkdAsync;
-   exit;
-  end;
-  Log(DKFormat(FTPLOG_CREATEDDIR,FtpClient1.HostFileName));
+   Exit;
+  end;       
   FtpClient1.CwdAsync;
+  Exit;
  end;
- else//ftpCwdAsync:
+ ftpPutAsync:
  begin
-  if RqType=ftpPutAsync then
-  begin
-   if FSmartPublishing and (dhMainForm.Act<>nil) then
-    dhMainForm.Act.MySiz.FindBody.Find(ExtractFileName(ToUpload[0]),DWORD(ToUpload.Objects[0]),true);
-   ToUpload.Delete(0);
-  end;
+  if FSmartPublishing and (dhMainForm.Act<>nil) then
+   dhMainForm.Act.MySiz.FindBody.Find(ExtractFileName(ToUpload[0]),DWORD(ToUpload.Objects[0]),true);
+  ToUpload.Delete(0);
+ end;
+ end;
 
   if ToUpload.Count<>0 then
   begin
-   Log(DKFormat(FTPLOG_UPLOAD,ExtractFileName(ToUpload[0])));
+   HostDirName:=ExtractHostDirName(ToUpload[0]);
+   if FtpClient1.HostDirName<>HostDirName then
+   begin
+    if FtpClient1.Binary then
+    begin
+     FtpClient1.TypeAsciiAsync;
+     Exit;
+    end;
+    FtpClient1.HostDirName:=HostDirName;
+    FtpClient1.CwdAsync;
+    Exit;
+   end;
+   if not FtpClient1.Binary then
+   begin
+    FtpClient1.TypeBinaryAsync;
+    Exit;
+   end;
    FtpClient1.HostFileName:=ExtractFileName(ToUpload[0]);
    FtpClient1.LocalFileName:=ToUpload[0];
+   Log(DKFormat(FTPLOG_UPLOAD,HostDirName+FtpClient1.HostFileName));
    FtpClient1.PutAsync;
-  end else
-  begin
-   Log(DKFormat(FTPLOG_SUCCESS),clGreen);
-   bStopTransfer.Click;
+   Exit;
   end;
- end;
- end;
+
+  Log(DKFormat(FTPLOG_SUCCESS),clGreen);
+  bStopTransfer.Click;
+
 end;
 {$ENDIF}
 

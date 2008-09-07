@@ -1,7 +1,6 @@
 object PublishFTP: TPublishFTP
-  Left = 130
-  Top = 101
-  AutoScroll = False
+  Left = 745
+  Top = 105
   Caption = 'FTP Settings'
   ClientHeight = 326
   ClientWidth = 463
@@ -192,11 +191,10 @@ object PublishFTP: TPublishFTP
     object dhLabel2: TdhLabel
       Left = 72
       Top = 200
-      Width = 6
+      Width = 12
       Height = 13
-      Text = '()'
+      Text = '=>'
       Style.FontSize = '8'
-      Style.Color = Gray
       AutoSizeXY = asXY
     end
   end

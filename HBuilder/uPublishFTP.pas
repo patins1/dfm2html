@@ -213,7 +213,7 @@ begin
   dhLabel2.Text:='[host name required]' else
    if (ePort.Text<>'') and not CheckInt(ePort.Text) then
   dhLabel2.Text:='[invalid port number]' else
-  dhLabel2.Text:='['+GetURL2(true)+']';
+  dhLabel2.Text:='=> '+GetURL2(true);
 end;
 
 function maskPsw(const Psw:String; maskPassword:Boolean):String;

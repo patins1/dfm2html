@@ -2473,7 +2473,7 @@ begin
  result:=false;
 end;
 
-var page_info,ForwardingDelay,BackgroundSoundForever,BackgroundSoundLoop,NsLoop,preloadOneByOne:string;
+var page_info,ForwardingDelay,BackgroundSoundForever,BackgroundSoundLoop,NsLoop,preloadOneByOne,dfm2html_js:string;
 
 
 
@@ -2660,6 +2660,10 @@ begin
  if HasPageProp('HTMLHead',page_info) then
   pre:=pre+page_info+CRLF;
 
+ dfm2html_js:='';
+ HasPageProp('GeneratedJavaScriptFile',dfm2html_js);
+ dfm2html_js:=FinalGeneratedJavaScriptFile(dfm2html_js);
+
  if bAdvPos(r,'<body',ns) and bAdvPos(r,'>',ns,r) then
  begin
   inc(r,length('>'));
@@ -2674,7 +2678,7 @@ begin
    preloadOneByOne:=CRLF+MakeIndent(2)+'<script type="text/javascript">preload(''onebyone.gif'');</script>';
   if not ((pagenest.parentTS<>nil) and pagenest.parentTS.IsIFrame) and (AdvPos('<noscript',ns)=0) then
    Insert(CRLF+MakeIndent(2)+'<noscript>This page requires JavaScript. <a href="http://www.dfm2html.com/js.html">Help</a></noscript>',ns,r);
-  Insert(CRLF+MakeIndent(2)+'<script type="text/javascript" src="dfm2html.js"></script>'+preloadOneByOne,ns,r);
+  Insert(CRLF+MakeIndent(2)+'<script type="text/javascript" src="'+dfm2html_js+'"></script>'+preloadOneByOne,ns,r);
  end;
 
 
@@ -2747,7 +2751,7 @@ begin
  end;
  *)
  if NeedJS then
-   glStringToFile('dfm2html.js',men);
+   glStringToFile(dfm2html_js,men);
 
  //http://groups.google.de/groups?q=%22utf-8%22+encoding+html&hl=de&lr=&ie=UTF-8&selm=wmiIc.90209%24sj4.1828%40news-server.bigpond.net.au&rnum=4
  ns:=AnsiSubstText(MaskQuotes,'"',ns);

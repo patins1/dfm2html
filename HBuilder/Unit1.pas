@@ -1491,10 +1491,11 @@ end;
 
 procedure StringToFile(FileName:string; const s:string);
 var NeedSave:boolean;
+    AbsoluteFileName:String;
 begin
- glSaveBin(calc_crc32_String(s),FileName,false,EmptyStr,NeedSave,true);
+ glSaveBin(calc_crc32_String(s),FileName,AbsoluteFileName,false,EmptyStr,NeedSave,true);
  if NeedSave then
- with TFileStream.create(FileName,fmCreate) do
+ with TFileStream.create(AbsoluteFileName,fmCreate) do
  begin
   if s<>EmptyStr then
    WriteBuffer(s[1],length(s));
@@ -1538,43 +1539,49 @@ begin
 end;
 
 
-function SaveBin(_crc:DWORD; var RasteringFile:string; CheckBaseRasteringFile:boolean; BaseRasteringFile:string; var NeedSave:boolean; NeedSameFileName:boolean):boolean;
+function SaveBin(_crc:DWORD; var RasteringFile,AbsoluteRasteringFile:string; CheckBaseRasteringFile:boolean; BaseRasteringFile:string; var NeedSave:boolean; NeedSameFileName:boolean):boolean;
 var gif_pre:TBitmap32;
     graph:TGraphic;
     id_crc:DWORD;
     server_crc:DWORD;
     sb:TSaveBinItem;
+    AbsoluteBaseRasteringFile:string;
 begin
   NeedSave:=false;
   server_crc:=_crc;//calc_crc32_String(RasteringFile,_crc);
-  RasteringFile:=RasteringSaveDir+RasteringFile;
+  RasteringFile:=CutCurrentDir(GoodWebPathDelimiters(RasteringFile));
+  AbsoluteRasteringFile:=RasteringSaveDir+GoodPathDelimiters(RasteringFile);
+  AbsoluteBaseRasteringFile:=RasteringSaveDir+GoodPathDelimiters(BaseRasteringFile);
+  ForceDirectories(ExtractFilePath(AbsoluteRasteringFile));
+
   if NeedSameFileName then
-   id_crc:=calc_crc32_String(lowercase(RasteringFile),_crc) else
+   id_crc:=calc_crc32_String(lowercase(AbsoluteRasteringFile),_crc) else
    id_crc:=calc_crc32_String(lowercase(RasteringSaveDir),_crc);
 
   sb:=FindIdCrc(id_crc);
   if sb<>nil then
-  if (sb.FileAge<>FileAge(sb.FileName)) or (sb.FileName<>RasteringFile) and (GeneratedFiles.IndexOf(sb.FileName)=-1) { or not SameText(RasteringSaveDir,ExtractFileDir(CrcList[i])+PathDelim)} then
+  if (sb.FileAge<>FileAge(sb.FileName)) or (sb.FileName<>AbsoluteRasteringFile) and (GeneratedFiles.IndexOf(sb.FileName)=-1) { or not SameText(RasteringSaveDir,ExtractFileDir(CrcList[i])+PathDelim)} then
   begin
    CrcList.Remove(sb);
   end else
   begin
-   RasteringFile:=sb.FileName;
-   if CheckBaseRasteringFile and (BaseRasteringFile=RasteringFile) then
+   AbsoluteRasteringFile:=sb.FileName;
+   RasteringFile:=GoodWebPathDelimiters(Copy(AbsoluteRasteringFile, Length(RasteringSaveDir)+1, MaxInt));
+   if CheckBaseRasteringFile and (AbsoluteBaseRasteringFile=AbsoluteRasteringFile) then
    begin
     result:=false;
     exit;
    end else
    begin
-    if (GeneratedFiles.IndexOf(sb.FileName)=-1) then GeneratedFiles.AddObject(RasteringFile,Pointer(server_crc));
+    if (GeneratedFiles.IndexOf(sb.FileName)=-1) then GeneratedFiles.AddObject(AbsoluteRasteringFile,Pointer(server_crc));
     result:=true;
     exit;
    end;
   end;
 
-  if (GeneratedFiles.IndexOf(RasteringFile)=-1) then GeneratedFiles.AddObject(RasteringFile,Pointer(server_crc));
+  if (GeneratedFiles.IndexOf(AbsoluteRasteringFile)=-1) then GeneratedFiles.AddObject(AbsoluteRasteringFile,Pointer(server_crc));
 
-  AfterSaveBinI:=FindFilename(RasteringFile);
+  AfterSaveBinI:=FindFilename(AbsoluteRasteringFile);
   if AfterSaveBinI<>nil then
    {CrcList.Objects[AfterSaveBinI]:=Pointer(_crc)} else
    begin
@@ -1583,7 +1590,7 @@ begin
    end;
   AfterSaveBinI.id_crc:=id_crc;
   AfterSaveBinI.data_crc:=_crc;
-  AfterSaveBinI.FileName:=RasteringFile;
+  AfterSaveBinI.FileName:=AbsoluteRasteringFile;
   {if dhMainForm.Act<>nil then
    AfterSaveBinI.DocName:=dhMainForm.Act.FileName; }
 
@@ -2219,7 +2226,7 @@ begin
   end else
    exit;
  end;
- PublishLog.DoUpload(Act.MySiz.FindBody.FTPURL);
+ PublishLog.DoUpload(Act.MySiz.FindBody.FTPURL,RasteringSaveDir);
 end;
 
 procedure AfterSaveBin;

@@ -30,10 +30,6 @@ object PageWizard: TPageWizard
     TabOrder = 0
     object TabSheet1: TTntTabSheet
       Caption = 'General'
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Label6: TdhLabel
         Left = 8
         Top = 16
@@ -233,7 +229,6 @@ object PageWizard: TPageWizard
           AutoSizeXY = asXY
           Anchors = [akTop, akRight]
           Right = 283
-          ExplicitLeft = 0
         end
         object eForwardingDelay: TMySpinEdit
           Left = 104
@@ -271,10 +266,6 @@ object PageWizard: TPageWizard
         TabOrder = 0
         object TntTabSheet1: TTntTabSheet
           Caption = 'Before </HEAD>'
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
           object eHead: TTntMemo
             Left = 8
             Top = 8
@@ -286,10 +277,6 @@ object PageWizard: TPageWizard
         end
         object TntTabSheet2: TTntTabSheet
           Caption = 'After <BODY>'
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
           object eBody: TTntMemo
             Left = 8
             Top = 8
@@ -301,10 +288,6 @@ object PageWizard: TPageWizard
         end
         object TntTabSheet3: TTntTabSheet
           Caption = 'At the very top'
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
           object eTop: TTntMemo
             Left = 8
             Top = 8
@@ -381,7 +364,6 @@ object PageWizard: TPageWizard
         Height = 13
         Text = 'CSS file:'
         AutoSizeXY = asXY
-        Visible = False
       end
       object eCSSFile: TTntEdit
         Left = 96
@@ -389,7 +371,6 @@ object PageWizard: TPageWizard
         Width = 281
         Height = 21
         TabOrder = 8
-        Visible = False
         OnChange = eCSSFileChange
       end
       object dhLabel7: TdhLabel
@@ -399,7 +380,6 @@ object PageWizard: TPageWizard
         Height = 13
         Text = '=>'
         AutoSizeXY = asXY
-        Visible = False
       end
     end
   end

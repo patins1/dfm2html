@@ -52,6 +52,9 @@ implementation
 
 const gif1by1='4749463839610100010080000000000000000021F90401000000002C00000000010001000002024401003B';
 
+var cssfile:string;
+var EverNeeded1by1,EverNeededSplit,EverNeededButton,EverNeededJS:Boolean;
+
 function GetBackBinary(const ss:string):string;
 var i:integer;
     s:string;
@@ -70,7 +73,7 @@ type tnest= class(TList)
     borders:TPoint;
     InnerPos:integer;
     MinWidth:integer;
-    AutoY,AutoX,NeedParentColor,InlineUsed:boolean;
+    AutoY,AutoX,NeedParentColor:boolean;
     Props,PropVals:TMyStringList;
     InlineUse,UsedInlineBy:TList;
     Anchors,OriAnchors:TAnchors;
@@ -1708,7 +1711,6 @@ begin
         *)
  pre:=s+pre;
 
- vv.Free;
 end;
 
 
@@ -1942,9 +1944,6 @@ begin
 
  Client:=pnest.Client;
  //inc(Client.Bottom,pnest.addheight);
-
- NeedButton:=NeedButton or (nest.tag='button');
-
 
  if not nest.IsPopupMenu then
  begin
@@ -2193,7 +2192,7 @@ begin
  begin
  ns:=ns+CRLF+MakeIndent(CurIndent);
 
- if (nest.Props<>nil) and (nest.tag='iframe') and (nest.Anchors*[akLeft,akRight]=[akLeft,akRight]) then
+ if (nest.Props<>nil) and (nest.tag='iframe') and ((nest.Anchors*[akLeft,akRight]=[akLeft,akRight]) or (nest.Anchors*[akTop,akBottom]=[akTop,akBottom])) then
  begin
   sPositionings:=extract('left')+extract('top')+extract('right')+extract('bottom')+extract('width')+extract('height');
   ns:=ns+'<div style="position:absolute;'+IndentSpace+sPositionings+'">';
@@ -2292,17 +2291,9 @@ begin
  for i:=0 to nest.InlineUse.Count-1 do
  begin
   vvadd(nest.InlineUse[i]);
-  tnest(nest.InlineUse[i]).InlineUsed:=true;
  end;
  if nest.Use<>nil then
   vvadd(nest.Use);
-end;
-
-
-procedure AddWidthHeight(st:TState; const pmn:string);
-begin
- if pmn<>'' then
-  pre:=pre+'.'+GetSelectorJS(nest.id,st)+IndentSpace+'{'+GoodStyle(pmn)+'}'+CRLF;
 end;
 
 
@@ -2317,12 +2308,28 @@ begin
    vvadd(nest);
   end;
  end;
+
+end;
+
+
+procedure BeforeWrite4(nest:TNest);
+
+procedure AddWidthHeight(st:TState; const pmn:string);
+begin
+ if pmn<>'' then
+  pre:=pre+'.'+GetSelectorJS(nest.id,st)+IndentSpace+'{'+GoodStyle(pmn)+'}'+CRLF;
+end;
+
+
+var i:integer;
+var pmn,phr,pdn,phd:string;
+begin
  for i:=0 to gln.Count-1 do
  begin
   nest:=TNest(gln.Objects[i]);
   nest.pmn:='';
   if (nest.Props<>nil){ and not nest.IsBody} then
-  if nest.Show or nest.img and nest.InlineUsed then
+  if nest.Show or nest.img and nest.IsIn and (nest.UsedInlineBy<>nil) then
   begin
    if not(nest.AutoX and nest.AutoY) then
    begin
@@ -2330,7 +2337,7 @@ begin
     phr:=CallTemplate_get_WidthHeight(nest,hsOver);
     pdn:=CallTemplate_get_WidthHeight(nest,hsDown);
     phd:=CallTemplate_get_WidthHeight(nest,hsOverDown);
-    if (phr<>'') or (pdn<>'') or (phd<>'') or nest.img and nest.InlineUsed then
+    if (phr<>'') or (pdn<>'') or (phd<>'') or nest.img and nest.IsIn and (nest.UsedInlineBy<>nil) then
     begin
      AddWidthHeight(hsNormal,pmn);
      if nest.DownOverlayOver then
@@ -2453,7 +2460,7 @@ begin
   nest.Show:=true;
 end;             }
 
-function HasPageProp(const PropName:string; var s:string):boolean;
+function HasPageProp(const PropName:string; var s:string; pagenest:TNest):boolean; overload;
 var nest:tnest;
 begin
  nest:=pagenest;
@@ -2473,16 +2480,45 @@ begin
  result:=false;
 end;
 
+function HasPageProp(const PropName:string; var s:string):boolean; overload;
+begin
+ result:=HasPageProp(PropName,s,pagenest);
+end;
+
 var page_info,ForwardingDelay,BackgroundSoundForever,BackgroundSoundLoop,NsLoop,preloadOneByOne,dfm2html_js:string;
 
+var s_cssfile:string;
+var s_EverNeeded1by1,s_EverNeededSplit,s_EverNeededButton,s_EverNeededJS:Boolean;
 
 
+procedure SetShowWhenSameCSSFile(nest:TNest);
+var i:integer;
+    s_cssfile:String;
 begin
-// if not nest.IsPC or nest.HasSubTS then
- if not nest.NeverVisible then 
+ s_cssfile:=cssfile;
+ try
+ if nest.IsPC then
+ begin
+  HasPageProp('GeneratedCSSFile',cssfile,nest);
+  cssfile:=FinalGeneratedCSSFile(cssfile);
+ end;
+ if not nest.IsPC and (nest.parentTS<>nil) then
+  nest.Show:=not nest.NeverVisible and nest.parentTS.show else
+  nest.Show:=cssfile=s_cssfile;
+ if nest.Show then
+ begin
  for i:=0 to nest.Count-1 do
-  savenested(nest[i]);
- if not(nest.IsPC and not nest.HasSubTS) then exit;
+  SetShowWhenSameCSSFile(nest[i]);
+ end;
+ finally
+  cssfile:=s_cssfile;
+ end;
+end;
+
+
+procedure InitAndStyles(ForCSSFile:Boolean);
+var i:Integer;
+begin
 
  PureFileName:=nest.PureFileName;
 
@@ -2495,8 +2531,6 @@ begin
  begin
   show:=false;
   IsIn:=false;
-  NeedOwnClass:=false;
-  InlineUsed:=false;
  end;
 
 
@@ -2520,6 +2554,8 @@ begin
   pnest:=pnest.parentTS;
  end;
  SetShow(nest);
+ if ForCSSFile then SetShowWhenSameCSSFile(pagenest);
+ 
  CalcDown(nest);
  CalcDown2(nest);
  SetStaticMenuShow(nest);
@@ -2540,12 +2576,14 @@ begin
   break;
  end;
  NeedJS:=true;
-// NeedJS:=true;
+// NeedJS:=true;                     
+ EverNeededJS:=EverNeededJS or NeedJS;
+ if ForCSSFile then NeedJS:=EverNeededJS;
 
 
 
 
-
+ 
 { if svg then
   filename:=PureFileName+'.svg' else
   filename:=PureFileName+'.html';
@@ -2561,17 +2599,37 @@ begin
  pre:='';
 
 
- 
+
  Preload:=TMyStringList.Create;
  ns:='';
 
  vv:=TList.Create;
+ try
  NeedButton:=false;
  BeforeWrite(nest);
  BeforeWrite2(nest);
- BeforeWrite3(nest);
- WriteNs(nest,1);
+ BeforeWrite3(nest);       
+ if not ForCSSFile then BeforeWrite4(nest);
+ if not ForCSSFile then WriteNs(nest,1);
+
+ Need1by1:=AdvPos('onebyone.gif',ns)>0;
+ EverNeeded1by1:=EverNeeded1by1 or Need1by1;     
+ if ForCSSFile then Need1by1:=EverNeeded1by1;
+
+ NeedSplit:=AdvPos('class="fill'{e.g. class="fill Panel1_nm"},ns)>0;
+ EverNeededSplit:=EverNeededSplit or NeedSplit;
+ if ForCSSFile then NeedSplit:=EverNeededSplit;
+
+ for i:=0 to gln.Count-1 do
+  NeedButton:=NeedButton or TNest(gln.Objects[i]).Show and (TNest(gln.Objects[i]).tag='button');
+ EverNeededButton:=EverNeededButton or NeedButton;   
+ if ForCSSFile then NeedButton:=EverNeededButton;
+
+ if not ForCSSFile and (cssfile<>'') then exit;
  StyleArrange; //wegen NeedOwnClass
+ finally
+  FreeAndNil(vv);
+ end;
 
 // if NeedButton then pre:='.button'+IndentSpace+'{white-space:normal}'+CRLF+pre;
 
@@ -2579,14 +2637,12 @@ begin
   pre:='div,span,img,a,form,body,label'+IndentSpace+'{border-width:'+inttostr(default_borderwidth)+'px;border-color:black}'+CRLF+pre;
 
 
- Need1by1:=AdvPos('onebyone.gif',ns)>0;
  if Need1by1 then
  begin
   pre:='img'+IndentSpace+'{border-style:none}'+CRLF+pre;
   glStringToFile('onebyone.gif',GetBackBinary(gif1by1));
  end;
 
- NeedSplit:=AdvPos('class="fill'{e.g. class="fill Panel1_nm"},ns)>0;
  if NeedSplit then
  begin
   //pre:=pre+'.fill'+IndentSpace+'{position:absolute;left:0;top:0;right:0;bottom:0;z-index:-99;padding:0;}'+CRLF;
@@ -2607,6 +2663,40 @@ begin
  if NeedButton then pre:='button'+IndentSpace+'{white-space:nowrap}'+CRLF+pre;
 
 
+end;
+
+
+begin
+// if not nest.IsPC or nest.HasSubTS then
+
+ s_cssfile:=cssfile;
+ s_EverNeeded1by1:=EverNeeded1by1;
+ s_EverNeededSplit:=EverNeededSplit;
+ s_EverNeededButton:=EverNeededButton;
+ s_EverNeededJS:=EverNeededJS;
+ try
+ if nest.IsPC then
+ begin           
+  HasPageProp('GeneratedCSSFile',cssfile,nest);
+  cssfile:=FinalGeneratedCSSFile(cssfile);
+  if cssfile<>s_cssfile then
+  begin
+   EverNeeded1by1:=false;
+   EverNeededSplit:=false;
+   EverNeededButton:=false;
+   EverNeededJS:=false;
+  end;
+ end;
+
+ if not nest.NeverVisible then
+ for i:=0 to nest.Count-1 do
+  savenested(nest[i]);
+
+
+ if nest.IsPC and not nest.HasSubTS then
+ begin
+
+ InitAndStyles(False);
 
  {if ShareWare and bAdvPosBack(r,'</body>',ns,length(ns)) then
  begin
@@ -2616,7 +2706,9 @@ begin
 
  if pre<>'' then
   pre:=MakeIndent(2)+'<style type="text/css">'+CRLF+'<!--'+CRLF+pre+'-->'+CRLF+MakeIndent(2)+'</style>'+CRLF;
-
+  
+ if cssfile<>'' then
+  pre:=MakeIndent(2)+'<link rel="stylesheet" type="text/css" href="'+cssfile+'"/>'+CRLF+pre;
 
  if HasPageProp('ForwardingURL',page_info) then
  begin
@@ -2763,7 +2855,30 @@ begin
   StringToFile(SaveDir+filename,SubstText(endl_main,endl,ns)) else }
  glStringToFile(filename,AnsiSubstText(endl_main,endl,ns));
  AllPCs.Free;
+ end;
+
+
+
+ if nest.isPC then
+ begin
+  if cssfile<>s_cssfile then
+  begin
+   InitAndStyles(true);
+   glStringToFile(cssfile,pre);
+   EverNeeded1by1:=s_EverNeeded1by1;
+   EverNeededSplit:=s_EverNeededSplit;
+   EverNeededButton:=s_EverNeededButton;
+   EverNeededJS:=s_EverNeededJS;        
+   FreeAndNil(PreLoad);
+  end;
+ end;
+
+
  //result:=filename;
+ finally
+  cssfile:=s_cssfile;
+ end;
+
 end;
 
 function ExtractPureFileName(const f:string): string;

@@ -2516,7 +2516,7 @@ begin
 end;
 
 
-procedure InitAndStyles(ForCSSFile:Boolean);
+procedure InitAndStyles(nest:TNest;ForCSSFile:Boolean);
 var i:Integer;
 begin
 
@@ -2696,7 +2696,7 @@ begin
  if nest.IsPC and not nest.HasSubTS then
  begin
 
- InitAndStyles(False);
+ InitAndStyles(nest,False);
 
  {if ShareWare and bAdvPosBack(r,'</body>',ns,length(ns)) then
  begin
@@ -2863,7 +2863,7 @@ begin
  begin
   if cssfile<>s_cssfile then
   begin
-   InitAndStyles(true);
+   InitAndStyles(nest,true);
    glStringToFile(cssfile,pre);
    EverNeeded1by1:=s_EverNeeded1by1;
    EverNeededSplit:=s_EverNeededSplit;

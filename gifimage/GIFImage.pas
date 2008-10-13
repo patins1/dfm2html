@@ -11098,6 +11098,9 @@ Step 6: Clear frame from backup buffer
 |            |                  |5. Copy buf to dest  |5. Copy buf to dest     |
 +------------+------------------+---------------------+------------------------+
 }
+  if (Disposal<Low(TDisposalMethod)) or (Disposal>High(TDisposalMethod)) then
+   Disposal:=dmNone;
+
   case (Disposal) of
     dmNone, dmNoDisposal:
       begin

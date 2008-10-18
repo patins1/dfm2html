@@ -244,6 +244,7 @@ var
      FViewer:string;
      FSmartPublishing:boolean;
      FPassiveFTP:boolean;
+     FAutoUpdate:boolean;
 
 procedure Register;
 

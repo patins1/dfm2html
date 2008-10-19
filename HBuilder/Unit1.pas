@@ -2629,7 +2629,7 @@ begin
  begin
   if MessageDlg(DKFormat(NEWVERSIONAVAILABLE),mtConfirmation,[mbYes, mbNo], 0)=mrYes then
   begin
-   Browse('http://www.dfm2html.'+GetTopLevelDomain+'/download/',{'iexplore'}FViewer,false);
+   Browse('http://www.dfm2html.'+GetTopLevelDomain+'/update.html',{'iexplore'}FViewer,false);
   end;
  end else
  begin

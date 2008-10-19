@@ -34,7 +34,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
     Right = 0
     Bottom = 0
     UseIFrame = False
-    Title = 'HTML Editor DFM2HTML Version 3.1'
+    Title = 'HTML Editor DFM2HTML Version 3.2'
     OutputDirectory = 'www2\'
     MetaAuthor = 'J'#246'rg Kiegeland'
     MetaDescription = 'An WYSIWYG HTML editor'
@@ -42,12 +42,14 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
       'HTML editor, web page maker, web design creator, anti aliasing, ' +
       'mouse over buttons, WYSIWYG, absolute positioning, site manageme' +
       'nt, authoring'
-    FTPURL = 'ftp://p8288468:5yMTPDtZ@kiegeland.com/dfm2html/'
+    FTPURL = 'ftp://p8288468:5yMTPDtZ@kiegeland.com/dfm2html_de/'
     HTTPURL = 'http://www.dfm2html.com/'
+    GeneratedImageFolder = 'images'
+    GeneratedCSSFile = 'dfm2html'
     object Panel4: TdhPanel
       Top = 4
       Width = 758
-      Height = 648
+      Height = 1908
       Style.Border.Width = 1
       Style.Border.Color = 15461355
       Style.Border.Style = cbsSolid
@@ -85,7 +87,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
         Top = 88
         Width = 24
         Height = 24
-        ActivePage = Page1
+        ActivePage = history
         FixedHeight = False
         object Page1: TdhPage
           Left = 192
@@ -99,7 +101,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
             Left = 16
             Top = 48
             Width = 456
-            Height = 330
+            Height = 346
             Text = 
               '<en>'#10'DFM2HTML is an easy to use WYSIWYG HTML editor. Sophisticat' +
               'ed web sites can be composed within minutes using drag&drop and ' +
@@ -141,7 +143,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
             Top = 392
             Width = 224
             Height = 22
-            Text = 'Download DFM2HTML 3.1'
+            Text = 'Download DFM2HTML 3.2'
             Style.FontSize = '19'
             AutoSizeXY = asXY
             PreferDownStyles = True
@@ -164,7 +166,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
           object Link21: TdhLink
             Left = 32
             Top = 424
-            Width = 104
+            Width = 110
             Height = 16
             Text = #9658' <en>Version history</en><de>Versionshistorie</de>'
             Style.TextDecoration = [ctdNone]
@@ -292,7 +294,6 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
               Style.TextDecoration = [ctdNone]
               AutoSizeXY = asXY
               Align = alTop
-              Right = 0
               StyleDown.TextDecoration = [ctdUnderline]
               StyleOver.TextDecoration = [ctdUnderline]
               Layout = ltText
@@ -307,7 +308,6 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
               Style.Color = Red
               AutoSizeXY = asY
               Align = alTop
-              Right = 0
             end
           end
           object Link25: TdhLink
@@ -395,7 +395,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
           object Label24: TdhLabel
             Left = 24
             Top = 16
-            Width = 340
+            Width = 331
             Height = 198
             Text = 
               '<address>Copyright '#169' 2008<br/>'#10'Dipl.-Inform. J'#246'rg Kiegeland<br/>' +
@@ -430,7 +430,6 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
               Style.BackgroundColor = 14211288
               AutoSizeXY = asY
               Align = alTop
-              Right = 0
             end
             object Label14: TdhLabel
               Left = 0
@@ -441,7 +440,6 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
               Style.FontWeight = cfwBold
               AutoSizeXY = asY
               Align = alTop
-              Right = 0
             end
             object Submit2: TdhLink
               Left = 0
@@ -452,7 +450,6 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
               Style.Border.Color = Black
               AutoSizeXY = asXY
               Align = alTop
-              Right = 0
               Layout = ltButton
               PreferDownStyles = True
               Options = [loDownIfMenu, loDownIfMouseDown, loDownIfURL]
@@ -485,7 +482,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
                 object Submit1: TdhLink
                   Left = 8
                   Top = 208
-                  Width = 92
+                  Width = 63
                   Height = 24
                   Text = '<en>Submit</en><de>Abschicken</de>'
                   AutoSizeXY = asXY
@@ -498,7 +495,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
                 object Label31: TdhLabel
                   Left = 8
                   Top = 8
-                  Width = 68
+                  Width = 69
                   Height = 16
                   Text = '<en>Your Name:</en><de>Dein Name:</de>'
                   AutoSizeXY = asXY
@@ -528,7 +525,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
                 object Label33: TdhLabel
                   Left = 8
                   Top = 88
-                  Width = 59
+                  Width = 57
                   Height = 16
                   Text = '<en>Message:</en><de>Nachricht:</de>'
                   AutoSizeXY = asXY
@@ -542,7 +539,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
                 end
                 object Link28: TdhLink
                   Top = 208
-                  Width = 73
+                  Width = 58
                   Height = 24
                   Text = '<en>Reset</en><de>L'#246'schen</de>'
                   AutoSizeXY = asXY
@@ -572,7 +569,6 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
                 Style.FontWeight = cfwBold
                 AutoSizeXY = asY
                 Align = alTop
-                Right = 1
               end
             end
             object Page7: TdhPage
@@ -589,7 +585,6 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
                 Height = 19
                 AutoSizeXY = asXY
                 Align = alTop
-                Right = 0
                 InnerHTML = 
                   '<?php'#13#10#9'$recipient = "info@dfm2html.com";'#13#10#9'$subject = "dfm2html' +
                   '.com contact form";'#13#10#13#10#9'if ($_POST["access"]!="dfm2html")  $err=' +
@@ -615,7 +610,6 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
                 Style.FontWeight = cfwBold
                 AutoSizeXY = asXY
                 Align = alTop
-                Right = 0
               end
               object DirectHTML5: TdhDirectHTML
                 Left = 0
@@ -623,7 +617,6 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
                 Height = 19
                 AutoSizeXY = asXY
                 Align = alTop
-                Right = 0
                 InnerHTML = '<?php'#13#10#9'} else {'#13#10'?>'
                 GenerateContainer = False
               end
@@ -633,7 +626,6 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
                 Height = 19
                 AutoSizeXY = asXY
                 Align = alTop
-                Right = 0
                 InnerHTML = '<?php'#13#10#9'}'#13#10'?>'
                 GenerateContainer = False
               end
@@ -646,7 +638,6 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
                 Style.Color = Red
                 AutoSizeXY = asXY
                 Align = alTop
-                Right = 0
               end
               object StyleSheet6: TdhStyleSheet
                 Left = 16
@@ -664,7 +655,6 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
                   Text = 'Link1'
                   AutoSizeXY = asXY
                   Align = alTop
-                  Right = 0
                   Layout = ltButton
                   PreferDownStyles = True
                   Options = [loDownIfMenu, loDownIfMouseDown, loDownIfURL]
@@ -684,7 +674,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
           object Label16: TdhLabel
             Left = 16
             Top = 24
-            Width = 274
+            Width = 115
             Height = 16
             Text = 
               #9658' <en>Contact us if your site shall be listed here</en><de>Benut' +
@@ -695,7 +685,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
           end
           object Label19: TdhLabel
             Left = 16
-            Top = 464
+            Top = 592
             Width = 320
             Height = 16
             Text = 
@@ -705,7 +695,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
           end
           object Image1: TdhLink
             Left = 168
-            Top = 688
+            Top = 816
             Width = 144
             Height = 144
             ImageType = bitStretch
@@ -1990,7 +1980,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
           end
           object Link6: TdhLink
             Left = 168
-            Top = 1392
+            Top = 1520
             Width = 144
             Height = 144
             ImageType = bitStretch
@@ -3363,7 +3353,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
           end
           object Link11: TdhLink
             Left = 168
-            Top = 1040
+            Top = 1168
             Width = 144
             Height = 144
             ImageType = bitStretch
@@ -4435,291 +4425,334 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
           end
           object StyleSheet5: TdhStyleSheet
             Left = 16
-            Top = 491
+            Top = 619
             Width = 28
             Height = 28
             Expanded = False
-            VertPosition = 180
+            VertPosition = 276
             ExpandedWidth = 240
             ExpandedHeight = 216
             Expanded = False
             object Link12: TdhLink
               Left = 0
-              Top = -180
+              Top = -276
               Height = 16
               Text = 'Link12'
               AutoSizeXY = asXY
               Align = alTop
-              Right = 0
               PreferDownStyles = True
               Options = [loDownIfMenu, loDownIfMouseDown, loDownIfURL]
             end
             object Link17: TdhLink
               Left = 0
-              Top = -164
+              Top = -260
               Height = 16
               Text = 'http://www.pletsch.info'
               AutoSizeXY = asXY
               Align = alTop
-              Right = 0
               PreferDownStyles = True
               Options = [loDownIfMenu, loDownIfMouseDown, loDownIfURL]
               Link = 'http://www.pletsch.info'
             end
             object Link16: TdhLink
               Left = 0
-              Top = -148
+              Top = -244
               Height = 16
               Text = 'http://www.qv90.de'
               AutoSizeXY = asXY
               Align = alTop
-              Right = 0
               PreferDownStyles = True
               Options = [loDownIfMenu, loDownIfMouseDown, loDownIfURL]
               Link = 'http://www.qv90.de'
             end
             object Link24: TdhLink
               Left = 0
-              Top = -132
+              Top = -228
               Height = 16
               Text = 'http://ronspctech.com/'
               AutoSizeXY = asXY
               Align = alTop
-              Right = 0
               PreferDownStyles = True
               Options = [loDownIfMenu, loDownIfMouseDown, loDownIfURL]
               Link = 'http://ronspctech.com/'
             end
             object Link31: TdhLink
               Left = 0
-              Top = -116
+              Top = -212
               Height = 16
               Text = 'http://homepages.rtlnet.de/debecher07381/'
               AutoSizeXY = asXY
               Align = alTop
-              Right = 0
               PreferDownStyles = True
               Options = [loDownIfMenu, loDownIfMouseDown, loDownIfURL]
               Link = 'http://homepages.rtlnet.de/debecher07381/'
             end
             object Link34: TdhLink
               Left = 0
-              Top = -100
+              Top = -196
               Height = 16
               Text = 'http://web.yeahost.com'
               AutoSizeXY = asXY
               Align = alTop
-              Right = 0
               PreferDownStyles = True
               Options = [loDownIfMenu, loDownIfMouseDown, loDownIfURL]
               Link = 'http://web.yeahost.com'
             end
             object Label15: TdhLabel
               Left = 0
-              Top = -84
+              Top = -180
               Height = 16
               Text = 'Label15'
               Style.Color = Red
               AutoSizeXY = asY
               Align = alTop
-              Right = 0
             end
             object Link32: TdhLink
               Left = 0
-              Top = -68
+              Top = -164
               Height = 16
               Text = 'http://server.jungle.googlepages.com/index.html'
               AutoSizeXY = asXY
               Align = alTop
-              Right = 0
               PreferDownStyles = True
               Options = [loDownIfMenu, loDownIfMouseDown, loDownIfURL]
               Link = 'http://server.jungle.googlepages.com/index.html'
             end
             object Link36: TdhLink
               Left = 0
-              Top = -52
+              Top = -148
               Height = 16
               Text = 'http://www.folkclub-hattersheim.de'
               AutoSizeXY = asXY
               Align = alTop
-              Right = 0
               PreferDownStyles = True
               Options = [loDownIfMenu, loDownIfMouseDown, loDownIfURL]
               Link = 'http://www.folkclub-hattersheim.de'
             end
             object Link18: TdhLink
               Left = 0
-              Top = -36
+              Top = -132
               Height = 16
               Text = 'http://www.fool-house.com/'
               AutoSizeXY = asXY
               Align = alTop
-              Right = 0
               PreferDownStyles = True
               Options = [loDownIfMenu, loDownIfMouseDown, loDownIfURL]
               Link = 'http://www.fool-house.com/'
             end
             object Link30: TdhLink
               Left = 0
-              Top = -20
+              Top = -116
               Height = 16
               Text = 'http://www.witches-of-monklake.de'
               AutoSizeXY = asXY
               Align = alTop
-              Right = 0
               PreferDownStyles = True
               Options = [loDownIfMenu, loDownIfMouseDown, loDownIfURL]
               Link = 'http://www.witches-of-monklake.de'
             end
             object Link39: TdhLink
               Left = 0
-              Top = -4
+              Top = -100
               Height = 16
               Text = 'http://www.samesame-online.de'
               AutoSizeXY = asXY
               Align = alTop
-              Right = 0
               PreferDownStyles = True
               Options = [loDownIfMenu, loDownIfMouseDown, loDownIfURL]
               Link = 'http://www.samesame-online.de'
             end
             object Link42: TdhLink
               Left = 0
-              Top = 12
+              Top = -84
               Height = 16
               Text = 'http://www.ichrr.de'
               AutoSizeXY = asXY
               Align = alTop
-              Right = 0
               PreferDownStyles = True
               Options = [loDownIfMenu, loDownIfMouseDown, loDownIfURL]
               Link = 'http://www.ichrr.de'
             end
             object Link43: TdhLink
               Left = 0
-              Top = 28
+              Top = -68
               Height = 16
               Text = 'http://www.haus-charlotte.de.ms'
               AutoSizeXY = asXY
               Align = alTop
-              Right = 0
               PreferDownStyles = True
               Options = [loDownIfMenu, loDownIfMouseDown, loDownIfURL]
               Link = 'http://www.haus-charlotte.de.ms'
             end
             object Link44: TdhLink
               Left = 0
-              Top = 44
+              Top = -52
               Height = 16
               Text = 'http://www.santamas.org'
               AutoSizeXY = asXY
               Align = alTop
-              Right = 0
               PreferDownStyles = True
               Options = [loDownIfMenu, loDownIfMouseDown, loDownIfURL]
               Link = 'http://www.santamas.org'
             end
             object Link46: TdhLink
               Left = 0
-              Top = 60
+              Top = -36
               Height = 16
               Text = 'http://www.steadystand.de'
               AutoSizeXY = asXY
               Align = alTop
-              Right = 0
               PreferDownStyles = True
               Options = [loDownIfMenu, loDownIfMouseDown, loDownIfURL]
               Link = 'http://www.steadystand.de'
             end
             object Link47: TdhLink
               Left = 0
-              Top = 76
+              Top = -20
               Height = 16
               Text = 'http://www.bueroorganisation-roth.de'
               AutoSizeXY = asXY
               Align = alTop
-              Right = 0
               PreferDownStyles = True
               Options = [loDownIfMenu, loDownIfMouseDown, loDownIfURL]
               Link = 'http://www.bueroorganisation-roth.de'
             end
             object Link48: TdhLink
               Left = 0
-              Top = 92
+              Top = -4
               Height = 16
               Text = 'http://cursogalileu.googlepages.com/index.html'
               AutoSizeXY = asXY
               Align = alTop
-              Right = 0
               PreferDownStyles = True
               Options = [loDownIfMenu, loDownIfMouseDown, loDownIfURL]
               Link = 'http://cursogalileu.googlepages.com/index.html'
             end
             object Link49: TdhLink
               Left = 0
-              Top = 108
+              Top = 12
               Height = 16
               Text = 'http://www.jungle-networks.com'
               AutoSizeXY = asXY
               Align = alTop
-              Right = 0
               PreferDownStyles = True
               Options = [loDownIfMenu, loDownIfMouseDown, loDownIfURL]
               Link = 'http://www.jungle-networks.com'
             end
             object Link50: TdhLink
               Left = 0
-              Top = 124
+              Top = 28
               Height = 16
               Text = 'http://www.biker-altenberge.de'
               AutoSizeXY = asXY
               Align = alTop
-              Right = 0
               PreferDownStyles = True
               Options = [loDownIfMenu, loDownIfMouseDown, loDownIfURL]
               Link = 'http://www.biker-altenberge.de'
             end
             object Link51: TdhLink
               Left = 0
-              Top = 140
+              Top = 44
               Height = 16
               Text = 'http://www.animecube.co.cc/'
               AutoSizeXY = asXY
               Align = alTop
-              Right = 0
               PreferDownStyles = True
               Options = [loDownIfMenu, loDownIfMouseDown, loDownIfURL]
               Link = 'http://www.animecube.co.cc/'
             end
             object Link52: TdhLink
               Left = 0
-              Top = 156
+              Top = 60
               Height = 16
               Text = 'http://www.thyagoohana.com'
               AutoSizeXY = asXY
               Align = alTop
-              Right = 0
               PreferDownStyles = True
               Options = [loDownIfMenu, loDownIfMouseDown, loDownIfURL]
-              Link = 'http://'
+              Link = 'http://www.thyagoohana.com'
             end
             object Link53: TdhLink
               Left = 0
-              Top = 172
+              Top = 76
               Height = 16
               Text = 'http://www.club500vomano.it'
               AutoSizeXY = asXY
               Align = alTop
-              Right = 0
               PreferDownStyles = True
               Options = [loDownIfMenu, loDownIfMouseDown, loDownIfURL]
               Link = 'http://www.club500vomano.it'
             end
+            object Link55: TdhLink
+              Left = 0
+              Top = 92
+              Height = 16
+              Text = 'http://gianni65.interfree.it'
+              AutoSizeXY = asXY
+              Align = alTop
+              PreferDownStyles = True
+              Options = [loDownIfMenu, loDownIfMouseDown, loDownIfURL]
+              Link = 'http://gianni65.interfree.it'
+            end
+            object Link56: TdhLink
+              Left = 0
+              Top = 108
+              Height = 16
+              Text = 'http://www.strings4voices.de'
+              AutoSizeXY = asXY
+              Align = alTop
+              PreferDownStyles = True
+              Options = [loDownIfMenu, loDownIfMouseDown, loDownIfURL]
+              Link = 'http://www.strings4voices.de'
+            end
+            object Link57: TdhLink
+              Left = 0
+              Top = 124
+              Height = 16
+              Text = 'http://www.rechtsanwalt-deibert.de'
+              AutoSizeXY = asXY
+              Align = alTop
+              PreferDownStyles = True
+              Options = [loDownIfMenu, loDownIfMouseDown, loDownIfURL]
+              Link = 'http://www.rechtsanwalt-deibert.de'
+            end
+            object Link58: TdhLink
+              Left = 0
+              Top = 140
+              Height = 16
+              Text = 'http://musical.mildtor.de'
+              AutoSizeXY = asXY
+              Align = alTop
+              PreferDownStyles = True
+              Options = [loDownIfMenu, loDownIfMouseDown, loDownIfURL]
+              Link = 'http://musical.mildtor.de'
+            end
+            object Link59: TdhLink
+              Left = 0
+              Top = 156
+              Height = 16
+              Text = 'http://www.leocavalcante.biteiro.com.br/StageAdjust/'
+              AutoSizeXY = asXY
+              Align = alTop
+              PreferDownStyles = True
+              Options = [loDownIfMenu, loDownIfMouseDown, loDownIfURL]
+              Link = 'http://www.leocavalcante.biteiro.com.br/StageAdjust/'
+            end
+            object Link60: TdhLink
+              Left = 0
+              Top = 172
+              Height = 16
+              Text = 'http://www.dertagdanach.com'
+              AutoSizeXY = asXY
+              Align = alTop
+              PreferDownStyles = True
+              Options = [loDownIfMenu, loDownIfMouseDown, loDownIfURL]
+              Link = 'http://www.dertagdanach.com'
+            end
           end
           object Link14: TdhLink
             Left = 168
-            Top = 1216
+            Top = 1344
             Width = 144
             Height = 144
             ImageType = bitStretch
@@ -6037,34 +6070,40 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
           object Label18: TdhLabel
             Left = 24
             Top = 48
-            Width = 316
-            Height = 404
+            Width = 345
+            Height = 526
             Text = 
               '<i><en>music</en><de>Musik</de></i>'#10'<ul>'#10'<li><Link18>http://www.' +
               'fool-house.com</Link18></li>'#10'<li><Link36>http://www.folkclub-hat' +
-              'tersheim.de</Link36></li>'#10'<li><Link39>http://www.samesame-online' +
-              '.de</Link39></li>'#10'</ul>'#10'<i><en>other</en><de>andere Themen</de><' +
-              '/i>'#10'<ul>'#10'<li><Link50>http://www.biker-altenberge.de</Link50></li' +
-              '>'#10'<li><Link52>http://www.thyagoohana.com</Link52></li>'#10'<li><Link' +
-              '53>http://www.club500vomano.it</Link53></li>'#10'<li><Link30>http://' +
-              'www.witches-of-monklake.de</Link30></li>'#10'<li><Link32>http://serv' +
-              'er.jungle.googlepages.com/index.html</Link32></li>'#10'<li><Link17>h' +
-              'ttp://www.pletsch.info</Link17></li>'#10'<li><Link47>http://www.buer' +
-              'oorganisation-roth.de</Link47></li>'#10'<li><Link48>http://cursogali' +
-              'leu.googlepages.com/index.html</Link48></li>'#10'<li><Link49>http://' +
-              'www.jungle-networks.com</Link49></li>'#10'<li><Link51>http://www.ani' +
-              'mecube.co.cc/</Link51></li>'#10'<li><Link43>http://www.haus-charlott' +
-              'e.de.ms</Link43></li>'#10'<li><Link16>http://www.qv90.de</Link16></l' +
-              'i>'#10'<li><Link44>http://www.santamas.org</Link44></li>'#10'<li><Link24' +
-              '>http://ronspctech.com</Link24></li>'#10'<li><Link42>http://www.ichr' +
-              'r.de</Link42></li>'#10'<li><Link31>http://homepages.rtlnet.de/debech' +
-              'er07381/</Link31></li>'#10'<li><Link46>http://www.steadystand.de</Li' +
-              'nk46></li>'#10'</ul>'
+              'tersheim.de</Link36></li>'#10'<li><Link56>http://www.strings4voices.' +
+              'de</Link56></li>'#10'<li><Link58>http://musical.mildtor.de</Link58><' +
+              '/li>'#10'<li><Link39>http://www.samesame-online.de</Link39></li>'#10'</u' +
+              'l>'#10'<i><en>programming</en><de>Programmierung</de></i>'#10'<ul>'#10'<li><' +
+              'Link16>http://www.qv90.de</Link16></li>'#10'<li><Link59>http://www.l' +
+              'eocavalcante.biteiro.com.br/StageAdjust/</Link59></li>'#10'</ul>'#10'<i>' +
+              '<en>other</en><de>andere Themen</de></i>'#10'<ul>'#10'<li><Link50>http:/' +
+              '/www.biker-altenberge.de</Link50></li>'#10'<li><Link52>http://www.th' +
+              'yagoohana.com</Link52></li>'#10'<li><Link55>http://gianni65.interfre' +
+              'e.it</Link55></li>'#10'<li><Link53>http://www.club500vomano.it</Link' +
+              '53></li>'#10'<li><Link30>http://www.witches-of-monklake.de</Link30><' +
+              '/li>'#10'<li><Link32>http://server.jungle.googlepages.com/index.html' +
+              '</Link32></li>'#10'<li><Link17>http://www.pletsch.info</Link17></li>' +
+              #10'<li><Link47>http://www.bueroorganisation-roth.de</Link47></li>'#10 +
+              '<li><Link57>http://www.rechtsanwalt-deibert.de</Link57></li>'#10'<li' +
+              '><Link48>http://cursogalileu.googlepages.com/index.html</Link48>' +
+              '</li>'#10'<li><Link49>http://www.jungle-networks.com</Link49></li>'#10'<' +
+              'li><Link51>http://www.animecube.co.cc/</Link51></li>'#10'<li><Link43' +
+              '>http://www.haus-charlotte.de.ms</Link43></li>'#10'<li><Link44>http:' +
+              '//www.santamas.org</Link44></li>'#10'<li><Link42>http://www.ichrr.de' +
+              '</Link42></li>'#10'<li><Link31>http://homepages.rtlnet.de/debecher07' +
+              '381/</Link31></li>'#10'<li><Link46>http://www.steadystand.de</Link46' +
+              '></li>'#10'<li><Link60>http://www.dertagdanach.com</Link60></li>'#10'</u' +
+              'l>'
             AutoSizeXY = asXY
           end
           object Link10: TdhLink
             Left = 168
-            Top = 864
+            Top = 992
             Width = 144
             Height = 144
             ImageType = bitStretch
@@ -7427,7 +7466,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
           end
           object Link27: TdhLink
             Left = 168
-            Top = 512
+            Top = 640
             Width = 144
             Height = 144
             ImageType = bitStretch
@@ -8885,7 +8924,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
           UseIFrame = False
           object Label5: TdhLabel
             Left = 24
-            Top = 1584
+            Top = 1656
             Width = 360
             Height = 80
             Text = 
@@ -8898,7 +8937,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
           end
           object Label25: TdhLabel
             Left = 24
-            Top = 1344
+            Top = 1416
             Width = 446
             Height = 212
             Text = 
@@ -8920,7 +8959,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
           object Label27: TdhLabel
             Left = 24
             Top = 24
-            Width = 281
+            Width = 304
             Height = 16
             Text = 
               #9658' <en>Reported bugs are fixed as fast as possible</en><de>Bugs w' +
@@ -8931,7 +8970,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
           end
           object Label20: TdhLabel
             Left = 24
-            Top = 1120
+            Top = 1192
             Width = 442
             Height = 193
             Text = 
@@ -8950,7 +8989,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
           end
           object Label21: TdhLabel
             Left = 24
-            Top = 928
+            Top = 1000
             Width = 418
             Height = 161
             Text = 
@@ -8968,7 +9007,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
           end
           object Label28: TdhLabel
             Left = 24
-            Top = 816
+            Top = 888
             Width = 434
             Height = 81
             Text = 
@@ -8982,7 +9021,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
           end
           object Label11: TdhLabel
             Left = 24
-            Top = 608
+            Top = 680
             Width = 354
             Height = 64
             Text = 
@@ -8996,7 +9035,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
           end
           object Label12: TdhLabel
             Left = 24
-            Top = 704
+            Top = 776
             Width = 330
             Height = 80
             Text = 
@@ -9010,7 +9049,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
           end
           object Label13: TdhLabel
             Left = 24
-            Top = 488
+            Top = 560
             Width = 450
             Height = 96
             Text = 
@@ -9025,7 +9064,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
           end
           object Label37: TdhLabel
             Left = 24
-            Top = 416
+            Top = 488
             Width = 426
             Height = 49
             Text = 
@@ -9038,7 +9077,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
           end
           object Label38: TdhLabel
             Left = 24
-            Top = 328
+            Top = 400
             Width = 210
             Height = 65
             Text = 
@@ -9051,7 +9090,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
           end
           object Label41: TdhLabel
             Left = 24
-            Top = 256
+            Top = 328
             Width = 338
             Height = 48
             Text = 
@@ -9064,7 +9103,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
           end
           object Label42: TdhLabel
             Left = 24
-            Top = 136
+            Top = 208
             Width = 426
             Height = 97
             Text = 
@@ -9080,13 +9119,29 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
           end
           object Label6: TdhLabel
             Left = 24
-            Top = 64
+            Top = 136
             Width = 442
             Height = 48
             Text = 
               '<code>New in version 3.1:'#10'* <b>&lt;iframe&gt;</b>s are now trans' +
               'parent by default'#10'* Generated images can now be stored in the <b' +
               '>JPEG</b> format'
+            Style.PaddingRight = 2
+            Style.WhiteSpace = cwsPre
+            Style.Color = Black
+            AutoSizeXY = asXY
+          end
+          object Label44: TdhLabel
+            Left = 24
+            Top = 48
+            Width = 442
+            Height = 64
+            Text = 
+              '<en><code>New in version 3.2:'#10'* The path of generated artifacts ' +
+              'can be adapted'#10'* "Check for update" functionality</code></en>'#10'<d' +
+              'e><code>Neu in Version 3.2:'#10'* Man kann den Pfad von generierten ' +
+              'Artefakten anpassen'#10'* "Auf Update '#252'berpr'#252'fen..."-Funktion</code>' +
+              '</de>'
             Style.PaddingRight = 2
             Style.WhiteSpace = cwsPre
             Style.Color = Red
@@ -9113,7 +9168,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
             Left = 16
             Top = 56
             Width = 440
-            Height = 705
+            Height = 817
             Text = 
               '<en><FAQ_question>HTML pages do not properly display in my brows' +
               'er.</FAQ_question>'#10'<br/>'#10'You have to enabled JavaScript in the o' +
@@ -9146,63 +9201,63 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
               'ist dies m'#246'glich.'#10'<br/><br/></de>'#10#10#10'<en><FAQ_question>How can I ' +
               'do contact forms or guest books?</FAQ_question>'#10'<br/>'#10'Form data ' +
               'from a contact form can be emailed via PHP, see the <b>Tools | P' +
-              'resets | PHP</b> example. '#10'A guest book is not yet possible.'#10'<br' +
-              '/><br/></en>'#10'<de><FAQ_question>Wie kann man Kontaktformulare ode' +
-              'r G'#228'steb'#252'cher bauen?</FAQ_question>'#10'<br/>'#10'Der Inhalt eines Konta' +
-              'ktformulas kann '#252'ber PHP an eine Email-Adresse gesendet werden, ' +
-              'siehe <b>Werkzeuge | Baukasten | PHP</b>. '#10'Ein G'#228'steb'#252'cher-Beisp' +
-              'iel existiert allerdings noch nicht.'#10'<br/><br/></de>'#10#10#10'<en><FAQ_' +
-              'question>How can I resize images?</FAQ_question>'#10'<br/>'#10'Select Po' +
-              's. tab and uncheck auto-height and auto-width. Then go to the Im' +
-              'age tab and set <i>Type</i> to <i>Stretch</i>.'#10'<br/><br/></en>'#10'<' +
-              'de><FAQ_question>Wie kann ich Bilder in der Gr'#246#223'e '#228'ndern?</FAQ_q' +
-              'uestion>'#10'<br/>'#10'In der Pos.-Tab, deselektiere <i>Auto. Breite</i>' +
-              ' und <i>Auto. H'#246'he</i>. Dann gehe zur Bild-Tab und setze <i>Typ<' +
-              '/i> auf <i>Dehnen</i>.'#10'<br/><br/></de>'#10#10'<en><FAQ_question>How ca' +
-              'n I center objects?</FAQ_question>'#10'<br/>'#10'Select Pos. tab and unc' +
-              'heck both <nobr><i>Right parent edge</i></nobr> and <nobr><i>Lef' +
-              't parent edge</i></nobr>.'#10'<br/><br/></en>'#10'<de><FAQ_question>Wie ' +
-              'k'#246'nnen Objekte zentriert werden?</FAQ_question>'#10'<br/>'#10'In der Pos' +
-              '.-Tab einfach <nobr><i>Rechte Begrenzung</i></nobr> und <nobr><i' +
-              '>Linke Begrenzung</i></nobr> deselektieren.'#10'<br/><br/></de>'#10#10'<en' +
-              '><FAQ_question>How can I mark a link to open in a new window?</F' +
-              'AQ_question>'#10'<br/>'#10'Choose "_blank" in "Target" field of the "Lin' +
-              'k" tab .'#10'<br/><br/></en>'#10'<de><FAQ_question>Wie kann ein Link in ' +
-              'einem neuen Fenster ge'#246'ffnet werden?</FAQ_question>'#10'<br/>'#10'W'#228'hle ' +
-              '"_blank" im "Zielfenster"-Feld in der "Link"-Tab .'#10'<br/><br/></d' +
-              'e>'#10#10'<en><FAQ_question>How can the user download files from my we' +
-              'b site?</FAQ_question>'#10'<br/>'#10'Put a file object on the document a' +
-              'nd associate the desired file with it. Next, add a new link obje' +
-              'ct and set its <b>Within page</b> field on the file object. The ' +
-              'file will be uploaded when publishing the site.'#10'<br/><br/></en>'#10 +
-              '<de><FAQ_question>Meine Website ist fast fertig,'#10'allerdings habe' +
-              ' ich noch Schwierigkeiten im Downloadbereich Dateien mit'#10'einem L' +
-              'ink zu verkn'#252'pfen, damit sich der User diese herunterladen kann.' +
-              ' Wie'#10'geht das?</FAQ_question>'#10'<br/>'#10'Sie m'#252'ssen ein File-Objekt a' +
-              'ufs Dokument droppen, dann die entsprechende'#10'Datei assoziieren. ' +
-              'Dann noch ein Link-Objekt aufs'#10'Dokument packen und dessen "Seite' +
-              'n-intern"-Feld auf das File-Objekt'#10'setzen - fertig. Beim n'#228'chste' +
-              'n Publizieren wird die Datei automatisch hochgeladen.'#10'<br/><br/>' +
-              '</de>'#10#10'<en><FAQ_question>How can one show an external web page i' +
-              'n a page object?</FAQ_question>'#10'<br/>'#10'First, you have to choose ' +
-              'the <b>&lt;iframe&gt;</b> option for it. Now, in the page proper' +
-              'ties dialog, Meta Tags tab, you can choose a redirection URL.'#10'Ho' +
-              'wever in order to immediately load the external web page without' +
-              ' redirection, you can specify the URL in the<nobr> <b>additional' +
-              ' HTML attributes</b></nobr> field (reachable from the <b>Misc</b' +
-              '> tab, <nobr><b>Special Styles..</b></nobr>) by e.g. defining <c' +
-              'ode>src='#8220'http://www.google.com'#8220'</code> .'#10'<br/><br/></en>'#10'<de><FA' +
-              'Q_question>Kann man in einem Seitenobjekt externe Webinhalte anz' +
-              'eigen?</FAQ_question>'#10'<br/>'#10'Zun'#228'chst mu'#223' daf'#252'r dessen <b>&lt;ifr' +
-              'ame&gt;</b> Option angew'#228'hlt werden. Dann kann man im Seiteneige' +
-              'nschaften-Dialog des Page-Objekts, Tab "Meta Tags", eine Weiterl' +
-              'eitungs-URL angeben.'#10'Um allerdings die externe Seite ohne Umwege' +
-              ' sofort zu laden, hilft z.B. folgende Angabe im <nobr> <b>zus'#228'tz' +
-              'liche HTML-Attribute</b></nobr>-Feld (<b>Mehr</b> tab, <nobr><b>' +
-              'Spezielle Stile..</b></nobr>): <code>src='#8220'http://www.google.com'#8220 +
-              '</code> . Eine ausf'#252'hrlichere Beschreibung gibt es <Link54>hier<' +
-              '/Link54> (der Link kann in DFM2HTML mit der Maus hinein gezogen ' +
-              'werden, um ihn zu '#246'ffnen).'#10'<br/><br/></de>'
+              'resets | PHP</b> example. '#10'A guest book preset not yet exists.'#10'<' +
+              'br/><br/></en>'#10'<de><FAQ_question>Wie kann man Kontaktformulare o' +
+              'der G'#228'steb'#252'cher bauen?</FAQ_question>'#10'<br/>'#10'Der Inhalt eines Kon' +
+              'taktformulas kann '#252'ber PHP an eine Email-Adresse gesendet werden' +
+              ', siehe <b>Werkzeuge | Baukasten | PHP</b>. '#10'Ein G'#228'steb'#252'cher-Bei' +
+              'spiel existiert allerdings noch nicht.'#10'<br/><br/></de>'#10#10#10'<en><FA' +
+              'Q_question>How can I resize images?</FAQ_question>'#10'<br/>'#10'Select ' +
+              'Pos. tab and uncheck auto-height and auto-width. Then go to the ' +
+              'Image tab and set <i>Type</i> to <i>Stretch</i>.'#10'<br/><br/></en>' +
+              #10'<de><FAQ_question>Wie kann ich Bilder in der Gr'#246#223'e '#228'ndern?</FAQ' +
+              '_question>'#10'<br/>'#10'In der Pos.-Tab, deselektiere <i>Auto. Breite</' +
+              'i> und <i>Auto. H'#246'he</i>. Dann gehe zur Bild-Tab und setze <i>Ty' +
+              'p</i> auf <i>Dehnen</i>.'#10'<br/><br/></de>'#10#10'<en><FAQ_question>How ' +
+              'can I center objects?</FAQ_question>'#10'<br/>'#10'Select Pos. tab and u' +
+              'ncheck both <nobr><i>Right parent edge</i></nobr> and <nobr><i>L' +
+              'eft parent edge</i></nobr>.'#10'<br/><br/></en>'#10'<de><FAQ_question>Wi' +
+              'e k'#246'nnen Objekte zentriert werden?</FAQ_question>'#10'<br/>'#10'In der P' +
+              'os.-Tab einfach <nobr><i>Rechte Begrenzung</i></nobr> und <nobr>' +
+              '<i>Linke Begrenzung</i></nobr> deselektieren.'#10'<br/><br/></de>'#10#10'<' +
+              'en><FAQ_question>How can I mark a link to open in a new window?<' +
+              '/FAQ_question>'#10'<br/>'#10'Choose "_blank" in "Target" field of the "L' +
+              'ink" tab .'#10'<br/><br/></en>'#10'<de><FAQ_question>Wie kann ein Link i' +
+              'n einem neuen Fenster ge'#246'ffnet werden?</FAQ_question>'#10'<br/>'#10'W'#228'hl' +
+              'e "_blank" im "Zielfenster"-Feld in der "Link"-Tab .'#10'<br/><br/><' +
+              '/de>'#10#10'<en><FAQ_question>How can the user download files from my ' +
+              'web site?</FAQ_question>'#10'<br/>'#10'Put a file object on the document' +
+              ' and associate the desired file with it. Next, add a new link ob' +
+              'ject and set its <b>Within page</b> field on the file object. Th' +
+              'e file will be uploaded when publishing the site.'#10'<br/><br/></en' +
+              '>'#10'<de><FAQ_question>Meine Website ist fast fertig,'#10'allerdings ha' +
+              'be ich noch Schwierigkeiten im Downloadbereich Dateien mit'#10'einem' +
+              ' Link zu verkn'#252'pfen, damit sich der User diese herunterladen kan' +
+              'n. Wie'#10'geht das?</FAQ_question>'#10'<br/>'#10'Sie m'#252'ssen ein File-Objekt' +
+              ' aufs Dokument droppen, dann die entsprechende'#10'Datei assoziieren' +
+              '. Dann noch ein Link-Objekt aufs'#10'Dokument packen und dessen "Sei' +
+              'ten-intern"-Feld auf das File-Objekt'#10'setzen - fertig. Beim n'#228'chs' +
+              'ten Publizieren wird die Datei automatisch hochgeladen.'#10'<br/><br' +
+              '/></de>'#10#10'<en><FAQ_question>How can one show an external web page' +
+              ' in a page object?</FAQ_question>'#10'<br/>'#10'First, you have to choos' +
+              'e the <b>&lt;iframe&gt;</b> option for it. Now, in the page prop' +
+              'erties dialog, Meta Tags tab, you can choose a redirection URL.'#10 +
+              'However in order to immediately load the external web page witho' +
+              'ut redirection, you can specify the URL in the<nobr> <b>addition' +
+              'al HTML attributes</b></nobr> field (reachable from the <b>Misc<' +
+              '/b> tab, <nobr><b>Special Styles..</b></nobr>) by e.g. defining ' +
+              '<code>src='#8220'http://www.google.com'#8220'</code> .'#10'<br/><br/></en>'#10'<de><' +
+              'FAQ_question>Kann man in einem Seitenobjekt externe Webinhalte a' +
+              'nzeigen?</FAQ_question>'#10'<br/>'#10'Zun'#228'chst mu'#223' daf'#252'r dessen <b>&lt;i' +
+              'frame&gt;</b> Option angew'#228'hlt werden. Dann kann man im Seitenei' +
+              'genschaften-Dialog des Page-Objekts, Tab "Meta Tags", eine Weite' +
+              'rleitungs-URL angeben.'#10'Um allerdings die externe Seite ohne Umwe' +
+              'ge sofort zu laden, hilft z.B. folgende Angabe im <nobr> <b>zus'#228 +
+              'tzliche HTML-Attribute</b></nobr>-Feld (<b>Mehr</b> tab, <nobr><' +
+              'b>Spezielle Stile..</b></nobr>): <code>src='#8220'http://www.google.co' +
+              'm'#8220'</code> . Eine ausf'#252'hrlichere Beschreibung gibt es <Link54>hie' +
+              'r</Link54> (der Link kann in DFM2HTML mit der Maus hinein gezoge' +
+              'n werden, um ihn zu '#246'ffnen).'#10'<br/><br/></de>'
             Style.TextAlign = ctaJustify
             AutoSizeXY = asY
           end
@@ -9222,7 +9277,6 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
               Text = 'Link5'
               AutoSizeXY = asXY
               Align = alTop
-              Right = 0
               PreferDownStyles = True
               Options = [loDownIfMenu, loDownIfMouseDown, loDownIfURL]
               Link = 'js.html'
@@ -9234,7 +9288,6 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
               Text = 'iFrames'
               AutoSizeXY = asXY
               Align = alTop
-              Right = 0
               PreferDownStyles = True
               Options = [loDownIfMenu, loDownIfMouseDown, loDownIfURL]
               LinkAnchor = iFrames
@@ -9254,7 +9307,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
           Left = 192
           Top = 88
           Width = 488
-          Height = 604
+          Height = 1200
           AutoSizeXY = asNone
           UseIFrame = False
           object Label26: TdhLabel
@@ -9514,7 +9567,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
             Left = 16
             Top = 416
             Width = 440
-            Height = 49
+            Height = 65
             Text = 
               '<en>'#10'<FAQ_question>Add your own presets</FAQ_question>'#10'<br/>'#10'You' +
               ' can extend the Presets dialog with your own presets by saving y' +
@@ -9539,6 +9592,59 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
               'nsistent</FAQ_question>'#10'<br/>'#10'Vielleicht schafft das Selektieren' +
               ' der PNG-Option im Objekt-Tab des betreffenden Objekts Abhilfe.'#10 +
               '</de>'
+            Style.TextAlign = ctaJustify
+            AutoSizeXY = asY
+          end
+          object Label36: TdhLabel
+            Left = 16
+            Top = 568
+            Width = 440
+            Height = 472
+            Text = 
+              '<en>'#10'<FAQ_question>Put your DFM2HTML documents under version con' +
+              'trol!</FAQ_question>'#10'<br/>'#10'<ul>'#10'<li>A very good version control ' +
+              'system is <i>Subversion</i></li>'#10'<li>A famous Subversion client ' +
+              'is <i>Tortoise</i></li>'#10'<li>'#10'Brief instruction:'#10'<ol>'#10'<li>First m' +
+              'ake a backup of your files you want to put under version control' +
+              '</li>'#10'<li>Download and install Tortoise (http://tortoisesvn.tigr' +
+              'is.org)</li>'#10'<li>Create a new directory for your Subversion repo' +
+              'sitory, e.g. c:\myRepository and choose <nobr><i>TortoiseSVN -> ' +
+              'Create repository here...</i></nobr> from its context menu </li>' +
+              #10'<li>Choose <i>SVN Checkout...</i> from the context menu of the ' +
+              'directory you want to put under version control. Choose <code>fi' +
+              'le:///C:/myRepository</code> as URL. Press OK and confirm the wa' +
+              'rning message.</li>'#10'<li>Next <u>commit</u> your directory by the' +
+              ' <i>SVN Commit...</i> context menu item. You can make detailed c' +
+              'hoices about which files/sub-directories to put under version co' +
+              'ntrol. Before clicking OK, you should type a good comment messag' +
+              'e.</li>'#10'<li>In the following, you can commit or revert changes m' +
+              'ade to versioned files. You have access to every version of your' +
+              ' webpage you ever committed!</li>'#10'</ol>'#10'</li>'#10'</ul>'#10'</en>'#10#10'<de><' +
+              'FAQ_question>Versioniere deine DFM2HTML-Dokumente !</FAQ_questio' +
+              'n>'#10'<br/>'#10'<ul>'#10'<li>Das <i>Subversion</i>-Versionierungssystem eig' +
+              'net sich daf'#252'r sehr gut</li>'#10'<li><i>Tortoise</i> ist eine belieb' +
+              'te <i>Subversion</i>-Oberfl'#228'che</li>'#10'<li>'#10'Kurzanleitung f'#252'r <i>S' +
+              'ubversion</i>:'#10'<ol>'#10'<li>Vorsichtshalber solltest du von deinen z' +
+              'u versionierenden Daten erstmal eine Sicherheitskopie machen...<' +
+              '/li>'#10'<li>Downloade/installiere Tortoise (http://tortoisesvn.tigr' +
+              'is.org)</li>'#10'<li>Erstelle ein neues Verzeichnis f'#252'r das Subversi' +
+              'on-Repository, z.B. c:\myRepository. W'#228'hle <nobr><i>TortoiseSVN ' +
+              '-> Create repository here...</i></nobr> im Kontextmen'#252' und best'#228 +
+              'tige.</li>'#10'<li>W'#228'hle nun <i>SVN Checkout...</i> im Kontextmenu d' +
+              'es zu versionierenden Verzeichnises. W'#228'hle <code>file:///C:/myRe' +
+              'pository</code> als URL. Klick OK and best'#228'tige den Warnhinweis.' +
+              '</li>'#10'<li>F'#252'hre nun ein <u>Commit</u> f'#252'r das zu versionierende ' +
+              'Verzeichnis aus (<i>SVN Commit...</i> in dessen Kontextmen'#252'). Du' +
+              ' kannst detailliert einstellen, welche Dateien und Verzeichnisse' +
+              ' du dem Repository '#252'berantworten willst. Du solltest dann noch e' +
+              'in m'#246'glichst sinnvollen Kommentar schreiben und dann mit OK best' +
+              #228'tigen.</li>'#10'<li>Zuk'#252'nftige '#196'nderungen im Verzeichnis kannst du ' +
+              #252'ber einen Commit "offiziell" machen, du kannst sie aber auch z.' +
+              'B. '#252'ber den "Revert"-Befehl r'#252'ckg'#228'ngig machen. Du hast auf jeden' +
+              ' Fall immer eine Sicherheitskopie in der Tasche (n'#228'mlich die als' +
+              ' letzte committete Version), kannst aber auch auf alle vergangen' +
+              'en Versionen deiner Webseite zur'#252'ckgreifen!</li>'#10'</ol>'#10'</li>'#10'</u' +
+              'l>'#10'</de>'
             Style.TextAlign = ctaJustify
             AutoSizeXY = asY
           end
@@ -9616,6 +9722,42 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
             Link = 
               'http://www.ikv.de/index.php?option=com_content&task=view&id=75&I' +
               'temid=77&lang=en'
+          end
+        end
+        object update: TdhPage
+          Left = 192
+          Top = 88
+          Width = 488
+          Height = 352
+          AutoSizeXY = asNone
+          UseIFrame = False
+          object Link61: TdhLink
+            Left = 16
+            Top = 16
+            Width = 224
+            Height = 22
+            Text = 'Download DFM2HTML 3.2'
+            Style.FontSize = '19'
+            AutoSizeXY = asXY
+            PreferDownStyles = True
+            Options = [loDownIfMenu, loDownIfMouseDown, loDownIfURL]
+            LinkAnchor = dfm2html_inst
+          end
+          object Label43: TdhLabel
+            Left = 24
+            Top = 64
+            Width = 442
+            Height = 64
+            Text = 
+              '<en><code>New in version 3.2:'#10'* The path of generated artifacts ' +
+              'can be adapted'#10'* "Check for update" functionality</code></en>'#10'<d' +
+              'e><code>Neu in Version 3.2:'#10'* Man kann den Pfad von generierten ' +
+              'Artefakten anpassen'#10'* "Auf Update '#252'berpr'#252'fen..."-Funktion</code>' +
+              '</de>'
+            Style.PaddingRight = 2
+            Style.WhiteSpace = cwsPre
+            Style.Color = Red
+            AutoSizeXY = asXY
           end
         end
       end
@@ -9729,7 +9871,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
         object Link7: TdhLink
           Left = 0
           Top = 59
-          Height = 29
+          Height = 45
           Text = '<en>User Pages</en><de>Benutzer- seiten</de>'
           Use = Link3
           AutoSizeXY = asY
@@ -9741,7 +9883,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
         end
         object Link4: TdhLink
           Left = 0
-          Top = 207
+          Top = 223
           Height = 29
           Text = '<en>Contact</en><de>Impressum</de>'
           Use = Link3
@@ -9754,8 +9896,8 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
         end
         object TdhAnchor2: TdhLink
           Left = 0
-          Top = 236
-          Height = 29
+          Top = 252
+          Height = 45
           Text = '<en>Disclaimer</en>'#10'<de>Haftungs- ausschluss</de>'
           Use = Link3
           AutoSizeXY = asY
@@ -9770,7 +9912,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
         end
         object Link19: TdhLink
           Left = 0
-          Top = 133
+          Top = 149
           Height = 29
           Text = 'FAQ'
           Use = Link3
@@ -9783,7 +9925,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
         end
         object Link20: TdhLink
           Left = 0
-          Top = 88
+          Top = 104
           Height = 45
           Text = '<en>Version history</en>'#10'<de>Versions- historie</de>'
           Use = Link3
@@ -9796,7 +9938,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
         end
         object Link13: TdhLink
           Left = 0
-          Top = 162
+          Top = 178
           Height = 45
           Text = 'Tips & Tricks'
           Use = Link3
@@ -9809,7 +9951,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
         end
         object Link40: TdhLink
           Left = 0
-          Top = 265
+          Top = 297
           Height = 45
           Text = '<en>More Programs</en><de>Weitere Programme</de>'
           Use = Link3
@@ -9859,7 +10001,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
           Style.Effects.AntiAliasing = True
           AutoSizeXY = asXY
           Align = alTop
-          Right = 0
+          Right = 3
           StyleDown.BackgroundColor = 9041148
           StyleOver.TextDecoration = [ctdUnderline]
           PreferDownStyles = True
@@ -9873,7 +10015,6 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
           Style.BackgroundColor = 16777088
           AutoSizeXY = asY
           Align = alTop
-          Right = 0
         end
         object Link45: TdhLink
           Left = 0
@@ -9915,7 +10056,6 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
           Style.Color = Red
           AutoSizeXY = asY
           Align = alTop
-          Right = 0
         end
         object Label8: TdhLabel
           Left = 0
@@ -9925,7 +10065,6 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
           Style.Color = Black
           AutoSizeXY = asY
           Align = alTop
-          Right = 0
         end
         object Link8: TdhLink
           Left = 0
@@ -9934,7 +10073,6 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
           Text = 'RegisterLink'
           AutoSizeXY = asXY
           Align = alTop
-          Right = 0
           PreferDownStyles = True
           Options = [loDownIfMenu, loDownIfMouseDown, loDownIfURL]
           Link = 
@@ -9949,7 +10087,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
           Style.FontWeight = cfwBold
           AutoSizeXY = asY
           Align = alTop
-          Right = 0
+          Right = 26
         end
         object Link23: TdhLink
           Left = 0
@@ -9958,7 +10096,6 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
           Text = 'feedback'
           AutoSizeXY = asXY
           Align = alTop
-          Right = 0
           PreferDownStyles = True
           Options = [loDownIfMenu, loDownIfMouseDown, loDownIfURL]
           LinkPage = feedback
@@ -9979,20 +10116,18 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
         Top = 0
         Height = 16
         Text = 'de'
-        Style.Display = cdsNone
+        Style.Display = cdsInline
         AutoSizeXY = asY
         Align = alTop
-        Right = 0
       end
       object en: TdhLabel
         Left = 0
         Top = 16
         Height = 16
         Text = 'en'
-        Style.Display = cdsInline
+        Style.Display = cdsNone
         AutoSizeXY = asY
         Align = alTop
-        Right = 0
       end
     end
   end

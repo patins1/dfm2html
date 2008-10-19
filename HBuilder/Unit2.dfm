@@ -43,7 +43,7 @@ object Tabs: TTabs
       Top = 2
       Width = 925
       Height = 204
-      ActivePage = AnchorPage
+      ActivePage = AnchorText
       TabOrder = 0
       TabStop = False
       TabWidth = 43
@@ -407,10 +407,8 @@ object Tabs: TTabs
               Style.Effects.Alpha = 30
               AutoSizeXY = asNone
               Align = alClient
-              Right = 2147483647
-              Bottom = 2147483647
-              ExplicitWidth = 100
-              ExplicitHeight = 100
+              Right = 0
+              Bottom = 0
               object dhPanel5: TdhPanel
                 Left = 0
                 Top = 0
@@ -420,10 +418,8 @@ object Tabs: TTabs
                   81EE5C951E0000000049454E44AE426082}
                 AutoSizeXY = asNone
                 Align = alClient
-                Right = 2147483647
-                Bottom = 2147483647
-                ExplicitWidth = 100
-                ExplicitHeight = 100
+                Right = 0
+                Bottom = 0
               end
             end
           end
@@ -637,7 +633,6 @@ object Tabs: TTabs
             Layout = ltText
             PreferDownStyles = True
             Options = [loDownIfMenu, loDownIfMouseDown, loDownIfURL]
-            ExplicitWidth = 100
           end
           object STYLE_dhLabel10: TdhLabel
             Left = 0
@@ -648,7 +643,6 @@ object Tabs: TTabs
             AutoSizeXY = asY
             Align = alTop
             Right = 2147483647
-            ExplicitWidth = 100
           end
           object STYLE_Link14: TdhLink
             Left = 0
@@ -683,7 +677,6 @@ object Tabs: TTabs
             Layout = ltText
             PreferDownStyles = False
             Options = [loDownIfMenu, loDownIfMouseDown, loDownIfURL]
-            ExplicitWidth = 100
           end
           object STYLE_Label28: TdhLabel
             Left = 0
@@ -695,7 +688,6 @@ object Tabs: TTabs
             AutoSizeXY = asY
             Align = alTop
             Right = 2147483647
-            ExplicitWidth = 100
           end
           object STYLE_dhLink2: TdhLink
             Left = 0
@@ -731,7 +723,6 @@ object Tabs: TTabs
             Layout = ltText
             PreferDownStyles = False
             Options = [loDownIfMenu, loDownIfMouseDown, loDownIfURL]
-            ExplicitWidth = 100
           end
         end
       end
@@ -843,7 +834,6 @@ object Tabs: TTabs
             AutoSizeXY = asXY
             Anchors = [akTop, akRight]
             Right = 143
-            ExplicitLeft = 0
           end
           object dhLabel8: TdhLabel
             Left = 8
@@ -1269,8 +1259,6 @@ object Tabs: TTabs
               Right = 2147483647
               Bottom = 2147483647
               UseIFrame = False
-              ExplicitWidth = 100
-              ExplicitHeight = 100
               object cAntiAliasing: TTntCheckBox
                 Left = 16
                 Top = 8
@@ -1332,13 +1320,12 @@ object Tabs: TTabs
                   Use = STYLE_dhLink2
                   AutoSizeXY = asXY
                   Align = alTop
-                  Right = 2147483647
+                  Right = 20
                   OnClick = dhLink9Click
                   Layout = ltText
                   PreferDownStyles = False
                   Options = [loDownIfMenu, loDownIfMouseDown, loDownIfURL]
                   Down = True
-                  ExplicitWidth = 100
                 end
                 object dhLink12: TdhLink
                   Left = 0
@@ -1348,12 +1335,11 @@ object Tabs: TTabs
                   Use = STYLE_dhLink2
                   AutoSizeXY = asXY
                   Align = alTop
-                  Right = 2147483647
+                  Right = 20
                   OnClick = dhLink9Click
                   Layout = ltText
                   PreferDownStyles = False
                   Options = [loDownIfMenu, loDownIfMouseDown, loDownIfURL]
-                  ExplicitWidth = 100
                 end
                 object dhLink11: TdhLink
                   Left = 0
@@ -1363,12 +1349,11 @@ object Tabs: TTabs
                   Use = STYLE_dhLink2
                   AutoSizeXY = asXY
                   Align = alTop
-                  Right = 2147483647
+                  Right = 20
                   OnClick = dhLink9Click
                   Layout = ltText
                   PreferDownStyles = False
                   Options = [loDownIfMenu, loDownIfMouseDown, loDownIfURL]
-                  ExplicitWidth = 100
                 end
                 object dhLink10: TdhLink
                   Left = 0
@@ -1378,12 +1363,11 @@ object Tabs: TTabs
                   Use = STYLE_dhLink2
                   AutoSizeXY = asXY
                   Align = alTop
-                  Right = 2147483647
+                  Right = 20
                   OnClick = dhLink9Click
                   Layout = ltText
                   PreferDownStyles = False
                   Options = [loDownIfMenu, loDownIfMouseDown, loDownIfURL]
-                  ExplicitWidth = 100
                 end
                 object dhLink13: TdhLink
                   Left = 0
@@ -1393,12 +1377,11 @@ object Tabs: TTabs
                   Use = STYLE_dhLink2
                   AutoSizeXY = asXY
                   Align = alTop
-                  Right = 2147483647
+                  Right = 20
                   OnClick = dhLink9Click
                   Layout = ltText
                   PreferDownStyles = False
                   Options = [loDownIfMenu, loDownIfMouseDown, loDownIfURL]
-                  ExplicitWidth = 100
                 end
               end
               object Panel5: TMyPanel
@@ -1419,7 +1402,6 @@ object Tabs: TTabs
                   AutoSizeXY = asXY
                   Anchors = [akTop, akRight]
                   Right = 149
-                  ExplicitLeft = 0
                 end
                 object lFlood: TdhLabel
                   Top = 33
@@ -1429,7 +1411,6 @@ object Tabs: TTabs
                   AutoSizeXY = asXY
                   Anchors = [akTop, akRight]
                   Right = 149
-                  ExplicitLeft = 0
                 end
                 object lDistance: TdhLabel
                   Top = 56
@@ -1439,7 +1420,6 @@ object Tabs: TTabs
                   AutoSizeXY = asXY
                   Anchors = [akTop, akRight]
                   Right = 149
-                  ExplicitLeft = 0
                 end
                 object lDegree: TdhLabel
                   Top = 79
@@ -1449,7 +1429,6 @@ object Tabs: TTabs
                   AutoSizeXY = asXY
                   Anchors = [akTop, akRight]
                   Right = 149
-                  ExplicitLeft = 0
                 end
                 object spBlurAlpha: TMySpinEdit
                   Left = 51
@@ -1575,7 +1554,6 @@ object Tabs: TTabs
                   AutoSizeXY = asXY
                   Anchors = [akTop, akRight]
                   Right = 141
-                  ExplicitLeft = 0
                 end
                 object spBlurRadius: TMySpinEdit
                   Left = 51
@@ -1638,7 +1616,6 @@ object Tabs: TTabs
                   AutoSizeXY = asXY
                   Anchors = [akTop, akRight]
                   Right = 150
-                  ExplicitLeft = 0
                 end
                 object Label8: TdhLabel
                   Top = 33
@@ -1648,7 +1625,6 @@ object Tabs: TTabs
                   AutoSizeXY = asXY
                   Anchors = [akTop, akRight]
                   Right = 150
-                  ExplicitLeft = 0
                 end
                 object Label6: TdhLabel
                   Top = 56
@@ -1658,7 +1634,6 @@ object Tabs: TTabs
                   AutoSizeXY = asXY
                   Anchors = [akTop, akRight]
                   Right = 150
-                  ExplicitLeft = 0
                 end
                 object Label5: TdhLabel
                   Top = 79
@@ -1668,7 +1643,6 @@ object Tabs: TTabs
                   AutoSizeXY = asXY
                   Anchors = [akTop, akRight]
                   Right = 150
-                  ExplicitLeft = 0
                 end
                 object slShiftX: TMyTrackBar
                   Left = 111
@@ -1782,7 +1756,6 @@ object Tabs: TTabs
                   AutoSizeXY = asXY
                   Anchors = [akTop, akRight]
                   Right = 149
-                  ExplicitLeft = 0
                 end
                 object Label10: TdhLabel
                   Top = 33
@@ -1792,7 +1765,6 @@ object Tabs: TTabs
                   AutoSizeXY = asXY
                   Anchors = [akTop, akRight]
                   Right = 149
-                  ExplicitLeft = 0
                 end
                 object Label3: TdhLabel
                   Top = 56
@@ -1802,7 +1774,6 @@ object Tabs: TTabs
                   AutoSizeXY = asXY
                   Anchors = [akTop, akRight]
                   Right = 149
-                  ExplicitLeft = 0
                 end
                 object Label4: TdhLabel
                   Top = 79
@@ -1812,7 +1783,6 @@ object Tabs: TTabs
                   AutoSizeXY = asXY
                   Anchors = [akTop, akRight]
                   Right = 149
-                  ExplicitLeft = 0
                 end
                 object slSkewX: TMyTrackBar
                   Left = 111
@@ -1936,7 +1906,6 @@ object Tabs: TTabs
             AutoSizeXY = asY
             Align = alTop
             Right = 2147483647
-            ExplicitWidth = 100
           end
           object STYLE_Link1: TdhLink
             Left = 0
@@ -1958,7 +1927,6 @@ object Tabs: TTabs
             Layout = ltText
             PreferDownStyles = False
             Options = [loDownIfMenu, loDownIfURL]
-            ExplicitWidth = 100
           end
           object STYLE_dhLink7: TdhLink
             Left = 0
@@ -1981,7 +1949,6 @@ object Tabs: TTabs
             Layout = ltText
             PreferDownStyles = False
             Options = [loDownIfMenu, loDownIfURL]
-            ExplicitWidth = 100
           end
           object STYLE_Label33: TdhLabel
             Left = 0
@@ -1993,7 +1960,6 @@ object Tabs: TTabs
             AutoSizeXY = asY
             Align = alTop
             Right = 2147483647
-            ExplicitWidth = 100
           end
           object STYLE_dhLabel11: TdhLabel
             Left = 0
@@ -2007,7 +1973,6 @@ object Tabs: TTabs
             AutoSizeXY = asY
             Align = alTop
             Right = 2147483647
-            ExplicitWidth = 100
           end
         end
         object IGNORE_dhDirectHTML1: TdhDirectHTML
@@ -2250,7 +2215,6 @@ object Tabs: TTabs
             AutoSizeXY = asXY
             Anchors = [akTop, akRight]
             Right = 119
-            ExplicitLeft = 0
           end
           object Label24: TdhLabel
             Top = 48
@@ -2260,7 +2224,6 @@ object Tabs: TTabs
             AutoSizeXY = asXY
             Anchors = [akTop, akRight]
             Right = 119
-            ExplicitLeft = 0
           end
           object Label30: TdhLabel
             Top = 72
@@ -2270,7 +2233,6 @@ object Tabs: TTabs
             AutoSizeXY = asXY
             Anchors = [akTop, akRight]
             Right = 119
-            ExplicitLeft = 0
           end
           object cbCursor: ThComboBox
             Left = 96
@@ -2360,7 +2322,6 @@ object Tabs: TTabs
             AutoSizeXY = asXY
             Anchors = [akTop, akRight]
             Right = 119
-            ExplicitLeft = 0
           end
           object Label18: TdhLabel
             Top = 72
@@ -2370,7 +2331,6 @@ object Tabs: TTabs
             AutoSizeXY = asXY
             Anchors = [akTop, akRight]
             Right = 119
-            ExplicitLeft = 0
           end
           object Label12: TdhLabel
             Top = 48
@@ -2380,7 +2340,6 @@ object Tabs: TTabs
             AutoSizeXY = asXY
             Anchors = [akTop, akRight]
             Right = 119
-            ExplicitLeft = 0
           end
           object CODE_cbVerticalAlign: ThComboBox
             Left = 96
@@ -2453,7 +2412,6 @@ object Tabs: TTabs
             AutoSizeXY = asXY
             Anchors = [akTop, akRight]
             Right = 119
-            ExplicitLeft = 0
           end
           object Label26: TdhLabel
             Top = 72
@@ -2463,7 +2421,6 @@ object Tabs: TTabs
             AutoSizeXY = asXY
             Anchors = [akTop, akRight]
             Right = 119
-            ExplicitLeft = 0
           end
           object Label13: TdhLabel
             Top = 48
@@ -2473,7 +2430,6 @@ object Tabs: TTabs
             AutoSizeXY = asXY
             Anchors = [akTop, akRight]
             Right = 119
-            ExplicitLeft = 0
           end
           object cbTextTransform: ThComboBox
             Left = 96
@@ -2576,7 +2532,6 @@ object Tabs: TTabs
             AutoSizeXY = asXY
             Anchors = [akTop, akRight]
             Right = 137
-            ExplicitLeft = 0
           end
           object Label37: TdhLabel
             Top = 48
@@ -2586,7 +2541,6 @@ object Tabs: TTabs
             AutoSizeXY = asXY
             Anchors = [akTop, akRight]
             Right = 137
-            ExplicitLeft = 0
           end
           object Label38: TdhLabel
             Top = 71
@@ -2596,7 +2550,6 @@ object Tabs: TTabs
             AutoSizeXY = asXY
             Anchors = [akTop, akRight]
             Right = 137
-            ExplicitLeft = 0
           end
           object IGNORE_Label39: TdhLabel
             Left = 107
@@ -2645,7 +2598,6 @@ object Tabs: TTabs
             AutoSizeXY = asXY
             Anchors = [akTop, akRight]
             Right = 103
-            ExplicitLeft = 0
           end
           object cbUse: ThComboBox
             Left = 112
@@ -2778,7 +2730,6 @@ object Tabs: TTabs
             Anchors = [akTop, akRight]
             Right = 64
             OnClick = cAutoXClick
-            ExplicitLeft = 0
           end
           object dhLabel30: TdhLabel
             Top = 22
@@ -2789,7 +2740,6 @@ object Tabs: TTabs
             Anchors = [akTop, akRight]
             Right = 168
             OnClick = cAutoXClick
-            ExplicitLeft = 0
           end
           object dhLabel31: TdhLabel
             Top = 46
@@ -2800,7 +2750,6 @@ object Tabs: TTabs
             Anchors = [akTop, akRight]
             Right = 168
             OnClick = cAutoXClick
-            ExplicitLeft = 0
           end
           object spWidth: TMySpinEdit
             Left = 46
@@ -2824,7 +2773,6 @@ object Tabs: TTabs
             Anchors = [akTop, akRight]
             Right = 64
             OnClick = cAutoXClick
-            ExplicitLeft = 0
           end
           object spHeight: TMySpinEdit
             Left = 150
@@ -2990,10 +2938,6 @@ object Tabs: TTabs
         Caption = 'Text'
         ImageIndex = -1
         OnShow = AnchorTextShow
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
         object Label31: TdhLabel
           Left = 24
           Top = 16
@@ -3014,7 +2958,7 @@ object Tabs: TTabs
         object Button8: TTntButton
           Left = 312
           Top = 1
-          Width = 113
+          Width = 145
           Height = 25
           Caption = 'Edit with formatting'
           TabOrder = 0
@@ -3204,10 +3148,6 @@ object Tabs: TTabs
         Caption = 'Edit'
         ImageIndex = -1
         OnShow = AnchorEditShow
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
         object GroupBox15: TMyGroupBox
           Left = 8
           Top = 0
@@ -3256,10 +3196,6 @@ object Tabs: TTabs
         Caption = 'Memo'
         ImageIndex = -1
         OnShow = AnchorMemoShow
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
         object Label35: TdhLabel
           Left = 8
           Top = 16
@@ -3393,7 +3329,6 @@ object Tabs: TTabs
             AutoSizeXY = asXY
             Anchors = [akTop, akRight]
             Right = 160
-            ExplicitLeft = 0
           end
           object eAction: ThEdit
             Left = 56
@@ -3412,7 +3347,6 @@ object Tabs: TTabs
             AutoSizeXY = asXY
             Anchors = [akTop, akRight]
             Right = 144
-            ExplicitLeft = 0
           end
           object CODE_eFormTarget: ThComboBox
             Left = 72
@@ -3470,7 +3404,6 @@ object Tabs: TTabs
             Anchors = [akTop, akRight]
             Enabled = False
             Right = 124
-            ExplicitLeft = 0
           end
           object spSlidePixel: TMySpinEdit
             Left = 88
@@ -3638,7 +3571,6 @@ object Tabs: TTabs
             AutoSizeXY = asXY
             Anchors = [akTop, akRight]
             Right = 136
-            ExplicitLeft = 0
           end
           object cbLinkPage: ThComboBox
             Left = 80
@@ -3680,7 +3612,6 @@ object Tabs: TTabs
             AutoSizeXY = asXY
             Anchors = [akTop, akRight]
             Right = 137
-            ExplicitLeft = 0
           end
         end
         object GroupBox28: TMyGroupBox
@@ -3701,7 +3632,6 @@ object Tabs: TTabs
             AutoSizeXY = asXY
             Anchors = [akTop, akRight]
             Right = 160
-            ExplicitLeft = 0
           end
           object dhLabel1: TdhLabel
             Top = 59
@@ -3711,7 +3641,6 @@ object Tabs: TTabs
             AutoSizeXY = asXY
             Anchors = [akTop, akRight]
             Right = 144
-            ExplicitLeft = 0
           end
           object CODE_eTarget: ThComboBox
             Left = 72
@@ -3851,10 +3780,6 @@ object Tabs: TTabs
         Caption = 'Hidden'
         ImageIndex = -1
         OnShow = AnchorHiddenShow
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
         object GroupBox31: TMyGroupBox
           Left = 8
           Top = 0
@@ -4047,7 +3972,6 @@ object Tabs: TTabs
             AutoSizeXY = asXY
             Anchors = [akTop, akRight]
             Right = 143
-            ExplicitLeft = 0
           end
           object Label34: TdhLabel
             Top = 50
@@ -4057,7 +3981,6 @@ object Tabs: TTabs
             AutoSizeXY = asXY
             Anchors = [akTop, akRight]
             Right = 143
-            ExplicitLeft = 0
           end
           object cSelectSelected: TTntCheckBox
             Left = 72
@@ -4092,10 +4015,6 @@ object Tabs: TTabs
         Caption = 'HTML'
         ImageIndex = -1
         OnShow = AnchorPureHTMLShow
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
         object Label32: TdhLabel
           Left = 8
           Top = 16
@@ -4217,7 +4136,6 @@ object Tabs: TTabs
             AutoSizeXY = asY
             Align = alTop
             Right = 2147483647
-            ExplicitWidth = 100
           end
         end
         object cLoop: TTntCheckBox

@@ -1,9 +1,9 @@
 object Options: TOptions
   Left = 225
-  Top = 163
+  Top = 137
   Caption = 'Options'
   ClientHeight = 241
-  ClientWidth = 306
+  ClientWidth = 346
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -15,14 +15,18 @@ object Options: TOptions
   Position = poScreenCenter
   OnCreate = FormCreate
   OnKeyPress = FormKeyPress
+  DesignSize = (
+    346
+    241)
   PixelsPerInch = 96
   TextHeight = 13
   object PageControl11: TMyPageControl
     Left = 8
     Top = 8
-    Width = 289
+    Width = 329
     Height = 193
-    ActivePage = TabSheet4
+    ActivePage = TabSheet6
+    Anchors = [akTop]
     TabOrder = 0
     TabStop = False
     object TabSheet1: TTntTabSheet
@@ -292,7 +296,7 @@ object Options: TOptions
           Style.BorderRadius.All = '6'
           AutoSizeXY = asY
           Align = alTop
-          Right = 12
+          Right = 2147483647
         end
       end
       object cClearCache: TTntButton
@@ -337,9 +341,23 @@ object Options: TOptions
         OnClick = RadioGroup1Click
       end
     end
+    object TabSheet6: TTntTabSheet
+      Caption = 'Update'
+      ExplicitLeft = 0
+      ExplicitTop = 31
+      object cAutoUpdate: TTntCheckBox
+        Left = 16
+        Top = 16
+        Width = 241
+        Height = 17
+        Caption = 'Monthly check for updates'
+        TabOrder = 0
+        OnClick = cSmartPublishingClick
+      end
+    end
   end
   object Button1: TTntButton
-    Left = 222
+    Left = 262
     Top = 210
     Width = 75
     Height = 25
@@ -374,7 +392,7 @@ object Options: TOptions
     Left = 32
     Top = 208
     LangData = {
-      07004F7074696F6E73010100000001000000070043617074696F6E0124000000
+      07004F7074696F6E73010100000001000000070043617074696F6E0126000000
       0D0050616765436F6E74726F6C31310000090054616253686565743101010000
       0002000000070043617074696F6E0006004C6162656C31010100000021000000
       0400546578740006004C6162656C320101000000220000000400546578740006
@@ -403,6 +421,8 @@ object Options: TOptions
       7074696F6E1D00000005004974656D73000700427574746F6E3101010000001E
       000000070043617074696F6E000B00466F6E744469616C6F673100000B004F70
       656E4469616C6F6731010100000020000000060046696C746572000F006C4469
-      726563746F727943616368650000}
+      726563746F727943616368650000090054616253686565743601010000002A00
+      0000070043617074696F6E000B00634175746F55706461746501010000002B00
+      0000070043617074696F6E00}
   end
 end

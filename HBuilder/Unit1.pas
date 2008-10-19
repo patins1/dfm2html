@@ -186,6 +186,8 @@ type
     N15: TTntMenuItem;
     mExternalizeImages: TTntMenuItem;
     IGNORE_SaveDraggedPictureDialog: TMySavePictureDialog;
+    mCheckForUpdate: TTntMenuItem;
+    procedure mCheckForUpdateClick(Sender: TObject);
     procedure mExternalizeImagesClick(Sender: TObject);
     procedure Exit1Click(Sender: TObject);
     procedure Button1Click(Sender: TObject);
@@ -286,12 +288,15 @@ type
   private
     LastFile:string;
     FAct:TPageContainer;
-    AlreadyCalled:boolean;
+    AlreadyCalled,SilentUpdateCheck:boolean;
     RegString:string;
+    LastUpdateCheck:TDateTime;
 
 {$IFNDEF CLX}
     HttpCli1: THttpCli;
+    HttpUpdateCli: THttpCli;
     procedure HttpCli1RequestDone(Sender  : TObject; RqType  : THttpRequest; ErrCode : Word);
+    procedure HttpUpdateCliRequestDone(Sender  : TObject; RqType  : THttpRequest; ErrCode : Word);
 {$ENDIF}
     procedure UpdateLanguage;
     procedure UpdateOtherConstants;
@@ -384,6 +389,8 @@ type PFontStyles=^TFontStyles;
 const
       configFile='Config.ini';
       crcFile='SmartPublishingCRCs.txt';
+      UpdateCheckInterval=30;
+      NeverCheckedForUpdate=0;
 
 var BaseDir:string;
 //    PureFileName:string;
@@ -428,6 +435,12 @@ begin
  LngFile:=TMemIniFile.Create(RootDir(configFile));
 end;
 
+function GetFormatSettings:TFormatSettings;
+begin           
+   Result.ShortDateFormat:='YYYY-MM-DD';
+   Result.LongDateFormat:='YYYY-MM-DD';
+   Result.DateSeparator:='-';
+end;
 
 procedure TdhMainForm.ReadConfig;
 var
@@ -437,8 +450,10 @@ var
     i:integer;
     s:String;
     iPropsAlign:TAlign;
+    sLastUpdateCheck:String;
 begin
   firststarted:=true;
+  LastUpdateCheck:=NeverCheckedForUpdate;
  try
  IniFile:=TMemIniFile.Create(RootDir(configFile));
 
@@ -450,6 +465,14 @@ begin
   UpdateRegistrationStatus(DecodePsw(ReadString('Program','R',EmptyStr)));
 
   LastFile:=ReadString('Program','Last File',EmptyStr);
+
+  sLastUpdateCheck:=ReadString('Program','Last Update Check','');
+  try
+   if sLastUpdateCheck<>'' then
+    LastUpdateCheck:=StrToDate(sLastUpdateCheck,GetFormatSettings);
+  except
+  end;
+  FAutoUpdate:=ReadBool('Program','Monthly Check For Update',true);
 
   with FuncSettings do
   begin
@@ -601,6 +624,12 @@ begin
 
   if Act<>nil then
    WriteString('Program','Last File', Act.FileName);
+
+
+  if LastUpdateCheck<>NeverCheckedForUpdate then
+   WriteString('Program','Last Update Check',DateToStr(LastUpdateCheck,GetFormatSettings));
+  WriteBool('Program','Monthly Check For Update',FAutoUpdate);
+
 
 
   with FuncSettings do
@@ -1723,7 +1752,7 @@ begin
    if anyFilesToShift then
    begin
     anyFilesToShift:=MessageDlg(DKFormat(COPYEXISTINGFILES,FileName),mtConfirmation,[mbYes, mbNo], 0)=mrYes;
-   end;            
+   end;
    if not anyFilesToWrite and not anyFilesToShift then
    begin
     ShowMessage(DKFormat(NOIMAGETOEXTERNALIZE));
@@ -1956,6 +1985,75 @@ end;
 procedure TdhMainForm.mCascadeClick(Sender: TObject);
 begin
  Cascade;
+end;
+
+{$IFDEF MSWINDOWS}
+function FileCreateAge(const FileName: string; out FileDateTime: TDateTime): Boolean;
+var
+  Handle: THandle;
+  FindData: TWin32FindData;
+  LSystemTime: TSystemTime;
+  LocalFileTime: TFileTime;
+begin
+  Result := False;
+  Handle := FindFirstFile(PChar(FileName), FindData);
+  if Handle <> INVALID_HANDLE_VALUE then
+  begin
+    Windows.FindClose(Handle);
+    //{!!}if (FindData.dwFileAttributes and FILE_ATTRIBUTE_DIRECTORY) = 0 then
+    begin
+      Result := True;
+      FileTimeToLocalFileTime(FindData.ftCreationTime{!!}, LocalFileTime);
+      FileTimeToSystemTime(LocalFileTime, LSystemTime);
+      with LSystemTime do
+        FileDateTime := EncodeDate(wYear, wMonth, wDay) +
+          EncodeTime(wHour, wMinute, wSecond, wMilliSeconds);
+    end;
+  end;
+end;
+{$ENDIF}
+
+
+procedure TdhMainForm.mCheckForUpdateClick(Sender: TObject);
+var FileDateTime: TDateTime;
+    Root:String;
+begin
+{$IFNDEF CLX}
+    SilentUpdateCheck:=Sender=nil;
+    if HttpUpdateCli<>nil then
+    begin
+     HttpUpdateCli.RcvdStream.Free;
+     HttpUpdateCli.RcvdStream:=nil;
+     FreeAndNil(HttpUpdateCli);
+    end;
+    HttpUpdateCli:=THttpCli.Create(nil);
+    HttpUpdateCli.OnRequestDone:=HttpUpdateCliRequestDone;
+    HttpUpdateCli.RcvdStream:=TStringStream.Create(EmptyStr);
+    if not FileAge(RootDir(configFile),FileDateTime) then
+    begin
+     WriteConfig;
+    end;
+    if SilentUpdateCheck then
+     Root:='/autoupd' else
+     Root:='/upd';
+    if FileCreateAge(Copy(RootDir(''),1,Length(RootDir(''))-1),FileDateTime) then
+    begin
+     HttpUpdateCli.URL:='http://www.dfm2html.com'+Root+'/'+DateToStr(FileDateTime,GetFormatSettings);
+    end else
+    begin
+     HttpUpdateCli.URL:='http://www.dfm2html.com'+Root+'/unknown';
+    end;
+    HttpUpdateCli.URL:=HttpUpdateCli.URL+'/'+WideStringReplace(DFM2HTML_VERSION,' ','_',[]);
+    if LastUpdateCheck<>NeverCheckedForUpdate then
+     HttpUpdateCli.URL:=HttpUpdateCli.URL+'/'+IntToStr(Round(Now-LastUpdateCheck-UpdateCheckInterval)) else
+     HttpUpdateCli.URL:=HttpUpdateCli.URL+'/-1';
+    if SilentUpdateCheck then
+    begin
+     LastUpdateCheck:=Now;
+    end;
+    HttpUpdateCli.GetASync;
+    exit;
+{$ENDIF}
 end;
 
 procedure TdhMainForm.mTileClick(Sender: TObject);
@@ -2506,6 +2604,41 @@ begin
 end;
 {$ENDIF}
 
+{$IFNDEF CLX}
+procedure TdhMainForm.HttpUpdateCliRequestDone(Sender: TObject;
+  RqType: THttpRequest; ErrCode: Word);       
+var VerList: TStringList;
+    NewVersion:String;
+begin
+ if ErrCode<>0 then
+ begin
+  if not SilentUpdateCheck then
+   MessageDlg(WideStringReplace(mCheckForUpdate.Caption,'&','',[])+':'+endl+HttpUpdateCli.ReasonPhrase,mtError,[mbOK], 0);
+  Exit;
+ end;
+ VerList := TStringList.Create;
+ VerList.Text:=(HttpUpdateCli.RcvdStream as TStringStream).DataString;
+ NewVersion := VerList.Values['version'];
+ if NewVersion = '' then
+ begin                   
+  if not SilentUpdateCheck then
+   MessageDlg(WideStringReplace(mCheckForUpdate.Caption,'&','',[])+':'+endl+HttpUpdateCli.ReasonPhrase,mtError,[mbOK], 0);
+  Exit;
+ end;
+ if NewVersion <> DFM2HTML_VERSION then
+ begin
+  if MessageDlg(DKFormat(NEWVERSIONAVAILABLE),mtConfirmation,[mbYes, mbNo], 0)=mrYes then
+  begin
+   Browse('http://www.dfm2html.'+GetTopLevelDomain+'/download/',{'iexplore'}FViewer,false);
+  end;
+ end else
+ begin
+  if not SilentUpdateCheck then
+   MessageDlg(DKFormat(STILLUPTODATE),mtInformation,[mbOK], 0);
+ end;
+end;
+{$ENDIF}
+
 
 var ch:char;
 
@@ -2559,6 +2692,11 @@ begin
  end;
  finally
   glLockWindowUpdate(false,lLock);
+ end;
+
+ if FAutoUpdate and ((LastUpdateCheck=NeverCheckedForUpdate) or (Now-LastUpdateCheck-UpdateCheckInterval>=0)) then
+ begin
+  mCheckForUpdateClick(nil);
  end;
 end;
 

@@ -14,7 +14,7 @@ uses
   dhPanel, dhLabel, dhPageControl, MySpinEdit, MyPageControl, dhStyleSheet, DKLang;
 
 
-type TFuncSettings=object 
+type TFuncSettings=object
      DefaultFont:TFont;  
      LRUfiles:TStringList;
      Compress:boolean;
@@ -60,6 +60,8 @@ type
     dhLabel2: TdhLabel;
     DKLanguageController1: TDKLanguageController;
     lDirectoryCache: TdhLabel;
+    TabSheet6: TTntTabSheet;
+    cAutoUpdate: TTntCheckBox;
     procedure spGridXChange(Sender: TObject);
     procedure Button2Click(Sender: TObject);
     procedure Button3Click(Sender: TObject);
@@ -127,6 +129,7 @@ begin
    bClearFocusedCache.Enabled:=dhMainForm.Act.MySiz.FindBody.Find('*',0,false);
   end else
    lDirectoryCache.Text:='';
+  cAutoUpdate.Checked:=FAutoUpdate;
  end;
  Adjusting:=false;
 end;
@@ -152,6 +155,7 @@ begin
   end;
   if not FSmartPublishing then
    SetLength(Uploaded,0);
+  FAutoUpdate:=cAutoUpdate.Checked;
  end;
 
 end;

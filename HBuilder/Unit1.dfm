@@ -1,10 +1,10 @@
 object dhMainForm: TdhMainForm
   Tag = 777789
-  Left = 316
-  Top = 460
+  Left = 952
+  Top = 176
   Caption = 'DFM2HTML'
-  ClientHeight = 441
-  ClientWidth = 1029
+  ClientHeight = 715
+  ClientWidth = 564
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -43,7 +43,7 @@ object dhMainForm: TdhMainForm
     object ToolBar1: TTntToolBar
       Left = 0
       Top = 2
-      Width = 1029
+      Width = 564
       Height = 31
       ButtonHeight = 30
       ButtonWidth = 31
@@ -334,8 +334,8 @@ object dhMainForm: TdhMainForm
   end
   object StatusBar: TStatusBar
     Left = 0
-    Top = 422
-    Width = 1029
+    Top = 696
+    Width = 564
     Height = 19
     Panels = <
       item
@@ -3462,6 +3462,10 @@ object dhMainForm: TdhMainForm
         Caption = 'Get Technical Support'
         OnClick = mTechnicalSupportClick
       end
+      object mCheckForUpdate: TTntMenuItem
+        Caption = 'Check for Update'
+        OnClick = mCheckForUpdateClick
+      end
       object N6: TTntMenuItem
         Caption = '-'
       end
@@ -3681,7 +3685,7 @@ object dhMainForm: TdhMainForm
     Left = 472
     Top = 152
     LangData = {
-      0A0064684D61696E466F726D0001960000000800646850616E656C3100000800
+      0A0064684D61696E466F726D0001970000000800646850616E656C3100000800
       546F6F6C4261723100000F00636F6D7050616765436F6E74726F6C0101000000
       03000000040048696E74000800636F6D70506167650101000000050000000400
       48696E74000900636F6D7050616E656C010100000007000000040048696E7400
@@ -3793,7 +3797,8 @@ object dhMainForm: TdhMainForm
       44726167676564506963747572654469616C6F670001050000000C0050696374
       75726550616E656C00000C00506963747572654C6162656C00000D0050726576
       696577427574746F6E00000A005061696E7450616E656C000008005061696E74
-      426F780000}
+      426F7800000F006D436865636B466F7255706461746501010000008900000007
+      0043617074696F6E00}
   end
   object GenerateTimer: TTimer
     Enabled = False

@@ -30,6 +30,7 @@ uses
 //const WM_PUSHUP=WM_USER+33;
 
 const LANGID_GERMAN=1031;  
+const LANGID_ITALIAN=1040;
 
 type TActionArea=(aaAll,aaGroup,aaOne);
 
@@ -2863,9 +2864,11 @@ begin
 end;
 
 procedure TdhMainForm.m5minGuideClick(Sender: TObject);
-begin                     
+begin
  if _LANGID=LANGID_GERMAN then
   Open(ExtractFilePath(Application.Exename)+'GuideGerman.dfm',false) else
+ if _LANGID=LANGID_ITALIAN then
+  Open(ExtractFilePath(Application.Exename)+'GuideItalian.dfm',false) else
   Open(ExtractFilePath(Application.Exename)+'Guide.dfm',false);
 end;
 
@@ -2986,7 +2989,9 @@ begin
 end;
 
 procedure TdhMainForm.MenuTutorial1Click(Sender: TObject);
-begin
+begin                                                            
+ if _LANGID=LANGID_ITALIAN then
+  Open(ExtractFilePath(Application.Exename)+'TutorialMenusItalian.dfm',false) else
   Open(ExtractFilePath(Application.Exename)+'TutorialMenus.dfm',false);
 end;
 

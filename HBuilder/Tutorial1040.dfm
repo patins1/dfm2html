@@ -1,9 +1,9 @@
 object PageContainer2: TPageContainer2
   Left = -4
   Top = -23
-  Caption = 'TutorialItalian.dfm'
-  ClientHeight = 519
-  ClientWidth = 1280
+  Caption = 'Tutorial1040.dfm'
+  ClientHeight = 626
+  ClientWidth = 1600
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clBlack
   Font.Height = -13
@@ -41,10 +41,9 @@ object PageContainer2: TPageContainer2
     OutputDirectory = 'tutorial\'
     MetaAuthor = 'J'#246'rg Kiegeland'
     MetaDescription = 'DFM2HTML Tutorial'
-    VertPosition = 7525
     object Panel6: TdhPanel
       Left = 16
-      Top = -7437
+      Top = 88
       Width = 296
       Height = 416
       Style.Border.Width = 18
@@ -320,7 +319,7 @@ object PageContainer2: TPageContainer2
     end
     object StyleSheet2: TdhStyleSheet
       Left = 439
-      Top = -7469
+      Top = 56
       Width = 28
       Height = 28
       Expanded = False
@@ -347,7 +346,7 @@ object PageContainer2: TPageContainer2
         Style.Effects.Rotation = 120
         AutoSizeXY = asY
         Align = alTop
-        Right = 0
+        Right = 20
       end
       object chapter: TdhLink
         Left = 0
@@ -358,7 +357,6 @@ object PageContainer2: TPageContainer2
         Style.FontWeight = cfwBold
         AutoSizeXY = asXY
         Align = alTop
-        Right = 0
         PreferDownStyles = True
         Options = [loDownIfMenu, loDownIfMouseDown, loDownIfURL]
       end
@@ -370,7 +368,7 @@ object PageContainer2: TPageContainer2
         Style.Padding = 5
         AutoSizeXY = asY
         Align = alTop
-        Right = 0
+        Right = 16
       end
       object Label3: TdhLabel
         Left = 0
@@ -380,7 +378,6 @@ object PageContainer2: TPageContainer2
         Style.Color = Red
         AutoSizeXY = asY
         Align = alTop
-        Right = 0
       end
       object Link2: TdhLink
         Left = 0
@@ -421,7 +418,7 @@ object PageContainer2: TPageContainer2
         Style.TextDecoration = [ctdNone]
         AutoSizeXY = asXY
         Align = alTop
-        Right = 0
+        Right = 10
         StyleOver.BackgroundImage.Data = {
           0A54504E474F626A65637489504E470D0A1A0A0000000D494844520000003200
           00003208060000001E3F88B10000000467414D410000AFC837058AE900000019
@@ -487,7 +484,7 @@ object PageContainer2: TPageContainer2
         Use = Link2
         AutoSizeXY = asXY
         Align = alTop
-        Right = 0
+        Right = 10
         StyleOver.BackgroundImage.Data = {
           0A54504E474F626A65637489504E470D0A1A0A0000000D494844520000003200
           00003208060000001E3F88B1000002CF4944415478DAED965D48145114C7FFB3
@@ -520,7 +517,7 @@ object PageContainer2: TPageContainer2
     end
     object Text5: TdhLabel
       Left = 24
-      Top = -6765
+      Top = 760
       Width = 624
       Height = 395
       Text = 
@@ -562,7 +559,7 @@ object PageContainer2: TPageContainer2
     end
     object TdhLabel2: TdhLabel
       Left = 24
-      Top = -3709
+      Top = 3816
       Width = 777
       Height = 59
       Text = 
@@ -576,7 +573,7 @@ object PageContainer2: TPageContainer2
     end
     object Text6: TdhLabel
       Left = 24
-      Top = -3637
+      Top = 3888
       Width = 154
       Height = 27
       Text = 'Courier New'
@@ -590,7 +587,7 @@ object PageContainer2: TPageContainer2
     end
     object TdhLabel3: TdhLabel
       Left = 24
-      Top = -3613
+      Top = 3912
       Width = 179
       Height = 35
       Text = 'Comic Sans MS'
@@ -604,7 +601,7 @@ object PageContainer2: TPageContainer2
     end
     object TdhLabel4: TdhLabel
       Left = 24
-      Top = -3573
+      Top = 3952
       Width = 193
       Height = 28
       Text = 'Times New Roman'
@@ -619,7 +616,7 @@ object PageContainer2: TPageContainer2
     end
     object Panel1: TdhPanel
       Left = 304
-      Top = -3645
+      Top = 3880
       Width = 240
       Height = 108
       Style.Border.Width = 2
@@ -682,7 +679,7 @@ object PageContainer2: TPageContainer2
     end
     object TdhLabel6: TdhLabel
       Left = 24
-      Top = -3519
+      Top = 4006
       Width = 688
       Height = 27
       Text = 
@@ -694,7 +691,7 @@ object PageContainer2: TPageContainer2
     end
     object TdhLabel8: TdhLabel
       Left = 24
-      Top = -3432
+      Top = 4093
       Width = 552
       Height = 75
       Text = 
@@ -710,7 +707,7 @@ object PageContainer2: TPageContainer2
     end
     object StyleSheet3: TdhStyleSheet
       Left = 608
-      Top = -3261
+      Top = 4264
       Width = 28
       Height = 28
       Expanded = False
@@ -734,12 +731,12 @@ object PageContainer2: TPageContainer2
         Style.Effects.Alpha = 194
         AutoSizeXY = asY
         Align = alTop
-        Right = 0
+        Right = 24
       end
     end
     object Panel4: TdhPanel
       Left = 48
-      Top = -3301
+      Top = 4224
       Width = 504
       Height = 216
       Style.Border.Width = 1
@@ -813,7 +810,7 @@ object PageContainer2: TPageContainer2
     end
     object Text12: TdhLabel
       Left = 558
-      Top = -3306
+      Top = 4219
       Width = 27
       Height = 234
       Text = 
@@ -828,7 +825,7 @@ object PageContainer2: TPageContainer2
     end
     object TdhLabel12: TdhLabel
       Left = 38
-      Top = -3083
+      Top = 4442
       Width = 546
       Height = 27
       Text = 
@@ -840,7 +837,7 @@ object PageContainer2: TPageContainer2
     end
     object TdhLabel14: TdhLabel
       Left = 24
-      Top = -2795
+      Top = 4730
       Width = 680
       Height = 91
       Text = 
@@ -859,7 +856,7 @@ object PageContainer2: TPageContainer2
     end
     object StyleSheet4: TdhStyleSheet
       Left = 592
-      Top = -2869
+      Top = 4656
       Width = 28
       Height = 28
       Expanded = False
@@ -913,7 +910,7 @@ object PageContainer2: TPageContainer2
         Style.FontWeight = cfwBold
         AutoSizeXY = asY
         Align = alTop
-        Right = 0
+        Right = 8
       end
       object Link13: TdhLink
         Left = 0
@@ -923,7 +920,7 @@ object PageContainer2: TPageContainer2
         Style.VerticalAlign = 'middle'
         AutoSizeXY = asXY
         Align = alTop
-        Right = 0
+        Right = 4
         Layout = ltButton
         PreferDownStyles = True
         Options = [loDownIfMenu, loDownIfMouseDown, loDownIfURL]
@@ -931,7 +928,7 @@ object PageContainer2: TPageContainer2
     end
     object Text13: TdhLabel
       Left = 32
-      Top = -2685
+      Top = 4840
       Width = 144
       Height = 128
       Text = 'affiancato in <nobr>direzione x/y</nobr>'
@@ -941,7 +938,7 @@ object PageContainer2: TPageContainer2
     end
     object TdhLabel15: TdhLabel
       Left = 184
-      Top = -2685
+      Top = 4840
       Width = 144
       Height = 128
       Text = 'affiancato in <nobr>direzione y</nobr>, centrato'
@@ -953,7 +950,7 @@ object PageContainer2: TPageContainer2
     end
     object TdhLabel16: TdhLabel
       Left = 456
-      Top = -2685
+      Top = 4840
       Width = 144
       Height = 128
       Text = 'adattato'
@@ -966,7 +963,7 @@ object PageContainer2: TPageContainer2
     end
     object TdhLabel17: TdhLabel
       Left = 24
-      Top = -2149
+      Top = 5376
       Width = 568
       Height = 59
       Text = 
@@ -980,7 +977,7 @@ object PageContainer2: TPageContainer2
     end
     object Button1: TdhLink
       Left = 40
-      Top = -2029
+      Top = 5496
       Width = 74
       Height = 74
       Text = 'Pulsante1'
@@ -997,7 +994,7 @@ object PageContainer2: TPageContainer2
     end
     object Text14: TdhLabel
       Left = 40
-      Top = -2069
+      Top = 5456
       Width = 96
       Height = 32
       Text = 'Un pulsante, ruotato di 45'#176
@@ -1005,7 +1002,7 @@ object PageContainer2: TPageContainer2
     end
     object Text16: TdhLabel
       Left = 312
-      Top = -2069
+      Top = 5456
       Width = 120
       Height = 32
       Text = 'Un link, che dice "Ciao" se cliccato:'
@@ -1013,7 +1010,7 @@ object PageContainer2: TPageContainer2
     end
     object Link3: TdhLink
       Left = 312
-      Top = -2029
+      Top = 5496
       Width = 76
       Height = 53
       Text = 'Ciao'
@@ -1058,7 +1055,7 @@ object PageContainer2: TPageContainer2
     end
     object Panel5: TdhPanel
       Left = 136
-      Top = -2037
+      Top = 5488
       Width = 104
       Height = 88
       Style.Border.Width = 2
@@ -1076,7 +1073,7 @@ object PageContainer2: TPageContainer2
     end
     object TdhLabel19: TdhLabel
       Left = 144
-      Top = -2069
+      Top = 5456
       Width = 152
       Height = 32
       Text = 'Un contenitore con bordo, dotato di ombreggiatura'
@@ -1084,7 +1081,7 @@ object PageContainer2: TPageContainer2
     end
     object TdhLabel21: TdhLabel
       Left = 24
-      Top = -1891
+      Top = 5634
       Width = 480
       Height = 43
       Text = 
@@ -1097,7 +1094,7 @@ object PageContainer2: TPageContainer2
     end
     object Text15: TdhLabel
       Left = 32
-      Top = -1837
+      Top = 5688
       Width = 80
       Height = 16
       Text = 'variante-font:'
@@ -1106,7 +1103,7 @@ object PageContainer2: TPageContainer2
     end
     object Text17: TdhLabel
       Left = 120
-      Top = -1837
+      Top = 5688
       Width = 372
       Height = 16
       Text = 'Testo formattato con la variante-font = maiuscolo piccolo'
@@ -1115,7 +1112,7 @@ object PageContainer2: TPageContainer2
     end
     object TdhLabel22: TdhLabel
       Left = 16
-      Top = -1805
+      Top = 5720
       Width = 96
       Height = 16
       Text = 'trasforma-testo:'
@@ -1124,7 +1121,7 @@ object PageContainer2: TPageContainer2
     end
     object TdhLabel23: TdhLabel
       Left = 120
-      Top = -1805
+      Top = 5720
       Width = 367
       Height = 16
       Text = 'Testo formattato con trasforma-testo = iniziali maiuscole'
@@ -1137,7 +1134,7 @@ object PageContainer2: TPageContainer2
     end
     object TdhLabel24: TdhLabel
       Left = 32
-      Top = -1773
+      Top = 5752
       Width = 80
       Height = 16
       Text = 'spazi-bianchi:'
@@ -1146,7 +1143,7 @@ object PageContainer2: TPageContainer2
     end
     object TdhLabel25: TdhLabel
       Left = 120
-      Top = -1773
+      Top = 5752
       Width = 519
       Height = 16
       Text = 
@@ -1157,7 +1154,7 @@ object PageContainer2: TPageContainer2
     end
     object TdhLabel26: TdhLabel
       Left = 32
-      Top = -1741
+      Top = 5784
       Width = 80
       Height = 16
       Text = 'direzione:'
@@ -1166,7 +1163,7 @@ object PageContainer2: TPageContainer2
     end
     object Edit1: TdhEdit
       Left = 120
-      Top = -1741
+      Top = 5784
       Width = 208
       Height = 23
       Style.Direction = cdiRtl
@@ -1175,7 +1172,7 @@ object PageContainer2: TPageContainer2
     end
     object TdhLabel27: TdhLabel
       Left = 32
-      Top = -1701
+      Top = 5824
       Width = 80
       Height = 16
       Text = 'allinea-testo:'
@@ -1184,7 +1181,7 @@ object PageContainer2: TPageContainer2
     end
     object TdhLabel28: TdhLabel
       Left = 120
-      Top = -1701
+      Top = 5824
       Width = 160
       Height = 66
       Text = 
@@ -1197,7 +1194,7 @@ object PageContainer2: TPageContainer2
     end
     object TdhLabel29: TdhLabel
       Left = 32
-      Top = -1621
+      Top = 5904
       Width = 80
       Height = 16
       Text = 'cursore:'
@@ -1206,7 +1203,7 @@ object PageContainer2: TPageContainer2
     end
     object TdhLabel30: TdhLabel
       Left = 120
-      Top = -1621
+      Top = 5904
       Width = 383
       Height = 16
       Text = 
@@ -1217,7 +1214,7 @@ object PageContainer2: TPageContainer2
     end
     object TdhLabel31: TdhLabel
       Left = 32
-      Top = -1589
+      Top = 5936
       Width = 80
       Height = 16
       Text = 'z-index:'
@@ -1226,7 +1223,7 @@ object PageContainer2: TPageContainer2
     end
     object dhAnchor112: TdhLink
       Left = 288
-      Top = -1517
+      Top = 6008
       Width = 116
       Height = 56
       Text = 'dhAnchor112'
@@ -1237,7 +1234,7 @@ object PageContainer2: TPageContainer2
     end
     object dhAnchor113: TdhLink
       Left = 160
-      Top = -1485
+      Top = 6040
       Width = 116
       Height = 56
       Text = 'dhAnchor113'
@@ -1249,7 +1246,7 @@ object PageContainer2: TPageContainer2
     end
     object dhAnchor114: TdhLink
       Left = 264
-      Top = -1477
+      Top = 6048
       Width = 116
       Height = 56
       Text = 'dhAnchor114'
@@ -1261,7 +1258,7 @@ object PageContainer2: TPageContainer2
     end
     object dhAnchor115: TdhLink
       Left = 336
-      Top = -1485
+      Top = 6040
       Width = 116
       Height = 56
       Text = 'dhAnchor115'
@@ -1273,7 +1270,7 @@ object PageContainer2: TPageContainer2
     end
     object dhAnchor116: TdhLink
       Left = 208
-      Top = -1493
+      Top = 6032
       Width = 116
       Height = 56
       Text = 'dhAnchor116'
@@ -1285,7 +1282,7 @@ object PageContainer2: TPageContainer2
     end
     object dhAnchor117: TdhLink
       Left = 192
-      Top = -1525
+      Top = 6000
       Width = 116
       Height = 56
       Text = 'dhAnchor117'
@@ -1297,7 +1294,7 @@ object PageContainer2: TPageContainer2
     end
     object dhStyleSheet6: TdhStyleSheet
       Left = 520
-      Top = -1549
+      Top = 5976
       Width = 28
       Height = 28
       Expanded = False
@@ -1326,7 +1323,7 @@ object PageContainer2: TPageContainer2
     end
     object TdhLabel32: TdhLabel
       Left = 120
-      Top = -1589
+      Top = 5936
       Width = 504
       Height = 48
       Text = 
@@ -1338,7 +1335,7 @@ object PageContainer2: TPageContainer2
     end
     object TdhLabel33: TdhLabel
       Left = 32
-      Top = -1389
+      Top = 6136
       Width = 112
       Height = 16
       Text = 'indentazione-testo:'
@@ -1347,7 +1344,7 @@ object PageContainer2: TPageContainer2
     end
     object TdhLabel34: TdhLabel
       Left = 168
-      Top = -1389
+      Top = 6136
       Width = 136
       Height = 82
       Text = 
@@ -1360,7 +1357,7 @@ object PageContainer2: TPageContainer2
     end
     object TdhLabel35: TdhLabel
       Left = 360
-      Top = -1389
+      Top = 6136
       Width = 160
       Height = 98
       Text = 
@@ -1375,7 +1372,7 @@ object PageContainer2: TPageContainer2
     end
     object TdhLabel36: TdhLabel
       Left = 32
-      Top = -1277
+      Top = 6248
       Width = 96
       Height = 16
       Text = 'allinea-verticale:'
@@ -1384,7 +1381,7 @@ object PageContainer2: TPageContainer2
     end
     object TdhLabel37: TdhLabel
       Left = 136
-      Top = -1277
+      Top = 6248
       Width = 368
       Height = 77
       Text = 
@@ -1396,7 +1393,7 @@ object PageContainer2: TPageContainer2
     end
     object TdhStyleSheet1: TdhStyleSheet
       Left = 552
-      Top = -1431
+      Top = 6094
       Width = 28
       Height = 28
       Expanded = False
@@ -1474,7 +1471,7 @@ object PageContainer2: TPageContainer2
     end
     object TdhLabel42: TdhLabel
       Left = 24
-      Top = -819
+      Top = 6706
       Width = 736
       Height = 453
       Text = 
@@ -1517,7 +1514,7 @@ object PageContainer2: TPageContainer2
     end
     object StyleSheet6: TdhStyleSheet
       Left = 680
-      Top = -917
+      Top = 6608
       Width = 28
       Height = 28
       Expanded = False
@@ -1554,12 +1551,12 @@ object PageContainer2: TPageContainer2
         Style.LineHeight = '150%'
         AutoSizeXY = asY
         Align = alTop
-        Right = 0
+        Right = 24
       end
     end
     object Text2: TdhLabel
       Left = 456
-      Top = 635
+      Top = 8160
       Width = 288
       Height = 32
       Text = 
@@ -1570,7 +1567,7 @@ object PageContainer2: TPageContainer2
     end
     object StyleSheet5: TdhStyleSheet
       Left = 680
-      Top = -645
+      Top = 6880
       Width = 28
       Height = 28
       Expanded = False
@@ -1629,7 +1626,7 @@ object PageContainer2: TPageContainer2
     end
     object TdhLabel52: TdhLabel
       Left = 32
-      Top = -1053
+      Top = 6472
       Width = 80
       Height = 32
       Text = 'CSS aggiuntivo:'
@@ -1638,7 +1635,7 @@ object PageContainer2: TPageContainer2
     end
     object TdhLabel53: TdhLabel
       Left = 120
-      Top = -1061
+      Top = 6464
       Width = 512
       Height = 58
       Text = 
@@ -1651,7 +1648,7 @@ object PageContainer2: TPageContainer2
     end
     object Anchor18: TdhLink
       Left = 128
-      Top = -1005
+      Top = 6520
       Width = 256
       Height = 22
       Text = 'Sposta il mouse su questo link'
@@ -1667,7 +1664,7 @@ object PageContainer2: TPageContainer2
     end
     object TdhLabel55: TdhLabel
       Left = 464
-      Top = -2069
+      Top = 5456
       Width = 224
       Height = 32
       Text = 
@@ -1677,9 +1674,9 @@ object PageContainer2: TPageContainer2
     end
     object TdhLabel57: TdhLabel
       Left = 487
-      Top = -2052
+      Top = 5473
       Width = 130
-      Height = 87
+      Height = 88
       Text = 'Apri'
       Style.BackgroundRepeat = cbrNoRepeat
       Style.FontSize = '48'
@@ -1710,7 +1707,7 @@ object PageContainer2: TPageContainer2
     end
     object Anchor5: TdhLabel
       Left = 24
-      Top = -6789
+      Top = 736
       Width = 143
       Height = 16
       Text = 'Posizionare gli oggetti'
@@ -1719,7 +1716,7 @@ object PageContainer2: TPageContainer2
     end
     object Anchor4: TdhLabel
       Left = 24
-      Top = -3741
+      Top = 3784
       Width = 150
       Height = 16
       Text = 'Formattazione del testo'
@@ -1728,7 +1725,7 @@ object PageContainer2: TPageContainer2
     end
     object Anchor7: TdhLabel
       Left = 24
-      Top = -3469
+      Top = 4056
       Width = 24
       Height = 16
       Text = 'Lati'
@@ -1737,7 +1734,7 @@ object PageContainer2: TPageContainer2
     end
     object Anchor8: TdhLabel
       Left = 24
-      Top = -2813
+      Top = 4712
       Width = 117
       Height = 16
       Text = 'Sfondi e Immagini'
@@ -1746,7 +1743,7 @@ object PageContainer2: TPageContainer2
     end
     object Anchor9: TdhLabel
       Left = 24
-      Top = -2165
+      Top = 5360
       Width = 36
       Height = 16
       Text = 'Effetti'
@@ -1755,7 +1752,7 @@ object PageContainer2: TPageContainer2
     end
     object Anchor10: TdhLabel
       Left = 24
-      Top = -1925
+      Top = 5600
       Width = 60
       Height = 16
       Text = 'Varie stili'
@@ -1764,7 +1761,7 @@ object PageContainer2: TPageContainer2
     end
     object Anchor11: TdhLabel
       Left = 24
-      Top = -845
+      Top = 6680
       Width = 140
       Height = 16
       Text = 'Gestione di stili e stati'
@@ -1773,7 +1770,7 @@ object PageContainer2: TPageContainer2
     end
     object TdhLabel5: TdhLabel
       Left = 24
-      Top = -6909
+      Top = 616
       Width = 46
       Height = 16
       Text = 'Oggetti'
@@ -1782,7 +1779,7 @@ object PageContainer2: TPageContainer2
     end
     object TdhLabel7: TdhLabel
       Left = 24
-      Top = -6877
+      Top = 648
       Width = 648
       Height = 75
       Text = 
@@ -1798,7 +1795,7 @@ object PageContainer2: TPageContainer2
     end
     object Label13: TdhLabel
       Left = 24
-      Top = -6349
+      Top = 1176
       Width = 92
       Height = 16
       Text = 'Tipi di oggetto'
@@ -1807,7 +1804,7 @@ object PageContainer2: TPageContainer2
     end
     object Label14: TdhLabel
       Left = 24
-      Top = -6317
+      Top = 1208
       Width = 640
       Height = 357
       Text = 
@@ -1842,7 +1839,7 @@ object PageContainer2: TPageContainer2
     end
     object Label17: TdhLabel
       Left = 6
-      Top = -7506
+      Top = 19
       Width = 364
       Height = 68
       Text = 'Tutorial per DFM2HTML'
@@ -1863,7 +1860,7 @@ object PageContainer2: TPageContainer2
     end
     object Label15: TdhLabel
       Left = 24
-      Top = -6989
+      Top = 536
       Width = 193
       Height = 16
       Text = 'Informazioni su questo tutorial'
@@ -1872,7 +1869,7 @@ object PageContainer2: TPageContainer2
     end
     object Label16: TdhLabel
       Left = 24
-      Top = -6965
+      Top = 560
       Width = 544
       Height = 42
       Text = 
@@ -1884,7 +1881,7 @@ object PageContainer2: TPageContainer2
     end
     object Label18: TdhLabel
       Left = 24
-      Top = -957
+      Top = 6568
       Width = 98
       Height = 16
       Text = 'Ri-usare gli stili'
@@ -1893,7 +1890,7 @@ object PageContainer2: TPageContainer2
     end
     object Label19: TdhLabel
       Left = 24
-      Top = -939
+      Top = 6586
       Width = 736
       Height = 67
       Text = 
@@ -1909,7 +1906,7 @@ object PageContainer2: TPageContainer2
     end
     object Anchor12: TdhLabel
       Left = 24
-      Top = -5531
+      Top = 1994
       Width = 43
       Height = 16
       Text = 'Moduli'
@@ -1918,7 +1915,7 @@ object PageContainer2: TPageContainer2
     end
     object TdhLabel47: TdhLabel
       Left = 32
-      Top = -5513
+      Top = 2012
       Width = 416
       Height = 50
       Text = 
@@ -1930,7 +1927,7 @@ object PageContainer2: TPageContainer2
     end
     object Form1: TdhHTMLForm
       Left = 32
-      Top = -5443
+      Top = 2082
       Height = 512
       Style.Border.Width = 6
       Style.Border.Color = 14540253
@@ -2115,7 +2112,6 @@ object PageContainer2: TPageContainer2
           Style.TextAlign = ctaRight
           AutoSizeXY = asY
           Align = alTop
-          Right = 0
         end
         object Label2: TdhLabel
           Left = 0
@@ -2128,7 +2124,7 @@ object PageContainer2: TPageContainer2
           Style.BackgroundColor = 16777181
           AutoSizeXY = asY
           Align = alTop
-          Right = 0
+          Right = 24
         end
         object Edit3: TdhEdit
           Left = 0
@@ -2144,7 +2140,7 @@ object PageContainer2: TPageContainer2
           Style.FontWeight = cfwBold
           AutoSizeXY = asY
           Align = alTop
-          Right = 0
+          Right = 12
           Text = 'Next large city:'
         end
         object Submit3: TdhLink
@@ -2176,7 +2172,7 @@ object PageContainer2: TPageContainer2
           Style.FontWeight = cfwBold
           AutoSizeXY = asY
           Align = alTop
-          Right = 0
+          Right = 6
           Items = <>
           SelectType = stDropDown
         end
@@ -2226,7 +2222,7 @@ object PageContainer2: TPageContainer2
     end
     object Label12: TdhLabel
       Left = 32
-      Top = -4923
+      Top = 2602
       Width = 640
       Height = 108
       Text = 
@@ -2246,7 +2242,7 @@ object PageContainer2: TPageContainer2
     end
     object TdhAnchor8: TdhLabel
       Left = 24
-      Top = -4798
+      Top = 2727
       Width = 79
       Height = 16
       Text = 'Navigazione'
@@ -2255,7 +2251,7 @@ object PageContainer2: TPageContainer2
     end
     object TdhLabel1: TdhLabel
       Left = 24
-      Top = -4775
+      Top = 2750
       Width = 640
       Height = 31
       Text = 
@@ -2266,7 +2262,7 @@ object PageContainer2: TPageContainer2
     end
     object PageControl1: TdhPageControl
       Left = 32
-      Top = -4709
+      Top = 2816
       Width = 24
       Height = 24
       ActivePage = Page3
@@ -2274,7 +2270,7 @@ object PageContainer2: TPageContainer2
       DynamicNavigation = True
       object Page1: TdhPage
         Left = 32
-        Top = -4717
+        Top = 2808
         Width = 696
         Height = 264
         Style.BackgroundImage.Data = {
@@ -2300,7 +2296,7 @@ object PageContainer2: TPageContainer2
       end
       object Page2: TdhPage
         Left = 32
-        Top = -4717
+        Top = 2808
         Width = 696
         Height = 264
         Style.Border.Color = Lime
@@ -2323,7 +2319,7 @@ object PageContainer2: TPageContainer2
       end
       object Page3: TdhPage
         Left = 32
-        Top = -4717
+        Top = 2808
         Width = 696
         Height = 264
         Style.BackgroundImage.Data = {
@@ -2350,7 +2346,7 @@ object PageContainer2: TPageContainer2
     end
     object StyleSheet7: TdhStyleSheet
       Left = 496
-      Top = -4853
+      Top = 2672
       Width = 28
       Height = 28
       Expanded = False
@@ -2388,12 +2384,11 @@ object PageContainer2: TPageContainer2
         Style.BorderRadius.All = '14'
         AutoSizeXY = asNone
         Align = alTop
-        Right = 0
       end
     end
     object Anchor2: TdhLink
       Left = 32
-      Top = -4733
+      Top = 2792
       Width = 90
       Height = 16
       Text = 'Link a Pagina 1'
@@ -2406,7 +2401,7 @@ object PageContainer2: TPageContainer2
     end
     object Anchor6: TdhLink
       Left = 144
-      Top = -4733
+      Top = 2792
       Width = 90
       Height = 16
       Text = 'Link a Pagina 2'
@@ -2419,7 +2414,7 @@ object PageContainer2: TPageContainer2
     end
     object Anchor13: TdhLink
       Left = 264
-      Top = -4733
+      Top = 2792
       Width = 90
       Height = 16
       Text = 'Link a Pagina 3'
@@ -2432,7 +2427,7 @@ object PageContainer2: TPageContainer2
     end
     object Label20: TdhLabel
       Left = 24
-      Top = -3842
+      Top = 3683
       Width = 73
       Height = 16
       Text = 'Stili oggetti'
@@ -2441,7 +2436,7 @@ object PageContainer2: TPageContainer2
     end
     object Label21: TdhLabel
       Left = 24
-      Top = -3818
+      Top = 3707
       Width = 528
       Height = 59
       Text = 
@@ -2454,7 +2449,7 @@ object PageContainer2: TPageContainer2
     end
     object Link8: TdhLink
       Left = 32
-      Top = -2925
+      Top = 4600
       Width = 200
       Height = 88
       Text = 
@@ -2468,7 +2463,7 @@ object PageContainer2: TPageContainer2
     end
     object Label23: TdhLabel
       Left = 24
-      Top = -5685
+      Top = 1840
       Width = 27
       Height = 16
       Text = 'Link'
@@ -2477,7 +2472,7 @@ object PageContainer2: TPageContainer2
     end
     object Label24: TdhLabel
       Left = 22
-      Top = -5669
+      Top = 1856
       Width = 608
       Height = 74
       Text = 
@@ -2493,7 +2488,7 @@ object PageContainer2: TPageContainer2
     end
     object StyleSheet8: TdhStyleSheet
       Left = 524
-      Top = -5638
+      Top = 1887
       Width = 28
       Height = 28
       Expanded = False
@@ -2507,7 +2502,6 @@ object PageContainer2: TPageContainer2
         Text = 'googlelink'
         AutoSizeXY = asXY
         Align = alTop
-        Right = 0
         PreferDownStyles = True
         Options = [loDownIfMenu, loDownIfMouseDown, loDownIfURL]
         Link = 'http://www.google.de'
@@ -2519,7 +2513,6 @@ object PageContainer2: TPageContainer2
         Text = 'nav_example'
         AutoSizeXY = asXY
         Align = alTop
-        Right = 0
         PreferDownStyles = True
         Options = [loDownIfMenu, loDownIfMouseDown, loDownIfURL]
         LinkAnchor = TdhAnchor8
@@ -2527,7 +2520,7 @@ object PageContainer2: TPageContainer2
     end
     object Link10: TdhLink
       Left = 26
-      Top = -5573
+      Top = 1952
       Width = 38
       Height = 16
       Text = 'google'
@@ -2539,7 +2532,7 @@ object PageContainer2: TPageContainer2
     end
     object Link11: TdhLink
       Left = 74
-      Top = -5573
+      Top = 1952
       Width = 38
       Height = 16
       Text = 'google'
@@ -2551,7 +2544,7 @@ object PageContainer2: TPageContainer2
     end
     object Link12: TdhLink
       Left = 122
-      Top = -5573
+      Top = 1952
       Width = 65
       Height = 24
       Text = 'google'
@@ -2563,7 +2556,7 @@ object PageContainer2: TPageContainer2
     end
     object Label25: TdhLabel
       Left = 24
-      Top = -2539
+      Top = 4986
       Width = 600
       Height = 227
       Text = 
@@ -2591,7 +2584,7 @@ object PageContainer2: TPageContainer2
     end
     object Label26: TdhLabel
       Left = 24
-      Top = -2301
+      Top = 5224
       Width = 38
       Height = 16
       Text = 'Colori'
@@ -2600,7 +2593,7 @@ object PageContainer2: TPageContainer2
     end
     object Label27: TdhLabel
       Left = 24
-      Top = -2285
+      Top = 5240
       Width = 576
       Height = 95
       Text = 
@@ -2618,7 +2611,7 @@ object PageContainer2: TPageContainer2
     end
     object StyleSheet9: TdhStyleSheet
       Left = 632
-      Top = -2317
+      Top = 5208
       Width = 28
       Height = 28
       Expanded = False
@@ -2635,7 +2628,7 @@ object PageContainer2: TPageContainer2
         Style.VerticalAlign = 'middle'
         AutoSizeXY = asXY
         Align = alTop
-        Right = 0
+        Right = 18
         Layout = ltButton
         PreferDownStyles = True
         Options = [loDownIfMenu, loDownIfMouseDown, loDownIfURL]
@@ -2648,12 +2641,11 @@ object PageContainer2: TPageContainer2
         Style.BackgroundColor = Red
         AutoSizeXY = asY
         Align = alTop
-        Right = 0
       end
     end
     object Label29: TdhLabel
       Left = 32
-      Top = -1181
+      Top = 6344
       Width = 80
       Height = 16
       Text = 'altezza-riga:'
@@ -2662,7 +2654,7 @@ object PageContainer2: TPageContainer2
     end
     object Label30: TdhLabel
       Left = 120
-      Top = -1181
+      Top = 6344
       Width = 236
       Height = 16
       Text = 'Puoi definire l'#39'altezza delle righe di testo:'
@@ -2670,7 +2662,7 @@ object PageContainer2: TPageContainer2
     end
     object Label31: TdhLabel
       Left = 360
-      Top = -1180
+      Top = 6345
       Width = 152
       Height = 106
       Text = 
@@ -2683,7 +2675,7 @@ object PageContainer2: TPageContainer2
     end
     object Label32: TdhLabel
       Left = 24
-      Top = -5941
+      Top = 1584
       Width = 55
       Height = 16
       Text = 'Etichette'
@@ -2692,7 +2684,7 @@ object PageContainer2: TPageContainer2
     end
     object Label33: TdhLabel
       Left = 22
-      Top = -5925
+      Top = 1600
       Width = 640
       Height = 229
       Text = 
@@ -2723,7 +2715,7 @@ object PageContainer2: TPageContainer2
     end
     object StyleSheet10: TdhStyleSheet
       Left = 656
-      Top = -6085
+      Top = 1440
       Width = 28
       Height = 28
       Expanded = False
@@ -2748,12 +2740,12 @@ object PageContainer2: TPageContainer2
         Style.LineHeight = '15'
         AutoSizeXY = asY
         Align = alTop
-        Right = 0
+        Right = 6
       end
     end
     object Label35: TdhLabel
       Left = 24
-      Top = 368
+      Top = 7893
       Width = 255
       Height = 16
       Text = 'Condivisione delle risorse di DFM2HTML'
@@ -2762,7 +2754,7 @@ object PageContainer2: TPageContainer2
     end
     object Label36: TdhLabel
       Left = 24
-      Top = 21
+      Top = 7546
       Width = 672
       Height = 314
       Text = 
@@ -2802,7 +2794,7 @@ object PageContainer2: TPageContainer2
     end
     object Label38: TdhLabel
       Left = 32
-      Top = -4423
+      Top = 3102
       Width = 688
       Height = 567
       Text = 
@@ -2857,7 +2849,7 @@ object PageContainer2: TPageContainer2
     end
     object Label37: TdhLabel
       Left = 24
-      Top = -3045
+      Top = 4480
       Width = 116
       Height = 16
       Text = 'Angoli Arrotondati'
@@ -2866,7 +2858,7 @@ object PageContainer2: TPageContainer2
     end
     object Label39: TdhLabel
       Left = 24
-      Top = -3016
+      Top = 4509
       Width = 608
       Height = 75
       Text = 
@@ -2882,7 +2874,7 @@ object PageContainer2: TPageContainer2
     end
     object Panel8: TdhPanel
       Left = 33
-      Top = -2924
+      Top = 4601
       Width = 40
       Height = 40
       Style.Border.Style = cbsDashed
@@ -2891,7 +2883,7 @@ object PageContainer2: TPageContainer2
     end
     object Panel9: TdhPanel
       Left = 34
-      Top = -2923
+      Top = 4602
       Width = 20
       Height = 20
       Style.Border.Color = Red
@@ -2902,7 +2894,7 @@ object PageContainer2: TPageContainer2
     end
     object Label22: TdhLabel
       Left = 58
-      Top = -2919
+      Top = 4606
       Width = 41
       Height = 14
       Text = '20 pixel'
@@ -2913,7 +2905,7 @@ object PageContainer2: TPageContainer2
     end
     object Label40: TdhLabel
       Left = 608
-      Top = -2685
+      Top = 4840
       Width = 144
       Height = 128
       Text = 'diviso'
@@ -2926,7 +2918,7 @@ object PageContainer2: TPageContainer2
     end
     object Label41: TdhLabel
       Left = 336
-      Top = -2685
+      Top = 4840
       Width = 112
       Height = 42
       Text = 'immagine'
@@ -2939,7 +2931,7 @@ object PageContainer2: TPageContainer2
     end
     object Label43: TdhLabel
       Left = 24
-      Top = 0
+      Top = 7525
       Width = 172
       Height = 16
       Text = 'Pubblicazione del progetto'
@@ -2948,7 +2940,7 @@ object PageContainer2: TPageContainer2
     end
     object Label44: TdhLabel
       Left = 24
-      Top = 397
+      Top = 7922
       Width = 672
       Height = 123
       Text = 
@@ -2968,7 +2960,7 @@ object PageContainer2: TPageContainer2
     end
     object Label45: TdhLabel
       Left = 24
-      Top = -352
+      Top = 7173
       Width = 27
       Height = 16
       Text = 'PHP'
@@ -2977,7 +2969,7 @@ object PageContainer2: TPageContainer2
     end
     object Label46: TdhLabel
       Left = 24
-      Top = -331
+      Top = 7194
       Width = 672
       Height = 319
       Text = 

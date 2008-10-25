@@ -1,9 +1,9 @@
-object PageContainer1: TPageContainer1
+object PageContainer2: TPageContainer2
   Left = -4
   Top = -23
-  Caption = 'GuideItalian.dfm'
-  ClientHeight = 519
-  ClientWidth = 1280
+  Caption = 'Guide1040.dfm'
+  ClientHeight = 626
+  ClientWidth = 1600
   Font.Charset = GREEK_CHARSET
   Font.Color = clBlack
   Font.Height = -16
@@ -26,12 +26,11 @@ object PageContainer1: TPageContainer1
     Right = 0
     Bottom = 0
     UseIFrame = False
-    VertPosition = 921
     object Label1: TdhLabel
       Left = 30
-      Top = -897
+      Top = 24
       Width = 350
-      Height = 50
+      Height = 51
       Text = 'Guida DFM2HTML'
       Style.FontSize = '36'
       Style.FontFamily = 'Arial Black'
@@ -39,7 +38,7 @@ object PageContainer1: TPageContainer1
     end
     object Label2: TdhLabel
       Left = 32
-      Top = -817
+      Top = 104
       Width = 632
       Height = 32
       Text = 
@@ -49,7 +48,7 @@ object PageContainer1: TPageContainer1
     end
     object Label3: TdhLabel
       Left = 32
-      Top = -761
+      Top = 160
       Width = 346
       Height = 16
       Text = '1. Aggiungere un oggetto per il controllo della pagina.'
@@ -58,7 +57,7 @@ object PageContainer1: TPageContainer1
     end
     object StyleSheet1: TdhStyleSheet
       Left = 535
-      Top = -881
+      Top = 40
       Width = 28
       Height = 28
       Expanded = False
@@ -242,7 +241,7 @@ object PageContainer1: TPageContainer1
     end
     object Label5: TdhLabel
       Left = 40
-      Top = -729
+      Top = 192
       Width = 632
       Height = 78
       Text = 
@@ -257,7 +256,7 @@ object PageContainer1: TPageContainer1
     end
     object Label6: TdhLabel
       Left = 32
-      Top = -633
+      Top = 288
       Width = 213
       Height = 16
       Text = '2. Aggiungere oggetti alla pagina'
@@ -266,7 +265,7 @@ object PageContainer1: TPageContainer1
     end
     object Label8: TdhLabel
       Left = 32
-      Top = -489
+      Top = 432
       Width = 251
       Height = 16
       Text = '3. Modificare gli Stili di Visualizzazione'
@@ -275,7 +274,7 @@ object PageContainer1: TPageContainer1
     end
     object Label9: TdhLabel
       Left = 40
-      Top = -601
+      Top = 320
       Width = 632
       Height = 82
       Text = 
@@ -293,7 +292,7 @@ object PageContainer1: TPageContainer1
     end
     object Label10: TdhLabel
       Left = 40
-      Top = -457
+      Top = 464
       Width = 632
       Height = 67
       Text = 
@@ -310,7 +309,7 @@ object PageContainer1: TPageContainer1
     end
     object Label7: TdhLabel
       Left = 32
-      Top = -353
+      Top = 568
       Width = 166
       Height = 16
       Text = '4. Creare Link alle Pagine'
@@ -319,7 +318,7 @@ object PageContainer1: TPageContainer1
     end
     object Label12: TdhLabel
       Left = 40
-      Top = -321
+      Top = 600
       Width = 632
       Height = 78
       Text = 
@@ -335,7 +334,7 @@ object PageContainer1: TPageContainer1
     end
     object Label14: TdhLabel
       Left = 32
-      Top = -217
+      Top = 704
       Width = 115
       Height = 16
       Text = '5. Generare HTML'
@@ -344,7 +343,7 @@ object PageContainer1: TPageContainer1
     end
     object Label15: TdhLabel
       Left = 40
-      Top = -185
+      Top = 736
       Width = 632
       Height = 64
       Text = 
@@ -358,7 +357,7 @@ object PageContainer1: TPageContainer1
     end
     object Label16: TdhLabel
       Left = 32
-      Top = -73
+      Top = 848
       Width = 279
       Height = 16
       Text = '<b>Argomenti avanzati (fai doppio clic sui link):</b>'
@@ -366,14 +365,14 @@ object PageContainer1: TPageContainer1
     end
     object PageControl1: TdhPageControl
       Left = 32
-      Top = -9
+      Top = 912
       Width = 24
       Height = 24
-      ActivePage = Page4
+      ActivePage = Page2
       FixedHeight = False
       object Page1: TdhPage
         Left = 32
-        Top = -17
+        Top = 904
         Width = 656
         Height = 48
         AutoSizeXY = asNone
@@ -381,7 +380,7 @@ object PageContainer1: TPageContainer1
       end
       object Page2: TdhPage
         Left = 32
-        Top = -17
+        Top = 904
         Width = 656
         Height = 536
         Use = Label41
@@ -471,7 +470,7 @@ object PageContainer1: TPageContainer1
       end
       object Page3: TdhPage
         Left = 32
-        Top = -17
+        Top = 904
         Width = 656
         Height = 536
         Use = Label41
@@ -570,7 +569,7 @@ object PageContainer1: TPageContainer1
       end
       object Page4: TdhPage
         Left = 32
-        Top = -17
+        Top = 904
         Width = 656
         Height = 536
         Use = Label41
@@ -668,7 +667,7 @@ object PageContainer1: TPageContainer1
     end
     object Link2: TdhLink
       Left = 32
-      Top = -45
+      Top = 876
       Width = 152
       Height = 22
       Text = 'Aggiungere Pi'#232' di Pagina'
@@ -681,7 +680,7 @@ object PageContainer1: TPageContainer1
     end
     object Link1: TdhLink
       Left = 216
-      Top = -45
+      Top = 876
       Width = 123
       Height = 22
       Text = 'Usare i Fogli di Stile'
@@ -694,7 +693,7 @@ object PageContainer1: TPageContainer1
     end
     object Link3: TdhLink
       Left = 368
-      Top = -45
+      Top = 876
       Width = 185
       Height = 22
       Text = 'Passare ad un Layout a Frame'
@@ -707,7 +706,7 @@ object PageContainer1: TPageContainer1
     end
     object StyleSheet2: TdhStyleSheet
       Left = 496
-      Top = -73
+      Top = 848
       Width = 28
       Height = 28
       Expanded = False

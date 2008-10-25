@@ -39,7 +39,7 @@ type
   public
     { Public declarations }
     procedure InsertCompo(Sender: TObject);
-    procedure Prepare;
+    procedure Prepare(DoShow:Boolean);
     procedure UpdateLanguage;
   end;
 
@@ -52,11 +52,13 @@ uses Unit1,MySiz;
 
 {$R *.dfm}
 
+const PresetsDir='Presets'+PathDelim;
+
 { TPresets }
-                
+
 function GetRootPresetsDir:String;
 begin
- result:=ExtractFilePath(Application.ExeName)+'Presets'+PathDelim;
+ result:=RootDir(PresetsDir);
 end;
 
                 {
@@ -139,30 +141,58 @@ begin
  end;
 end;
 
+function RightLanguage(const FoundFileName:String; var TabName:String):Boolean;
+var WithoutDFM:String;
+    Index:Integer;
+begin
+ WithoutDFM:=Copy(FoundFileName,1,Length(FoundFileName)-Length('.dfm'));
+ Index:=Length(WithoutDFM);
+ while (Index>=1) and (WithoutDFM[Index] in ['0'..'9']) do
+  Index:=Index-1;
+ if Length(WithoutDFM)-Index<=3 then
+  Index:=Length(WithoutDFM);
+ TabName:=Copy(WithoutDFM,1,Index);
+ Result:=GetLanguageDFM(PresetsDir+TabName)=RootDir(PresetsDir+FoundFileName);
+end;
 
-
-
-procedure TPresets.Prepare;
+procedure TPresets.Prepare(DoShow:Boolean);
 var link:TdhLink;
     page:TdhPage;
-    NoSel:boolean;
     i:integer;
+    TabName,SelectedTabName:String;
 var SearchRec: TSearchRec;
 begin
- NoSel:=dhPageControl1.ActivePage=nil;
+ SelectedTabName:='';
+ for i:=dhPanel2.ControlCount-1 downto 0 do
+ begin
+  link:=dhPanel2.Controls[i] as TdhLink;
+  if link.IsActivated then
+   SelectedTabName:=link.Text;
+ end;
+
  if FindFirst(GetRootPresetsDir+'*.dfm',faAnyFile,SearchRec)=0 then
  repeat
 
-   for i:=0 to dhPanel2.ControlCount-1 do
-   if (dhPanel2.Controls[i] as TdhLink).HTMLAttributes=SearchRec.Name then
-    SearchRec.Name:='';
+   for i:=dhPanel2.ControlCount-1 downto 0 do
+   begin
+    link:=dhPanel2.Controls[i] as TdhLink;
+    if link.HTMLAttributes=SearchRec.Name then
+    begin
+     if not RightLanguage(SearchRec.Name,TabName) then
+     begin
+      link.LinkPage.Free;
+      link.Free;
+     end;
+     SearchRec.Name:='';
+    end;
+   end;
 
-   if (SearchRec.Name<>'') and (SearchRec.Name[1]<>'.')  then
+   if (SearchRec.Name<>'') and (SearchRec.Name[1]<>'.') and RightLanguage(SearchRec.Name,TabName) then
    begin
     link:=TdhLink.Create(Self);
     link.Use:=STYLE_Link1;
     link.Align:=alLeft;
-    link.Text:=Copy(SearchRec.Name,1,length(SearchRec.Name)-length('.dfm'));
+    link.Text:=TabName;
     link.HTMLAttributes:=SearchRec.Name;
     link.Left:=1000;
     link.Parent:=dhPanel2;
@@ -175,18 +205,34 @@ begin
  until FindNext(SearchRec)<>0;
  SysUtils.FindClose(SearchRec);
 
- if NoSel then
- if (dhPanel2.ControlCount<>0) and (dhPanel2.Controls[0] is TdhLink) then
-  (dhPanel2.Controls[0] as TdhLink).Click;
-
-
- if not Visible then
+ for i:=dhPanel2.ControlCount-1 downto 0 do
  begin
-  Top:=dhMainForm.Height-Height-40;
-  Left:=dhMainForm.Width-Width-20;
+  link:=dhPanel2.Controls[i] as TdhLink;
+  if SelectedTabName=link.Text then
+  begin
+   link.Click;
+  end;
+ end;
+ if (SelectedTabName='') and (dhPanel2.ControlCount<>0) and (dhPanel2.Controls[0] is TdhLink) then
+ begin
+  (dhPanel2.Controls[0] as TdhLink).Click;
+ end;
+ for i:=dhPanel2.ControlCount-1 downto 0 do
+ begin
+  link:=dhPanel2.Controls[i] as TdhLink;
+  if link.IsActivated and Assigned(link.OnClick) then
+   link.OnClick(link);
  end;
 
- Show;
+ if DoShow then
+ begin
+  if not Visible then
+  begin
+   Top:=dhMainForm.Height-Height-40;
+   Left:=dhMainForm.Width-Width-20;
+  end;
+  Show;
+ end;
 end;
 
 procedure TPresets.ChangePresetsPage(Sender:TObject);

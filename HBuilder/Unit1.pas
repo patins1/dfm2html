@@ -29,7 +29,7 @@ uses
 
 //const WM_PUSHUP=WM_USER+33;
 
-const LANGID_GERMAN=1031;  
+const LANGID_GERMAN=1031;
 const LANGID_ITALIAN=1040;
 
 type TActionArea=(aaAll,aaGroup,aaOne);
@@ -327,7 +327,7 @@ type
     function CloseQuery: Boolean; override;
     procedure Loaded; override;
     //procedure CreateParams(var Params: TCreateParams); override;
-    procedure UpdateStateClearing;     
+    procedure UpdateStateClearing;
     function GetTopLevelDomain:String;
   public
     { Public declarations }
@@ -358,6 +358,8 @@ type TFakeWinControl=class(TWinControl);
 
 
 function ExtractUrlAimedFilenameToWindowsFilename(const URL: string): string;
+function GetLanguageDFM(const prefix:String):String;
+function RootDir(const s:string): string;
 
 var
   CF_COMPONENTS: Word;
@@ -441,6 +443,16 @@ begin
    Result.ShortDateFormat:='YYYY-MM-DD';
    Result.LongDateFormat:='YYYY-MM-DD';
    Result.DateSeparator:='-';
+end;
+
+function GetLanguageDFM(const prefix:String):String;
+var StartsWith:String;
+begin
+ StartsWith:=RootDir(prefix);
+ Result:=StartsWith+IntToStr(_LANGID)+'.dfm';
+ if FileExists(Result) then
+  Exit;
+ Result:=StartsWith+'.dfm';
 end;
 
 procedure TdhMainForm.ReadConfig;
@@ -1408,7 +1420,7 @@ begin
   (Sender as TToolButton).Down:=false;
   (Sender as TToolButton).Marked:=false; }
   gActDown:=nil;
- end else       
+ end else
   (Sender as TToolButton).Down:=true;    *)
 end;
 
@@ -1698,7 +1710,7 @@ procedure TdhMainForm.mExternalizeImagesClick(Sender: TObject);
 var Directory:{$IFDEF CLX}widestring{$ELSE}string{$ENDIF};
     sw:string;
     I: Integer;
-    pn:TdhCustomPanel;  
+    pn:TdhCustomPanel;
     State:TState;
     FileName:String;
     anyFilesToWrite:Boolean;
@@ -2189,9 +2201,7 @@ end;
 
 procedure TdhMainForm.mTutorialClick(Sender: TObject);
 begin
- if _LANGID=LANGID_GERMAN then
-  Open(ExtractFilePath(Application.Exename)+'TutorialGerman.dfm',false) else
-  Open(ExtractFilePath(Application.Exename)+'Tutorial.dfm',false);
+ Open(GetLanguageDFM('Tutorial'),false);
 end;
 
 function TdhMainForm.GetTopLevelDomain:String;
@@ -2574,7 +2584,7 @@ end;
 procedure TdhMainForm.mPresetsClick(Sender: TObject);
 begin
  LateCreateForm(TPresets,Presets);
- Presets.Prepare;
+ Presets.Prepare(True);
 end;
 
 procedure TdhMainForm.mCloseAllClick(Sender: TObject);
@@ -2865,31 +2875,27 @@ end;
 
 procedure TdhMainForm.m5minGuideClick(Sender: TObject);
 begin
- if _LANGID=LANGID_GERMAN then
-  Open(ExtractFilePath(Application.Exename)+'GuideGerman.dfm',false) else
- if _LANGID=LANGID_ITALIAN then
-  Open(ExtractFilePath(Application.Exename)+'GuideItalian.dfm',false) else
-  Open(ExtractFilePath(Application.Exename)+'Guide.dfm',false);
+ Open(GetLanguageDFM('Guide'),false);
 end;
 
 procedure TdhMainForm.mBasicExampleClick(Sender: TObject);
 begin
- Open(ExtractFilePath(Application.Exename)+'GuideExample.dfm',false);
+ Open(RootDir('GuideExample.dfm'),false);
 end;
 
 procedure TdhMainForm.mBasicExamplewithFooterClick(Sender: TObject);
 begin
- Open(ExtractFilePath(Application.Exename)+'GuideExampleWithFooter.dfm',false);
+ Open(RootDir('GuideExampleWithFooter.dfm'),false);
 end;
 
 procedure TdhMainForm.mBasicExamplewithStylesheetClick(Sender: TObject);
 begin
- Open(ExtractFilePath(Application.Exename)+'GuideExampleWithStylesheet.dfm',false);
+ Open(RootDir('GuideExampleWithStylesheet.dfm'),false);
 end;
 
 procedure TdhMainForm.mBasicExamplewithFramesLayoutClick(Sender: TObject);
 begin
- Open(ExtractFilePath(Application.Exename)+'GuideExampleWithFramesLayout.dfm',false);
+ Open(RootDir('GuideExampleWithFramesLayout.dfm'),false);
 end;
 
 procedure TdhMainForm.DEBUG_OnLoad1Click(Sender: TObject);
@@ -2923,7 +2929,10 @@ begin
  UpdateStatusBar;
  UpdateOtherConstants;
  if Presets<>nil then
+ begin
+  Presets.Prepare(False);
   Presets.UpdateLanguage;
+ end;
 end;
 
 procedure TdhMainForm.UpdateOtherConstants;
@@ -2989,10 +2998,8 @@ begin
 end;
 
 procedure TdhMainForm.MenuTutorial1Click(Sender: TObject);
-begin                                                            
- if _LANGID=LANGID_ITALIAN then
-  Open(ExtractFilePath(Application.Exename)+'TutorialMenusItalian.dfm',false) else
-  Open(ExtractFilePath(Application.Exename)+'TutorialMenus.dfm',false);
+begin
+ Open(GetLanguageDFM('TutorialMenus'),false);
 end;
 
 initialization

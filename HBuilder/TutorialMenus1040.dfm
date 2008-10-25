@@ -1,4 +1,4 @@
-object PageContainer1: TPageContainer1
+object PageContainer2: TPageContainer2
   Left = -4
   Top = -23
   Caption = 'TutorialMenusItalian.dfm'
@@ -26,10 +26,9 @@ object PageContainer1: TPageContainer1
     Right = 0
     Bottom = 0
     UseIFrame = False
-    VertPosition = 245
     object Label1: TdhLabel
       Left = 0
-      Top = -245
+      Top = 0
       Width = 681
       Height = 43
       Text = 
@@ -44,7 +43,7 @@ object PageContainer1: TPageContainer1
     end
     object StyleSheet1: TdhStyleSheet
       Left = 844
-      Top = -165
+      Top = 80
       Width = 28
       Height = 28
       Expanded = False
@@ -83,7 +82,7 @@ object PageContainer1: TPageContainer1
     end
     object StyleSheet2: TdhStyleSheet
       Left = 846
-      Top = -117
+      Top = 128
       Width = 28
       Height = 28
       Expanded = False
@@ -146,7 +145,7 @@ object PageContainer1: TPageContainer1
     end
     object Link1: TdhLink
       Left = 404
-      Top = 72
+      Top = 317
       Width = 153
       Height = 18
       Text = 'Paragrafi di questo tutorial '
@@ -158,7 +157,7 @@ object PageContainer1: TPageContainer1
       Options = [loDownIfMenu, loDownIfMouseDown, loDownIfURL]
       object Menu1: TdhMenu
         Left = 419
-        Top = 93
+        Top = 338
         Width = 131
         Height = 62
         Style.Border.Width = 1
@@ -212,7 +211,7 @@ object PageContainer1: TPageContainer1
     end
     object Label8: TdhLabel
       Left = 28
-      Top = -181
+      Top = 64
       Width = 131
       Height = 16
       Text = 'Informazioni di Base'
@@ -221,7 +220,7 @@ object PageContainer1: TPageContainer1
     end
     object Label9: TdhLabel
       Left = 28
-      Top = 307
+      Top = 552
       Width = 122
       Height = 16
       Text = 'Gestione dello stile'
@@ -230,7 +229,7 @@ object PageContainer1: TPageContainer1
     end
     object Label10: TdhLabel
       Left = 36
-      Top = 347
+      Top = 592
       Width = 632
       Height = 65
       Text = 
@@ -245,7 +244,7 @@ object PageContainer1: TPageContainer1
     end
     object Label7: TdhLabel
       Left = 28
-      Top = -157
+      Top = 88
       Width = 720
       Height = 129
       Text = 
@@ -267,7 +266,7 @@ object PageContainer1: TPageContainer1
     end
     object Label11: TdhLabel
       Left = 140
-      Top = 67
+      Top = 312
       Width = 248
       Height = 127
       Text = 
@@ -285,7 +284,7 @@ object PageContainer1: TPageContainer1
     end
     object Label5: TdhLabel
       Left = 28
-      Top = 963
+      Top = 1208
       Width = 88
       Height = 16
       Text = 'Opzioni Menu'
@@ -294,7 +293,7 @@ object PageContainer1: TPageContainer1
     end
     object MenuStylesheet: TdhStyleSheet
       Left = 772
-      Top = 427
+      Top = 672
       Width = 28
       Height = 28
       Expanded = False
@@ -342,7 +341,7 @@ object PageContainer1: TPageContainer1
     end
     object Menu3: TdhMenu
       Left = 60
-      Top = 427
+      Top = 672
       Width = 467
       Height = 38
       Use = Menu2
@@ -362,7 +361,7 @@ object PageContainer1: TPageContainer1
         Options = [loDownIfMenu, loDownIfMouseDown, loDownIfURL]
         object Menu4: TdhMenu
           Left = 63
-          Top = 466
+          Top = 711
           Width = 161
           Height = 98
           Use = Menu2
@@ -383,7 +382,7 @@ object PageContainer1: TPageContainer1
             Options = [loDownIfMenu, loDownIfMouseDown, loDownIfURL]
             object Menu7: TdhMenu
               Left = 225
-              Top = 496
+              Top = 741
               Width = 57
               Height = 68
               Use = Menu2
@@ -427,8 +426,8 @@ object PageContainer1: TPageContainer1
             Options = [loDownIfMenu, loDownIfMouseDown, loDownIfURL]
             object Menu5: TdhMenu
               Left = 225
-              Top = 466
-              Width = 153
+              Top = 711
+              Width = 161
               Height = 68
               Use = Menu2
               AutoSizeXY = asXY
@@ -439,15 +438,15 @@ object PageContainer1: TPageContainer1
                 Left = 2
                 Top = 32
                 Height = 34
-                Text = 'Link with submenu'
+                Text = 'Link con sottomenu'
                 Use = Link2
                 AutoSizeXY = asXY
                 Align = alTop
                 PreferDownStyles = True
                 Options = [loDownIfMenu, loDownIfMouseDown, loDownIfURL]
                 object Menu10: TdhMenu
-                  Left = 371
-                  Top = 500
+                  Left = 387
+                  Top = 741
                   Width = 57
                   Height = 98
                   Use = Menu2
@@ -458,7 +457,7 @@ object PageContainer1: TPageContainer1
                   object Link18: TdhLink
                     Left = 2
                     Top = 2
-                    Height = 36
+                    Height = 34
                     Text = 'Link'
                     Use = Link2
                     AutoSizeXY = asXY
@@ -468,8 +467,8 @@ object PageContainer1: TPageContainer1
                   end
                   object Link19: TdhLink
                     Left = 2
-                    Top = 34
-                    Height = 36
+                    Top = 32
+                    Height = 34
                     Text = 'Link'
                     Use = Link2
                     AutoSizeXY = asXY
@@ -479,8 +478,8 @@ object PageContainer1: TPageContainer1
                   end
                   object Link21: TdhLink
                     Left = 2
-                    Top = 66
-                    Height = 36
+                    Top = 62
+                    Height = 34
                     Text = 'Link'
                     Use = Link2
                     AutoSizeXY = asXY
@@ -529,7 +528,7 @@ object PageContainer1: TPageContainer1
         Options = [loDownIfMenu, loDownIfMouseDown, loDownIfURL]
         object Menu6: TdhMenu
           Left = 216
-          Top = 466
+          Top = 711
           Width = 161
           Height = 68
           Use = Menu2
@@ -550,7 +549,7 @@ object PageContainer1: TPageContainer1
             Options = [loDownIfMenu, loDownIfMouseDown, loDownIfURL]
             object Menu9: TdhMenu
               Left = 378
-              Top = 466
+              Top = 711
               Width = 57
               Height = 68
               Use = Menu2
@@ -608,7 +607,7 @@ object PageContainer1: TPageContainer1
         Options = [loDownIfMenu, loDownIfMouseDown, loDownIfURL]
         object Menu8: TdhMenu
           Left = 369
-          Top = 466
+          Top = 711
           Width = 57
           Height = 98
           Use = Menu2
@@ -625,7 +624,6 @@ object PageContainer1: TPageContainer1
             Use = Link2
             AutoSizeXY = asXY
             Align = alTop
-            Right = 2
             PreferDownStyles = True
             Options = [loDownIfMenu, loDownIfMouseDown, loDownIfURL]
           end
@@ -637,7 +635,6 @@ object PageContainer1: TPageContainer1
             Use = Link2
             AutoSizeXY = asXY
             Align = alTop
-            Right = 2
             PreferDownStyles = True
             Options = [loDownIfMenu, loDownIfMouseDown, loDownIfURL]
           end
@@ -649,7 +646,6 @@ object PageContainer1: TPageContainer1
             Use = Link2
             AutoSizeXY = asXY
             Align = alTop
-            Right = 2
             PreferDownStyles = True
             Options = [loDownIfMenu, loDownIfMouseDown, loDownIfURL]
           end
@@ -658,7 +654,7 @@ object PageContainer1: TPageContainer1
     end
     object Label12: TdhLabel
       Left = 36
-      Top = 627
+      Top = 872
       Width = 632
       Height = 241
       Text = 
@@ -685,7 +681,7 @@ object PageContainer1: TPageContainer1
     end
     object Label14: TdhLabel
       Left = 40
-      Top = 1059
+      Top = 1304
       Width = 66
       Height = 16
       Text = '<u>Menu inline</u>'
@@ -693,20 +689,20 @@ object PageContainer1: TPageContainer1
     end
     object Label16: TdhLabel
       Left = 40
-      Top = 1091
-      Width = 624
-      Height = 48
+      Top = 1336
+      Width = 640
+      Height = 32
       Text = 
         'Nel <b>Menu inline</b> '#232' impostata l'#39'opzione e la voce di menu d' +
-        'el menu viene allineata in alto, il menu viene anche allineato i' +
-        'n alto apparendo sotto alla voce di menu. L'#39'effetto visuale vien' +
-        'e illustrato nell'#39'esempio seguente:'
+        'el menu viene allineata in alto. Anche il menu viene allineato i' +
+        'n alto, quando appare sotto la voce di menu. L'#39'effetto visuale v' +
+        'iene illustrato nell'#39'esempio seguente:'
       AutoSizeXY = asY
     end
     object Label13: TdhLabel
       Left = 40
-      Top = 1555
-      Width = 624
+      Top = 1800
+      Width = 592
       Height = 64
       Text = 
         'Il precedente menu inline contiene due livelli di sottomenu nidi' +
@@ -720,7 +716,7 @@ object PageContainer1: TPageContainer1
     end
     object Page1: TdhPage
       Left = 42
-      Top = 1141
+      Top = 1386
       Width = 680
       Height = 408
       AutoSizeXY = asNone
@@ -730,7 +726,7 @@ object PageContainer1: TPageContainer1
         Top = 8
         Width = 24
         Height = 24
-        ActivePage = Page7
+        ActivePage = Page5
         FixedHeight = True
         object Page2: TdhPage
           Left = 232
@@ -885,7 +881,7 @@ object PageContainer1: TPageContainer1
           object Menu21: TdhMenu
             Left = 16
             Top = 30
-            Height = 156
+            Height = 80
             Use = Menu27
             AutoSizeXY = asXY
             Align = alTop
@@ -985,7 +981,7 @@ object PageContainer1: TPageContainer1
             end
             object Link51: TdhLink
               Left = 14
-              Top = 124
+              Top = 48
               Height = 24
               Text = 'Link con sottomenu'
               Use = Link58
@@ -1197,7 +1193,7 @@ object PageContainer1: TPageContainer1
     end
     object Label19: TdhLabel
       Left = 40
-      Top = 1672
+      Top = 1917
       Width = 129
       Height = 16
       Text = '<u>Menu Aperto Continuo</u>'
@@ -1205,7 +1201,7 @@ object PageContainer1: TPageContainer1
     end
     object Label15: TdhLabel
       Left = 40
-      Top = 1713
+      Top = 1958
       Width = 624
       Height = 32
       Text = 
@@ -1216,7 +1212,7 @@ object PageContainer1: TPageContainer1
     end
     object Label17: TdhLabel
       Left = 40
-      Top = 1790
+      Top = 2035
       Width = 303
       Height = 16
       Text = '<u>Apertura al clic del mouse o al passaggio del mouse</u>'
@@ -1224,19 +1220,19 @@ object PageContainer1: TPageContainer1
     end
     object Label18: TdhLabel
       Left = 40
-      Top = 1831
-      Width = 624
-      Height = 32
+      Top = 2076
+      Width = 608
+      Height = 48
       Text = 
-        'Mettendo la spunta nella casella <b>after</b> nel pannello <b>Ap' +
-        'ri Menu Con</b> il menu si apre quando '#232' trascorso l'#39'intervallo ' +
-        'di tempo specificato. Altrimenti, il menu si potr'#224' aprire solo c' +
-        'on un clic del mouse.'
+        'Mettendo la spunta nella casella <b>dopo</b> nel pannello <b>Apr' +
+        'i Menu Con</b> il menu si apre automaticamente soffermando il mo' +
+        'use sul menu per l'#39'intervallo di tempo specificato. In caso cont' +
+        'rario, il menu si potr'#224' aprire solo con un clic del mouse.'
       AutoSizeXY = asY
     end
     object Label20: TdhLabel
       Left = 40
-      Top = 995
+      Top = 1240
       Width = 624
       Height = 35
       Text = 

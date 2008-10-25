@@ -26,9 +26,10 @@ object PageContainer1: TPageContainer1
     Right = 0
     Bottom = 0
     UseIFrame = False
+    VertPosition = 921
     object Label1: TdhLabel
       Left = 30
-      Top = 24
+      Top = -897
       Width = 350
       Height = 50
       Text = 'Guida DFM2HTML'
@@ -38,7 +39,7 @@ object PageContainer1: TPageContainer1
     end
     object Label2: TdhLabel
       Left = 32
-      Top = 104
+      Top = -817
       Width = 632
       Height = 32
       Text = 
@@ -48,7 +49,7 @@ object PageContainer1: TPageContainer1
     end
     object Label3: TdhLabel
       Left = 32
-      Top = 160
+      Top = -761
       Width = 346
       Height = 16
       Text = '1. Aggiungere un oggetto per il controllo della pagina.'
@@ -57,7 +58,7 @@ object PageContainer1: TPageContainer1
     end
     object StyleSheet1: TdhStyleSheet
       Left = 535
-      Top = 40
+      Top = -881
       Width = 28
       Height = 28
       Expanded = False
@@ -241,13 +242,13 @@ object PageContainer1: TPageContainer1
     end
     object Label5: TdhLabel
       Left = 40
-      Top = 192
+      Top = -729
       Width = 632
       Height = 78
       Text = 
         'Prima crea un nuovo documento DFM2HTML usando il menu <b>File</b' +
         '>. Per disegnare diverse pagine in un documento DFM2HTML dovrai ' +
-        'aggiungere al documento un oggetto per il controllo della pagina' +
+        'aggiungere al documento un oggetto per il controllo delle pagine' +
         '. Per fare questo clicca il pulsante <Image3></Image3> sulla Bar' +
         'ra Strumenti e poi clicca nel documento.'#10'Hai aggiunto l'#39'oggetto ' +
         'chiamato <b>PageControl1</b> come oggetto figlio all'#39'oggetto <b>' +
@@ -256,7 +257,7 @@ object PageContainer1: TPageContainer1
     end
     object Label6: TdhLabel
       Left = 32
-      Top = 288
+      Top = -633
       Width = 213
       Height = 16
       Text = '2. Aggiungere oggetti alla pagina'
@@ -265,7 +266,7 @@ object PageContainer1: TPageContainer1
     end
     object Label8: TdhLabel
       Left = 32
-      Top = 432
+      Top = -489
       Width = 251
       Height = 16
       Text = '3. Modificare gli Stili di Visualizzazione'
@@ -274,25 +275,25 @@ object PageContainer1: TPageContainer1
     end
     object Label9: TdhLabel
       Left = 40
-      Top = 320
+      Top = -601
       Width = 632
       Height = 82
       Text = 
         'Ora aggiungiamo pagine alternative all'#39'oggetto di controllo dell' +
-        'a pagina. Si pu'#242' visualizzare solo una pagina alternativa per vo' +
+        'e pagine. Si pu'#242' visualizzare solo una pagina alternativa per vo' +
         'lta. Nella zona in basso ci sono le schede delle propriet'#224', in c' +
         'ui '#232' possibile modificare gli oggetti selezionati. Vai alla sche' +
-        'da <tab>&nbsp;&nbsp;Pagina&nbsp;&nbsp;</tab> del controllo pagin' +
-        'a. Dato che una pagina alternativa, <b>Page1</b>, viene creata p' +
-        'er opzione predefinita, aggiungi una seconda pagina alternativa,' +
-        ' <b>Page2</b>, cliccando il pulsante <b>Crea nuova pagina</b>. E' +
-        #39' possibile modificare il nome di un oggetto nella scheda <tab>&' +
-        'nbsp;Oggetto&nbsp;&nbsp;</tab>'
+        'da <tab>&nbsp;Pagina&nbsp;&nbsp;</tab> del controllo pagina. Dat' +
+        'o che una pagina alternativa, <b>Page1</b>, viene creata per opz' +
+        'ione predefinita, aggiungi una seconda pagina alternativa, <b>Pa' +
+        'ge2</b>, cliccando il pulsante <b>Crea nuova pagina</b>. E'#39' poss' +
+        'ibile modificare il nome di un oggetto nella scheda <tab>&nbsp;O' +
+        'ggetto&nbsp;&nbsp;</tab>'
       AutoSizeXY = asY
     end
     object Label10: TdhLabel
       Left = 40
-      Top = 464
+      Top = -457
       Width = 632
       Height = 67
       Text = 
@@ -309,7 +310,7 @@ object PageContainer1: TPageContainer1
     end
     object Label7: TdhLabel
       Left = 32
-      Top = 568
+      Top = -353
       Width = 166
       Height = 16
       Text = '4. Creare Link alle Pagine'
@@ -318,7 +319,7 @@ object PageContainer1: TPageContainer1
     end
     object Label12: TdhLabel
       Left = 40
-      Top = 600
+      Top = -321
       Width = 632
       Height = 78
       Text = 
@@ -334,7 +335,7 @@ object PageContainer1: TPageContainer1
     end
     object Label14: TdhLabel
       Left = 32
-      Top = 704
+      Top = -217
       Width = 115
       Height = 16
       Text = '5. Generare HTML'
@@ -343,7 +344,7 @@ object PageContainer1: TPageContainer1
     end
     object Label15: TdhLabel
       Left = 40
-      Top = 736
+      Top = -185
       Width = 632
       Height = 64
       Text = 
@@ -357,7 +358,7 @@ object PageContainer1: TPageContainer1
     end
     object Label16: TdhLabel
       Left = 32
-      Top = 848
+      Top = -73
       Width = 279
       Height = 16
       Text = '<b>Argomenti avanzati (fai doppio clic sui link):</b>'
@@ -365,14 +366,14 @@ object PageContainer1: TPageContainer1
     end
     object PageControl1: TdhPageControl
       Left = 32
-      Top = 912
+      Top = -9
       Width = 24
       Height = 24
-      ActivePage = Page2
+      ActivePage = Page4
       FixedHeight = False
       object Page1: TdhPage
         Left = 32
-        Top = 904
+        Top = -17
         Width = 656
         Height = 48
         AutoSizeXY = asNone
@@ -380,7 +381,7 @@ object PageContainer1: TPageContainer1
       end
       object Page2: TdhPage
         Left = 32
-        Top = 904
+        Top = -17
         Width = 656
         Height = 536
         Use = Label41
@@ -470,7 +471,7 @@ object PageContainer1: TPageContainer1
       end
       object Page3: TdhPage
         Left = 32
-        Top = 904
+        Top = -17
         Width = 656
         Height = 536
         Use = Label41
@@ -523,11 +524,11 @@ object PageContainer1: TPageContainer1
           Width = 561
           Height = 50
           Text = 
-            'Seleziona <b>Style1</b>, vai alla scheda <tab>&nbsp;&nbsp;&nbsp;' +
-            'Lato&nbsp;&nbsp;&nbsp;</tab> e definisci un bordo nero di 10 pix' +
-            'el (seleziona il valore <b>Solid</b> per lo stile del bordo). Or' +
-            'a arrotonda gli angoli: Premi il pulsante <b>Modifica Radius Bor' +
-            'do</b> e definisci un radius del bordo di 20 pixel.'
+            'Seleziona <b>Style1</b>, vai alla scheda <tab>&nbsp;&nbsp;Lato&n' +
+            'bsp;&nbsp;&nbsp;</tab> e definisci un bordo nero di 10 pixel (se' +
+            'leziona il valore <b>Solid</b> per lo stile del bordo). Ora arro' +
+            'tonda gli angoli: Premi il pulsante <b>Modifica Radius Bordo</b>' +
+            ' e definisci un radius del bordo di 20 pixel.'
           Style.PaddingTop = 1
           AutoSizeXY = asY
         end
@@ -560,16 +561,16 @@ object PageContainer1: TPageContainer1
           Width = 561
           Height = 34
           Text = 
-            'Seleziona <b>Page1</b>, vai alla scheda <tab>&nbsp;&nbsp;Oggetto' +
-            '&nbsp;&nbsp;</tab> e scegli <b>Style1</b> nel campo <b>Usa</b>. ' +
-            'Fai la stessa cosa per <b>Page2</b>.'
+            'Seleziona <b>Page1</b>, vai alla scheda <tab>&nbsp;Oggetto&nbsp;' +
+            '&nbsp;</tab> e scegli <b>Style1</b> nel campo <b>Usa</b>. Fai la' +
+            ' stessa cosa per <b>Page2</b>.'
           Style.PaddingTop = 1
           AutoSizeXY = asY
         end
       end
       object Page4: TdhPage
         Left = 32
-        Top = 904
+        Top = -17
         Width = 656
         Height = 536
         Use = Label41
@@ -589,9 +590,9 @@ object PageContainer1: TPageContainer1
         object Label34: TdhLabel
           Left = 32
           Top = 89
-          Width = 325
+          Width = 333
           Height = 16
-          Text = '1. Insrire le pagine in un oggetto pagina scorrevole'
+          Text = '1. Inserire le pagine in un oggetto pagina scorrevole'
           Use = Label4
           AutoSizeXY = asXY
         end
@@ -631,12 +632,12 @@ object PageContainer1: TPageContainer1
           Height = 66
           Text = 
             'Nella scheda <tab>&nbsp;&nbsp;&nbsp;Pos.&nbsp;&nbsp;&nbsp;&nbsp;' +
-            '</tab> per <b>Page3</b>, spunta le opzioni <b>Lato parent destro' +
-            '</b> e <b>Lato parent basso</b>.'#10'L'#39'oggetto <b>index</b> rapprese' +
-            'nta la finestra del browser, e se viene ridimensionato dall'#39'uten' +
-            'te l'#39'oggetto child <b>Page3</b> si ridimensiona nello stesso mod' +
-            'o, tenendo la distanza dei suoi lati constante ai corrispondenti' +
-            ' lati dell'#39'oggetto <b>index</b>.'
+            '</tab> per <b>Page3</b>, spunta le opzioni <b>Lato destro genito' +
+            're</b> e <b>Lato basso genitore</b>.'#10'L'#39'oggetto <b>index</b> rapp' +
+            'resenta la finestra del browser e, se l'#39'utente ridimensiona l'#39'og' +
+            'getto figlio, <b>Page3</b> si ridimensiona nello stesso modo, ma' +
+            'ntenendo costante la distanza dei suoi lati dai corrispondenti l' +
+            'ati dell'#39'oggetto <b>index</b>.'
           Style.PaddingTop = 1
           AutoSizeXY = asY
         end
@@ -657,17 +658,17 @@ object PageContainer1: TPageContainer1
           Text = 
             'Dovresti posizionare l'#39'oggetto <b>Page3</b> in modo che occupi u' +
             'na vasta area dell'#39'oggetto <b>index</b>. Puoi nascondere qualsia' +
-            'si barra di scorrimento nella scheda <tab>&nbsp;&nbsp;&nbsp;Pagi' +
-            'na&nbsp;&nbsp;&nbsp;</tab> dell'#39'oggetto <b>index</b> (seleziona ' +
-            '<b>no</b>), dato che le pagine alternative vengono gi'#224' fatte sco' +
-            'rrere all'#39'interno dell'#39'oggetto <b>Page3</b>.'
+            'si barra di scorrimento usando la scheda <tab>&nbsp;Pagina&nbsp;' +
+            '&nbsp;&nbsp;</tab>dell'#39'oggetto <b>index</b> (seleziona <b>no</b>' +
+            '), dato che le pagine alternative vengono gi'#224' fatte scorrere all' +
+            #39'interno dell'#39'oggetto <b>Page3</b>.'
           AutoSizeXY = asY
         end
       end
     end
     object Link2: TdhLink
       Left = 32
-      Top = 876
+      Top = -45
       Width = 152
       Height = 22
       Text = 'Aggiungere Pi'#232' di Pagina'
@@ -680,7 +681,7 @@ object PageContainer1: TPageContainer1
     end
     object Link1: TdhLink
       Left = 216
-      Top = 876
+      Top = -45
       Width = 123
       Height = 22
       Text = 'Usare i Fogli di Stile'
@@ -693,7 +694,7 @@ object PageContainer1: TPageContainer1
     end
     object Link3: TdhLink
       Left = 368
-      Top = 876
+      Top = -45
       Width = 185
       Height = 22
       Text = 'Passare ad un Layout a Frame'
@@ -706,7 +707,7 @@ object PageContainer1: TPageContainer1
     end
     object StyleSheet2: TdhStyleSheet
       Left = 496
-      Top = 848
+      Top = -73
       Width = 28
       Height = 28
       Expanded = False

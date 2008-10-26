@@ -2253,6 +2253,9 @@ begin
     result:=GetImageBitmap;
   end;
   UpdateCalculations(false);
+ end else
+ begin
+   result:=nil;
  end;
 end;
 
@@ -11078,21 +11081,14 @@ begin
   result:=true;
  end else }
 {$ENDIF}
+ if Graphic<>nil then
  begin
   res:=GetBitmap32FromGraphic(Graphic);
   result:=true;
-
-  {
-  res:=TBitmap32.Create;
-  res.Assign(Graphic);
-  if Graphic.Transparent then
-   res.DrawMode:=dmBlend;
-  result:=true;   }
- end{ else
+ end else
  begin
-  res:=nil;
   result:=false;
- end};
+ end;
 end;
 
 procedure TdhCustomPanel.PaintWhiteBackground(ref_brct:TRect; Src:TBitmap32; const brct: TRect);

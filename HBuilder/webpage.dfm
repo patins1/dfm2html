@@ -143,7 +143,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
             Top = 392
             Width = 224
             Height = 22
-            Text = 'Download DFM2HTML 3.2'
+            Text = 'Download DFM2HTML 3.3'
             Style.FontSize = '19'
             AutoSizeXY = asXY
             PreferDownStyles = True
@@ -686,7 +686,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
           object Label16: TdhLabel
             Left = 16
             Top = 24
-            Width = 115
+            Width = 274
             Height = 16
             Text = 
               #9658' <en>Contact us if your site shall be listed here</en><de>Benut' +
@@ -4793,7 +4793,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
             object Label45: TdhLabel
               Left = 0
               Top = 88
-              Width = 100
+              Width = 26
               Height = 100
               Text = 'Label45'
               ImageType = bitImage
@@ -8975,12 +8975,12 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
           Left = 192
           Top = 88
           Width = 488
-          Height = 1756
+          Height = 1884
           AutoSizeXY = asNone
           UseIFrame = False
           object Label5: TdhLabel
             Left = 24
-            Top = 1656
+            Top = 1744
             Width = 360
             Height = 80
             Text = 
@@ -8993,7 +8993,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
           end
           object Label25: TdhLabel
             Left = 24
-            Top = 1416
+            Top = 1504
             Width = 446
             Height = 212
             Text = 
@@ -9026,7 +9026,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
           end
           object Label20: TdhLabel
             Left = 24
-            Top = 1192
+            Top = 1280
             Width = 442
             Height = 193
             Text = 
@@ -9045,7 +9045,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
           end
           object Label21: TdhLabel
             Left = 24
-            Top = 1000
+            Top = 1088
             Width = 418
             Height = 161
             Text = 
@@ -9063,7 +9063,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
           end
           object Label28: TdhLabel
             Left = 24
-            Top = 888
+            Top = 976
             Width = 434
             Height = 81
             Text = 
@@ -9077,7 +9077,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
           end
           object Label11: TdhLabel
             Left = 24
-            Top = 680
+            Top = 768
             Width = 354
             Height = 64
             Text = 
@@ -9091,7 +9091,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
           end
           object Label12: TdhLabel
             Left = 24
-            Top = 776
+            Top = 864
             Width = 330
             Height = 80
             Text = 
@@ -9105,7 +9105,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
           end
           object Label13: TdhLabel
             Left = 24
-            Top = 560
+            Top = 648
             Width = 450
             Height = 96
             Text = 
@@ -9120,7 +9120,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
           end
           object Label37: TdhLabel
             Left = 24
-            Top = 488
+            Top = 576
             Width = 426
             Height = 49
             Text = 
@@ -9133,7 +9133,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
           end
           object Label38: TdhLabel
             Left = 24
-            Top = 400
+            Top = 488
             Width = 210
             Height = 65
             Text = 
@@ -9146,7 +9146,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
           end
           object Label41: TdhLabel
             Left = 24
-            Top = 328
+            Top = 416
             Width = 338
             Height = 48
             Text = 
@@ -9159,7 +9159,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
           end
           object Label42: TdhLabel
             Left = 24
-            Top = 208
+            Top = 296
             Width = 426
             Height = 97
             Text = 
@@ -9175,7 +9175,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
           end
           object Label6: TdhLabel
             Left = 24
-            Top = 136
+            Top = 224
             Width = 442
             Height = 48
             Text = 
@@ -9189,7 +9189,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
           end
           object Label44: TdhLabel
             Left = 24
-            Top = 64
+            Top = 152
             Width = 386
             Height = 49
             Text = 
@@ -9198,6 +9198,22 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
               'e><code>Neu in Version 3.2:'#10'* Man kann den Pfad von generierten ' +
               'Artefakten anpassen'#10'* "Auf Update '#252'berpr'#252'fen..."-Funktion</code>' +
               '</de>'
+            Style.PaddingRight = 2
+            Style.WhiteSpace = cwsPre
+            Style.Color = Black
+            AutoSizeXY = asXY
+          end
+          object Label46: TdhLabel
+            Left = 24
+            Top = 64
+            Width = 346
+            Height = 65
+            Text = 
+              '<en><code>New in version 3.3:'#10'* Italian language is added '#10'  (th' +
+              'anks to Rinaldo M. aka Whiteshark!)'#10'* Fixed bug with IE7 and aut' +
+              'o-width buttons</code></en>'#10'<de><code>Neu in Version 3.2:'#10'* Ital' +
+              'ienische Sprache hinzugef'#252'gt'#10'  (dank Rinaldo M. aka Whiteshark!)' +
+              #10'* Bug-Fix f'#252'r IE7 und auto-width-Buttons</code></de>'
             Style.PaddingRight = 2
             Style.WhiteSpace = cwsPre
             Style.Color = Red
@@ -9633,7 +9649,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
             Left = 16
             Top = 416
             Width = 440
-            Height = 65
+            Height = 49
             Text = 
               '<en>'#10'<FAQ_question>Add your own presets</FAQ_question>'#10'<br/>'#10'You' +
               ' can extend the Presets dialog with your own presets by saving y' +
@@ -9665,7 +9681,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
             Left = 16
             Top = 568
             Width = 440
-            Height = 472
+            Height = 392
             Text = 
               '<en>'#10'<FAQ_question>Put your DFM2HTML documents under version con' +
               'trol!</FAQ_question>'#10'<br/>'#10'<ul>'#10'<li>A very good version control ' +
@@ -9812,8 +9828,24 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
           object Label43: TdhLabel
             Left = 24
             Top = 64
-            Width = 442
-            Height = 64
+            Width = 346
+            Height = 65
+            Text = 
+              '<en><code>New in version 3.3:'#10'* Italian language is added '#10'  (th' +
+              'anks to Rinaldo M. aka Whiteshark!)'#10'* Fixed bug with IE7 and aut' +
+              'o-width buttons</code></en>'#10'<de><code>Neu in Version 3.2:'#10'* Ital' +
+              'ienische Sprache hinzugef'#252'gt'#10'  (dank Rinaldo M. aka Whiteshark!)' +
+              #10'* Bug-Fix f'#252'r IE7 und auto-width-Buttons</code></de>'
+            Style.PaddingRight = 2
+            Style.WhiteSpace = cwsPre
+            Style.Color = Red
+            AutoSizeXY = asXY
+          end
+          object Label47: TdhLabel
+            Left = 24
+            Top = 152
+            Width = 386
+            Height = 49
             Text = 
               '<en><code>New in version 3.2:'#10'* The path of generated artifacts ' +
               'can be adapted'#10'* "Check for update" functionality</code></en>'#10'<d' +
@@ -9822,7 +9854,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
               '</de>'
             Style.PaddingRight = 2
             Style.WhiteSpace = cwsPre
-            Style.Color = Red
+            Style.Color = Black
             AutoSizeXY = asXY
           end
         end

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <XML_DIZ_INFO>
 	<MASTER_PAD_VERSION_INFO>
-		<MASTER_PAD_EDITOR>DeuPAD 2.0.2.50 (http://www.deupad.org)</MASTER_PAD_EDITOR>
+		<MASTER_PAD_EDITOR>DeuPAD 3.0.1.54 (http://www.deupad.org)</MASTER_PAD_EDITOR>
 		<MASTER_PAD_INFO>Portable Application Description, or PAD for short, is a data set that is used by shareware authors to dissemminate information to anyone interested in their software products.  To find out more go to http://www.asp-shareware.org/pad</MASTER_PAD_INFO>
-		<MASTER_PAD_VERSION>2.01</MASTER_PAD_VERSION>
+		<MASTER_PAD_VERSION>3.01</MASTER_PAD_VERSION>
 	</MASTER_PAD_VERSION_INFO>
 	<Company_Info>
 		<Company_Name>Joerg Kiegeland</Company_Name>
@@ -34,19 +34,19 @@
 	</Company_Info>
 	<Program_Info>
 		<Program_Name>DFM2HTML</Program_Name>
-		<Program_Version>3.2</Program_Version>
+		<Program_Version>3.3</Program_Version>
 		<Program_Type>Freeware</Program_Type>
 		<Program_Release_Status>Major Update</Program_Release_Status>
 		<Program_Category_Class>Web Development::HTML Tools</Program_Category_Class>
 		<Program_Release_Year>2008</Program_Release_Year>
 		<Program_Release_Month>10</Program_Release_Month>
-		<Program_Release_Day>19</Program_Release_Day>
+		<Program_Release_Day>26</Program_Release_Day>
 		<Program_Cost_Other>0.00</Program_Cost_Other>
 		<Program_Cost_Other_Code />
 		<Program_Cost_Dollars>0.00</Program_Cost_Dollars>
 		<Program_Categories />
 		<Program_Specific_Category>Development Tools</Program_Specific_Category>
-		<Program_Change_Info>The path of generated artifacts can be adapted</Program_Change_Info>
+		<Program_Change_Info>Added Italian language</Program_Change_Info>
 		<Program_Language>German,English</Program_Language>
 		<Program_OS_Support>Win98,WinXP,Windows2000,Windows Vista Starter,Windows Vista Home Basic,Windows Vista Home Premium,Windows Vista Business,Windows Vista Enterprise,Windows Vista Ultimate,Windows Vista Home Basic x64,Windows Vista Home Premium x64,Windows Vista Business x64,Windows Vista Enterprise x64,Windows Vista Ultimate x64</Program_OS_Support>
 		<Program_Install_Support>Install and Uninstall</Program_Install_Support>
@@ -59,9 +59,9 @@
 			<Filename_Generic>dfm2html.exe</Filename_Generic>
 			<Filename_Versioned>dfm2v1_3.exe</Filename_Versioned>
 			<Filename_Previous>dfm2v1_3.exe</Filename_Previous>
-			<File_Size_Bytes>924600</File_Size_Bytes>
-			<File_Size_K>902</File_Size_K>
-			<File_Size_MB>0.88</File_Size_MB>
+			<File_Size_Bytes>985811</File_Size_Bytes>
+			<File_Size_K>962</File_Size_K>
+			<File_Size_MB>0.94</File_Size_MB>
 		</File_Info>
 		<Expire_Info>
 			<Has_Expire_Info>N</Has_Expire_Info>
@@ -268,6 +268,14 @@ distributing the software and/or documentation with other products
 		<Affiliates_Yaskifo_Vendor_ID />
 		<Affiliates_Yaskifo_Product_ID />
 		<Affiliates_Yaskifo_Maximum_Commission_Rate />
+		<Affiliates_Cleverbridge_Order_Page />
+		<Affiliates_Cleverbridge_Vendor_ID />
+		<Affiliates_Cleverbridge_Product_ID />
+		<Affiliates_Cleverbridge_Maximum_Commission_Rate />
+		<Affiliates_OneNetworkDirect_Order_Page />
+		<Affiliates_OneNetworkDirect_Vendor_ID />
+		<Affiliates_OneNetworkDirect_Product_ID />
+		<Affiliates_OneNetworkDirect_Maximum_Commission_Rate />
 	</Affiliates>
 	<ASP>
 		<ASP_FORM>Y</ASP_FORM>

@@ -2203,6 +2203,14 @@ begin
   AddStyle('width','100%');
   AddStyle('height','100%');
   closeSecondDiv:=true;
+ end else
+ if (nest.Props<>nil) and ((nest.tag='input') or (nest.tag='button')) and nest.AutoX and (nest.Align=alNone) then
+ begin
+  sPositionings:=extract('position')+extract('left')+extract('top')+extract('right')+extract('bottom');
+  ns:=ns+'<div style="'+sPositionings+'">';
+  inc(CurIndent);
+  ns:=ns+CRLF+MakeIndent(CurIndent);
+  closeSecondDiv:=true;
  end;
  if nest.PngToChild and (nest.Props<>nil) and nest.IsRastered(true) then
  begin

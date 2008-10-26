@@ -1,7 +1,6 @@
 object GradientWizard: TGradientWizard
   Left = 178
   Top = 103
-  AutoScroll = False
   Caption = 'Gradient Wizard'
   ClientHeight = 155
   ClientWidth = 271
@@ -21,7 +20,7 @@ object GradientWizard: TGradientWizard
   object FirstColor: TdhColorPicker
     Left = 8
     Top = 75
-    Width = 105
+    Width = 113
     Height = 21
     Caption = 'First Color'
     Font.Charset = DEFAULT_CHARSET
@@ -38,7 +37,7 @@ object GradientWizard: TGradientWizard
   object SecondColor: TdhColorPicker
     Left = 8
     Top = 99
-    Width = 105
+    Width = 113
     Height = 21
     Caption = 'Second Color'
     Font.Charset = DEFAULT_CHARSET
@@ -55,10 +54,10 @@ object GradientWizard: TGradientWizard
   object lWidth: TdhLabel
     Left = 8
     Top = 136
-    Width = 39
+    Width = 31
     Height = 13
     Text = 'Width:'
-    AutoSizeXY = asY
+    AutoSizeXY = asXY
   end
   object SampleGradient: TdhPanel
     Left = 176
@@ -93,7 +92,7 @@ object GradientWizard: TGradientWizard
     TabOrder = 2
   end
   object spMasterAlpha: TMySpinEdit
-    Left = 56
+    Left = 63
     Top = 128
     Width = 58
     Height = 22
@@ -105,7 +104,7 @@ object GradientWizard: TGradientWizard
     ValueChange = spMasterAlphaValueChange
   end
   object dhLink1: TdhLink
-    Left = 116
+    Left = 124
     Top = 75
     Width = 18
     Height = 45
@@ -124,10 +123,10 @@ object GradientWizard: TGradientWizard
   object lHeight: TdhLabel
     Left = 8
     Top = 136
-    Width = 39
+    Width = 34
     Height = 13
     Text = 'Height:'
-    AutoSizeXY = asY
+    AutoSizeXY = asXY
   end
   object DKLanguageController1: TDKLanguageController
     IgnoreList.Strings = (

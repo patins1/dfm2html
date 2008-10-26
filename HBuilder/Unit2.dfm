@@ -43,7 +43,7 @@ object Tabs: TTabs
       Top = 2
       Width = 925
       Height = 204
-      ActivePage = AnchorText
+      ActivePage = AnchorSelect
       TabOrder = 0
       TabStop = False
       TabWidth = 43
@@ -604,13 +604,12 @@ object Tabs: TTabs
           Width = 28
           Height = 28
           Expanded = False
-          VertPosition = 25
           ExpandedWidth = 129
           ExpandedHeight = 100
           Expanded = False
           object STYLE_Link2: TdhLink
             Left = 0
-            Top = 25
+            Top = 50
             Height = 24
             Text = 'STYLE_Link2'
             ImageType = bitTile
@@ -626,7 +625,7 @@ object Tabs: TTabs
             Style.BorderRadius.All = '100 100'
             AutoSizeXY = asNone
             Align = alTop
-            Right = 2147483647
+            Right = 0
             StyleDown.Effects.Enabled = True
             StyleDown.Effects.AntiAliasing = False
             StyleDown.Effects.Text = etInclude
@@ -636,17 +635,17 @@ object Tabs: TTabs
           end
           object STYLE_dhLabel10: TdhLabel
             Left = 0
-            Top = 12
+            Top = 37
             Height = 13
             Text = 'Label10'
             Style.FontSize = '3'
             AutoSizeXY = asY
             Align = alTop
-            Right = 2147483647
+            Right = 0
           end
           object STYLE_Link14: TdhLink
             Left = 0
-            Top = -7
+            Top = 18
             Height = 19
             Text = 'STYLE_Link14'
             Style.Border.Width = 1
@@ -665,7 +664,7 @@ object Tabs: TTabs
             Style.BorderRadius.All = '115'
             AutoSizeXY = asXY
             Align = alTop
-            Right = 2147483647
+            Right = 0
             StyleDown.BorderTop.Color = ThreeDDarkShadow
             StyleDown.BorderBottom.Color = White
             StyleDown.BorderLeft.Color = ThreeDDarkShadow
@@ -680,18 +679,18 @@ object Tabs: TTabs
           end
           object STYLE_Label28: TdhLabel
             Left = 0
-            Top = 49
+            Top = 74
             Height = 23
             Text = 'STYLE_Label28'
             Style.PaddingTop = 10
             Style.Display = cdsBlock
             AutoSizeXY = asY
             Align = alTop
-            Right = 2147483647
+            Right = 0
           end
           object STYLE_dhLink2: TdhLink
             Left = 0
-            Top = -25
+            Top = 0
             Height = 18
             Text = 'Link1'
             Style.Border.Color = ThreeDShadow
@@ -710,7 +709,7 @@ object Tabs: TTabs
             Style.BorderRadius.All = '5'
             AutoSizeXY = asXY
             Align = alTop
-            Right = 2147483647
+            Right = 0
             StyleDown.Border.Color = ThreeDShadow
             StyleDown.Border.Style = cbsSolid
             StyleDown.BackgroundImage.Data = {
@@ -1249,15 +1248,15 @@ object Tabs: TTabs
             Top = 19
             Width = 24
             Height = 24
-            ActivePage = TabSheet7
+            ActivePage = TabSheet8
             FixedHeight = True
             object TabSheet3: TdhPage
               Left = 1
               Top = 1
               AutoSizeXY = asNone
               Align = alClient
-              Right = 2147483647
-              Bottom = 2147483647
+              Right = 1
+              Bottom = 1
               UseIFrame = False
               object cAntiAliasing: TTntCheckBox
                 Left = 16
@@ -1300,15 +1299,13 @@ object Tabs: TTabs
               Top = 1
               AutoSizeXY = asNone
               Align = alClient
-              Right = 2147483647
-              Bottom = 2147483647
+              Right = 1
+              Bottom = 1
               UseIFrame = False
-              ExplicitWidth = 100
-              ExplicitHeight = 100
               object dhPanel4: TdhPanel
                 Left = 3
                 Top = 4
-                Width = 126
+                Width = 132
                 Height = 94
                 Style.MarginRight = '20'
                 AutoSizeXY = asNone
@@ -1591,12 +1588,12 @@ object Tabs: TTabs
               end
             end
             object TabSheet7: TdhPage
-              Left = 0
-              Top = 0
+              Left = 1
+              Top = 1
               AutoSizeXY = asNone
               Align = alClient
-              Right = 0
-              Bottom = 0
+              Right = 1
+              Bottom = 1
               UseIFrame = False
               object Panel3: TMyPanel
                 Left = 256
@@ -1905,7 +1902,7 @@ object Tabs: TTabs
             Style.ZIndex = -1
             AutoSizeXY = asY
             Align = alTop
-            Right = 2147483647
+            Right = 0
           end
           object STYLE_Link1: TdhLink
             Left = 0
@@ -1919,7 +1916,7 @@ object Tabs: TTabs
             Use = STYLE_dhLink2
             AutoSizeXY = asXY
             Align = alTop
-            Right = 2147483647
+            Right = 0
             StyleDown.BorderBottom.Style = cbsNone
             StyleDown.ZIndex = 10
             StyleDown.BorderRadius.BottomRight = '0'
@@ -1941,7 +1938,7 @@ object Tabs: TTabs
             Use = STYLE_dhLink2
             AutoSizeXY = asXY
             Align = alTop
-            Right = 2147483647
+            Right = 0
             StyleDown.BorderRight.Style = cbsNone
             StyleDown.ZIndex = 10
             StyleDown.BorderRadius.BottomRight = '0'
@@ -1959,7 +1956,7 @@ object Tabs: TTabs
             Use = STYLE_dhLabel11
             AutoSizeXY = asY
             Align = alTop
-            Right = 2147483647
+            Right = 0
           end
           object STYLE_dhLabel11: TdhLabel
             Left = 0
@@ -1972,7 +1969,7 @@ object Tabs: TTabs
             Style.BorderRadius.All = '5'
             AutoSizeXY = asY
             Align = alTop
-            Right = 2147483647
+            Right = 0
           end
         end
         object IGNORE_dhDirectHTML1: TdhDirectHTML
@@ -3078,7 +3075,7 @@ object Tabs: TTabs
             Width = 23
             Height = 13
             Text = 'Title:'
-            AutoSizeXY = asY
+            AutoSizeXY = asXY
           end
           object eTitle: ThEdit
             Left = 56
@@ -3983,9 +3980,9 @@ object Tabs: TTabs
             Right = 143
           end
           object cSelectSelected: TTntCheckBox
-            Left = 72
+            Left = 56
             Top = 69
-            Width = 129
+            Width = 150
             Height = 15
             Caption = 'Initially selected'
             TabOrder = 0

@@ -390,7 +390,7 @@ object PageContainer2: TPageContainer2
         end
       end
     end
-    object Label5: TdhLabel
+    object PresetsHelperPHP6: TdhLabel
       Left = 0
       Top = 584
       Height = 183

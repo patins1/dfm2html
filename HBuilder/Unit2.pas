@@ -447,7 +447,7 @@ type
     mFullCopy: TTntMenuItem;
     mGotoMenu: TTntMenuItem;
     cMenuAuto: TTntCheckBox;
-    MakeTransparent1: TTntMenuItem;
+    mSetBackgroundColorTransparent: TTntMenuItem;
     mCopyOverStylesToDownStyles: TTntMenuItem;
     procedure IGNORE_Button1Click(Sender: TObject);
     procedure bClearEdgeClick(Sender: TObject);
@@ -646,7 +646,7 @@ type
     procedure mFullCopyClick(Sender: TObject);
     procedure mGotoMenuClick(Sender: TObject);
     procedure cMenuAutoClick(Sender: TObject);
-    procedure MakeTransparent1Click(Sender: TObject);
+    procedure mSetBackgroundColorTransparentClick(Sender: TObject);
     procedure mCopyOverStylesToDownStylesClick(Sender: TObject);
   private
     FAdjusting:boolean;
@@ -4118,6 +4118,7 @@ begin
  begin
   mSaveImageToFile.Enabled:=dhPanel1.Style.BackgroundImage.HasPicture;
   mChangeColors.Enabled:=mSaveImageToFile.Enabled;
+  mSetBackgroundColorTransparent.Enabled:=mSaveImageToFile.Enabled;
   PopupMenu1.Popup(Mouse.CursorPos.X,Mouse.CursorPos.Y);
  end;
 end;
@@ -5558,7 +5559,7 @@ begin
  cHorizontalLayoutClick(nil);  
 end;
 
-procedure TTabs.MakeTransparent1Click(Sender: TObject);
+procedure TTabs.mSetBackgroundColorTransparentClick(Sender: TObject);
 var bmp32:TBitmap32;
     src:TPersistent;
     col32:TColor32;

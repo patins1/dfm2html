@@ -43,7 +43,7 @@ object Tabs: TTabs
       Top = 2
       Width = 925
       Height = 204
-      ActivePage = AnchorSelect
+      ActivePage = AnchorBackground
       TabOrder = 0
       TabStop = False
       TabWidth = 43
@@ -625,7 +625,7 @@ object Tabs: TTabs
             Style.BorderRadius.All = '100 100'
             AutoSizeXY = asNone
             Align = alTop
-            Right = 0
+            Right = 2147483647
             StyleDown.Effects.Enabled = True
             StyleDown.Effects.AntiAliasing = False
             StyleDown.Effects.Text = etInclude
@@ -641,7 +641,7 @@ object Tabs: TTabs
             Style.FontSize = '3'
             AutoSizeXY = asY
             Align = alTop
-            Right = 0
+            Right = 2147483647
           end
           object STYLE_Link14: TdhLink
             Left = 0
@@ -664,7 +664,7 @@ object Tabs: TTabs
             Style.BorderRadius.All = '115'
             AutoSizeXY = asXY
             Align = alTop
-            Right = 0
+            Right = 2147483647
             StyleDown.BorderTop.Color = ThreeDDarkShadow
             StyleDown.BorderBottom.Color = White
             StyleDown.BorderLeft.Color = ThreeDDarkShadow
@@ -686,7 +686,7 @@ object Tabs: TTabs
             Style.Display = cdsBlock
             AutoSizeXY = asY
             Align = alTop
-            Right = 0
+            Right = 2147483647
           end
           object STYLE_dhLink2: TdhLink
             Left = 0
@@ -709,7 +709,7 @@ object Tabs: TTabs
             Style.BorderRadius.All = '5'
             AutoSizeXY = asXY
             Align = alTop
-            Right = 0
+            Right = 2147483647
             StyleDown.Border.Color = ThreeDShadow
             StyleDown.Border.Style = cbsSolid
             StyleDown.BackgroundImage.Data = {
@@ -1255,8 +1255,8 @@ object Tabs: TTabs
               Top = 1
               AutoSizeXY = asNone
               Align = alClient
-              Right = 1
-              Bottom = 1
+              Right = 2147483647
+              Bottom = 2147483647
               UseIFrame = False
               object cAntiAliasing: TTntCheckBox
                 Left = 16
@@ -1295,12 +1295,12 @@ object Tabs: TTabs
               end
             end
             object TabSheet8: TdhPage
-              Left = 1
-              Top = 1
+              Left = 0
+              Top = 0
               AutoSizeXY = asNone
               Align = alClient
-              Right = 1
-              Bottom = 1
+              Right = 0
+              Bottom = 0
               UseIFrame = False
               object dhPanel4: TdhPanel
                 Left = 3
@@ -1592,9 +1592,11 @@ object Tabs: TTabs
               Top = 1
               AutoSizeXY = asNone
               Align = alClient
-              Right = 1
-              Bottom = 1
+              Right = 2147483647
+              Bottom = 2147483647
               UseIFrame = False
+              ExplicitWidth = 100
+              ExplicitHeight = 100
               object Panel3: TMyPanel
                 Left = 256
                 Top = 2
@@ -1902,7 +1904,7 @@ object Tabs: TTabs
             Style.ZIndex = -1
             AutoSizeXY = asY
             Align = alTop
-            Right = 0
+            Right = 2147483647
           end
           object STYLE_Link1: TdhLink
             Left = 0
@@ -1916,7 +1918,7 @@ object Tabs: TTabs
             Use = STYLE_dhLink2
             AutoSizeXY = asXY
             Align = alTop
-            Right = 0
+            Right = 2147483647
             StyleDown.BorderBottom.Style = cbsNone
             StyleDown.ZIndex = 10
             StyleDown.BorderRadius.BottomRight = '0'
@@ -1938,7 +1940,7 @@ object Tabs: TTabs
             Use = STYLE_dhLink2
             AutoSizeXY = asXY
             Align = alTop
-            Right = 0
+            Right = 2147483647
             StyleDown.BorderRight.Style = cbsNone
             StyleDown.ZIndex = 10
             StyleDown.BorderRadius.BottomRight = '0'
@@ -1956,7 +1958,7 @@ object Tabs: TTabs
             Use = STYLE_dhLabel11
             AutoSizeXY = asY
             Align = alTop
-            Right = 0
+            Right = 2147483647
           end
           object STYLE_dhLabel11: TdhLabel
             Left = 0
@@ -1969,7 +1971,7 @@ object Tabs: TTabs
             Style.BorderRadius.All = '5'
             AutoSizeXY = asY
             Align = alTop
-            Right = 0
+            Right = 2147483647
           end
         end
         object IGNORE_dhDirectHTML1: TdhDirectHTML
@@ -4373,9 +4375,9 @@ object Tabs: TTabs
       Caption = 'Change Colors'
       OnClick = mChangeColorsClick
     end
-    object MakeTransparent1: TTntMenuItem
-      Caption = 'Make background color transparent'
-      OnClick = MakeTransparent1Click
+    object mSetBackgroundColorTransparent: TTntMenuItem
+      Caption = 'Set background color transparent'
+      OnClick = mSetBackgroundColorTransparentClick
     end
   end
   object SaveDialog1: TSaveDialog
@@ -4716,8 +4718,9 @@ object Tabs: TTabs
       0000002B010000070043617074696F6E0009006D46756C6C436F707901010000
       002C010000070043617074696F6E0009006D476F746F4D656E75010100000033
       010000070043617074696F6E000900634D656E754175746F0101000000340100
-      00070043617074696F6E0010004D616B655472616E73706172656E7431010100
-      000035010000070043617074696F6E001B006D436F70794F7665725374796C65
-      73546F446F776E5374796C6573010100000036010000070043617074696F6E00}
+      00070043617074696F6E001E006D5365744261636B67726F756E64436F6C6F72
+      5472616E73706172656E74010100000035010000070043617074696F6E001B00
+      6D436F70794F7665725374796C6573546F446F776E5374796C65730101000000
+      36010000070043617074696F6E00}
   end
 end

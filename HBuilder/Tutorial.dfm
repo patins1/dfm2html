@@ -2,7 +2,7 @@ object PageContainer1: TPageContainer1
   Left = -4
   Top = -23
   Caption = 'Tutorial.dfm'
-  ClientHeight = 726
+  ClientHeight = 626
   ClientWidth = 1600
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clBlack
@@ -2500,7 +2500,7 @@ object PageContainer1: TPageContainer1
       Layout = ltLink
       PreferDownStyles = True
       Options = [loDownIfMenu, loDownIfMouseDown, loDownIfURL]
-      Link = 'http://www.google.de'
+      Link = 'http://www.google.com'
     end
     object Link11: TdhLink
       Left = 74
@@ -2512,7 +2512,7 @@ object PageContainer1: TPageContainer1
       Layout = ltText
       PreferDownStyles = True
       Options = [loDownIfMenu, loDownIfMouseDown, loDownIfURL]
-      Link = 'http://www.google.de'
+      Link = 'http://www.google.com'
     end
     object Link12: TdhLink
       Left = 122
@@ -2524,7 +2524,7 @@ object PageContainer1: TPageContainer1
       Layout = ltButton
       PreferDownStyles = True
       Options = [loDownIfMenu, loDownIfMouseDown, loDownIfURL]
-      Link = 'http://www.google.de'
+      Link = 'http://www.google.com'
     end
     object Label25: TdhLabel
       Left = 24

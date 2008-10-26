@@ -346,7 +346,7 @@ object PageContainer2: TPageContainer2
         Style.Effects.Rotation = 120
         AutoSizeXY = asY
         Align = alTop
-        Right = 20
+        Right = 0
       end
       object chapter: TdhLink
         Left = 0
@@ -357,6 +357,7 @@ object PageContainer2: TPageContainer2
         Style.FontWeight = cfwBold
         AutoSizeXY = asXY
         Align = alTop
+        Right = 0
         PreferDownStyles = True
         Options = [loDownIfMenu, loDownIfMouseDown, loDownIfURL]
       end
@@ -368,7 +369,7 @@ object PageContainer2: TPageContainer2
         Style.Padding = 5
         AutoSizeXY = asY
         Align = alTop
-        Right = 16
+        Right = 0
       end
       object Label3: TdhLabel
         Left = 0
@@ -378,6 +379,7 @@ object PageContainer2: TPageContainer2
         Style.Color = Red
         AutoSizeXY = asY
         Align = alTop
+        Right = 0
       end
       object Link2: TdhLink
         Left = 0
@@ -418,7 +420,7 @@ object PageContainer2: TPageContainer2
         Style.TextDecoration = [ctdNone]
         AutoSizeXY = asXY
         Align = alTop
-        Right = 10
+        Right = 0
         StyleOver.BackgroundImage.Data = {
           0A54504E474F626A65637489504E470D0A1A0A0000000D494844520000003200
           00003208060000001E3F88B10000000467414D410000AFC837058AE900000019
@@ -484,7 +486,7 @@ object PageContainer2: TPageContainer2
         Use = Link2
         AutoSizeXY = asXY
         Align = alTop
-        Right = 10
+        Right = 0
         StyleOver.BackgroundImage.Data = {
           0A54504E474F626A65637489504E470D0A1A0A0000000D494844520000003200
           00003208060000001E3F88B1000002CF4944415478DAED965D48145114C7FFB3
@@ -685,7 +687,7 @@ object PageContainer2: TPageContainer2
       Text = 
         'Nota che in questi esempi il font ha l'#39'anti-aliasing. Questa fun' +
         'zione si pu'#242' attivare nella scheda <tab>&nbsp;&nbsp;Effetto&nbsp' +
-        ';&nbsp;&nbsp;</tab>.'
+        ';&nbsp;&nbsp;</tab>'
       Use = pad
       AutoSizeXY = asY
     end
@@ -731,7 +733,7 @@ object PageContainer2: TPageContainer2
         Style.Effects.Alpha = 194
         AutoSizeXY = asY
         Align = alTop
-        Right = 24
+        Right = 0
       end
     end
     object Panel4: TdhPanel
@@ -842,7 +844,7 @@ object PageContainer2: TPageContainer2
       Height = 91
       Text = 
         'Puoi assegnare uno sfondo a qualsiasi oggetto visuale nella sche' +
-        'da <tab>&nbsp;&nbsp;Sfondo&nbsp;&nbsp;</tab> Lo sfondo compare d' +
+        'da <tab>&nbsp;&nbsp;Immag.&nbsp;&nbsp;</tab> Lo sfondo compare d' +
         'ietro qualsiasi contenuto testuale o oggetto figlio. '#10'Puoi affia' +
         'ncare l'#39'immagine di sfondo (<b>tipo=affiancato</b>), adattare l'#39 +
         'immagine di sfondo (<b>tipo=adattato</b>), o dividere l'#39'immagine' +
@@ -910,7 +912,7 @@ object PageContainer2: TPageContainer2
         Style.FontWeight = cfwBold
         AutoSizeXY = asY
         Align = alTop
-        Right = 8
+        Right = 0
       end
       object Link13: TdhLink
         Left = 0
@@ -920,7 +922,7 @@ object PageContainer2: TPageContainer2
         Style.VerticalAlign = 'middle'
         AutoSizeXY = asXY
         Align = alTop
-        Right = 4
+        Right = 0
         Layout = ltButton
         PreferDownStyles = True
         Options = [loDownIfMenu, loDownIfMouseDown, loDownIfURL]
@@ -975,7 +977,7 @@ object PageContainer2: TPageContainer2
       Use = pad
       AutoSizeXY = asY
     end
-    object Button1: TdhLink
+    object Pulsante1: TdhLink
       Left = 40
       Top = 5496
       Width = 74
@@ -990,7 +992,7 @@ object PageContainer2: TPageContainer2
       Layout = ltButton
       PreferDownStyles = True
       Options = [loDownIfMenu, loDownIfMouseDown, loDownIfURL]
-      Link = 'javascript:alert(this.id+'#39' is pressed'#39')'
+      Link = 'javascript:alert(this.id+'#39' '#232' stato premuto'#39')'
     end
     object Text14: TdhLabel
       Left = 40
@@ -1051,7 +1053,7 @@ object PageContainer2: TPageContainer2
       Layout = ltText
       PreferDownStyles = True
       Options = [loDownIfMenu, loDownIfMouseDown, loDownIfURL]
-      Link = 'javascript:alert('#39'hello'#39')'
+      Link = 'javascript:alert('#39'Ciao'#39')'
     end
     object Panel5: TdhPanel
       Left = 136
@@ -1122,11 +1124,10 @@ object PageContainer2: TPageContainer2
     object TdhLabel23: TdhLabel
       Left = 120
       Top = 5720
-      Width = 367
+      Width = 338
       Height = 16
       Text = 'Testo formattato con trasforma-testo = iniziali maiuscole'
       Style.TextTransform = cttCapitalize
-      Style.FontVariant = cfvSmallCaps
       Style.Effects.Enabled = True
       Style.Effects.AntiAliasing = False
       Style.Effects.Text = etInclude
@@ -1551,7 +1552,7 @@ object PageContainer2: TPageContainer2
         Style.LineHeight = '150%'
         AutoSizeXY = asY
         Align = alTop
-        Right = 24
+        Right = 0
       end
     end
     object Text2: TdhLabel
@@ -1636,8 +1637,8 @@ object PageContainer2: TPageContainer2
     object TdhLabel53: TdhLabel
       Left = 120
       Top = 6464
-      Width = 512
-      Height = 58
+      Width = 568
+      Height = 42
       Text = 
         'Se hai dimestichezza con gli stili CSS, puoi definire i tuoi sti' +
         'li, che sono inseriti senza analisi nel file HTML. Il seguente e' +
@@ -1950,7 +1951,7 @@ object PageContainer2: TPageContainer2
       AutoSizeXY = asNone
       Anchors = [akLeft, akTop, akRight]
       Right = 44
-      Action = 'javascript:alert('#39'The form was submitted!'#39')'
+      Action = 'javascript:alert('#39'Il modulo '#232' stato inviato!'#39')'
       Target = '_self'
       object Text18: TdhLabel
         Left = 72
@@ -2112,6 +2113,7 @@ object PageContainer2: TPageContainer2
           Style.TextAlign = ctaRight
           AutoSizeXY = asY
           Align = alTop
+          Right = 0
         end
         object Label2: TdhLabel
           Left = 0
@@ -2124,7 +2126,7 @@ object PageContainer2: TPageContainer2
           Style.BackgroundColor = 16777181
           AutoSizeXY = asY
           Align = alTop
-          Right = 24
+          Right = 0
         end
         object Edit3: TdhEdit
           Left = 0
@@ -2140,7 +2142,7 @@ object PageContainer2: TPageContainer2
           Style.FontWeight = cfwBold
           AutoSizeXY = asY
           Align = alTop
-          Right = 12
+          Right = 0
           Text = 'Next large city:'
         end
         object Submit3: TdhLink
@@ -2172,7 +2174,7 @@ object PageContainer2: TPageContainer2
           Style.FontWeight = cfwBold
           AutoSizeXY = asY
           Align = alTop
-          Right = 6
+          Right = 0
           Items = <>
           SelectType = stDropDown
         end
@@ -2384,6 +2386,7 @@ object PageContainer2: TPageContainer2
         Style.BorderRadius.All = '14'
         AutoSizeXY = asNone
         Align = alTop
+        Right = 0
       end
     end
     object Anchor2: TdhLink
@@ -2502,6 +2505,7 @@ object PageContainer2: TPageContainer2
         Text = 'googlelink'
         AutoSizeXY = asXY
         Align = alTop
+        Right = 0
         PreferDownStyles = True
         Options = [loDownIfMenu, loDownIfMouseDown, loDownIfURL]
         Link = 'http://www.google.de'
@@ -2513,6 +2517,7 @@ object PageContainer2: TPageContainer2
         Text = 'nav_example'
         AutoSizeXY = asXY
         Align = alTop
+        Right = 0
         PreferDownStyles = True
         Options = [loDownIfMenu, loDownIfMouseDown, loDownIfURL]
         LinkAnchor = TdhAnchor8
@@ -2528,7 +2533,7 @@ object PageContainer2: TPageContainer2
       Layout = ltLink
       PreferDownStyles = True
       Options = [loDownIfMenu, loDownIfMouseDown, loDownIfURL]
-      Link = 'http://www.google.de'
+      Link = 'http://www.google.it'
     end
     object Link11: TdhLink
       Left = 74
@@ -2540,7 +2545,7 @@ object PageContainer2: TPageContainer2
       Layout = ltText
       PreferDownStyles = True
       Options = [loDownIfMenu, loDownIfMouseDown, loDownIfURL]
-      Link = 'http://www.google.de'
+      Link = 'http://www.google.it'
     end
     object Link12: TdhLink
       Left = 122
@@ -2552,7 +2557,7 @@ object PageContainer2: TPageContainer2
       Layout = ltButton
       PreferDownStyles = True
       Options = [loDownIfMenu, loDownIfMouseDown, loDownIfURL]
-      Link = 'http://www.google.de'
+      Link = 'http://www.google.it'
     end
     object Label25: TdhLabel
       Left = 24
@@ -2560,25 +2565,25 @@ object PageContainer2: TPageContainer2
       Width = 600
       Height = 227
       Text = 
-        'Con il pulsante&nbsp;<Link13>File..</Link13> puoi caricare un'#39'im' +
-        'magine dal tuo file system locale.<br/> '#10'Puoi anche trascinare (' +
-        'drag&drop) un file di immagine dal file system o da una finestra' +
-        ' di Esplora Risorse '#10'nella casella immagine nella scheda <tab>&n' +
-        'bsp;Sfondo&nbsp;&nbsp;</tab> o direttamente in qualche oggetto. ' +
-        #10'E'#39' possibile creare un'#39'immagine da un colore semi-trasparente o' +
-        ' da un gradiente.'#10'Facendo clic destro sulla casella dell'#39'immagin' +
-        'e, appare un menu contestuale che ti permette di modificare'#10'alcu' +
-        'ni parametri del colore, salvare l'#39'immagine su disco, o catturar' +
-        'e il colore del pixel pi'#249' in basso a sinistra '#10'(che si presume c' +
-        'orrisponda al colore di sfondo dell'#39'immagine) trasparente.'#10'<br/>' +
-        '<br/>'#10'Il documento DFM2HTML salva solo i link alle immagini.  '#10'D' +
-        'ato che precedenti versioni di DFM2HTML salvavano le immagini di' +
-        'rettamente nel documento, '#10'puoi usare il comando <b>Strumenti | ' +
-        'Esternalizza Immagini</b> per trasferire le immagini dal tuo doc' +
-        'umento ad una cartella.'#10'Puoi usare lo stesso comando per spostar' +
-        'e immagini gi'#224' linkate in un'#39'altra cartella. '#10'Puoi vedere la pos' +
-        'izione di un'#39'immagine tramite <nobr><b>Stili | Mostra informazio' +
-        'ni sullo stile</b></nobr>.'
+        'Con il pulsante&nbsp;<Link13>Da file..</Link13> puoi caricare un' +
+        #39'immagine dal tuo file system locale.<br/> '#10'Puoi anche trascinar' +
+        'e (drag&drop) un file di immagine dal file system o da una fines' +
+        'tra di Esplora Risorse '#10'nella casella immagine nella scheda <tab' +
+        '>&nbsp;Immag.&nbsp;&nbsp;</tab> o direttamente in qualche oggett' +
+        'o. '#10'E'#39' possibile creare un'#39'immagine da un colore semi-trasparent' +
+        'e o da un gradiente.'#10'Facendo clic destro sulla casella dell'#39'imma' +
+        'gine, appare un menu contestuale che ti permette di modificare'#10'a' +
+        'lcuni parametri del colore, salvare l'#39'immagine su disco, o cattu' +
+        'rare il colore del pixel pi'#249' in basso a sinistra '#10'(che si presum' +
+        'e corrisponda al colore di sfondo dell'#39'immagine) trasparente.'#10'<b' +
+        'r/><br/>'#10'Il documento DFM2HTML salva solo i link alle immagini. ' +
+        ' '#10'Dato che precedenti versioni di DFM2HTML salvavano le immagini' +
+        ' direttamente nel documento, '#10'puoi usare il comando <b>Strumenti' +
+        ' | Esternalizza Immagini</b> per trasferire le immagini dal tuo ' +
+        'documento ad una cartella.'#10'Puoi usare lo stesso comando per spos' +
+        'tare immagini gi'#224' linkate in un'#39'altra cartella. '#10'Puoi vedere la ' +
+        'posizione di un'#39'immagine tramite <nobr><b>Stili | Mostra informa' +
+        'zioni sullo stile</b></nobr>.'
       Use = pad
       AutoSizeXY = asY
     end
@@ -2628,7 +2633,7 @@ object PageContainer2: TPageContainer2
         Style.VerticalAlign = 'middle'
         AutoSizeXY = asXY
         Align = alTop
-        Right = 18
+        Right = 0
         Layout = ltButton
         PreferDownStyles = True
         Options = [loDownIfMenu, loDownIfMouseDown, loDownIfURL]
@@ -2641,6 +2646,7 @@ object PageContainer2: TPageContainer2
         Style.BackgroundColor = Red
         AutoSizeXY = asY
         Align = alTop
+        Right = 0
       end
     end
     object Label29: TdhLabel
@@ -2740,7 +2746,7 @@ object PageContainer2: TPageContainer2
         Style.LineHeight = '15'
         AutoSizeXY = asY
         Align = alTop
-        Right = 6
+        Right = 0
       end
     end
     object Label35: TdhLabel
@@ -2803,14 +2809,14 @@ object PageContainer2: TPageContainer2
         'hiamate <u>pagine alternative</u>.'#10'<br/>'#10'Puoi aggiungere una pag' +
         'ina ad un oggetto di controllo pagina'#10'<ul>'#10'<li>dal menu contestu' +
         'ale</li>'#10'<li>da <b>Crea nuova pagina</b> nella scheda <tab>&nbsp' +
-        ';&nbsp;Pagine&nbsp;&nbsp;</tab></li>'#10'<li>trascinando un oggetto ' +
+        ';&nbsp;Pagina&nbsp;&nbsp;</tab></li>'#10'<li>trascinando un oggetto ' +
         'pagina dalla Barra Strumenti nell'#39'oggetto di controllo pagina</l' +
         'i>'#10'<li>incollando un oggetto pagina dagli Appunti nell'#39'oggetto d' +
         'i controllo pagina (<b>Modifica | Incolla</b>).</li>'#10'</ul>'#10'Le pa' +
         'gine alternative vengono inserite in pagine HTML diverse per opz' +
         'ione predefinita.'#10'Togliendo la spunta da <nobr><b>Una pagina HTM' +
         'L per oggetto pagina</b></nobr> nella scheda '#10'<tab>&nbsp;&nbsp;P' +
-        'agine&nbsp;&nbsp;</tab>, le pagine vengono contenute all'#39'interno' +
+        'agina&nbsp;&nbsp;</tab>, le pagine vengono contenute all'#39'interno' +
         ' di un'#39'unica pagina HTML. '#10'Questo offre il vantaggio di evitare ' +
         'il caricamento di una nuova pagina HTML nel browser quando l'#39'ute' +
         'nte attiva '#10'un'#39'altra pagina alternativa tramite link, cos'#236' la nu' +
@@ -2835,7 +2841,7 @@ object PageContainer2: TPageContainer2
         '/>'#10'Per opzione predefinita una pagina indipendente non produce u' +
         'n file HTML separato (ad eccezione della pagina principale).'#10'Se ' +
         'metti la spunta su <b>&lt;IFRAME&gt;</b> nella scheda <tab>&nbsp' +
-        ';&nbsp;Pagine&nbsp;&nbsp;&nbsp;</tab>,'#10'il contenuto dell'#39'oggetto' +
+        ';&nbsp;Pagina&nbsp;&nbsp;&nbsp;</tab>,'#10'il contenuto dell'#39'oggetto' +
         ' pagina viene inserito in una pagina HTML separata, che viene in' +
         'corporata da un elemento IFRAME '#10'nella pagina HTML principale. '#10 +
         'Il vantaggio consiste nel fatto che soltanto questa pagina HTML ' +
@@ -2859,16 +2865,15 @@ object PageContainer2: TPageContainer2
     object Label39: TdhLabel
       Left = 24
       Top = 4509
-      Width = 608
+      Width = 624
       Height = 75
       Text = 
-        'Premendo il pulsante Modifica Radius Bordo nella scheda'#10'<tab>&nb' +
-        'sp;&nbsp;&nbsp;Lato&nbsp;&nbsp;&nbsp;</tab> '#10'puoi arrotondare og' +
-        'ni angolo singolarmente o i quattro angoli insieme, '#10'definendo u' +
-        'n parametro radius di arrotondamento. '#10'I radius verticale ed ori' +
-        'zzontale si possono regolare separatamente. '#10'L'#39'esempio che segue' +
-        ' ha un radius di arrotondamento di 20 pixel in entrambe le direz' +
-        'ioni:'
+        'Premendo il pulsante Radius Bordo nella scheda'#10'<tab>&nbsp;&nbsp;' +
+        '&nbsp;Lato&nbsp;&nbsp;&nbsp;</tab> '#10'puoi arrotondare ogni angolo' +
+        ' singolarmente o i quattro angoli insieme, '#10'definendo un paramet' +
+        'ro radius di arrotondamento. '#10'I radius verticale ed orizzontale ' +
+        'si possono regolare separatamente. '#10'L'#39'esempio che segue ha un ra' +
+        'dius di arrotondamento di 20 pixel in entrambe le direzioni:'
       Use = pad
       AutoSizeXY = asY
     end

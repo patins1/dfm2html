@@ -3531,6 +3531,7 @@ begin
   if HasProp(sty+'FontStyle',s) then AddStyle('font-style',GetHyphens(s));
   if HasProp(sty+'FontVariant',s) then AddStyle('font-variant',GetHyphens(s));
   if HasProp(sty+'FontWeight',s) then AddStyle('font-weight',GetHyphens(s));
+  if HasProp(sty+'LetterSpacing',s) then AddStyle('letter-spacing',WithPX(s));
   if HasProp(sty+'LineHeight',s) then AddStyle('line-height',WithPX(s));
   if HasProp(sty+'ListStyleType',s) then AddStyle('list-style-type',GetHyphens(s));
   if HasProp(sty+'Margin',s) then AddStyle('margin',WithPX(s));

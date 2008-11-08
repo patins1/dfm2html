@@ -30,6 +30,9 @@ type
     DKLanguageController1: TDKLanguageController;
     cbDisplay: ThComboBox;
     dhLabel1: TdhLabel;
+    dhLabel2: TdhLabel;
+    CODE_cbLetterSpacing: ThComboBox;
+    procedure CODE_cbLetterSpacingValueChange(Sender: TObject; Clear: Boolean);
     procedure CODE_cbLineHeightValueChange(Sender: TObject; Clear: Boolean);
     procedure eBeforeValueChange(Sender: TObject; Clear: Boolean);
     procedure eAfterValueChange(Sender: TObject; Clear: Boolean);
@@ -62,6 +65,15 @@ uses Unit1,Unit2;
 
 {$R *.dfm}
 
+procedure TMoreMisc.CODE_cbLetterSpacingValueChange(Sender: TObject;
+  Clear: Boolean);
+var i:integer;
+begin
+ for i:=0 to Tabs.Selection.Count-1 do
+  (TObject(Tabs.Selection[i]) as TdhCustomPanel).ActStyle.LetterSpacing:=WithoutPx(GoodValue(CODE_cbLetterSpacing.Text));
+ UpdateMoreDisplay;
+end;
+
 procedure TMoreMisc.CODE_cbLineHeightValueChange(Sender: TObject;
   Clear: Boolean);
 var i:integer;
@@ -72,7 +84,8 @@ begin
 end;
 
 procedure TMoreMisc.UpdateMoreDisplay;
-begin
+begin                                                   
+ CODE_cbLetterSpacing.StoredText:=Tabs.ActStyle.LetterSpacing;
  CODE_cbLineHeight.StoredText:=Tabs.ActStyle.LineHeight;
  eBefore.StoredText:=Tabs.ActStyle.ContentBefore;
  eAfter.StoredText:=Tabs.ActStyle.ContentAfter;
@@ -137,6 +150,7 @@ begin
  with (TObject(Tabs.Selection[i]) as TdhCustomPanel) do
  with ActStyle do
  begin
+  LetterSpacing:='';
   LineHeight:='';
   Visibility:=Low(TCSSVisibility);
   Display:=Low(TCSSDisplay);

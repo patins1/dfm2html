@@ -1,9 +1,8 @@
 object MoreMisc: TMoreMisc
-  Left = 91
-  Top = 91
-  AutoScroll = False
+  Left = 156
+  Top = 144
   Caption = 'Special Styles'
-  ClientHeight = 247
+  ClientHeight = 288
   ClientWidth = 241
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -17,7 +16,7 @@ object MoreMisc: TMoreMisc
   OnCreate = FormCreate
   DesignSize = (
     241
-    247)
+    288)
   PixelsPerInch = 96
   TextHeight = 13
   object Label16: TdhLabel
@@ -72,7 +71,7 @@ object MoreMisc: TMoreMisc
   end
   object Button1: TTntButton
     Left = 80
-    Top = 214
+    Top = 255
     Width = 65
     Height = 25
     Anchors = [akLeft, akBottom]
@@ -80,6 +79,7 @@ object MoreMisc: TMoreMisc
     Caption = 'Close'
     ModalResult = 2
     TabOrder = 1
+    ExplicitTop = 214
   end
   object CODE_cbLineHeight: ThComboBox
     Left = 8
@@ -145,13 +145,14 @@ object MoreMisc: TMoreMisc
   end
   object bClearMore: TTntButton
     Left = 8
-    Top = 214
+    Top = 255
     Width = 65
     Height = 25
     Anchors = [akBottom]
     Caption = 'Reset'
     TabOrder = 6
     OnClick = bClearMoreClick
+    ExplicitTop = 214
   end
   object CODE_eHTMLAttributes: ThComboBox
     Left = 8
@@ -192,6 +193,35 @@ object MoreMisc: TMoreMisc
     Text = 'display:'
     AutoSizeXY = asXY
   end
+  object dhLabel2: TdhLabel
+    Left = 8
+    Top = 208
+    Width = 66
+    Height = 13
+    Text = 'letter-spacing:'
+    AutoSizeXY = asXY
+  end
+  object CODE_cbLetterSpacing: ThComboBox
+    Left = 8
+    Top = 224
+    Width = 105
+    Height = 21
+    DropDownCount = 10
+    ItemHeight = 13
+    TabOrder = 17
+    Items.Strings = (
+      'normal'
+      '1px'
+      '3px'
+      '5px'
+      '7px'
+      '0.1em'
+      '0.3em'
+      '0.5em'
+      '0.7em')
+    ValueChange = CODE_cbLetterSpacingValueChange
+    ChangeReason = 'Change Letter-Spacing'
+  end
   object DKLanguageController1: TDKLanguageController
     IgnoreList.Strings = (
       '*.ChangeReason'
@@ -199,7 +229,7 @@ object MoreMisc: TMoreMisc
     Left = 112
     Top = 112
     LangData = {
-      08004D6F72654D697363010100000001000000070043617074696F6E01100000
+      08004D6F72654D697363010100000001000000070043617074696F6E01120000
       0007004C6162656C31360101000000130000000400546578740007004C616265
       6C33330101000000140000000400546578740007004C6162656C323801010000
       00150000000400546578740007004C6162656C33320101000000160000000400
@@ -211,6 +241,8 @@ object MoreMisc: TMoreMisc
       656D73000A0062436C6561724D6F726501010000001000000007004361707469
       6F6E001400434F44455F6548544D4C4174747269627574657300000900636244
       6973706C617901010000001B00000005004974656D7300080064684C6162656C
-      3101010000001C00000004005465787400}
+      3101010000001C00000004005465787400080064684C6162656C320101000000
+      1D000000040054657874001400434F44455F63624C657474657253706163696E
+      670000}
   end
 end

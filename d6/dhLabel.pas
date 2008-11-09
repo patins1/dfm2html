@@ -2154,6 +2154,7 @@ var bs,vn,ii,toleft,toright,Fit:integer;
     Sz:TSize;
     Canvas:TCanvas;
     pi:^Integer;
+    LetterSpacing,WordSpacing:Integer;
 {$IFNDEF CLX}
     DC: HDC;
 {$ENDIF}   
@@ -2192,6 +2193,15 @@ begin
    UseStyleTree:=StyleTree;
    CSSToFont(Canvas.Font);
 
+
+   if not GetVal(pcLetterSpacing) then
+    Cascaded.LetterSpacing:='normal';
+   LetterSpacing:=GetLetterSpacing(Cascaded.LetterSpacing,GetComputedFontSize);
+
+   if not GetVal(pcWordSpacing) then
+    Cascaded.WordSpacing:='normal';
+   WordSpacing:=GetWordSpacing(Cascaded.WordSpacing,GetComputedFontSize);
+
    if (gltext[vn]<>markupEmptyEle) then
    begin
 {    if AAA and _AntiAliasing then
@@ -2221,6 +2231,11 @@ begin
    for ii:=bs-1 downto vn+1 do
     P[ii]:=P[ii]-P[ii-1];
 {$ENDIF}
+   for ii:=vn to bs-1 do
+    P[ii]:=P[ii]+LetterSpacing;
+   for ii:=vn to bs-1 do
+   if gltext[ii]=' ' then
+    P[ii]:=P[ii]+WordSpacing;
    end else
     P[vn]:=0;
 

@@ -165,6 +165,8 @@ type
   TStates=set of TState;
   TCSSBackgroundPosition=type string;
   TCSSVerticalAlign=type string;
+  TCSSLetterSpacing=type string;
+  TCSSWordSpacing=type string;
   TCSSLineHeight=type string;
   TCSSFontFamily=type string;
   TSlidePixel=1..9999;
@@ -203,10 +205,10 @@ const InvalidCSSPos=maxint;
       InvalidEqArea=maxint;
 
 
-type  TPropChoose=(pcAntiAliasing,pcBackgroundAttachment,pcBackgroundColor,pcBackgroundImage,pcBackgroundPosition,pcBackgroundRepeat,pcBorderColor,pcBorderRadius, pcBorderWidth,pcBorderStyle,pcColor,pcContentAfter,pcContentBefore,pcCursor,pcDirection,pcDisplay,pcEffects,pcFontFamily,pcFontSize,pcFontStyle,pcFontVariant,pcFontWeight,pcLineHeight,pcListStyleType,
-                   pcMargin,pcMinHeight,pcMinWidth,pcPadding,pcTextAlign,pcTextDecoration,pcTextIndent,pcTextTransform,pcTransformationsMatrix,pcVerticalAlign,pcVisibility,pcWhiteSpace,pcZIndex,pcOther);
-var pcChanges:array[TPropChoose] of TWhatChanged=({pcAntiAliasing}[{empty}],{pcBackgroundAttachment}[],{pcBackgroundColor}[wcColor],{pcBackgroundImage}[wcSize,wcText],{pcBackgroundPosition}[],{pcBackgroundRepeat}[],{pcBorderColor}[],{pcBorderRadius}[],{pcBorderWidth}[wcSize,wcText2],{pcBorderStyle}[wcSize,wcText2],{pcColor}[wcFont],{pcContentAfter}[wcText,wcSize],{pcContentBefore}[wcText,wcSize],{pcCursor}[wcCursor],{pcDirection}[wcText2,wcSize],{pcDisplay}[wcText,wcSize],{pcEffects}[wcSize],{pcFontFamily}[wcFont,wcText2,wcSize],{pcFontSize}[wcFont,wcText2,wcSize],{pcFontStyle}[wcSize,wcFont,wcText2],{pcFontVariant}[wcText,wcSize],{pcFontWeight}[wcFont,wcText2,wcSize],{pcLineHeight}[wcText2,wcSize],{pcListStyleType}[],
-                   {pcMargin}[wcSize,wcText2],{pcMinHeight}[wcSize],{pcMinWidth}[wcSize],{pcPadding}[wcSize,wcText2],{pcTextAlign}[wcText2],{pcTextDecoration}[wcFont],{pcTextIndent}[wcText2,wcSize],{pcTextTransform}[wcText,wcSize],{pcTransformationsMatrix}[{empty}],{pcVerticalAlign}[wcText2,wcSize],{pcVisibility}[],{pcWhiteSpace}[wcText,wcSize],{pcZIndex}[wcZIndex],{pcOther}[]);
+type  TPropChoose=(pcAntiAliasing,pcBackgroundAttachment,pcBackgroundColor,pcBackgroundImage,pcBackgroundPosition,pcBackgroundRepeat,pcBorderColor,pcBorderRadius, pcBorderWidth,pcBorderStyle,pcColor,pcContentAfter,pcContentBefore,pcCursor,pcDirection,pcDisplay,pcEffects,pcFontFamily,pcFontSize,pcFontStyle,pcFontVariant,pcFontWeight,pcLetterSpacing,pcLineHeight,pcListStyleType,
+                   pcMargin,pcMinHeight,pcMinWidth,pcPadding,pcTextAlign,pcTextDecoration,pcTextIndent,pcTextTransform,pcTransformationsMatrix,pcVerticalAlign,pcVisibility,pcWhiteSpace,pcWordSpacing,pcZIndex,pcOther);
+var pcChanges:array[TPropChoose] of TWhatChanged=({pcAntiAliasing}[{empty}],{pcBackgroundAttachment}[],{pcBackgroundColor}[wcColor],{pcBackgroundImage}[wcSize,wcText],{pcBackgroundPosition}[],{pcBackgroundRepeat}[],{pcBorderColor}[],{pcBorderRadius}[],{pcBorderWidth}[wcSize,wcText2],{pcBorderStyle}[wcSize,wcText2],{pcColor}[wcFont],{pcContentAfter}[wcText,wcSize],{pcContentBefore}[wcText,wcSize],{pcCursor}[wcCursor],{pcDirection}[wcText2,wcSize],{pcDisplay}[wcText,wcSize],{pcEffects}[wcSize],{pcFontFamily}[wcFont,wcText2,wcSize],{pcFontSize}[wcFont,wcText2,wcSize],{pcFontStyle}[wcSize,wcFont,wcText2],{pcFontVariant}[wcText,wcSize],{pcFontWeight}[wcFont,wcText2,wcSize],{pcLetterSpacing}[wcText2,wcSize],{pcLineHeight}[wcText2,wcSize],{pcListStyleType}[],
+                   {pcMargin}[wcSize,wcText2],{pcMinHeight}[wcSize],{pcMinWidth}[wcSize],{pcPadding}[wcSize,wcText2],{pcTextAlign}[wcText2],{pcTextDecoration}[wcFont],{pcTextIndent}[wcText2,wcSize],{pcTextTransform}[wcText,wcSize],{pcTransformationsMatrix}[{empty}],{pcVerticalAlign}[wcText2,wcSize],{pcVisibility}[],{pcWhiteSpace}[wcText,wcSize],{pcWordSpacing}[wcText2,wcSize],{pcZIndex}[wcZIndex],{pcOther}[]);
 
 
 type
@@ -505,7 +507,9 @@ type
 
     Before,After:string;
     BackgroundPosition:TCSSBackgroundPosition;
-    VerticalAlign:TCSSVerticalAlign;
+    VerticalAlign:TCSSVerticalAlign;   
+    LetterSpacing:TCSSLetterSpacing;
+    WordSpacing:TCSSWordSpacing;
     LineHeight:TCSSLineHeight;
     TextIndent:TCSSTextIndent;
     BorderRadius:string;
@@ -623,6 +627,8 @@ type
     FMinWidth:TCSSCardinal;
     FMinHeight:TCSSCardinal;
     FVerticalAlign:TCSSVerticalAlign;
+    FLetterSpacing:TCSSLetterSpacing;
+    FWordSpacing:TCSSWordSpacing;
     FLineHeight:TCSSLineHeight;
     FDisplay:TCSSDisplay;
     FVisibility:TCSSVisibility;
@@ -649,6 +655,8 @@ type
     procedure SetCursor(Value:TCSSCursor);
     procedure SetBackgroundPosition(Value:TCSSBackgroundPosition);
     procedure SetVerticalAlign(Value:TCSSVerticalAlign);
+    procedure SetLetterSpacing(Value:TCSSLetterSpacing);
+    procedure SetWordSpacing(Value:TCSSWordSpacing);
     procedure SetLineHeight(Value:TCSSLineHeight);
     procedure SetTextIndent(Value:TCSSTextIndent);
     procedure SetZIndex(Value:TCSSInteger);
@@ -793,6 +801,8 @@ type
     property TextIndent:TCSSTextIndent read FTextIndent write SetTextIndent;
 
     property VerticalAlign: TCSSVerticalAlign read FVerticalAlign write SetVerticalAlign;
+    property LetterSpacing: TCSSLetterSpacing read FLetterSpacing write SetLetterSpacing;
+    property WordSpacing: TCSSWordSpacing read FWordSpacing write SetWordSpacing;
     property LineHeight: TCSSLineHeight read FLineHeight write SetLineHeight;
     property Display:TCSSDisplay read FDisplay write SetDisplay default cdsInherit;
     property Visibility:TCSSVisibility read FVisibility write SetVisibility default cviInherit;
@@ -1816,6 +1826,8 @@ function AutoSizeY(Self:TControl):boolean;}
 function CanAutoSizeX(Self:TControl):boolean;
 
 function GetVerticalAlignPixels(const Value:TCSSVerticalAlign; FontAscend,FontHeight,OwnAscend,OwnHeight,OwnLineHeight:integer):integer;
+function GetLetterSpacing(const Value:TCSSLetterSpacing; FontSize:single):Integer;
+function GetWordSpacing(const Value:TCSSWordSpacing; FontSize:single):Integer;
 function GetLineHeight(const Value:TCSSLineHeight; ContentHeight,FontSize:integer):integer;
 function GetTextIndentPixels(Value:TCSSTextIndent; const FontSize:single):integer;
 function GetFontSizePixels(const Value:string; const ParentFontSize:single):single;
@@ -1847,7 +1859,7 @@ procedure SaveGraphic(g:TGraphic; const FileName: string);
 
 procedure _SkipValue(Reader: TReader);
 
-const AutoInherit=[{pcDisplay,}{pcAntiAliasing,}pcDirection,pcTextAlign,{pcWhiteSpace (div, pre true),}pcTextIndent,pcTextTransform,     pcFontSize,pcFontFamily,pcColor,pcFontStyle,pcFontVariant,pcFontWeight,pcLineHeight,pcListStyleType,pcTextDecoration,   pcCursor,pcVisibility];
+const AutoInherit=[{pcDisplay,}{pcAntiAliasing,}pcDirection,pcTextAlign,{pcWhiteSpace (div, pre true),}pcTextIndent,pcTextTransform,     pcFontSize,pcFontFamily,pcColor,pcFontStyle,pcFontVariant,pcFontWeight,pcLetterSpacing,pcLineHeight,pcListStyleType,pcTextDecoration,   pcCursor,pcVisibility,pcWordSpacing];
 
 
 
@@ -2704,11 +2716,22 @@ end;
 
 function MyStrToFloat(s:string):Extended;
 var r:integer;
+    negate:boolean;
 begin
+ if (s<>'') and (s[1]='-') then
+ begin
+  s:=Copy(s,2,MaxInt);
+  negate:=true;
+ end else
+ begin
+  negate:=false;
+ end;
  r:=pos('.',s);
  if r=0 then
   result:=strtoint(s) else
   result:=strtoint(copy(s,1,r-1))+strtoint(copy(s,r+1,maxint))/IntPower(10,length(s)-r);
+ if negate then
+  result:=-result; 
 end;
 
 
@@ -2717,6 +2740,42 @@ begin
  if not SubEqualEnd('em',Value) then
   result:=strtoint(Value) else
   result:=MyStrToFloat(CopyLess(Value,2))*FontSize;
+end;
+
+function GetLetterSpacing(const Value:TCSSLetterSpacing; FontSize:single):Integer;
+begin
+  if Value='normal' then
+   result:=0 else
+   result:=Round(GetLengthPixels(Value,FontSize));
+end;
+
+function CanGetLetterSpacing(var Value:TCSSLetterSpacing):boolean;
+begin
+ Value:=LowerCase(Trim(Value));
+ try
+  GetLetterSpacing(Value,0);
+  result:=true;
+ except
+  result:=false;
+ end;
+end;
+
+function GetWordSpacing(const Value:TCSSWordSpacing; FontSize:single):Integer;
+begin
+  if Value='normal' then
+   result:=0 else
+   result:=Round(GetLengthPixels(Value,FontSize));
+end;
+      
+function CanGetWordSpacing(var Value:TCSSWordSpacing):boolean;
+begin
+ Value:=LowerCase(Trim(Value));
+ try
+  GetWordSpacing(Value,0);
+  result:=true;
+ except
+  result:=false;
+ end;
 end;
 
 function GetTextIndentPixels(Value:TCSSTextIndent; const FontSize:single):integer;
@@ -5274,6 +5333,8 @@ begin
     FFontSize:=EmptyStr;
     FFontFamily:=EmptyStr;
     FVerticalAlign:=EmptyStr;
+    FLetterSpacing:=EmptyStr;
+    FWordSpacing:=EmptyStr;
     FLineHeight:=EmptyStr;
     FTextIndent:=EmptyStr;
     FBackgroundAttachment:=Low(TCSSBackgroundAttachment);
@@ -8311,7 +8372,11 @@ begin
  pcBackgroundPosition:
   result:=Cascaded.BackgroundPosition;
  pcVerticalAlign:
-  result:=WithPX(Cascaded.VerticalAlign);
+  result:=WithPX(Cascaded.VerticalAlign); 
+ pcLetterSpacing:
+  result:=WithPX(Cascaded.LetterSpacing);
+ pcWordSpacing:
+  result:=WithPX(Cascaded.WordSpacing);
  pcLineHeight:
   result:=WithPX(Cascaded.LineHeight);
  pcTextIndent:
@@ -8901,6 +8966,8 @@ begin
     FMinWidth:=s.FMinWidth;
     FMinHeight:=s.FMinHeight;
     FVerticalAlign:=s.FVerticalAlign;
+    FLetterSpacing:=s.FLetterSpacing;
+    FWordSpacing:=s.FWordSpacing;
     FLineHeight:=s.FLineHeight;
     FDisplay:=s.FDisplay;
     FListStyleType:=s.FListStyleType;
@@ -8966,6 +9033,8 @@ begin
     if (c.FMinWidth<>vsrInherit) xor sub then FMinWidth:=s.FMinWidth;
     if (c.FMinHeight<>vsrInherit) xor sub then FMinHeight:=s.FMinHeight;
     if (c.FVerticalAlign<>EmptyStr) xor sub then FVerticalAlign:=s.FVerticalAlign;
+    if (c.FLetterSpacing<>EmptyStr) xor sub then FLetterSpacing:=s.FLetterSpacing;
+    if (c.FWordSpacing<>EmptyStr) xor sub then FWordSpacing:=s.FWordSpacing;
     if (c.FLineHeight<>EmptyStr) xor sub then FLineHeight:=s.FLineHeight;
     if (c.FDisplay<>Low(TCSSDisplay)) xor sub then FDisplay:=s.FDisplay;
     if (c.FVisibility<>Low(TCSSVisibility)) xor sub then FVisibility:=s.FVisibility;
@@ -8989,13 +9058,29 @@ begin
  pc(pcVerticalAlign);
 end;
 
+procedure TStyle.SetLetterSpacing(Value:TCSSLetterSpacing);
+begin
+ if (Value<>EmptyStr) and not CanGetLetterSpacing(Value) then
+  raise WException.Create(WFormat(QUOTEINVALIDVALUE_STR,[Value]));
+ FLetterSpacing:=Value;
+ pc(pcLetterSpacing);
+end;
+
+procedure TStyle.SetWordSpacing(Value:TCSSWordSpacing);
+begin
+ if (Value<>EmptyStr) and not CanGetWordSpacing(Value) then
+  raise WException.Create(WFormat(QUOTEINVALIDVALUE_STR,[Value]));
+ FWordSpacing:=Value;
+ pc(pcWordSpacing);
+end;
+
 procedure TStyle.SetLineHeight(Value:TCSSLineHeight);
 begin
  if (Value<>EmptyStr) and not CanGetLineHeight(Value) then
   raise WException.Create(WFormat(QUOTEINVALIDVALUE_STR,[Value]));
  FLineHeight:=Value;
  pc(pcLineHeight);
-end;
+end;   
 
 procedure TStyle.SetTextIndent(Value:TCSSTextIndent);
 begin
@@ -9247,6 +9332,18 @@ begin
  if FVerticalAlign<>EmptyStr then
  begin
   Cascaded.VerticalAlign:=FVerticalAlign;
+  Result:=True;
+ end;
+ pcLetterSpacing:
+ if FLetterSpacing<>EmptyStr then
+ begin
+  Cascaded.LetterSpacing:=FLetterSpacing;
+  Result:=True;
+ end;
+ pcWordSpacing:
+ if FWordSpacing<>EmptyStr then
+ begin
+  Cascaded.WordSpacing:=FWordSpacing;
   Result:=True;
  end;
  pcLineHeight:

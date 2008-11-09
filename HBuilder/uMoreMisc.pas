@@ -32,6 +32,9 @@ type
     dhLabel1: TdhLabel;
     dhLabel2: TdhLabel;
     CODE_cbLetterSpacing: ThComboBox;
+    CODE_cbWordSpacing: ThComboBox;
+    dhLabel3: TdhLabel;
+    procedure CODE_cbWordSpacingValueChange(Sender: TObject; Clear: Boolean);
     procedure CODE_cbLetterSpacingValueChange(Sender: TObject; Clear: Boolean);
     procedure CODE_cbLineHeightValueChange(Sender: TObject; Clear: Boolean);
     procedure eBeforeValueChange(Sender: TObject; Clear: Boolean);
@@ -83,9 +86,19 @@ begin
  UpdateMoreDisplay;
 end;
 
+procedure TMoreMisc.CODE_cbWordSpacingValueChange(Sender: TObject;
+  Clear: Boolean);
+var i:integer;
+begin
+ for i:=0 to Tabs.Selection.Count-1 do
+  (TObject(Tabs.Selection[i]) as TdhCustomPanel).ActStyle.WordSpacing:=WithoutPx(GoodValue(CODE_cbWordSpacing.Text));
+ UpdateMoreDisplay;
+end;
+
 procedure TMoreMisc.UpdateMoreDisplay;
-begin                                                   
- CODE_cbLetterSpacing.StoredText:=Tabs.ActStyle.LetterSpacing;
+begin
+ CODE_cbLetterSpacing.StoredText:=Tabs.ActStyle.LetterSpacing;   
+ CODE_cbWordSpacing.StoredText:=Tabs.ActStyle.WordSpacing;
  CODE_cbLineHeight.StoredText:=Tabs.ActStyle.LineHeight;
  eBefore.StoredText:=Tabs.ActStyle.ContentBefore;
  eAfter.StoredText:=Tabs.ActStyle.ContentAfter;
@@ -151,6 +164,7 @@ begin
  with ActStyle do
  begin
   LetterSpacing:='';
+  WordSpacing:='';
   LineHeight:='';
   Visibility:=Low(TCSSVisibility);
   Display:=Low(TCSSDisplay);

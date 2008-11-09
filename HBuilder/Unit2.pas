@@ -3551,7 +3551,7 @@ begin
  if result then
  with (TObject(Selection[i]) as TdhCustomPanel) do
  with ActStyle do
- result:=(LetterSpacing=EmptyStr) and (LineHeight=EmptyStr) and (Visibility=Low(TCSSVisibility)) and (Display=Low(TCSSDisplay)) and (ContentBefore=EmptyStr) and (ContentAfter=EmptyStr) and (Other=EmptyStr) and (HTMLAttributes=EmptyStr);
+ result:=(LetterSpacing=EmptyStr) and (WordSpacing=EmptyStr) and (LineHeight=EmptyStr) and (Visibility=Low(TCSSVisibility)) and (Display=Low(TCSSDisplay)) and (ContentBefore=EmptyStr) and (ContentAfter=EmptyStr) and (Other=EmptyStr) and (HTMLAttributes=EmptyStr);
 end;
 
 function TTabs.IsAllMoreCleared:boolean;

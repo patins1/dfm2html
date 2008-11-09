@@ -79,7 +79,6 @@ object MoreMisc: TMoreMisc
     Caption = 'Close'
     ModalResult = 2
     TabOrder = 1
-    ExplicitTop = 214
   end
   object CODE_cbLineHeight: ThComboBox
     Left = 8
@@ -152,7 +151,6 @@ object MoreMisc: TMoreMisc
     Caption = 'Reset'
     TabOrder = 6
     OnClick = bClearMoreClick
-    ExplicitTop = 214
   end
   object CODE_eHTMLAttributes: ThComboBox
     Left = 8
@@ -222,6 +220,35 @@ object MoreMisc: TMoreMisc
     ValueChange = CODE_cbLetterSpacingValueChange
     ChangeReason = 'Change Letter-Spacing'
   end
+  object CODE_cbWordSpacing: ThComboBox
+    Left = 128
+    Top = 224
+    Width = 105
+    Height = 21
+    DropDownCount = 10
+    ItemHeight = 13
+    TabOrder = 18
+    Items.Strings = (
+      'normal'
+      '8px'
+      '13px'
+      '20px'
+      '32px'
+      '0.5em'
+      '1em'
+      '1.5em'
+      '2em')
+    ValueChange = CODE_cbWordSpacingValueChange
+    ChangeReason = 'Change Word-Spacing'
+  end
+  object dhLabel3: TdhLabel
+    Left = 128
+    Top = 208
+    Width = 66
+    Height = 13
+    Text = 'word-spacing:'
+    AutoSizeXY = asXY
+  end
   object DKLanguageController1: TDKLanguageController
     IgnoreList.Strings = (
       '*.ChangeReason'
@@ -229,7 +256,7 @@ object MoreMisc: TMoreMisc
     Left = 112
     Top = 112
     LangData = {
-      08004D6F72654D697363010100000001000000070043617074696F6E01120000
+      08004D6F72654D697363010100000001000000070043617074696F6E01140000
       0007004C6162656C31360101000000130000000400546578740007004C616265
       6C33330101000000140000000400546578740007004C6162656C323801010000
       00150000000400546578740007004C6162656C33320101000000160000000400
@@ -243,6 +270,7 @@ object MoreMisc: TMoreMisc
       6973706C617901010000001B00000005004974656D7300080064684C6162656C
       3101010000001C00000004005465787400080064684C6162656C320101000000
       1D000000040054657874001400434F44455F63624C657474657253706163696E
-      670000}
+      6700001200434F44455F6362576F726453706163696E670000080064684C6162
+      656C3301010000001E00000004005465787400}
   end
 end

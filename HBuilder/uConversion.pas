@@ -3558,7 +3558,8 @@ begin
   if HasProp(sty+'TextIndent',s) then AddStyle('text-indent',WithPX(s));
   if HasProp(sty+'TextTransform',s) then AddStyle('text-transform',GetHyphens(s));
   if HasProp(sty+'VerticalAlign',s) then AddStyle('vertical-align',WithPX(s));
-  if HasProp(sty+'WhiteSpace',s) then AddStyle('white-space',GetHyphens(s));
+  if HasProp(sty+'WhiteSpace',s) then AddStyle('white-space',GetHyphens(s));  
+  if HasProp(sty+'WordSpacing',s) then AddStyle('word-spacing',WithPX(s));
 
   if HasProp(sty+'Cursor',s) then AddStyle('cursor',GetHyphens(s));
   if HasProp(sty+'Display',s) then AddStyle('display',GetHyphens(s));

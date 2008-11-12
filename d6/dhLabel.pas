@@ -196,6 +196,8 @@ type
     function ListStyleType:TCSSListStyleType;
     function TextAlign:TCSSTextAlign;
     function TextIndent:integer;
+    function LetterSpacing: Integer;
+    function WordSpacing: Integer;
     function AntiAliasing:boolean;
     function TextOnly:boolean; override;
     function TextExclude:boolean; override;
@@ -2143,6 +2145,20 @@ begin
   inc(result,Pall[vn]);
 end;
 
+function TdhCustomLabel.LetterSpacing: Integer;
+begin
+   if not GetVal(pcLetterSpacing) then
+    Cascaded.LetterSpacing:='normal';
+   LetterSpacing:=GetLetterSpacing(Cascaded.LetterSpacing,GetComputedFontSize);
+end;
+
+function TdhCustomLabel.WordSpacing: Integer;
+begin
+   if not GetVal(pcWordSpacing) then
+    Cascaded.WordSpacing:='normal';
+   WordSpacing:=GetWordSpacing(Cascaded.WordSpacing,GetComputedFontSize);
+end;
+
 
 //Calcs width for character gltext[i]:
 //Ppre[i]+P[i]+Psuc[i]=Pall[i]
@@ -2154,7 +2170,7 @@ var bs,vn,ii,toleft,toright,Fit:integer;
     Sz:TSize;
     Canvas:TCanvas;
     pi:^Integer;
-    LetterSpacing,WordSpacing:Integer;
+    _LetterSpacing,_WordSpacing:Integer;
 {$IFNDEF CLX}
     DC: HDC;
 {$ENDIF}   
@@ -2193,14 +2209,8 @@ begin
    UseStyleTree:=StyleTree;
    CSSToFont(Canvas.Font);
 
-
-   if not GetVal(pcLetterSpacing) then
-    Cascaded.LetterSpacing:='normal';
-   LetterSpacing:=GetLetterSpacing(Cascaded.LetterSpacing,GetComputedFontSize);
-
-   if not GetVal(pcWordSpacing) then
-    Cascaded.WordSpacing:='normal';
-   WordSpacing:=GetWordSpacing(Cascaded.WordSpacing,GetComputedFontSize);
+   _LetterSpacing:=LetterSpacing;
+   _WordSpacing:=WordSpacing;
 
    if (gltext[vn]<>markupEmptyEle) then
    begin
@@ -2232,10 +2242,10 @@ begin
     P[ii]:=P[ii]-P[ii-1];
 {$ENDIF}
    for ii:=vn to bs-1 do
-    P[ii]:=P[ii]+LetterSpacing;
+    P[ii]:=P[ii]+_LetterSpacing;
    for ii:=vn to bs-1 do
    if gltext[ii]=' ' then
-    P[ii]:=P[ii]+WordSpacing;
+    P[ii]:=P[ii]+_WordSpacing;
    end else
     P[vn]:=0;
 
@@ -3404,7 +3414,7 @@ begin
     ActTopGraph.Font.Assign(Canvas.Font);
     OldClipRect:=ActTopGraph.ClipRect;
     ActTopGraph.ClipRect:=ClpRct;
-    ActTopGraph.RenderTextExtended(TextRct.Left, TextRct.Top, copy(gltext,vn,bs-vn), AALevel,{ $FF000000 or }Color32(Canvas.Font.Color),Point(TextRct.Right-TextRct.Left,TextRct.Bottom-TextRct.Top),AddP(bs-1,bs));
+    ActTopGraph.RenderTextExtended(TextRct.Left, TextRct.Top, copy(gltext,vn,bs-vn), AALevel,{ $FF000000 or }Color32(Canvas.Font.Color),Point(TextRct.Right-TextRct.Left,TextRct.Bottom-TextRct.Top),AddP(bs-1,bs),LetterSpacing,WordSpacing);
     ActTopGraph.ClipRect:=OldClipRect;
    end;
 

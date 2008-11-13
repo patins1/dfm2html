@@ -2238,11 +2238,16 @@ begin
 
   assert(not WithMeta);
   WithMeta:=_WithMeta;
-  CopyList:=PrepareCopyList(CopyDependencies,FChildList);
   try
-   _CopyComponents(Owner, CopyList);
+   CopyList:=PrepareCopyList(CopyDependencies,FChildList);
+   IsCopying:=true;
+   try
+    _CopyComponents(Owner, CopyList);
+   finally
+    IsCopying:=false;
+    CopyList.Free;
+   end;
   finally
-   CopyList.Free;
    WithMeta:=false;
   end;
 end;

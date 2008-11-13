@@ -5275,7 +5275,7 @@ begin
   try
    if f.HasFile then
    begin
-    f.Name:=ExtractPureFileName(f.FileName);
+    f.Name:=ExtractPureFileName(f.GetAbsolutePath);
    end;
   except
   end;
@@ -5293,7 +5293,7 @@ begin
  f:=TObject(Selection[0]) as TdhFile;
  if f.HasFile then
  begin
-  OpenDialog1.FileName:=f.FileName
+  OpenDialog1.FileName:=f.GetAbsolutePath
  end else
  begin                                                         
   OpenDialog1.FileName:=EmptyStr;
@@ -5361,6 +5361,7 @@ begin
  cLoop.Checked:=f.Loop;
  lFileInfo.Visible:=f.HasFile;
  cLinked.Checked:=f.Linked;
+ cLinked.Visible:=not f.Linked;
  if f.HasFile then
  begin
   fsize:=f.FileSize;
@@ -5381,7 +5382,7 @@ end;
 
 procedure TTabs.bGoToFileClick(Sender: TObject);
 begin
- Browse((TObject(Selection[0]) as TdhFile).FileName,EmptyStr,true,true);
+ Browse((TObject(Selection[0]) as TdhFile).GetAbsolutePath,EmptyStr,true,true);
 end;
 
 procedure TTabs.cFileUsageClick(Sender: TObject);
@@ -5402,7 +5403,7 @@ begin
    begin
     f:=(TObject(Selection[i]) as TdhFile);
     if f.HasFile and f.Linked then
-     f.LoadFromFile(f.FileName,f.Linked);
+     f.LoadFromFile(f.GetAbsolutePath,f.Linked);
    end;
   UpdateFileDisplay;
   Changed('Reload File Contents');

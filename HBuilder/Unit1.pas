@@ -360,6 +360,7 @@ type TFakeWinControl=class(TWinControl);
 function ExtractUrlAimedFilenameToWindowsFilename(const URL: string): string;
 function GetLanguageDFM(const prefix:String):String;
 function RootDir(const s:string): string;
+function isAbsolute(s:String):boolean;
 
 var
   CF_COMPONENTS: Word;
@@ -1713,6 +1714,25 @@ begin
  Close;
 end;
 
+
+function AsString(graphic:TGraphic):String;
+var
+  Stream: TStringStream;
+begin
+  Stream := TStringStream.Create('');
+  try
+    graphic.SaveToStream(Stream);
+    Result:=Stream.DataString;
+  finally
+    Stream.Free;
+  end;
+end;
+
+function PureFileName(const FileName:String):String;
+begin
+ Result:=ExtractFileName(GoodPathDelimiters(FileName));
+end;
+
 procedure TdhMainForm.mExternalizeImagesClick(Sender: TObject);
 var Directory:{$IFDEF CLX}widestring{$ELSE}string{$ENDIF};
     sw:string;
@@ -1760,8 +1780,8 @@ begin
        if pn.StyleArr[state]<>nil then with pn.StyleArr[state] do
        if BackgroundImage.HasPicture then
        begin
-        FileName:=sw+ProposedBackgroundFilename;
-        if BackgroundImage.HasPath and (LowerCase(BackgroundImage.Path)<>LowerCase(FileName)) then
+        FileName:=sw+PureFileName(ProposedBackgroundFilename);
+        if BackgroundImage.HasPath and (LowerCase(BackgroundImage.GetAbsolutePath)<>LowerCase(FileName)) then
         begin
          anyFilesToShift:=true;
          break;
@@ -1787,8 +1807,8 @@ begin
        if pn.StyleArr[state]<>nil then with pn.StyleArr[state] do
        if BackgroundImage.HasPicture then
        begin
-        FileName:=sw+ProposedBackgroundFilename;
-        if not BackgroundImage.HasPath and FileExists(FileName) or anyFilesToShift and BackgroundImage.HasPath and (LowerCase(BackgroundImage.Path)<>LowerCase(FileName)) and FileExists(FileName) then
+        FileName:=sw+PureFileName(ProposedBackgroundFilename);
+        if not BackgroundImage.HasPath and FileExists(FileName) and (StringFromFile(FileName)<>AsString(BackgroundImage.RequestGraphic)) or anyFilesToShift and BackgroundImage.HasPath and (LowerCase(BackgroundImage.GetAbsolutePath)<>LowerCase(FileName)) and FileExists(FileName) and (StringFromFile(FileName)<>StringFromFile(BackgroundImage.GetAbsolutePath)) then
         begin
           if MessageDlg(DKFormat(EXTERNALIZEDIMAGEALREADYEXISTS,FileName),mtConfirmation,[mbYes, mbNo], 0)<>mrYes then exit;
         end;
@@ -1805,15 +1825,15 @@ begin
        if pn.StyleArr[state]<>nil then with pn.StyleArr[state] do
        if BackgroundImage.HasPicture then
        begin
-        FileName:=sw+ProposedBackgroundFilename;;
+        FileName:=sw+PureFileName(ProposedBackgroundFilename);
         if not BackgroundImage.HasPath then
         begin
          SaveGraphic(BackgroundImage.RequestGraphic,FileName);
          LoadImage(FileName);
         end else
-        if anyFilesToShift and (LowerCase(BackgroundImage.Path)<>LowerCase(FileName)) then
+        if anyFilesToShift and (LowerCase(BackgroundImage.GetAbsolutePath)<>LowerCase(FileName)) then
         begin
-         funcutils.StringToFile(FileName,StringFromFile(BackgroundImage.Path));
+         funcutils.StringToFile(FileName,StringFromFile(BackgroundImage.GetAbsolutePath));
          LoadImage(FileName);
         end;
        end;
@@ -2211,7 +2231,7 @@ end;
 
 procedure TdhMainForm.mTutorialClick(Sender: TObject);
 begin
- Open(GetLanguageDFM('Tutorial'),false);
+ Open(GetLanguageDFM('Tutorial'+PathDelim+'Tutorial'),false);
 end;
 
 function TdhMainForm.GetTopLevelDomain:String;
@@ -3012,7 +3032,7 @@ end;
 
 procedure TdhMainForm.MenuTutorial1Click(Sender: TObject);
 begin
- Open(GetLanguageDFM('TutorialMenus'),false);
+ Open(GetLanguageDFM('TutorialMenus'+PathDelim+'TutorialMenus'),false);
 end;
 
 initialization

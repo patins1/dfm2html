@@ -37,7 +37,7 @@ type
   end;
 
 
-  TPageContainer = class(TMyForm,IDesignerHook)
+  TPageContainer = class(TMyForm,IDesignerHook,IRelativePathProvider)
   private
     { Private declarations }
     FFileName:String;
@@ -85,6 +85,8 @@ type
     { Public declarations }
     LiveReason:string;
     MySiz: TMySiz;
+    function GetRelativePath(const Path:String):String;
+    function GetAbsolutePath(const Path:String):String;
     procedure SetDesigning(Designing,Transient:boolean);
     constructor Create(AOwner:TComponent); override;
     destructor Destroy; override;
@@ -163,6 +165,8 @@ procedure GeneralPasteComponentsStream(AOwner:TComponent; AParent:TWinControl; P
 
 procedure glLockWindowUpdate(Lock:boolean; var lLock:boolean);
 procedure InternalReadDFM(Content:string; Instance:TComponent);
+
+var IsCopying:Boolean=False;
 
 implementation
 
@@ -1048,27 +1052,30 @@ begin
  try
  LastAct:=Tabs.PageControl1.ActivePage;
  sl:=MySiz.GetSelectionIDs;
- MySiz.ClearSelection;
- for i:=ControlCount-1 downto 0 do
- if not (Controls[i] is TMySiz) then
- with Controls[i] do
- begin
-  self.RemoveControl(Controls[i]);
-  Free;
- end;
-//  Controls[i].RemoveComponent;
+ try
+  MySiz.ClearSelection;
+  for i:=ControlCount-1 downto 0 do
+  if not (Controls[i] is TMySiz) then
+  with Controls[i] do
+  begin
+   self.RemoveControl(Controls[i]);
+   Free;
+  end;
+ //  Controls[i].RemoveComponent;
 
- InternalReadDFM(Content,Self);
+  InternalReadDFM(Content,Self);
 
- BorderStyle:={$IFDEF CLX}fbsSizeable{$ELSE}bsSizeable{$ENDIF};
- if not ForPreview then
-  FormStyle:=fsMDIChild;
- ActiveControl:=nil;
- SetDesigning(not _RuntimeMode,false);
- UpdateControlState;
- MySiz.BringToFront;
- MySiz.AddSelectionByIDs(sl);
+  BorderStyle:={$IFDEF CLX}fbsSizeable{$ELSE}bsSizeable{$ENDIF};
+  if not ForPreview then
+   FormStyle:=fsMDIChild;
+  ActiveControl:=nil;
+  SetDesigning(not _RuntimeMode,false);
+  UpdateControlState;
+  MySiz.BringToFront;
+  MySiz.AddSelectionByIDs(sl);
+ finally
  sl.Free;
+ end;
  dhMainForm.UpdateCommands(true,true);
  if (LastAct<>nil) and LastAct.TabVisible then
   Tabs.PageControl1.ActivePage:=LastAct;
@@ -1087,7 +1094,7 @@ var c1,c2:int64;
     lLock:boolean;
 begin
 // QueryPerformanceCounter(c1);
- 
+
       Include(FFormState, fsCreating);
       try
  {glLockWindowUpdate(true,lLock);
@@ -1096,10 +1103,10 @@ begin
  try
  LateCreateForm(TFormWarnings,FormWarnings);
  WarningsCount:=FormWarnings.Memo1.Lines.Count;;
- ReadDFM(StringFromFile(AFileName));
  if not SetUntitled then
   FileName := AFileName else
   FileName := DefaultFileName;
+ ReadDFM(StringFromFile(AFileName));
 // dhMainForm.Realign;
  Application.ProcessMessages; //damit width sich anpaﬂt
  //Self.Font.Assign(FuncSettings.DefaultFont);
@@ -1167,7 +1174,7 @@ begin
   Caption:=DKFormat(UNTITLED) else
   Caption := ExtractFileName(FileName);
 end;
-                                
+
 procedure TPageContainer.ActDFM();
 var r:integer;
 begin
@@ -1461,7 +1468,7 @@ begin
      '{$R *.dfm}'+#13#10+
      #13#10+
      'end.';
-  StringToFile(ExtractFileDir(Filename)+'/'+PureFileName+'.pas',s);
+  StringToFile(ExtractFileDir(Filename)+PathDelim+PureFileName+'.pas',s);
  { for i:=0 to ControlCount-1 do
   begin
 
@@ -1481,9 +1488,12 @@ begin
  step.page:=apage.Name;
  step.scrollpos:=Point(mysiz.FindBody.HorzPosition,mysiz.FindBody.VertPosition);
  sl:=mysiz.GetSelectionIDs;
- if sl.Count<>0 then
-  step.selection:=sl[sl.Count-1];
- sl.Free;
+ try
+  if sl.Count<>0 then
+   step.selection:=sl[sl.Count-1];
+ finally
+  sl.Free;
+ end;
  result:=step;
 end;
 
@@ -2149,6 +2159,33 @@ procedure TPageContainer.CMMouseLeave(var Message: TMessage);
 begin
  inherited;
  MySiz.DesignMouseMove; //clear name and pos statusbar fields
+end;
+
+function TPageContainer.GetRelativePath(const Path:String):String;
+var Dir:String;
+begin
+ if isAbsolute(Path) and not IsUntitled and not IsCopying then
+ begin
+  Dir:=GoodLocalPath(ExtractFileDir(Filename));
+  if SubEqual(GoodPathDelimiters(LowerCase(Dir)),GoodPathDelimiters(LowerCase(Path))) then
+  begin
+   Result:=Copy(Path,Length(Dir)+1,MaxInt);
+   Exit;
+  end;
+ end;
+ Result:=Path;
+end;
+
+function TPageContainer.GetAbsolutePath(const Path:String):String;
+var Dir:String;
+begin
+ if not isAbsolute(Path) and not IsUntitled then
+ begin   
+  Dir:=GoodLocalPath(ExtractFileDir(Filename));
+  Result:=Dir+Path;
+  Exit;
+ end;
+ Result:=Path;
 end;
 
 end.

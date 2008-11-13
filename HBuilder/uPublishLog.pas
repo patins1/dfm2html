@@ -174,8 +174,11 @@ begin
   if (RqType=ftpCwdAsync) then
   begin
    FtpClient1.HostFileName:=Copy(FtpClient1.HostDirName,1,AdvPos('/',FtpClient1.HostDirName,2)-1);
-   FtpClient1.MkdAsync;
-   Exit;
+   if FtpClient1.HostFileName<>'' then
+   begin
+    FtpClient1.MkdAsync;
+    Exit;
+   end;
   end;
   Log(FtpClient1.ErrorMessage,clRed);
   bStopTransfer.Click;

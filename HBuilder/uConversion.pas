@@ -372,10 +372,11 @@ end;
 function StringFromFile(const FileName:string):string;
 begin
  with TFileStream.create(FileName,fmOpenRead) do
- begin
+ try
   SetLength(result,Size);
   if Size<>0 then
    ReadBuffer(result[1],Size);
+ finally
   Free;
  end;
 end;
@@ -990,18 +991,21 @@ var d:TStringStream;
     HasSrc:boolean;
 begin
    f:=TStringStream.Create(Content);
-
-   if TestStreamFormat(f)=sofText then //we need not Text but Resource format
-    f:=_ObjectTextToResource(f);
-
-
-   //convert to dfm to xml
-   d:=TStringStream.Create('');
-   AllObjs:='';
-   ObjectResourceToXML(f,d);
-   f.Free;
-   dd:=d.DataString;
-   d.Free;
+   try
+    if TestStreamFormat(f)=sofText then //we need not Text but Resource format
+     f:=_ObjectTextToResource(f);
+    //convert to dfm to xml
+    d:=TStringStream.Create('');
+    try
+     AllObjs:='';
+     ObjectResourceToXML(f,d);
+     dd:=d.DataString;
+    finally
+     d.Free;
+    end;
+   finally
+    f.Free;
+   end;
          {
    i:=1;
    while bAdvPos(i2,'type="',dd,i) and bAdvPos(i,'"',dd,i2+length('type="')) do
@@ -2613,28 +2617,28 @@ begin
 
  vv:=TList.Create;
  try
- NeedButton:=false;
- BeforeWrite(nest);
- BeforeWrite2(nest);
- BeforeWrite3(nest);       
- if not ForCSSFile then BeforeWrite4(nest);
- if not ForCSSFile then WriteNs(nest,1);
+  NeedButton:=false;
+  BeforeWrite(nest);
+  BeforeWrite2(nest);
+  BeforeWrite3(nest);
+  if not ForCSSFile then BeforeWrite4(nest);
+  if not ForCSSFile then WriteNs(nest,1);
 
- Need1by1:=AdvPos('onebyone.gif',ns)>0;
- EverNeeded1by1:=EverNeeded1by1 or Need1by1;     
- if ForCSSFile then Need1by1:=EverNeeded1by1;
+  Need1by1:=AdvPos('onebyone.gif',ns)>0;
+  EverNeeded1by1:=EverNeeded1by1 or Need1by1;
+  if ForCSSFile then Need1by1:=EverNeeded1by1;
 
- NeedSplit:=AdvPos('class="fill'{e.g. class="fill Panel1_nm"},ns)>0;
- EverNeededSplit:=EverNeededSplit or NeedSplit;
- if ForCSSFile then NeedSplit:=EverNeededSplit;
+  NeedSplit:=AdvPos('class="fill'{e.g. class="fill Panel1_nm"},ns)>0;
+  EverNeededSplit:=EverNeededSplit or NeedSplit;
+  if ForCSSFile then NeedSplit:=EverNeededSplit;
 
- for i:=0 to gln.Count-1 do
-  NeedButton:=NeedButton or TNest(gln.Objects[i]).Show and (TNest(gln.Objects[i]).tag='button');
- EverNeededButton:=EverNeededButton or NeedButton;   
- if ForCSSFile then NeedButton:=EverNeededButton;
+  for i:=0 to gln.Count-1 do
+   NeedButton:=NeedButton or TNest(gln.Objects[i]).Show and (TNest(gln.Objects[i]).tag='button');
+  EverNeededButton:=EverNeededButton or NeedButton;
+  if ForCSSFile then NeedButton:=EverNeededButton;
 
- if not ForCSSFile and (cssfile<>'') then exit;
- StyleArrange; //wegen NeedOwnClass
+  if not ForCSSFile and (cssfile<>'') then exit;
+  StyleArrange; //wegen NeedOwnClass
  finally
   FreeAndNil(vv);
  end;
@@ -2950,17 +2954,19 @@ var //childNodes:IDOMNodeList;
 
 begin
  PropVals2:=TMyStringList.Create;
- while docg.Over('<property name="') and docg.SaveOverPos('" value="',_nam) and docg.SaveOverPos('"',_val) and docg.OverPos('/>') and docg.overShit do
- begin
-   Props.AddObject(_nam,Pointer(Props.Count));
-   PropVals2.Add(_val);
+ try
+  while docg.Over('<property name="') and docg.SaveOverPos('" value="',_nam) and docg.SaveOverPos('"',_val) and docg.OverPos('/>') and docg.overShit do
+  begin
+    Props.AddObject(_nam,Pointer(Props.Count));
+    PropVals2.Add(_val);
+  end;
+  Props.CaseSensitive:=true;
+  Props.Sorted:=true;
+  for i:=0 to Props.Count-1 do
+   PropVals.Add(PropVals2[Integer(Props.Objects[i])]);
+ finally
+   PropVals2.free;
  end;
- 
- Props.CaseSensitive:=true;
- Props.Sorted:=true;
- for i:=0 to Props.Count-1 do
-  PropVals.Add(PropVals2[Integer(Props.Objects[i])]);
- PropVals2.free;
  {if HasProp('FinalHeight',s) and Props.IndexOf('Height',i) then
   PropVals[i]:=s;     }
 end;
@@ -3517,15 +3523,18 @@ begin
   if HasProp(sty+'FontFamily',s) then
   begin
    sl:=GetFontList(s);
-   s:='';
-   for i:=0 to sl.Count-1 do
-   begin
-    if Pos(' ',sl[i])<>0 then
-     s:=s+'"'+sl[i]+'"'+',' else
-     s:=s+sl[i]+',';
+   try
+    s:='';
+    for i:=0 to sl.Count-1 do
+    begin
+     if Pos(' ',sl[i])<>0 then
+      s:=s+'"'+sl[i]+'"'+',' else
+      s:=s+sl[i]+',';
+    end;
+    AddStyle('font-family',copy(s,1,length(s)-1));
+   finally
+    sl.Free;
    end;
-   AddStyle('font-family',copy(s,1,length(s)-1));
-   sl.Free;
   end;
   if HasProp(sty+'FontSize',s) then AddStyle('font-size',WithPX(s));
   if HasProp(sty+'FontStyle',s) then AddStyle('font-style',GetHyphens(s));
@@ -3652,10 +3661,10 @@ begin
  try
   glStyle:='';
   id:='';
-  IsTop:=docg.Point=1{Node.parentNode.nodeType=9}; 
+  IsTop:=docg.Point=1{Node.parentNode.nodeType=9};
   assert(docg.SaveOverPos('<object ',id));
   if docg.Over('name="') then
-   assert(docg.SaveOverPos('" ',id));     
+   assert(docg.SaveOverPos('" ',id));
   assert(docg.OverPos('classname="'));
   assert(docg.SaveOverPos('">',ClassName));
   docg.overShit;
@@ -3867,22 +3876,25 @@ begin
    if HasProp('Items.Strings',s) then
    begin
     sl:=TStringList.Create;
-    sl.Text:=s;
-    if not HasProp('ItemIndex',ItemIndex) then
-     ItemIndex:=-1;
-    for i:=0 to sl.Count-1 do
-    begin
-     if i=ItemIndex then
-      AddAttr('selected','selected');
-     s:=sl[i];
-     //if ((classname='TdhComboBox') or (classname='TdhListBox')) and GetRealBoxText(s,boxval,s) then
-     // AddAttr('value',boxval);
+    try
+     sl.Text:=s;
+     if not HasProp('ItemIndex',ItemIndex) then
+      ItemIndex:=-1;
+     for i:=0 to sl.Count-1 do
+     begin
+      if i=ItemIndex then
+       AddAttr('selected','selected');
+      s:=sl[i];
+      //if ((classname='TdhComboBox') or (classname='TdhListBox')) and GetRealBoxText(s,boxval,s) then
+      // AddAttr('value',boxval);
 
-     DoEle('option',false,false);
-     PureWrite(s);
-     EndEle('select');
+      DoEle('option',false,false);
+      PureWrite(s);
+      EndEle('select');
+     end;
+    finally
+     sl.Free;
     end;
-    sl.Free;
    end;
   end else
   if (ClassName='TLabel') or (ClassName='TRxLabel') then
@@ -4458,17 +4470,13 @@ begin
     EndEle('iframe');
 
  finally
- if snest<>nil then
-  EndEle('x');
-
-    {
- if Props<>nil then
- assert(Props=nil);}
- Props.Free;
- PropVals.Free;
- if not docg.Over('</object>') then
- assert(docg.Over('</object>'),'Object '''+id+''' has faulty content!');
- docg.overShit;
+  if snest<>nil then
+   EndEle('x');
+  Props.Free;
+  PropVals.Free;
+  if not docg.Over('</object>') then
+  assert(docg.Over('</object>'),'Object '''+id+''' has faulty content!');
+  docg.overShit;
  end;
 
 end;
@@ -4984,30 +4992,35 @@ begin
 
    docg.init(Content);
 //   QueryPerformanceCounter(Int64((@c1)^));
-   TransNode(nil);
-//   QueryPerformanceCounter(Int64((@c2)^));
+   try
+    TransNode(nil);
+ //   QueryPerformanceCounter(Int64((@c2)^));
 
-   gln:=TMyStringList.Create;
-//   gln.CaseSensitive:=true;
+    gln:=TMyStringList.Create;
+    try
+ //   gln.CaseSensitive:=true;
+     SetGln(gnest);
+     gln.Sorted:=true;
+     SetUse;
+     MenusAndLinks;
+     FlattenStyle;
+     UnsetUse;
 
-   SetGln(gnest);
-   gln.Sorted:=true;
-   SetUse;
-   MenusAndLinks;
-   FlattenStyle;
-   UnsetUse;
+     Shift(gnest);
 
-   Shift(gnest);
-
-   SetPure(gnest);
-   if gnest.Count>=1 then
-    PureFileName:=TNest(gnest[0]).PureFileName;
-   Ranking;
-   {PureFileName:=}SaveNested(gnest);
-   FreeAndNil(gln);
-{   FreeAndNil(glMainIDs);
-   FreeAndNil(GrobList);}
-   FreeAndNil(gnest);
+     SetPure(gnest);
+     if gnest.Count>=1 then
+      PureFileName:=TNest(gnest[0]).PureFileName;
+     Ranking;
+     {PureFileName:=}SaveNested(gnest);
+    finally
+     FreeAndNil(gln);
+    end;
+ {   FreeAndNil(glMainIDs);
+    FreeAndNil(GrobList);}
+   finally
+    FreeAndNil(gnest);
+   end;
 end;
 {
 procedure DoConvert(const PureFileName,FileName:string);
@@ -5028,8 +5041,7 @@ begin
 end;
 
 procedure EndConverting;
-begin
- 
+begin       
   FreeAndNil(WrittenPages);
   FreeAndNil(WrittenObjs);
   FreeAndNil(Warnings);

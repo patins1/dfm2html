@@ -630,7 +630,7 @@ begin
  IniFile:=TMemIniFile.Create(RootDir(configFile));
 
  with IniFile do
- begin
+ try
   Clear;
   WriteString('Program','V','1.2');
   //WriteString('Program','R',EncodePsw(RegString));
@@ -672,6 +672,7 @@ begin
   WriteInteger('General','LANGID',_LANGID);
 
   UpdateFile;
+ finally 
   Free;
  end;
 
@@ -1538,11 +1539,14 @@ var NeedSave:boolean;
 begin
  glSaveBin(calc_crc32_String(s),FileName,AbsoluteFileName,false,EmptyStr,NeedSave,true);
  if NeedSave then
- with TFileStream.create(AbsoluteFileName,fmCreate) do
  begin
-  if s<>EmptyStr then
-   WriteBuffer(s[1],length(s));
-  Free;
+  with TFileStream.create(AbsoluteFileName,fmCreate) do
+  try
+   if s<>EmptyStr then
+    WriteBuffer(s[1],length(s));
+  finally
+   Free;
+  end;
   glAfterSaveBin;
  end;
 end;
@@ -1662,22 +1666,25 @@ begin
  GenerateTimer.Tag:=0;
  //GenerateTimer.Enabled:=true;
  try
- glSaveBin:=SaveBin;
- try
- Content:=Act.GetDFMStr(false,true);
- StartConverting(BaseDir,FuncSettings.Compress,nil);
- DoConvertContent(PureFileName,content);
- if View then
- if Warnings.Count<>0 then
- begin
-  LateCreateForm(TFormWarnings,FormWarnings);
-  FormWarnings.Memo1.Lines.Assign(Warnings);
-  FormWarnings.Show;
- end;
- EndConverting;
- finally
-  glSaveBin:=nil;
- end;
+  glSaveBin:=SaveBin;
+  try
+   Content:=Act.GetDFMStr(false,true);
+   StartConverting(BaseDir,FuncSettings.Compress,nil);
+   try
+    DoConvertContent(PureFileName,content);
+    if View then
+    if Warnings.Count<>0 then
+    begin
+     LateCreateForm(TFormWarnings,FormWarnings);
+     FormWarnings.Memo1.Lines.Assign(Warnings);
+     FormWarnings.Show;
+    end;
+   finally
+    EndConverting;
+   end;
+  finally
+   glSaveBin:=nil;
+  end;
  finally
   GenerateTimer.Enabled:=false;
   StatusBar.Panels[StatusBar_Mode].Text:=sStatus;
@@ -1958,9 +1965,12 @@ begin
  //if (cbName.ItemIndex<>-1) and (cbName.Items[cbName.ItemIndex]<>cbName.Text) then exit;
  if cbName.DroppedDown or (Act=nil) or _RuntimeMode then exit;
  sl:=TStringList.Create;
- sl.Add(cbName.Text);
- Act.MySiz.AddSelectionByIDs(sl);
- sl.Free;
+ try
+  sl.Add(cbName.Text);
+  Act.MySiz.AddSelectionByIDs(sl);
+ finally
+  sl.Free;
+ end;
 end;
 
 procedure TdhMainForm.PageControl1Changing(Sender: TObject;
@@ -2683,11 +2693,14 @@ begin
  //Show;
  //LateCreateForm(TStartUp,StartUp);
  StartUp:=TStartUp.Create(Self);
+ try
 {$IFDEF FINALV}
  //StartUp.cTemplate.Visible:=false;
 {$ENDIF}
- su:=StartUp.FirstAction;
- FreeAndNil(StartUp);
+  su:=StartUp.FirstAction;
+ finally
+  FreeAndNil(StartUp);
+ end;
 {$ENDIF}
  glLockWindowUpdate(true,lLock);
  try

@@ -5,7 +5,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
   VertScrollBar.Tracking = True
   Anchors = [akLeft, akTop, akRight, akBottom]
   Caption = 'webpage.dfm'
-  ClientHeight = 626
+  ClientHeight = 726
   ClientWidth = 1600
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clBlack
@@ -34,7 +34,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
     Right = 0
     Bottom = 0
     UseIFrame = False
-    Title = 'HTML Editor DFM2HTML Version 3.2'
+    Title = 'HTML Editor DFM2HTML Version 3.3'
     OutputDirectory = 'www2\'
     MetaAuthor = 'J'#246'rg Kiegeland'
     MetaDescription = 'An WYSIWYG HTML editor'
@@ -42,7 +42,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
       'HTML editor, web page maker, web design creator, anti aliasing, ' +
       'mouse over buttons, WYSIWYG, absolute positioning, site manageme' +
       'nt, authoring'
-    FTPURL = 'ftp://p8288468:5yMTPDtZ@kiegeland.com/dfm2html_de/'
+    FTPURL = 'ftp://p8288468:5yMTPDtZ@kiegeland.com/dfm2html/'
     HTTPURL = 'http://www.dfm2html.com/'
     GeneratedImageFolder = 'images'
     GeneratedCSSFile = 'dfm2html'
@@ -101,7 +101,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
             Left = 16
             Top = 48
             Width = 456
-            Height = 346
+            Height = 330
             Text = 
               '<en>'#10'DFM2HTML is an easy to use WYSIWYG HTML editor. Sophisticat' +
               'ed web sites can be composed within minutes using drag&drop and ' +
@@ -166,7 +166,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
           object Link21: TdhLink
             Left = 32
             Top = 424
-            Width = 110
+            Width = 104
             Height = 16
             Text = #9658' <en>Version history</en><de>Versionshistorie</de>'
             Style.TextDecoration = [ctdNone]
@@ -352,8 +352,8 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
             Width = 27
             Height = 22
             AutoSizeXY = asXY
+            FileName = 'CreateInstall\dfm2html_inst.exe'
             Linked = True
-            FileName = 'C:\HBuilder\CreateInstall\dfm2html_inst.exe'
           end
           object pad_file: TdhFile
             Left = 224
@@ -361,8 +361,8 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
             Width = 27
             Height = 22
             AutoSizeXY = asXY
+            FileName = 'pad_file.xml'
             Linked = True
-            FileName = 'C:\HBuilder\pad_file.xml'
           end
           object CurrentVersion: TdhFile
             Left = 320
@@ -370,8 +370,8 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
             Width = 27
             Height = 22
             AutoSizeXY = asXY
+            FileName = 'CurrentVersion.txt'
             Linked = True
-            FileName = 'C:\HBuilder\CurrentVersion.txt'
           end
         end
         object register: TdhPage
@@ -4765,7 +4765,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
               Height = 100
               Text = 'Label45'
               ImageType = bitImage
-              Style.BackgroundImage.Path = 'C:\HBuilder\DFM2HTMLBANNER.gif'
+              Style.BackgroundImage.Path = 'DFM2HTMLBANNER.gif'
               Style.BackgroundImage.State = isAnimatedGIF
               Style.BackgroundImage.Width = 100
               Style.BackgroundImage.Height = 100
@@ -9179,7 +9179,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
             Text = 
               '<en><code>New in version 3.3:'#10'* Italian language is added '#10'  (th' +
               'anks to Rinaldo M. aka Whiteshark!)'#10'* Fixed bug with IE7 and aut' +
-              'o-width buttons</code></en>'#10'<de><code>Neu in Version 3.2:'#10'* Ital' +
+              'o-width buttons</code></en>'#10'<de><code>Neu in Version 3.3:'#10'* Ital' +
               'ienische Sprache hinzugef'#252'gt'#10'  (dank Rinaldo M. aka Whiteshark!)' +
               #10'* Bug-Fix f'#252'r IE7 und auto-width-Buttons</code></de>'
             Style.PaddingRight = 2
@@ -9347,8 +9347,8 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
             Width = 27
             Height = 22
             AutoSizeXY = asXY
+            FileName = 'iFrames.dfm'
             Linked = True
-            FileName = 'C:\HBuilder\iFrames.dfm'
           end
         end
         object tips: TdhPage
@@ -9784,7 +9784,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
             Top = 16
             Width = 224
             Height = 22
-            Text = 'Download DFM2HTML 3.2'
+            Text = 'Download DFM2HTML 3.3'
             Style.FontSize = '19'
             AutoSizeXY = asXY
             PreferDownStyles = True
@@ -9799,7 +9799,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
             Text = 
               '<en><code>New in version 3.3:'#10'* Italian language is added '#10'  (th' +
               'anks to Rinaldo M. aka Whiteshark!)'#10'* Fixed bug with IE7 and aut' +
-              'o-width buttons</code></en>'#10'<de><code>Neu in Version 3.2:'#10'* Ital' +
+              'o-width buttons</code></en>'#10'<de><code>Neu in Version 3.3:'#10'* Ital' +
               'ienische Sprache hinzugef'#252'gt'#10'  (dank Rinaldo M. aka Whiteshark!)' +
               #10'* Bug-Fix f'#252'r IE7 und auto-width-Buttons</code></de>'
             Style.PaddingRight = 2
@@ -9935,7 +9935,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
         object Link7: TdhLink
           Left = 0
           Top = 59
-          Height = 45
+          Height = 29
           Text = '<en>User Pages</en><de>Benutzer- seiten</de>'
           Use = Link3
           AutoSizeXY = asY
@@ -9947,7 +9947,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
         end
         object Link4: TdhLink
           Left = 0
-          Top = 223
+          Top = 207
           Height = 29
           Text = '<en>Contact</en><de>Impressum</de>'
           Use = Link3
@@ -9960,8 +9960,8 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
         end
         object TdhAnchor2: TdhLink
           Left = 0
-          Top = 252
-          Height = 45
+          Top = 236
+          Height = 29
           Text = '<en>Disclaimer</en>'#10'<de>Haftungs- ausschluss</de>'
           Use = Link3
           AutoSizeXY = asY
@@ -9976,7 +9976,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
         end
         object Link19: TdhLink
           Left = 0
-          Top = 149
+          Top = 133
           Height = 29
           Text = 'FAQ'
           Use = Link3
@@ -9989,7 +9989,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
         end
         object Link20: TdhLink
           Left = 0
-          Top = 104
+          Top = 88
           Height = 45
           Text = '<en>Version history</en>'#10'<de>Versions- historie</de>'
           Use = Link3
@@ -10002,7 +10002,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
         end
         object Link13: TdhLink
           Left = 0
-          Top = 178
+          Top = 162
           Height = 45
           Text = 'Tips & Tricks'
           Use = Link3
@@ -10015,7 +10015,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
         end
         object Link40: TdhLink
           Left = 0
-          Top = 297
+          Top = 265
           Height = 45
           Text = '<en>More Programs</en><de>Weitere Programme</de>'
           Use = Link3
@@ -10179,18 +10179,20 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
         Top = 0
         Height = 16
         Text = 'de'
-        Style.Display = cdsInline
+        Style.Display = cdsNone
         AutoSizeXY = asY
         Align = alTop
+        Right = 0
       end
       object en: TdhLabel
         Left = 0
         Top = 16
         Height = 16
         Text = 'en'
-        Style.Display = cdsNone
+        Style.Display = cdsInline
         AutoSizeXY = asY
         Align = alTop
+        Right = 0
       end
     end
   end

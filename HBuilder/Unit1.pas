@@ -1767,6 +1767,7 @@ begin
   ShowMessage(DKFormat(NOIMAGETOEXTERNALIZE));
   exit;
  end;
+ Directory:=ExtractFilePath(Act.FileName);
  if SelectDirectory('','',Directory) then
  begin
    sw:=GoodLocalPath(Directory);
@@ -2908,27 +2909,27 @@ end;
 
 procedure TdhMainForm.m5minGuideClick(Sender: TObject);
 begin
- Open(GetLanguageDFM('Guide'),false);
+ Open(GetLanguageDFM('Guide'+PathDelim+'Guide'),false);
 end;
 
 procedure TdhMainForm.mBasicExampleClick(Sender: TObject);
 begin
- Open(RootDir('GuideExample.dfm'),false);
+ Open(RootDir('GuideExamples'+PathDelim+'GuideExample.dfm'),false);
 end;
 
 procedure TdhMainForm.mBasicExamplewithFooterClick(Sender: TObject);
 begin
- Open(RootDir('GuideExampleWithFooter.dfm'),false);
+ Open(RootDir('GuideExamples'+PathDelim+'GuideExampleWithFooter.dfm'),false);
 end;
 
 procedure TdhMainForm.mBasicExamplewithStylesheetClick(Sender: TObject);
 begin
- Open(RootDir('GuideExampleWithStylesheet.dfm'),false);
+ Open(RootDir('GuideExamples'+PathDelim+'GuideExampleWithStylesheet.dfm'),false);
 end;
 
 procedure TdhMainForm.mBasicExamplewithFramesLayoutClick(Sender: TObject);
 begin
- Open(RootDir('GuideExampleWithFramesLayout.dfm'),false);
+ Open(RootDir('GuideExamples'+PathDelim+'GuideExampleWithFramesLayout.dfm'),false);
 end;
 
 procedure TdhMainForm.DEBUG_OnLoad1Click(Sender: TObject);

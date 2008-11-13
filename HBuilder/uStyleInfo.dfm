@@ -1,7 +1,6 @@
 object StyleInfo: TStyleInfo
   Left = 221
   Top = 150
-  AutoScroll = False
   Caption = 'Style information'
   ClientHeight = 168
   ClientWidth = 307
@@ -27,6 +26,7 @@ object StyleInfo: TStyleInfo
     ReadOnly = True
     ScrollBars = ssVertical
     TabOrder = 0
+    WordWrap = False
   end
   object DKLanguageController1: TDKLanguageController
     Left = 144

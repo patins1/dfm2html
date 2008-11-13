@@ -475,8 +475,11 @@ type
     procedure LoadFromFile(const Filename: string);
     procedure Assign(Source: TPersistent); override;
     property OnChange: TNotifyEvent read FOnChange write FOnChange;
+    procedure SetPath(const Path:String);
+    function GetRelativePath:String;
+    function GetAbsolutePath:String;
   published
-    property Path:String read FPath write FPath;
+    property Path:String read GetRelativePath write SetPath;
     property State:TImageState read FImageState write FImageState stored StoreCalculations;
     property Width:Integer read FWidth write FWidth stored StoreCalculations;
     property Height:Integer read FHeight write FHeight stored StoreCalculations;
@@ -599,7 +602,7 @@ type
     IsNewPaddingStored,IsNewMarginStored,IsNewBorderStored:boolean;
 
     _BasePadding,_BaseMargin,_BaseBorder:TRect;
-                           
+
     FDirection: TCSSDirection;
     FBefore: String;
     FAfter: String;
@@ -2024,7 +2027,7 @@ function GetPixelCombineNormal(F: TColor32; B: TColor32; M: TColor32=255):TColor
 Function ApplyDark(Color:TColor; HowMuch:Byte):TColor;
 
 function WFormat(const c:WideString; const Args: array of const):WideString;
-              
+
 function WideStringReplace(const S, OldPattern, NewPattern: WideString;
   Flags: TReplaceFlags): WideString;
 
@@ -2037,6 +2040,13 @@ type WException=class (Exception)
     constructor Create(const Value:WideString);
     property Message: WideString read WMessage write WMessage;
 end;
+
+type IRelativePathProvider=interface ['{F26D0C91-801B-44A4-86CC-0D265F94F7C6}']
+    function GetRelativePath(const Path:String):String;
+    function GetAbsolutePath(const Path:String):String;
+end;
+
+function findIRelativePathProvider(C:TControl):IRelativePathProvider;
 
 //var _GetDefFontCharSet:TFontCharset=DEFAULT_CHARSET;
 
@@ -2254,7 +2264,7 @@ begin
   FreeAndNil(FPictureID);
   FPictureID:=TPictureID.Create;
   try
-    FPictureID.LoadFromFile(FPath);
+    FPictureID.LoadFromFile(GetAbsolutePath);
     FPictureID.OnChange:=Changed;
   except
     FreeAndNil(FPictureID);
@@ -2315,7 +2325,7 @@ begin
   begin
    if TLocationImage(Source).HasPath then
    begin
-    Path:=TLocationImage(Source).Path;
+    Path:=TLocationImage(Source).GetAbsolutePath;
    end;
    Source:=TLocationImage(Source).FPictureID;
   end;
@@ -5578,6 +5588,54 @@ begin
  result:=RecursiveShowing(self.Owner.Owner);
 end;
 
+function findIRelativePathProvider(C:TControl):IRelativePathProvider;
+begin
+ while C<>nil do
+ begin
+  if C.GetInterface(IRelativePathProvider, Result) then
+   Exit;
+  C:=C.Parent;
+ end;
+ Result:=nil;
+end;
+
+procedure TLocationImage.SetPath(const Path:String);
+var RelativePathProvider:IRelativePathProvider;
+begin
+  RelativePathProvider:=findIRelativePathProvider(self.Owner.Owner);
+  if RelativePathProvider<>nil then
+  begin
+   FPath:=RelativePathProvider.GetAbsolutePath(Path);
+   Exit;
+  end;
+  FPath:=Path;
+end;
+
+function TLocationImage.GetRelativePath:String;
+var RelativePathProvider:IRelativePathProvider;
+begin
+  RelativePathProvider:=findIRelativePathProvider(self.Owner.Owner);
+  if RelativePathProvider<>nil then
+  begin
+   Result:=RelativePathProvider.GetRelativePath(FPath);
+   Exit;
+  end;
+  Result:=FPath;
+end;
+
+function TLocationImage.GetAbsolutePath:String;
+var RelativePathProvider:IRelativePathProvider;
+begin
+  RelativePathProvider:=findIRelativePathProvider(self.Owner.Owner);
+  if RelativePathProvider<>nil then
+  begin
+   Result:=RelativePathProvider.GetAbsolutePath(FPath);
+   Exit;
+  end;
+  Result:=FPath;
+end;
+
+
 function TStyle.IsStyleStored:boolean;
 var PropChoose:TPropChoose;
 begin
@@ -8356,7 +8414,7 @@ begin
   result:='(defined)';
  pcBackgroundImage{,pcImage,pcEdgeImage,pcStretchImage}:
  if Cascaded.Picture.HasPath then
-  result:='('+Cascaded.Picture.Path+')'{+_if(Cascaded.Picture.PictureID.ReferenceCount>0,'['+inttostr(Cascaded.Picture.PictureID.ReferenceCount)+' occurences]',EmptyStr)} else
+  result:='('+Cascaded.Picture.GetAbsolutePath+')'{+_if(Cascaded.Picture.PictureID.ReferenceCount>0,'['+inttostr(Cascaded.Picture.PictureID.ReferenceCount)+' occurences]',EmptyStr)} else
   result:='('+UpperCase(Copy(Cascaded.Picture.GraphicExtension,2,maxint))+' image)'{+_if(Cascaded.Picture.PictureID.ReferenceCount>0,'['+inttostr(Cascaded.Picture.PictureID.ReferenceCount)+' occurences]',EmptyStr)};
   //result:='('+Cascaded.Picture.Graphic.ClassName+')';
  pcBorderColor,pcBackgroundColor,pcColor:

@@ -27,8 +27,6 @@ type
     FLinked: boolean;
     procedure WriteData(Stream: TStream);
     procedure ReadData(Stream: TStream);
-    procedure WriteFromFile(Writer: TWriter);
-    procedure ReadFromFile(Reader: TReader);
     function PrepareHTMLFile: boolean;
     procedure WriteHTMLFileName(Writer: TWriter);
     procedure SetUsage(const Value: TFileUsage);
@@ -42,7 +40,6 @@ type
     function ProposedFileName: String;
     function HasFile:Boolean;
     function FileSize:integer;
-    function FileName:String;
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
     procedure Invalidate; override;
@@ -52,8 +49,11 @@ type
     procedure GetAutoRect(AllowModifyX,AllowModifyY:boolean; var NewWidth, NewHeight: Integer); override;
     function EffectsAllowed: boolean; override;
 
+    procedure SetPath(const Path:String);
+    function GetRelativePath:String;
+    function GetAbsolutePath:String;
   published
-
+    property FileName:String read GetRelativePath write SetPath;
     property Usage:TFileUsage read FUsage write SetUsage default fuPure;
     property Loop:boolean read FLoop write FLoop stored IsLoopStored;
     property Linked:boolean read FLinked write SetLinked;
@@ -154,7 +154,6 @@ var ReallyFile,InvalidFile:boolean;
 begin
   inherited;
   Filer.DefineBinaryProperty('Data', ReadData, WriteData, HasFile and not Linked);
-  Filer.DefineProperty('FileName', ReadFromFile, WriteFromFile, HasFile);
   if not WithMeta and (Filer is TWriter) then exit;
   ReallyFile:=not (csLoading in ComponentState) and Assigned(glSaveBin) and PrepareHTMLFile;
   InvalidFile:=false;
@@ -313,21 +312,6 @@ begin
  result:=FFileName<>'';
 end;
 
-procedure TdhFile.ReadFromFile(Reader: TReader);
-begin
- FFileName:=Reader.ReadString;
-end;
-
-procedure TdhFile.WriteFromFile(Writer: TWriter);
-begin
- Writer.WriteString(FFileName);
-end;
-
-function TdhFile.FileName: String;
-begin
- result:=FFileName;
-end;
-
 procedure TdhFile.WriteHTMLFileName(Writer: TWriter);
 begin
  Writer.WriteString(HTMLFileName);
@@ -374,7 +358,7 @@ begin
   exit;
  end;
  try
-    AssignFile(f, FileName);
+    AssignFile(f, GetAbsolutePath);
     Reset(f);
     try
       Result := System.FileSize(f);
@@ -397,7 +381,7 @@ begin
  begin
   if not (csLoading in ComponentState) and HasFile then
   begin
-   LoadFromFile(FileName,Value);
+   LoadFromFile(GetAbsolutePath,Value);
   end else
    FLinked := Value;
  end;
@@ -408,7 +392,7 @@ begin
  if Linked then
  begin
   try
-   FileData:=StringFromFile(FileName);
+   FileData:=StringFromFile(GetAbsolutePath);
   except
    Result:=false;
    exit;
@@ -418,6 +402,42 @@ begin
   FileData:=FData;
  end;
  result:=true;
+end;
+
+procedure TdhFile.SetPath(const Path:String);
+var RelativePathProvider:IRelativePathProvider;
+begin
+  RelativePathProvider:=findIRelativePathProvider(self);
+  if RelativePathProvider<>nil then
+  begin
+   FFileName:=RelativePathProvider.GetAbsolutePath(Path);
+   Exit;
+  end;
+  FFileName:=Path;
+end;
+
+function TdhFile.GetRelativePath:String;
+var RelativePathProvider:IRelativePathProvider;
+begin
+  RelativePathProvider:=findIRelativePathProvider(self);
+  if RelativePathProvider<>nil then
+  begin
+   Result:=RelativePathProvider.GetRelativePath(FFileName);
+   Exit;
+  end;
+  Result:=FFileName;
+end;
+
+function TdhFile.GetAbsolutePath:String;
+var RelativePathProvider:IRelativePathProvider;
+begin
+  RelativePathProvider:=findIRelativePathProvider(self);
+  if RelativePathProvider<>nil then
+  begin
+   Result:=RelativePathProvider.GetAbsolutePath(FFileName);
+   Exit;
+  end;
+  Result:=FFileName;
 end;
 
 initialization

@@ -2,7 +2,7 @@ object PageContainer1: TPageContainer1
   Left = -4
   Top = -23
   Caption = 'Tutorial.dfm'
-  ClientHeight = 726
+  ClientHeight = 626
   ClientWidth = 1600
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clBlack
@@ -2537,26 +2537,26 @@ object PageContainer1: TPageContainer1
         'et of HTML pages are generated and stored in a directory of your' +
         ' local disk. '#10'The local directory can be changed at <b>Publish <' +
         '/b>| <b>Page Properties</b> &rarr; <b>Local Directory</b>. A rel' +
-        'ative path is interpreted relative to the directory where your D' +
-        'FM2HTML project file is stored.'#10'<br/><br/>'#10'HTML pages, which are' +
-        ' accessed online using a HTTP address, are usually stored on a F' +
-        'TP server.'#10'DFM2HTML can automatically upload generated files to ' +
-        'a FTP directory, which you can define at <b>Publish </b>| <b>Pag' +
-        'e Properties</b> &rarr; <b>FTP Directory</b> (you have to find o' +
-        'ut about the FTP connection parameters at your hosting service).' +
-        ' '#10'After filling out the FTP connection parameters, you can publi' +
-        'sh the project by <b>Publish </b>| <b>Publish</b>. '#10'To open the ' +
-        'web browser from within DFM2HTML and browse the web site online,' +
-        ' you can define the HTTP address at <b>Publish </b>| <b>Page Pro' +
-        'perties</b> &rarr; <b>HTTP URL</b> and then choose <b>Publish </' +
-        'b>| <b>Browse Remote</b>.'#10'<br/><br/>'#10'The same HTML files are gen' +
-        'erated for both a preview and FTP publishing.'#10'Only files which h' +
-        'ave changed since the last upload are uploaded to the FTP server' +
-        ' (this behavior can be deactivated in <b>Tools</b> | <b>Options<' +
-        '/b> &rarr; <b>Publish</b> &rarr; <b>Use Smart Publishing</b>).'#10'F' +
-        'iles which are generated for a preview can also be uploaded to a' +
-        ' FTP server with external FTP programs or can in general be stor' +
-        'ed on any medium with a directory structure (like a CD-ROM).'
+        'ative path is interpreted relative to the temporary directory.'#10'<' +
+        'br/><br/>'#10'HTML pages, which are accessed online using a HTTP add' +
+        'ress, are usually stored on a FTP server.'#10'DFM2HTML can automatic' +
+        'ally upload generated files to a FTP directory, which you can de' +
+        'fine at <b>Publish </b>| <b>Page Properties</b> &rarr; <b>FTP Di' +
+        'rectory</b> (you have to find out about the FTP connection param' +
+        'eters at your hosting service). '#10'After filling out the FTP conne' +
+        'ction parameters, you can publish the project by <b>Publish </b>' +
+        '| <b>Publish</b>. '#10'To open the web browser from within DFM2HTML ' +
+        'and browse the web site online, you can define the HTTP address ' +
+        'at <b>Publish </b>| <b>Page Properties</b> &rarr; <b>HTTP URL</b' +
+        '> and then choose <b>Publish </b>| <b>Browse Remote</b>.'#10'<br/><b' +
+        'r/>'#10'The same HTML files are generated for both a preview and FTP' +
+        ' publishing.'#10'Only files which have changed since the last upload' +
+        ' are uploaded to the FTP server (this behavior can be deactivate' +
+        'd in <b>Tools</b> | <b>Options</b> &rarr; <b>Publish</b> &rarr; ' +
+        '<b>Use Smart Publishing</b>).'#10'Files which are generated for a pr' +
+        'eview can also be uploaded to a FTP server with external FTP pro' +
+        'grams or can in general be stored on any medium with a directory' +
+        ' structure (like a CD-ROM).'
       Use = pad
       AutoSizeXY = asY
     end

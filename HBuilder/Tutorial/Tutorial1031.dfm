@@ -2,7 +2,7 @@ object PageContainer3: TPageContainer3
   Left = -4
   Top = -23
   Caption = 'TutorialGerman.dfm'
-  ClientHeight = 726
+  ClientHeight = 626
   ClientWidth = 1600
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clBlack
@@ -2606,28 +2606,28 @@ object PageContainer3: TPageContainer3
         'ner</b>) generiert und anschlie'#223'end wird die Startseite in einem' +
         ' Webbrowser (<b>Werkzeuge</b> | <b>Optionen</b> | <b>Ausgabe</b>' +
         ') angezeigt. '#10'Eine relative Pfadangabe f'#252'r <b>Lokaler Ordner</b>' +
-        ' wird relativ zum Verzeichnis interpretiert, in dem sich das DFM' +
-        '2HTML-Dokument befindet.'#10'<br/><br/>'#10#220'ber "http://" addressierte ' +
-        'Webseiten im Internet k'#246'nnen oft '#252'ber FTP verwaltet werden.'#10'DFM2' +
-        'HTML kann die HTML-Dateien auf Wunsch auf einen FTP-Server hochl' +
-        'aden. Dazu m'#252'ssen zun'#228'chst die n'#246'tigen FTP-Daten in <b>Publizier' +
-        'en </b>| <b>Seiteneigenschaften</b> &rarr; <b>FTP-Verzeichnis</b' +
-        '> eingegeben werden. '#10'Danach kann '#252'ber <nobr><b>Publizieren</b> ' +
-        '| <b>Publizieren</b></nobr> der Upload-Prozess gestartet werden.' +
-        ' '#10'Es kann noch zus'#228'tzlich eine HTTP-Adresse in <nobr><b>Publizie' +
-        'ren </b>| <b>Seiteneigenschaften</b></nobr> &rarr; <b>HTTP URL</' +
-        'b> angegeben werden,  die '#252'ber <nobr><b>Publizieren </b>| <b>Web' +
-        'seite online besuchen</b></nobr> abgerufen werden kann, um die W' +
-        'ebseite online zu betrachten.'#10'<br/><br/>'#10'Ein Geschwindigskeitsvo' +
-        'rteil des integrierten FTP-Upload-Tools gegen'#252'ber dem manuellem ' +
-        'Upload ist, da'#223' nur Dateien hochgeladen werden, die sich seit de' +
-        'm letzten Upload-Prozess ver'#228'ndert haben '#10'(dieses Feature kann '#252 +
-        'ber <b>Werkzeuge</b> | <b>Optionen</b> &rarr; <b>Publizieren</b>' +
-        ' &rarr; <nobr><b>Benutze intelligentes Hochladen</b></nobr> deak' +
-        'tiviert werden).'#10'Alternativ k'#246'nnen die f'#252'r eine Vorschau generie' +
-        'rten HTML-Dateien (<b>Publizieren | Vorschauordner '#246'ffnen</b>) a' +
-        'uch mit herk'#246'mmlichen FTP-Programmen auf ein FTP-Server '#252'bertrag' +
-        'en werden oder sie k'#246'nnen z.B. auf eine CD gebrannt werden.'
+        ' wird relativ zum tempor'#228'ren Verzeichnis interpretiert.'#10'<br/><br' +
+        '/>'#10#220'ber "http://" addressierte Webseiten im Internet k'#246'nnen oft ' +
+        #252'ber FTP verwaltet werden.'#10'DFM2HTML kann die HTML-Dateien auf Wu' +
+        'nsch auf einen FTP-Server hochladen. Dazu m'#252'ssen zun'#228'chst die n'#246 +
+        'tigen FTP-Daten in <b>Publizieren </b>| <b>Seiteneigenschaften</' +
+        'b> &rarr; <b>FTP-Verzeichnis</b> eingegeben werden. '#10'Danach kann' +
+        ' '#252'ber <nobr><b>Publizieren</b> | <b>Publizieren</b></nobr> der U' +
+        'pload-Prozess gestartet werden. '#10'Es kann noch zus'#228'tzlich eine HT' +
+        'TP-Adresse in <nobr><b>Publizieren </b>| <b>Seiteneigenschaften<' +
+        '/b></nobr> &rarr; <b>HTTP URL</b> angegeben werden,  die '#252'ber <n' +
+        'obr><b>Publizieren </b>| <b>Webseite online besuchen</b></nobr> ' +
+        'abgerufen werden kann, um die Webseite online zu betrachten.'#10'<br' +
+        '/><br/>'#10'Ein Geschwindigskeitsvorteil des integrierten FTP-Upload' +
+        '-Tools gegen'#252'ber dem manuellem Upload ist, da'#223' nur Dateien hochg' +
+        'eladen werden, die sich seit dem letzten Upload-Prozess ver'#228'nder' +
+        't haben '#10'(dieses Feature kann '#252'ber <b>Werkzeuge</b> | <b>Optione' +
+        'n</b> &rarr; <b>Publizieren</b> &rarr; <nobr><b>Benutze intellig' +
+        'entes Hochladen</b></nobr> deaktiviert werden).'#10'Alternativ k'#246'nne' +
+        'n die f'#252'r eine Vorschau generierten HTML-Dateien (<b>Publizieren' +
+        ' | Vorschauordner '#246'ffnen</b>) auch mit herk'#246'mmlichen FTP-Program' +
+        'men auf ein FTP-Server '#252'bertragen werden oder sie k'#246'nnen z.B. au' +
+        'f eine CD gebrannt werden.'
       Use = pad
       AutoSizeXY = asY
     end

@@ -2,7 +2,7 @@ object PageContainer2: TPageContainer2
   Left = -4
   Top = -23
   Caption = 'Tutorial1040.dfm'
-  ClientHeight = 726
+  ClientHeight = 626
   ClientWidth = 1600
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clBlack
@@ -2561,7 +2561,7 @@ object PageContainer2: TPageContainer2
       Left = 24
       Top = 7546
       Width = 672
-      Height = 314
+      Height = 298
       Text = 
         'Da un progetto di DFM2HTML si pu'#242' generare una serie di pagine H' +
         'TML e file di immagini, che si possono visualizzare in un browse' +
@@ -2571,29 +2571,28 @@ object PageContainer2: TPageContainer2
         'ata in una directory del tuo disco locale una serie di pagine HT' +
         'ML. '#10'La directory locale si pu'#242' scegliere in <b>Pubblica </b>| <' +
         'b>Propriet'#224' Pagina</b> &rarr; <b>Directory Locale</b>. Un percor' +
-        'so relativo viene interpretato come relativo alla directory in c' +
-        'ui '#232' salvato il file del tuo progetto DFM2HTML.'#10'<br/><br/>'#10'Le pa' +
-        'gine HTML, a cui si accede online usando un indirizzo HTTP, veng' +
-        'ono solitamente salvate su un server FTP.'#10'DFM2HTML '#232' in grado di' +
-        ' caricare automaticamente i file generati in una directory FTP, ' +
-        'che puoi impostare in <b>Pubblica </b>| <b>Propriet'#224' Pagina</b> ' +
-        '&rarr; <b>Directory FTP</b> (chiedi i parametri della connession' +
-        'e FTP '#10'al tuo fornitore di hosting). '#10'Dopo aver compilato i para' +
-        'metri della connessione FTP, potrai pubblicare il progetto usand' +
-        'o <b>Pubblica </b>| <b>Pubblica</b>. '#10'Per aprire il browser dall' +
-        #39'interfaccia di DFM2HTML e navigare nel sito web online, puoi im' +
-        'postare l'#39'indirizzo HTTP in <b>Pubblica </b>| <b>Propriet'#224' Pagin' +
-        'a</b> &rarr; <b>URL HTTP</b> scegliendo quindi <b>Pubblica </b>|' +
-        ' <b>Visualizza Online</b>.'#10'<br/><br/>'#10'Gli stessi file HTML vengo' +
-        'no generati sia per l'#39'anteprima che per la pubblicazione FTP.'#10'So' +
-        'lo i file che hanno subito modifiche dall'#39'ultimo upload vengono ' +
-        'caricati sul server FTP (questa opzione si pu'#242' disattivare in <b' +
-        '>Strumenti</b> | <b>Opzioni</b> &rarr; <b>Pubblica</b> &rarr; <b' +
-        '>Usa Pubblicazione Smart</b>).'#10'I file che sono stati generati pe' +
-        'r l'#39'anteprima si possono ugualmente caricare su un server FTP us' +
-        'ando programmi FTP esterni, o possono essere genericamente salva' +
-        'ti su qualsiasi supporto multimediale dotato di una struttura a ' +
-        'directory (come un CD-ROM).'
+        'so relativo viene interpretato come relativo alla directory temp' +
+        'oranea di Windows.'#10'<br/><br/>'#10'Le pagine HTML, a cui si accede on' +
+        'line usando un indirizzo HTTP, vengono solitamente salvate su un' +
+        ' server FTP.'#10'DFM2HTML '#232' in grado di caricare automaticamente i f' +
+        'ile generati in una directory FTP, che puoi impostare in <b>Pubb' +
+        'lica </b>| <b>Propriet'#224' Pagina</b> &rarr; <b>Directory FTP</b> (' +
+        'chiedi i parametri della connessione FTP '#10'al tuo fornitore di ho' +
+        'sting). '#10'Dopo aver compilato i parametri della connessione FTP, ' +
+        'potrai pubblicare il progetto usando <b>Pubblica </b>| <b>Pubbli' +
+        'ca</b>. '#10'Per aprire il browser dall'#39'interfaccia di DFM2HTML e na' +
+        'vigare nel sito web online, puoi impostare l'#39'indirizzo HTTP in <' +
+        'b>Pubblica </b>| <b>Propriet'#224' Pagina</b> &rarr; <b>URL HTTP</b> ' +
+        'scegliendo quindi <b>Pubblica </b>| <b>Visualizza Online</b>.'#10'<b' +
+        'r/><br/>'#10'Gli stessi file HTML vengono generati sia per l'#39'antepri' +
+        'ma che per la pubblicazione FTP.'#10'Solo i file che hanno subito mo' +
+        'difiche dall'#39'ultimo upload vengono caricati sul server FTP (ques' +
+        'ta opzione si pu'#242' disattivare in <b>Strumenti</b> | <b>Opzioni</' +
+        'b> &rarr; <b>Pubblica</b> &rarr; <b>Usa Pubblicazione Smart</b>)' +
+        '.'#10'I file che sono stati generati per l'#39'anteprima si possono ugua' +
+        'lmente caricare su un server FTP usando programmi FTP esterni, o' +
+        ' possono essere genericamente salvati su qualsiasi supporto mult' +
+        'imediale dotato di una struttura a directory (come un CD-ROM).'
       Use = pad
       AutoSizeXY = asY
     end

@@ -48,21 +48,16 @@
    <bl> CreateInstall Free</>
    <files listview >
       <_><src>C:\HBuilder\DFM2HTML.exe</><dest>inst</><custom></><ifexist>over</><recurs></></>
-<_><src>C:\HBuilder\Tutorial.dfm</><dest>inst</><custom></><ifexist>over</><recurs></></>
-<_><src>C:\HBuilder\Tutorial1031.dfm</><dest>inst</><custom></><ifexist>over</><recurs>0</></>
-<_><src>C:\HBuilder\Tutorial1040.dfm</><dest>inst</><custom></><ifexist>over</><recurs>0</></>
-<_><src>C:\HBuilder\TutorialMenus.dfm</><dest>inst</><custom></><ifexist>over</><recurs></></>
-<_><src>C:\HBuilder\TutorialMenus1040.dfm</><dest>inst</><custom></><ifexist>over</><recurs>0</></>
-<_><src>C:\HBuilder\Guide.dfm</><dest>inst</><custom></><ifexist>over</><recurs></></>
-<_><src>C:\HBuilder\Guide1031.dfm</><dest>inst</><custom></><ifexist>over</><recurs>0</></>
-<_><src>C:\HBuilder\Guide1040.dfm</><dest>inst</><custom></><ifexist>over</><recurs>0</></>
-<_><src>C:\HBuilder\GuideExample.dfm</><dest>inst</><custom></><ifexist>over</><recurs></></>
-<_><src>C:\HBuilder\GuideExampleWithFooter.dfm</><dest>inst</><custom></><ifexist>over</><recurs></></>
-<_><src>C:\HBuilder\GuideExampleWithFramesLayout.dfm</><dest>inst</><custom></><ifexist>over</><recurs></></>
-<_><src>C:\HBuilder\GuideExampleWithStylesheet.dfm</><dest>inst</><custom></><ifexist>over</><recurs></></>
+<_><src>C:\HBuilder\Tutorial\*.dfm</><dest>custom</><custom>#setuppath#\Tutorial</><ifexist>over</><recurs>0</></>
+<_><src>C:\HBuilder\Tutorial\Images\*</><dest>custom</><custom>#setuppath#\Tutorial\Images</><ifexist>over</><recurs>0</></>
+<_><src>C:\HBuilder\TutorialMenus\*.dfm</><dest>custom</><custom>#setuppath#\TutorialMenus</><ifexist>over</><recurs>0</></>
+<_><src>C:\HBuilder\Guide\*.dfm</><dest>custom</><custom>#setuppath#\Guide</><ifexist>over</><recurs>0</></>
+<_><src>C:\HBuilder\Guide\Images\*</><dest>custom</><custom>#setuppath#\Guide\Images</><ifexist>over</><recurs>0</></>
+<_><src>C:\HBuilder\GuideExamples\*.dfm</><dest>custom</><custom>#setuppath#\GuideExamples</><ifexist>over</><recurs>0</></>
 <_><src>C:\HBuilder\Readme.txt</><dest>inst</><custom></><ifexist>over</><recurs></></>
 <_><src>C:\HBuilder\LICENSE.TXT</><dest>inst</><custom></><ifexist>over</><recurs></></>
 <_><src>C:\HBuilder\Presets\*.dfm</><dest>custom</><custom>#setuppath#\Presets</><ifexist>over</><recurs></></>
+<_><src>C:\HBuilder\Presets\Images\Links\*</><dest>custom</><custom>#setuppath#\Presets\Images\Links</><ifexist>over</><recurs>0</></>
 <_><src>C:\HBuilder\Templates\Frames\*.dfm</><dest>custom</><custom>#setuppath#\Templates\Frames</><ifexist>overnewer</><recurs></></>
 <_><src>C:\HBuilder\Templates\No Frames\*.dfm</><dest>custom</><custom>#setuppath#\Templates\No Frames</><ifexist>overnewer</><recurs></></>
 <_><src>C:\HBuilder\DFM2HTML.dklang</><dest>inst</><custom></><ifexist>over</><recurs>0</></>

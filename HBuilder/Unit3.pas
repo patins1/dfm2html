@@ -36,8 +36,16 @@ type
     scrollpos:TPoint;
   end;
 
+  TRelativePathProvider = class (TMyForm,IRelativePathProvider)
+    protected
+      function RootPath:String; virtual; abstract;
+    public
+      function GetRelativePath(const Path:String):String;
+      function GetAbsolutePath(const Path:String):String;
+  end;
 
-  TPageContainer = class(TMyForm,IDesignerHook,IRelativePathProvider)
+
+  TPageContainer = class(TRelativePathProvider,IDesignerHook)
   private
     { Private declarations }
     FFileName:String;
@@ -81,12 +89,11 @@ type
 {$IFDEF CLX}
     function GetClientRect:TRect; override;
 {$ENDIF}
+    function RootPath:String; override;
   public
     { Public declarations }
     LiveReason:string;
     MySiz: TMySiz;
-    function GetRelativePath(const Path:String):String;
-    function GetAbsolutePath(const Path:String):String;
     procedure SetDesigning(Designing,Transient:boolean);
     constructor Create(AOwner:TComponent); override;
     destructor Destroy; override;
@@ -2161,28 +2168,31 @@ begin
  MySiz.DesignMouseMove; //clear name and pos statusbar fields
 end;
 
-function TPageContainer.GetRelativePath(const Path:String):String;
-var Dir:String;
+function TPageContainer.RootPath:String;
 begin
- if isAbsolute(Path) and not IsUntitled and not IsCopying then
+ if IsUntitled then
+  Result:='' else
+  Result:=GoodLocalPath(ExtractFileDir(Filename));
+end;
+
+function TRelativePathProvider.GetRelativePath(const Path:String):String;
+begin
+ if isAbsolute(Path) and isAbsolute(RootPath) and not IsCopying then
  begin
-  Dir:=GoodLocalPath(ExtractFileDir(Filename));
-  if SubEqual(GoodPathDelimiters(LowerCase(Dir)),GoodPathDelimiters(LowerCase(Path))) then
+  if SubEqual(GoodPathDelimiters(LowerCase(RootPath)),GoodPathDelimiters(LowerCase(Path))) then
   begin
-   Result:=Copy(Path,Length(Dir)+1,MaxInt);
+   Result:=Copy(Path,Length(RootPath)+1,MaxInt);
    Exit;
   end;
  end;
  Result:=Path;
 end;
 
-function TPageContainer.GetAbsolutePath(const Path:String):String;
-var Dir:String;
+function TRelativePathProvider.GetAbsolutePath(const Path:String):String;
 begin
- if not isAbsolute(Path) and not IsUntitled then
- begin   
-  Dir:=GoodLocalPath(ExtractFileDir(Filename));
-  Result:=Dir+Path;
+ if not isAbsolute(Path) and isAbsolute(RootPath) then
+ begin
+  Result:=RootPath+Path;
   Exit;
  end;
  Result:=Path;

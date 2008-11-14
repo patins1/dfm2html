@@ -294,22 +294,27 @@ var
   W: TWriter;
   I: Integer;
 begin
-  S := TMemoryStream.Create;
+  S := TMemoryStream.Create;         
   try
-    W := TWriter.Create(S, 1024);
+    IsCopying:=true;
     try
-      W.Root := Root;
-      for I := 0 to Components.Count - 1 do
-      if Components[I]<>nil then
-      begin
-        {if (TComponent(Components[I]) is TdhPage) and (Components.IndexOf(TdhPage(Components[I]).PageControl)<>-1) then
-         Continue;}
-        W.WriteSignature;
-        W.WriteComponent(TComponent(Components[I]));
+      W := TWriter.Create(S, 1024);
+      try
+        W.Root := Root;
+        for I := 0 to Components.Count - 1 do
+        if Components[I]<>nil then
+        begin
+          {if (TComponent(Components[I]) is TdhPage) and (Components.IndexOf(TdhPage(Components[I]).PageControl)<>-1) then
+           Continue;}
+          W.WriteSignature;
+          W.WriteComponent(TComponent(Components[I]));
+        end;
+        W.WriteListEnd;
+      finally
+        W.Free;
       end;
-      W.WriteListEnd;
     finally
-      W.Free;
+      IsCopying:=false;
     end;
   finally
    //S.Free;
@@ -2240,11 +2245,9 @@ begin
   WithMeta:=_WithMeta;
   try
    CopyList:=PrepareCopyList(CopyDependencies,FChildList);
-   IsCopying:=true;
    try
     _CopyComponents(Owner, CopyList);
    finally
-    IsCopying:=false;
     CopyList.Free;
    end;
   finally

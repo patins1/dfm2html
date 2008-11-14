@@ -13,7 +13,7 @@ uses
   DKLang, MyForm;
 
 type
-  TPresets = class(TMyForm)
+  TPresets = class(TRelativePathProvider)
     dhStyleSheet1: TdhStyleSheet;
     dhPanel1: TdhPanel;
     dhPanel2: TdhPage;
@@ -35,7 +35,8 @@ type
     { Private declarations }
   protected
     procedure CompoMouseUp(Sender: TObject; Button: TMouseButton;
-      Shift: TShiftState; X, Y: Integer);
+      Shift: TShiftState; X, Y: Integer);  
+    function RootPath:String; override;
   public
     { Public declarations }
     procedure InsertCompo(Sender: TObject);
@@ -332,6 +333,11 @@ begin
    end;
   end;
  end;
+end;
+
+function TPresets.RootPath:String;
+begin
+ Result:=GetRootPresetsDir;
 end;
 
 end.

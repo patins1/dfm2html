@@ -35,7 +35,7 @@ package TntUnicodeVcl_D90;
 {$IMAGEBASE $400000}
 {$DESCRIPTION 'Tnt Unicode Controls'}
 {$DESIGNONLY}
-{$IMPLICITBUILD ON}
+{$IMPLICITBUILD OFF}
 
 requires
   dcldb,

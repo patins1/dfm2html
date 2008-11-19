@@ -24,7 +24,7 @@ package TntUnicodeVcl_R90;
 {$IMAGEBASE $400000}
 {$DESCRIPTION 'Tnt Unicode Controls - Runtime'}
 {$RUNONLY}
-{$IMPLICITBUILD ON}
+{$IMPLICITBUILD OFF}
 
 requires
   vcl,

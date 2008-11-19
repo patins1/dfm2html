@@ -1480,7 +1480,7 @@ begin
   Picture := TLocationImage(GetOrdValue).PictureID;
   if (Picture=nil) or (Picture.Graphic = nil) then
     Result := srNone else
-    Result := '(' + Picture.Graphic.ClassName + ')'+'[References:'+inttostr(Picture.ReferenceCount)+']';
+    Result := '(' + Picture.Graphic.ClassName + ')';
 end;
 
 

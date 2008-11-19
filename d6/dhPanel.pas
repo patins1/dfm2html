@@ -462,9 +462,9 @@ type
     function StoreCalculations:boolean;
     procedure ReleaseResources;
     function CachingIsUseful:Boolean;
-    property PictureID:TPictureID read FPictureID;
     procedure Clear;
-  public
+  public                             
+    property PictureID:TPictureID read FPictureID;
     function HasPath: Boolean;
     function GraphicExtension:String;
     function GetGraphic:TGraphic;

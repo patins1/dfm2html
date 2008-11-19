@@ -310,9 +310,9 @@ object PageWizard: TPageWizard
         AutoSizeXY = asXY
       end
       object eImageFolder: TTntEdit
-        Left = 96
+        Left = 104
         Top = 64
-        Width = 281
+        Width = 273
         Height = 21
         TabOrder = 1
         OnChange = eImageFolderChange
@@ -326,9 +326,9 @@ object PageWizard: TPageWizard
         AutoSizeXY = asXY
       end
       object eJavaScriptFile: TTntEdit
-        Left = 96
+        Left = 104
         Top = 110
-        Width = 281
+        Width = 273
         Height = 21
         TabOrder = 3
         OnChange = eJavaScriptFileChange
@@ -343,7 +343,7 @@ object PageWizard: TPageWizard
       end
       object dhLabel4: TdhLabel
         Left = 96
-        Top = 91
+        Top = 87
         Width = 12
         Height = 13
         Text = '=>'
@@ -351,7 +351,7 @@ object PageWizard: TPageWizard
       end
       object dhLabel5: TdhLabel
         Left = 96
-        Top = 141
+        Top = 133
         Width = 12
         Height = 13
         Text = '=>'
@@ -366,16 +366,16 @@ object PageWizard: TPageWizard
         AutoSizeXY = asXY
       end
       object eCSSFile: TTntEdit
-        Left = 96
+        Left = 104
         Top = 160
-        Width = 281
+        Width = 273
         Height = 21
         TabOrder = 8
         OnChange = eCSSFileChange
       end
       object dhLabel7: TdhLabel
         Left = 96
-        Top = 187
+        Top = 183
         Width = 12
         Height = 13
         Text = '=>'

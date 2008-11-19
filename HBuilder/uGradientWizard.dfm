@@ -61,7 +61,7 @@ object GradientWizard: TGradientWizard
   end
   object SampleGradient: TdhPanel
     Left = 176
-    Top = 16
+    Top = 13
     Width = 88
     Height = 88
     Style.Border.Width = 1
@@ -73,7 +73,7 @@ object GradientWizard: TGradientWizard
   object rgDirection: TTntRadioGroup
     Left = 8
     Top = 8
-    Width = 153
+    Width = 162
     Height = 57
     Caption = 'Direction'
     Items.Strings = (

@@ -35,15 +35,13 @@ object Tabs: TTabs
     Align = alClient
     Right = 0
     Bottom = 0
-    ExplicitWidth = 100
-    ExplicitHeight = 100
     object PageControl1: TMyPageControl
       Tag = 2
       Left = 0
       Top = 2
       Width = 925
       Height = 204
-      ActivePage = AnchorBackground
+      ActivePage = AnchorLink
       TabOrder = 0
       TabStop = False
       TabWidth = 43
@@ -198,7 +196,7 @@ object Tabs: TTabs
           object cTransparent: TTntCheckBox
             Left = 120
             Top = 54
-            Width = 81
+            Width = 85
             Height = 17
             Caption = 'Transparent'
             TabOrder = 0
@@ -625,7 +623,6 @@ object Tabs: TTabs
             Style.BorderRadius.All = '100 100'
             AutoSizeXY = asNone
             Align = alTop
-            Right = 2147483647
             StyleDown.Effects.Enabled = True
             StyleDown.Effects.AntiAliasing = False
             StyleDown.Effects.Text = etInclude
@@ -641,7 +638,6 @@ object Tabs: TTabs
             Style.FontSize = '3'
             AutoSizeXY = asY
             Align = alTop
-            Right = 2147483647
           end
           object STYLE_Link14: TdhLink
             Left = 0
@@ -664,7 +660,6 @@ object Tabs: TTabs
             Style.BorderRadius.All = '115'
             AutoSizeXY = asXY
             Align = alTop
-            Right = 2147483647
             StyleDown.BorderTop.Color = ThreeDDarkShadow
             StyleDown.BorderBottom.Color = White
             StyleDown.BorderLeft.Color = ThreeDDarkShadow
@@ -686,7 +681,6 @@ object Tabs: TTabs
             Style.Display = cdsBlock
             AutoSizeXY = asY
             Align = alTop
-            Right = 2147483647
           end
           object STYLE_dhLink2: TdhLink
             Left = 0
@@ -709,7 +703,6 @@ object Tabs: TTabs
             Style.BorderRadius.All = '5'
             AutoSizeXY = asXY
             Align = alTop
-            Right = 2147483647
             StyleDown.Border.Color = ThreeDShadow
             StyleDown.Border.Style = cbsSolid
             StyleDown.BackgroundImage.Data = {
@@ -1255,8 +1248,6 @@ object Tabs: TTabs
               Top = 1
               AutoSizeXY = asNone
               Align = alClient
-              Right = 2147483647
-              Bottom = 2147483647
               UseIFrame = False
               object cAntiAliasing: TTntCheckBox
                 Left = 16
@@ -1592,11 +1583,7 @@ object Tabs: TTabs
               Top = 1
               AutoSizeXY = asNone
               Align = alClient
-              Right = 2147483647
-              Bottom = 2147483647
               UseIFrame = False
-              ExplicitWidth = 100
-              ExplicitHeight = 100
               object Panel3: TMyPanel
                 Left = 256
                 Top = 2
@@ -1904,7 +1891,6 @@ object Tabs: TTabs
             Style.ZIndex = -1
             AutoSizeXY = asY
             Align = alTop
-            Right = 2147483647
           end
           object STYLE_Link1: TdhLink
             Left = 0
@@ -1918,7 +1904,6 @@ object Tabs: TTabs
             Use = STYLE_dhLink2
             AutoSizeXY = asXY
             Align = alTop
-            Right = 2147483647
             StyleDown.BorderBottom.Style = cbsNone
             StyleDown.ZIndex = 10
             StyleDown.BorderRadius.BottomRight = '0'
@@ -1940,7 +1925,6 @@ object Tabs: TTabs
             Use = STYLE_dhLink2
             AutoSizeXY = asXY
             Align = alTop
-            Right = 2147483647
             StyleDown.BorderRight.Style = cbsNone
             StyleDown.ZIndex = 10
             StyleDown.BorderRadius.BottomRight = '0'
@@ -1958,7 +1942,6 @@ object Tabs: TTabs
             Use = STYLE_dhLabel11
             AutoSizeXY = asY
             Align = alTop
-            Right = 2147483647
           end
           object STYLE_dhLabel11: TdhLabel
             Left = 0
@@ -1971,7 +1954,6 @@ object Tabs: TTabs
             Style.BorderRadius.All = '5'
             AutoSizeXY = asY
             Align = alTop
-            Right = 2147483647
           end
         end
         object IGNORE_dhDirectHTML1: TdhDirectHTML
@@ -2695,7 +2677,7 @@ object Tabs: TTabs
             209
             91)
           object spLeft: TMySpinEdit
-            Left = 46
+            Left = 50
             Top = 16
             Width = 51
             Height = 22
@@ -2737,7 +2719,7 @@ object Tabs: TTabs
             Text = 'Left'
             AutoSizeXY = asXY
             Anchors = [akTop, akRight]
-            Right = 168
+            Right = 164
             OnClick = cAutoXClick
           end
           object dhLabel31: TdhLabel
@@ -2747,12 +2729,12 @@ object Tabs: TTabs
             Text = 'Width'
             AutoSizeXY = asXY
             Anchors = [akTop, akRight]
-            Right = 168
+            Right = 164
             OnClick = cAutoXClick
           end
           object spWidth: TMySpinEdit
-            Left = 46
-            Top = 40
+            Left = 51
+            Top = 41
             Width = 51
             Height = 22
             MaxValue = 999999
@@ -3569,12 +3551,12 @@ object Tabs: TTabs
             Text = 'Link to page'
             AutoSizeXY = asXY
             Anchors = [akTop, akRight]
-            Right = 136
+            Right = 128
           end
           object cbLinkPage: ThComboBox
-            Left = 80
+            Left = 88
             Top = 19
-            Width = 121
+            Width = 113
             Height = 21
             Font.Charset = DEFAULT_CHARSET
             Font.Color = clWindowText
@@ -3588,9 +3570,9 @@ object Tabs: TTabs
             ChangeReason = 'Edit Link'
           end
           object cbLinkAnchor: ThComboBox
-            Left = 80
+            Left = 88
             Top = 51
-            Width = 121
+            Width = 113
             Height = 21
             Font.Charset = DEFAULT_CHARSET
             Font.Color = clWindowText
@@ -3610,7 +3592,7 @@ object Tabs: TTabs
             Text = 'Within page'
             AutoSizeXY = asXY
             Anchors = [akTop, akRight]
-            Right = 137
+            Right = 129
           end
         end
         object GroupBox28: TMyGroupBox
@@ -4134,7 +4116,6 @@ object Tabs: TTabs
             Style.FontFamily = 'Times New Roman, Times, serif'
             AutoSizeXY = asY
             Align = alTop
-            Right = 2147483647
           end
         end
         object cLoop: TTntCheckBox

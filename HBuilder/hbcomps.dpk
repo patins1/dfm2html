@@ -30,15 +30,9 @@ requires
   VclSmp,
   vcljpg,
   dhcomps,
-{$IFDEF VER130}
   dklang10,
-  dhcomps,
-  dklang7,
-{$ELSE}
-  TntUnicodeVcl_R70,
   GR32_D2005,
   TntUnicodeVcl_R90,
-{$ENDIF}
   vclactnband,
   vclx,
   dsnap,

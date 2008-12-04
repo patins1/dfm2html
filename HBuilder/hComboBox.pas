@@ -36,11 +36,11 @@ type
     FValueChange: TMyValueChange;
     InEvent,FModified:boolean;
     FStoredCleared:boolean;
-    FStoredValue:String;
+    FStoredValue:WideString;
     Updating:boolean; //needed for CLX only
     { Private declarations }
 //    procedure WMUserAgent(var Msg:TMsg); message WM_REVISE_UA;
-    procedure SetStoredText(const Value: string);
+    procedure SetStoredText(const Value: WideString);
     procedure SetStoredItemIndex(const Value: integer);
   protected
     { Protected declarations }
@@ -53,9 +53,9 @@ type
   public
     { Public declarations }
     procedure SetDetailedStoredItemIndex(IsCleared:boolean; const Value: integer);
-    procedure SetDetailedStoredValue(IsCleared:boolean; DisplayValue: String);
+    procedure SetDetailedStoredValue(IsCleared:boolean; DisplayValue: WideString);
     constructor Create(AOwner: TComponent); override;
-    property StoredText:string write SetStoredText;
+    property StoredText:WideString write SetStoredText;
     property StoredItemIndex:integer write SetStoredItemIndex;
     function Commit:boolean;
     procedure Abort;
@@ -67,7 +67,7 @@ type
 
 
 
-function GoodValue(const s:string):string;
+function GoodValue(const s:WideString):WideString;
 procedure ShowInputError(const Message:WideString);
 
 //const sClearValue='*CLEAR VALUE*';
@@ -85,7 +85,7 @@ end;
 
 
 
-function GoodValue(const s:string):string;
+function GoodValue(const s:WideString):WideString;
 begin
  if s='*CLEAR VALUE*' then
   result:='' else
@@ -118,7 +118,7 @@ end;}
 
 
 
-procedure ThComboBox.SetDetailedStoredValue(IsCleared:boolean; DisplayValue: String);
+procedure ThComboBox.SetDetailedStoredValue(IsCleared:boolean; DisplayValue: WideString);
 var DisplayIndex:integer;
 
 function GetNearByIndex:boolean;
@@ -162,7 +162,7 @@ begin
   Updating:=false;
 end;
 
-procedure ThComboBox.SetStoredText(const Value: string);
+procedure ThComboBox.SetStoredText(const Value: WideString);
 begin
   SetDetailedStoredValue(false,Value);
 end;

@@ -518,7 +518,7 @@ type
     BorderRadius:string;
     Margin:string;
     FontFamily:TCSSFontFamily;
-    Other:string;
+    Other:HypeString;
     FontSize:string;
   end;
 
@@ -614,7 +614,7 @@ type
     FBackgroundPosition:TCSSBackgroundPosition;
     FPaddings:array[TEdgeAlign] of TCSSCardinal;
     FMargins:array[TEdgeAlign] of TCSSMargin;
-    FOther:string;
+    FOther:HypeString;
     FTextAlign:TCSSTextAlign;
     FWhiteSpace:TCSSWhiteSpace;
     FTextTransform:TCSSTextTransform;
@@ -782,7 +782,7 @@ type
     property MarginRight: TCSSMargin index ealRight read FMargins[ealRight] write SetMargin;
     property MarginBottom: TCSSMargin index ealBottom read FMargins[ealBottom] write SetMargin;
 
-    property Other: String read FOther write FOther;
+    property Other: HypeString read FOther write FOther;
     property ContentBefore: String read FBefore write SetBefore;
     property ContentAfter: String read FAfter write SetAfter;
     property BackgroundColor:TCSSColor read FBackgroundColor write SetBackgroundColor default colInherit;
@@ -1097,7 +1097,7 @@ type
     HorzScrollInfo: TMyScrollInfo;
     FScrollingInEdges: boolean;
     FEdgesInScrolledArea: boolean;
-    FHTMLAttributes: string;
+    FHTMLAttributes: HypeString;
     FCenter: boolean;
     _AutoResizing:boolean;
     CSSRight,CSSBottom:integer;
@@ -1553,7 +1553,7 @@ type
     //property Center:boolean read FCenter write SetCenter stored false default false;
 
     procedure SetBoundedVHPos(H, V: integer);
-    property HTMLAttributes:string read FHTMLAttributes write FHTMLAttributes;
+    property HTMLAttributes:HypeString read FHTMLAttributes write FHTMLAttributes;
 //    procedure TryBrokenReferences; virtual;
     procedure CopyDependencies(CopyList:TList); virtual;
 

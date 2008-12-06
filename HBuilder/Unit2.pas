@@ -5568,7 +5568,8 @@ var bmp32:TBitmap32;
 begin
  bmp32:=nil;
  try
-  if GetAs32(dhPanel1.Style.BackgroundImage.RequestGraphic,bmp32) and not bmp32.Empty then
+  bmp32:=GetAs32(dhPanel1.Style.BackgroundImage.RequestGraphic);
+  if (bmp32<>nil) and not bmp32.Empty then
   begin
    col32:=bmp32.Pixel[0,bmp32.Height-1];
    for x:=0 to bmp32.Width-1 do

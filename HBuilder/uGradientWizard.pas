@@ -200,7 +200,7 @@ begin
  if pn.HasBackgroundImage(FPicture) then
  begin
   //if cVert.Checked then
-  GetAs32(FPicture,Bitmap);
+  Bitmap:=GetAs32(FPicture);
   try
   FirstColor.Color:=WinColor(Bitmap.Pixels[0,0]);
   if rgDirection.ItemIndex=0 then

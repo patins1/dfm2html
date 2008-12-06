@@ -79,7 +79,8 @@ implementation
 function TColorizeImg.Prepare(Graphic:TGraphic; bgcol:TColor): boolean;
 begin
  FreeAndNil(bmp32);
- if not GetAs32(Graphic,bmp32) then
+ bmp32:=GetAs32(Graphic);
+ if bmp32=nil then
  begin
   result:=false;
   exit;

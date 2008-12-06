@@ -1588,9 +1588,7 @@ end;
 
 
 function SaveBin(_crc:DWORD; var RasteringFile,AbsoluteRasteringFile:string; CheckBaseRasteringFile:boolean; BaseRasteringFile:string; var NeedSave:boolean; NeedSameFileName:boolean):boolean;
-var gif_pre:TBitmap32;
-    graph:TGraphic;
-    id_crc:DWORD;
+var id_crc:DWORD;
     server_crc:DWORD;
     sb:TSaveBinItem;
     AbsoluteBaseRasteringFile:string;

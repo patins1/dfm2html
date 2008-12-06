@@ -85,8 +85,7 @@ begin
  if Pn.HasBackgroundImage(FPicture) then
  begin
   //if cVert.Checked then
-  Bitmap:=TBitmap32.Create;
-  GetAs32(FPicture,Bitmap);
+  Bitmap:=GetAs32(FPicture);
   FirstColor.Color:=WinColor(Bitmap.Pixels[0,Bitmap.Height-1]);
   spMasterAlpha.Value:=Adj255to100(Bitmap.Pixels[0,Bitmap.Height-1] shr 24 and $FF);
  end;

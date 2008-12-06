@@ -10,7 +10,7 @@ uses
   Dialogs, Controls, Windows, Messages, Graphics, Forms,
   {$ENDIF}
   SysUtils, Classes,{$IFDEF MSWINDOWS}HttpProt,{$ELSE}{IcsUrl,}{$ENDIF}
-  dhPanel,dhLabel,GR32,UseFastStrings;
+  dhPanel,dhLabel,GR32,UseFastStrings,MyBitmap32;
 
 {$R 'dhPageControl.dcr'}
 
@@ -135,7 +135,7 @@ type
     procedure SetName(const Value: TComponentName); override;
     function NeedPadding(HasRastering:TRasterType): boolean; override;
     //function Opaque: boolean; override;
-    procedure PaintWhiteBackground(ref_brct: TRect; Src: TBitmap32; const brct: TRect); override;
+    procedure PaintWhiteBackground(ref_brct: TRect; Src: TMyBitmap32; const brct: TRect); override;
     //function SomethingIsFixed: boolean; override;
     function SomethingIsScrolled: boolean; override;
     function HeightDiff: integer; override;
@@ -655,7 +655,7 @@ begin
 // result:=false;
 end;
  }
-procedure TdhPage.PaintWhiteBackground(ref_brct:TRect; Src:TBitmap32; const brct: TRect);
+procedure TdhPage.PaintWhiteBackground(ref_brct:TRect; Src:TMyBitmap32; const brct: TRect);
 var BPos:TPoint;
 var num_across,num_down:integer;
     W,H,x,y,x_coord,y_coord:integer;

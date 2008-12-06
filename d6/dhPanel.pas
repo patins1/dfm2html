@@ -31,7 +31,7 @@ uses
   ComCtrls, CommCtrl, StdCtrls, clipbrd,
 {$ENDIF}
   math{$IFNDEF VER130}{, variants}{$ENDIF}{$IFDEF DEB},funcutils,jclDebug{$ENDIF},
-  GR32,GR32_Transforms,gauss,GR32_Blend,GR32_LowLevel,crc,BinList,BinTree;
+  GR32,GR32_Transforms,gauss,GR32_Blend,GR32_LowLevel,crc,BinList,BinTree,MyBitmap32;
 
 const EmptyStr='';
 
@@ -925,7 +925,7 @@ type
     FVertScrollbarNeverVisible,FHorzScrollbarNeverVisible:boolean;
     NCScrollbars:boolean;
     FOneButton:boolean;
-    ActTopGraph:TBitmap32;
+    ActTopGraph:TMyBitmap32;
     InlineUsedByList:TList;
     StyleArr:array[TState] of TStyle;
     //Control:TControl;
@@ -1066,7 +1066,7 @@ type
     procedure InvDesigner;
     function ActStyle:TStyle;
     procedure Frame3D(Border:TEdgeAlign; Points: array of TPoint);
-    procedure SpecialBg(const ref_scrolled,ref_fixed:TRect; Src:TBitmap32; const brct: TRect; IsFixed:boolean{; OffsetPoint:TPoint});
+    procedure SpecialBg(const ref_scrolled,ref_fixed:TRect; Src:TMyBitmap32; const brct: TRect; IsFixed:boolean{; OffsetPoint:TPoint});
     procedure SpecialPaintBorder(const rct,brct: TRect);
     function IsAbsolutePositioned:boolean;
     function GetStyleByName(const name:string; var r:TStyle):boolean;
@@ -1089,9 +1089,9 @@ type
     DragHPos, DragVPos: Integer;
     FDragOffset:TPoint;
     TopIsValid,BackIsValid:boolean;
-    BackGraph:TBitmap32;
-    TopGraph:TBitmap32;
-    TransparentTop:TBitmap32;
+    BackGraph:TMyBitmap32;
+    TopGraph:TMyBitmap32;
+    TransparentTop:TMyBitmap32;
     _SelfCBound:TRect;
     VertScrollInfo: TMyScrollInfo;
     HorzScrollInfo: TMyScrollInfo;
@@ -1115,7 +1115,7 @@ type
     procedure InvalDeepestBack;
     procedure AssertTop(addheight:integer; NeedTransparentImage:boolean=false);
     procedure PaintHidden;
-    procedure BeginPainting(bmp:TBitmap32);
+    procedure BeginPainting(bmp:TMyBitmap32);
     procedure EndPainting;
     procedure SetASXY(const Value: TASXY);
     procedure PixelCombineNormal(F: TColor32; var B: TColor32;
@@ -1124,7 +1124,7 @@ type
       M: TColor32);
     procedure PixelCombineNegativeMultiply(F: TColor32; var B: TColor32;
       M: TColor32);
-    function TransPainting(nWidth:integer=-1; nHeight:integer=-1): TBitmap32;
+    function TransPainting(nWidth:integer=-1; nHeight:integer=-1): TMyBitmap32;
     procedure SetImageType(const Value: TImageType);
     procedure WriteSUse(Writer: TWriter);
     procedure ReadSUse(Reader: TReader);
@@ -1175,8 +1175,8 @@ type
     procedure PixelCombineInner(F: TColor32; var B: TColor32; M: TColor32);
     procedure SetCenter(const Value: boolean);
     procedure PreventFlicker;
-    procedure TransFromBlackWhite_BG(bmp: TBitmap32);
-    procedure TransFromBlackWhite_TP(bmp:TBitmap32);
+    procedure TransFromBlackWhite_BG(bmp: TMyBitmap32);
+    procedure TransFromBlackWhite_TP(bmp:TMyBitmap32);
     procedure DoAutoSize(var PreferedWidth,PreferedHeight:integer);
   protected
    // FSharingEnabled:boolean;
@@ -1223,7 +1223,7 @@ type
     procedure AdjustScrolling(var R: TRect);
     function Opaque:boolean;
     function TransparentEdges:TRect;
-    procedure PaintWhiteBackground(ref_brct: TRect; Src: TBitmap32; const brct: TRect); virtual;
+    procedure PaintWhiteBackground(ref_brct: TRect; Src: TMyBitmap32; const brct: TRect); virtual;
     function SomethingIsFixed: boolean; //virtual;
     function SomethingIsScrolled: boolean; virtual;
     function ValidChildrenInvalidParent:boolean;
@@ -1546,7 +1546,7 @@ type
     function ScrollAreaWithScrollbars_Edges:TRect;
     function ScrollArea_Edges:TRect;
 
-    function GetOpaquePainting(var TopGraph: TBitmap32): boolean;
+    function GetOpaquePainting(var TopGraph: TMyBitmap32): boolean;
 
     function HorizontalCenter:boolean;
     function VerticalCenter:boolean;
@@ -1713,7 +1713,7 @@ function GetCursorBack(Cursor:TCursor):TCSSCursor;
 function FindForm(Value:string; var f:TForm):boolean;
 
 
-function GetCRCFromBitmap32(b:TBitmap32; w,h:integer; ResumeCrc:DWORD=0):DWORD;
+function GetCRCFromBitmap32(b:TMyBitmap32; w,h:integer; ResumeCrc:DWORD=0):DWORD;
 
 //function ColorToIdent(Color: Longint; var Ident: string): Boolean;
 function IdentToColor(const Ident: string; var Color: Integer): Boolean;
@@ -1748,7 +1748,7 @@ var CancelCheckDesignState:boolean;
     StoredChecking:boolean=false;
 
 (*type ITopGraph=interface ['{B238529C-08BE-4067-8262-93906552568C}']
-       function TopGraph:TBitmap32;
+       function TopGraph:TMyBitmap32;
 end;
 *)
 const
@@ -1854,7 +1854,7 @@ procedure GetRepeatings(var BPos:TPoint; var num_across,num_down:integer; W,H:in
 
 function GetNearestFont(const s:string):TFontName;
 function GetFontList(const s:String):TStringList;
-function GetAs32(Graphic:TGraphic; var res:TBitmap32):boolean;
+function GetAs32(Graphic:TGraphic):TMyBitmap32;
 
 function GetGraphicExtension(Graphic:TGraphic):string;
 procedure SaveGraphic(g:TGraphic; const FileName: string);
@@ -1879,10 +1879,10 @@ end;
 
 
 
-function HasSemiBmp32(res:TBitmap32):boolean;
+function HasSemiBmp32(res:TMyBitmap32):boolean;
 
 {$IFNDEF CLX}
-function GetJPEGImageFromBitmap32(Src:TBitmap32):TJPEGImage; 
+function GetJPEGImageFromBitmap32(Src:TMyBitmap32):TJPEGImage; 
 {$ENDIF}
 
 function TFakeControl(c:TControl):_TFakeControl; {$IFDEF VER160}unsafe;{$ENDIF}
@@ -1931,10 +1931,10 @@ procedure UpdateZIndex(Self:TWinControl);
 function GetGifImageFromBitmap32(Transparent:TBitmap32; Opaque:TBitmap32):TGifImage;
 {$IFNDEF CLX}
 function GetPNGObjectPTFromGif(gif:TGIFImage):TPNGObject;
-function GetPNGObjectPTFromGifAndBitmap32(Transparent:TBitmap32; gif:TGIFImage):TPNGObject;
+function GetPNGObjectPTFromGifAndBitmap32(Transparent:TMyBitmap32; gif:TGIFImage):TPNGObject;
 {$ENDIF}
 function GetPNGObjectFromBitmap32(Src:TBitmap32{; WithTransparency:boolean}):TGraphic;
-function GetBitmap32FromPNGObject(png:TPNGObject):TBitmap32;
+function GetBitmap32FromPNGObject(png:TPNGObject):TMyBitmap32;
 
 
 
@@ -2486,7 +2486,7 @@ type PBoolean=^Boolean;
 
 
 
-function HasSomething(bt:TBitmap32):boolean;
+function HasSomething(bt:TMyBitmap32):boolean;
 begin
  result:=not bt.Empty;//{(bt<>nil) and }(bt.Width<>0) and (bt.Height<>0);
 end;
@@ -4080,9 +4080,9 @@ begin
 end;
 
 function HasSemi(Graphic:TGraphic):boolean;
-var res:TBitmap32;
+var res:TMyBitmap32;
 begin
-  GetAs32(Graphic,res);
+  res:=GetAs32(Graphic);
   try
    result:=HasSemiBmp32(res);
   finally
@@ -4090,7 +4090,7 @@ begin
   end;
 end;
 
-function HasSemiBmp32(res:TBitmap32):boolean;
+function HasSemiBmp32(res:TMyBitmap32):boolean;
 var P: PColor32;
     i:integer;
 begin
@@ -10473,7 +10473,7 @@ end;
 
 procedure ParentPaintTo(Self:TdhCustomPanel; _Parent:TWinControl; IsTop:boolean; CutR:TRect; const SelfCBound:TRect; addheight:integer; SelfZOrder:integer{=-5555});
 
-procedure CopyTop(src:TWinControl; dst:TdhCustomPanel; srcTopGraph:TBitmap32; rr:TRect);
+procedure CopyTop(src:TWinControl; dst:TdhCustomPanel; srcTopGraph:TMyBitmap32; rr:TRect);
 var s,d:TRect;
 begin
  s:=rr;
@@ -10935,14 +10935,14 @@ end;
 
 
 
-function GetBitmap32FromPNGObject(png:TPNGObject):TBitmap32;
+function GetBitmap32FromPNGObject(png:TPNGObject):TMyBitmap32;
 var P: PColor32;
     bp:pByteArray;
     x,y:integer;
     TransparentColor:TColor;
     sl:pRGBLine;
 begin
-  result:=TBitmap32.Create;
+  result:=TMyBitmap32.Create;
   case png.TransparencyMode of
   ptmPartial:
   begin
@@ -11044,7 +11044,7 @@ end;
 type TFakeGIFImage=class(TGIFImage);
 type TGraphicAccess = class(TGraphic);
 
-function GetBitmap32FromGIFImage(gif:TGIFImage):TBitmap32;
+function GetBitmap32FromGifImage(gif:TGIFImage):TMyBitmap32;
 var P: PColor32;
     bp:pByteArray;
     x,y,i,ForceFrame:integer;
@@ -11067,7 +11067,7 @@ end;
 
 begin
 
-  result:=TBitmap32.Create;
+  result:=TMyBitmap32.Create;
 
   Source:=gif;
   begin //siehe result.Assign(TGraphic);
@@ -11118,7 +11118,7 @@ begin
 (*
 
                     
-  result:=TBitmap32.Create;
+  result:=TMyBitmap32.Create;
   result.Assign(gif);
   if gif.ForceFrame>=0 then
    GIFSubImage:=gif.Images[gif.ForceFrame] else
@@ -11146,13 +11146,13 @@ end;
 {$IFNDEF CLX}
 {$ENDIF}
          {
-function GetBitmap32FromBitmap(bt:TBitmap):TBitmap32;
+function GetBitmap32FromBitmap(bt:TBitmap):TMyBitmap32;
 var P: PColor32;
     bp:pByteArray;
     x,y:integer;
     TransparentColor:TColor32;
 begin
-  result:=TBitmap32.Create;
+  result:=TMyBitmap32.Create;
   result.Assign(bt);
   if bt.Transparent and ((bt.Width<>0) or (bt.Height<>0)) then
   begin
@@ -11168,13 +11168,13 @@ begin
   end;
 end;    }
 
-function GetBitmap32FromGraphic(bt:TGraphic):TBitmap32;
+function GetBitmap32FromGraphic(bt:TGraphic):TMyBitmap32;
 var P: PColor32;
     bp:pByteArray;
     x,y:integer;
     TransparentColor:TColor32;
 begin
-  result:=TBitmap32.Create;
+  result:=TMyBitmap32.Create;
   result.Assign(bt);
   if bt.Transparent and ((result.Width<>0) or (result.Height<>0)) then
   begin
@@ -11217,17 +11217,15 @@ begin
 {$ENDIF}
 end;
 
-function GetAs32(Graphic:TGraphic; var res:TBitmap32):boolean;
+function GetAs32(Graphic:TGraphic):TMyBitmap32;
 begin
  if Graphic is TPNGObject then
  begin
-  res:=GetBitmap32FromPNGObject(TPNGObject(Graphic));
-  result:=true;
+  result:=GetBitmap32FromPNGObject(TPNGObject(Graphic));
  end else
  if Graphic is TGifImage then
  begin
-  res:=GetBitmap32FromGifImage(TGifImage(Graphic));
-  result:=true;
+  result:=GetBitmap32FromGifImage(TGifImage(Graphic));
  end else
 {$IFNDEF CLX}
  {if Graphic is TBitmap then
@@ -11238,15 +11236,14 @@ begin
 {$ENDIF}
  if Graphic<>nil then
  begin
-  res:=GetBitmap32FromGraphic(Graphic);
-  result:=true;
+  result:=GetBitmap32FromGraphic(Graphic);
  end else
  begin
-  result:=false;
+  result:=nil;
  end;
 end;
 
-procedure TdhCustomPanel.PaintWhiteBackground(ref_brct:TRect; Src:TBitmap32; const brct: TRect);
+procedure TdhCustomPanel.PaintWhiteBackground(ref_brct:TRect; Src:TMyBitmap32; const brct: TRect);
 begin
 
 end;
@@ -11282,7 +11279,7 @@ end;
 
 
 
-function Multiply32(Strech32:TBitmap32; NewWidth,NewHeight:integer):TBitmap32;
+function Multiply32(Strech32:TMyBitmap32; NewWidth,NewHeight:integer):TMyBitmap32;
 var w,h,x,y:integer;
     OldDrawMode:TDrawMode;
 begin
@@ -11290,7 +11287,7 @@ begin
  Strech32.DrawMode:=dmOpaque;
  w:=Strech32.Width;
  h:=Strech32.Height;
- Result:=TBitmap32.Create;
+ Result:=TMyBitmap32.Create;
  Result.DrawMode:=dmOpaque;
  Result.Width:=NewWidth;
  Result.Height:=NewHeight;
@@ -11313,7 +11310,7 @@ begin
  Result.DrawMode:=OldDrawMode;
 end;
 
-procedure TdhCustomPanel.SpecialBg(const ref_scrolled,ref_fixed:TRect; Src:TBitmap32; const brct: TRect; IsFixed:boolean{; OffsetPoint:TPoint});
+procedure TdhCustomPanel.SpecialBg(const ref_scrolled,ref_fixed:TRect; Src:TMyBitmap32; const brct: TRect; IsFixed:boolean{; OffsetPoint:TPoint});
 var
   //bmp:TBitmap;
   num_across, num_down,
@@ -11327,7 +11324,7 @@ var
   //MyRgn: HRGN ;
   SaveIndex: Integer;
   x1,x2,y1,y2,i:integer;
-  Strech32,Strech32Mult:TBitmap32;
+  Strech32,Strech32Mult:TMyBitmap32;
   R,R2,ref:TRect;
 
 
@@ -11339,9 +11336,9 @@ end;
 
 
 procedure StretchDrawEx(Graphic:TGraphic);
-var Strech32:TBitmap32;
+var Strech32:TMyBitmap32;
 begin
-  GetAs32(Graphic,Strech32);
+  Strech32:=GetAs32(Graphic);
   try
   Strech32.StretchFilter:=sfLanczos;
   R:=Rect(0,0,Strech32.Width,Strech32.Height);
@@ -11425,7 +11422,7 @@ begin
  if (Referer.GetImageType=bitSplit) then
  begin
 
-   GetAs32(FPicture,Strech32);
+   Strech32:=GetAs32(FPicture);
    Strech32.StretchFilter:=sfNearest;//sfLanczos;
    try
    //Strech32.StretchFilter:=sfLanczos;
@@ -11489,7 +11486,7 @@ begin
  SelectClipRgn(Canvas.Handle,MyRgn);
    }
 
- GetAs32(FPicture,Strech32);
+ Strech32:=GetAs32(FPicture);
  try
  GetRepeatings(BPos,num_across,num_down,Strech32.Width,Strech32.Height,brct,FBackgroundRepeat in [cbrRepeat,cbrRepeatX],FBackgroundRepeat in [cbrRepeat,cbrRepeatY]);
 
@@ -11720,7 +11717,7 @@ begin
 end;
 
 
-function GetEqArea(bmp:TBitmap32;TryX,TryY:integer):TRect;
+function GetEqArea(bmp:TMyBitmap32;TryX,TryY:integer):TRect;
 var x,y,w,h:integer;
     bbase,base,compareTo:PColor32;
     Eq:boolean;
@@ -12396,7 +12393,7 @@ begin
 end;
 
 
-procedure MixColor(Src:TBitmap32; Color:TColor32);
+procedure MixColor(Src:TMyBitmap32; Color:TColor32);
 var P:PColor32;
     i:integer;
 begin
@@ -12409,15 +12406,15 @@ begin
 end;
 
 
-procedure Exch(var a,b:TBitmap32); overload;
-var c:TBitmap32;
+procedure Exch(var a,b:TMyBitmap32); overload;
+var c:TMyBitmap32;
 begin
  c:=a;
  a:=b;
  b:=c;
 end;
 
-procedure MixAlpha(Src:TBitmap32);
+procedure MixAlpha(Src:TMyBitmap32);
 var P:PColor32;
     i:integer;
     alpha,alpha_shifted,p1,p2:DWORD;
@@ -12594,10 +12591,10 @@ begin
    result:=false;
 end;
 
-type TTransFromProc=procedure (bmp:TBitmap32) of object;
+type TTransFromProc=procedure (bmp:TMyBitmap32) of object;
 
 
-procedure TdhCustomPanel.TransFromBlackWhite_BG(bmp:TBitmap32);
+procedure TdhCustomPanel.TransFromBlackWhite_BG(bmp:TMyBitmap32);
 begin
   BeginPainting(bmp);
   try
@@ -12608,7 +12605,7 @@ begin
   end;
 end;
 
-procedure TdhCustomPanel.TransFromBlackWhite_TP(bmp:TBitmap32);
+procedure TdhCustomPanel.TransFromBlackWhite_TP(bmp:TMyBitmap32);
 begin
   BeginPainting(bmp);
   try
@@ -12620,15 +12617,15 @@ end;
 
 
 
-function TransFromBlackWhite(callback:TTransFromProc; w,h:integer):TBitmap32;
-var Src2:TBitmap32;
+function TransFromBlackWhite(callback:TTransFromProc; w,h:integer):TMyBitmap32;
+var Src2:TMyBitmap32;
 begin
-  result:=TBitmap32.Create;
+  result:=TMyBitmap32.Create;
   result.Width:=w;
   result.Height:=h;
   if not result.Empty then
   begin
-  Src2:=TBitmap32.Create;
+  Src2:=TMyBitmap32.Create;
   Src2.SetSize(result.Width,result.Height);
   Src2.Clear(clWhite32);
   callback(Src2);
@@ -12641,7 +12638,7 @@ begin
 end;
 
 
-procedure ColXor(bmp:TBitmap32);
+procedure ColXor(bmp:TMyBitmap32);
 var i:integer;
 var P: PColor32;
 begin
@@ -12709,14 +12706,14 @@ begin
 end;
 
 
-function TdhCustomPanel.TransPainting(nWidth:integer=-1; nHeight:integer=-1):TBitmap32;
-var Src:TBitmap32;
+function TdhCustomPanel.TransPainting(nWidth:integer=-1; nHeight:integer=-1):TMyBitmap32;
+var Src:TMyBitmap32;
 var T: TAffineTransformation;
     Transformations:TTransformations;
     bWidth,bHeight:integer;     
     cr:TRect;
 
-procedure DoBlurPure(_Src:TBitmap32; Blur:TBlur; shift:integer; inv:boolean=false);
+procedure DoBlurPure(_Src:TMyBitmap32; Blur:TBlur; shift:integer; inv:boolean=false);
 var P,P2,P3: PColor32;
     j,OffsX,OffsY,Offs,count:integer;
     a:DWORD;
@@ -12751,7 +12748,7 @@ begin
  end;
 end;
 
-procedure DoBlur(_Src:TBitmap32; Blur:TBlurEffect; inv:boolean);
+procedure DoBlur(_Src:TMyBitmap32; Blur:TBlurEffect; inv:boolean);
 var P,P2,P4: PColor32;
     j,OffsX,OffsY{,Offs},count:integer;
     Alpha:double;
@@ -13288,7 +13285,7 @@ begin
  result:=round((d-von)/einheit)*einheit+von;
 end;
 
-function ScaledCol(Src:TBitmap32; X,Y,ScaleX,ScaleY:Double; const BorderClip:TRect):TColor32;
+function ScaledCol(Src:TMyBitmap32; X,Y,ScaleX,ScaleY:Double; const BorderClip:TRect):TColor32;
 {$DEFINE ScaleColDouble}
 var vonX,vonY,bisX,bisY:Double;
     iX,iY:integer;
@@ -13426,7 +13423,7 @@ end;
 
 
 
-procedure RoundCorner(const OuterRect:TRect; Src,Dst:TBitmap32; HorzOuterRadius,VertOuterRadius,HorzBorderWidth,VertBorderWidth:integer; Align:TAlign);
+procedure RoundCorner(const OuterRect:TRect; Src,Dst:TMyBitmap32; HorzOuterRadius,VertOuterRadius,HorzBorderWidth,VertBorderWidth:integer; Align:TAlign);
 var HorzInnerRadius,VertInnerRadius,x,y:integer;
     alpha,betta,_alpha,alphaO,alphaI,perimeter,act_arc,beta,
     NormalX,NormalY,DistRound,DistOuter,DistInner,projX,projY,RoundOuterX,RoundOuterY,RoundInnerX,RoundInnerY,OuterX,OuterY,InnerX,InnerY,pct,pct2:double;
@@ -13891,7 +13888,7 @@ end;
 
 
 
-procedure PaintBlur(_Src,SrcFinal:TBitmap32; pc:TPixelCombineMode; inv:boolean);
+procedure PaintBlur(_Src,SrcFinal:TMyBitmap32; pc:TPixelCombineMode; inv:boolean);
 begin
  _Src.DrawMode:=dmCustom;
  (*
@@ -13961,7 +13958,7 @@ begin
 end;
 
 procedure DoBlurEffects;
-var Src2,SrcFinal:TBitmap32;
+var Src2,SrcFinal:TMyBitmap32;
     MaxJitter:integer;
 begin
   if (Transformations<>nil) then
@@ -13979,9 +13976,9 @@ begin
    EqArea.Bottom:=max(EqArea.Bottom,EqArea.Top);
    EqArea.Right:=max(EqArea.Right,EqArea.Left);
 
-   Src2:=TBitmap32.Create;
+   Src2:=TMyBitmap32.Create;
    Src2.SetSize(Src.Width,Src.Height);
-   SrcFinal:=TBitmap32.Create;
+   SrcFinal:=TMyBitmap32.Create;
    SrcFinal.Assign(Src);
    try
    if Transformations.InnerGlow.Enabled then
@@ -14032,7 +14029,7 @@ begin
 end;
 
 procedure AllOrTextOnly;
-var Src2:TBitmap32;
+var Src2:TMyBitmap32;
 begin
   if TextExclude then
   begin
@@ -14058,7 +14055,7 @@ end;
 
 
 procedure DoTransform;
-var Src2:TBitmap32;
+var Src2:TMyBitmap32;
 begin
 
   assert(bWidth=Src.Width); 
@@ -14098,7 +14095,7 @@ begin
   Src.DrawMode:=dmBlend;
   Src.OnPixelCombine:= PixelCombineNormal;
   Src.DrawMode:=dmCustom;
-  Src2:=TBitmap32.Create;
+  Src2:=TMyBitmap32.Create;
   Src2.SetSize(nWidth,nHeight);
   Src2.Clear(0);
 
@@ -14134,7 +14131,7 @@ begin
 end;
 
 procedure DoRoundCorners;
-var SrcFinal:TBitmap32;
+var SrcFinal:TMyBitmap32;
     bo,OuterRect,InnerRect:TRect;
     brTopLeft,brTopRight,brBottomLeft,brBottomRight:TPoint;
     AvailX,AvailY:integer;
@@ -14144,7 +14141,7 @@ begin
   if GetBorderRadii(brTopLeft,brTopRight,brBottomLeft,brBottomRight,TopLeftDouble,TopRightDouble,BottomLeftDouble,BottomRightDouble) then
   begin
 
-   SrcFinal:=TBitmap32.Create;
+   SrcFinal:=TMyBitmap32.Create;
    SrcFinal.Assign(Src);
    bo:=BorderPureWithHidden;
    OuterRect:=ShrinkRect(Src.BoundsRect,MarginPure);
@@ -14283,7 +14280,7 @@ var Scrollbar3dlightColor,ScrollbarDarkshadowColor:TColor32;
 
     ScrollbarFaceColor,ScrollbarArrowColor,ScrollbarBaseColor:TColor32;
                                                                        
-var Src:TBitmap32;
+var Src:TMyBitmap32;
 
 const uparrow:array[0..6,0..6] of integer=(
 (0,0,0,0,0,0,0),
@@ -14578,7 +14575,7 @@ begin
 end;
 
 
-{function FullOpaque(b:TBitmap32):boolean;
+{function FullOpaque(b:TMyBitmap32):boolean;
 var x,y:integer;
 begin
  for x:=0 to b.Width-1 do
@@ -14630,7 +14627,7 @@ begin
   if not Opaque then
   begin
    if BackGraph=nil then
-    BackGraph:=TBitmap32.Create;
+    BackGraph:=TMyBitmap32.Create;
    BackGraph.SetSize(nWidth,nHeight);
    PaintOnlyBg:=glPaintOnlyBg;
    glPaintOnlyBg:=false;
@@ -14665,7 +14662,7 @@ begin
   if TopGraph=nil then
   if BackGraph<>nil then
    TopGraph:=BackGraph else
-   TopGraph:=TBitmap32.Create;
+   TopGraph:=TMyBitmap32.Create;
 
   TopGraph.SetSize(nWidth,nHeight);
   if BackIsValid and (BackGraph<>TopGraph) and not TopIsValid then
@@ -14679,7 +14676,7 @@ begin
     PaintHidden;
    if NeedTransparentImage then
    begin
-    TransparentTop:=TBitmap32.Create;
+    TransparentTop:=TMyBitmap32.Create;
     TransparentTop.SetSize(nWidth,nHeight);
    end;
   end else
@@ -14712,7 +14709,7 @@ begin
  end;
 end;
 
-procedure TdhCustomPanel.BeginPainting(bmp:TBitmap32);
+procedure TdhCustomPanel.BeginPainting(bmp:TMyBitmap32);
 begin
    assert(ActTopGraph=nil);
    assert(not bmp.Empty);
@@ -16571,7 +16568,7 @@ type
   TDWORDArray = Array[Word] of DWORD;
   pDWORDArray = ^TDWORDArray;
 
-procedure NormalizeOpaque(Transparent:TBitmap32; Opaque:TBitmap32);
+procedure NormalizeOpaque(Transparent:TMyBitmap32; Opaque:TMyBitmap32);
 var P,P2: PColor32;
     i:integer;
 begin
@@ -16779,7 +16776,7 @@ begin
 end;
 
 (*
-function GetIconFromBitmap32(Transparent:TBitmap32; Opaque:TBitmap32):TIcon;
+function GetIconFromBitmap32(Transparent:TMyBitmap32; Opaque:TMyBitmap32):TIcon;
 var b:TBitmap;
 begin
   result:=TIcon.Create;
@@ -16800,7 +16797,7 @@ end;
 
 
 (*
-function GetGifImageFromBitmap32(Transparent:TBitmap32; Opaque:TBitmap32):TGifImage;
+function GetGifImageFromBitmap32(Transparent:TMyBitmap32; Opaque:TMyBitmap32):TGifImage;
 var y,x:integer;
 var P,P2,P3: PColor32;
     bp:pByteArray;
@@ -16911,7 +16908,7 @@ end;
 
 {$IFNDEF CLX}
 
-function GetPNGObjectPTFromGifAndBitmap32(Transparent:TBitmap32; gif:TGIFImage):TPNGObject;
+function GetPNGObjectPTFromGifAndBitmap32(Transparent:TMyBitmap32; gif:TGIFImage):TPNGObject;
 var bt:TBitmap;
 var P: PColor32;
     bp:pByteArray;
@@ -16976,7 +16973,7 @@ begin
 end;
 
 
-function GetPNGObjectPTFromBitmap32(Transparent:TBitmap32; Opaque:TBitmap32):TPNGObject;
+function GetPNGObjectPTFromBitmap32(Transparent:TMyBitmap32; Opaque:TMyBitmap32):TPNGObject;
 var gif:TGifImage;
 begin
  gif:=GetGifImageFromBitmap32(Transparent,Opaque);
@@ -16989,9 +16986,9 @@ end;
 
 
 function GetPNGObjectPTFromGif(gif:TGIFImage):TPNGObject;
-var Transparent:TBitmap32;
+var Transparent:TMyBitmap32;
 begin
- GetAs32(gif,Transparent);
+ Transparent:=GetAs32(gif);
  try
   result:=GetPNGObjectPTFromGifAndBitmap32(Transparent,gif);
  finally
@@ -17004,7 +17001,7 @@ end;
 
                   
 {$IFNDEF CLX}
-function GetJPEGImageFromBitmap32(Src:TBitmap32):TJPEGImage;
+function GetJPEGImageFromBitmap32(Src:TMyBitmap32):TJPEGImage;
 var bt:TBitmap;
 begin
   bt:=TBitmap.Create;
@@ -17017,7 +17014,7 @@ end;
 {$ENDIF}
 
 
-function GetFromBitmap32(Transparent:TBitmap32):TGraphic;
+function GetFromBitmap32(Transparent:TMyBitmap32):TGraphic;
 begin
  result:=TBitmap.Create;
  result.Assign(Transparent);
@@ -17030,11 +17027,11 @@ end;
 
   end; }
 
-function GetGifTransparent(Opaque:TBitmap32; Transparent:TBitmap32):TBitmap32;
+function GetGifTransparent(Opaque:TMyBitmap32; Transparent:TMyBitmap32):TMyBitmap32;
 var J:integer;
 var P,P2: PColor32;
 begin
- result:=TBitmap32.Create;
+ result:=TMyBitmap32.Create;
  result.Assign(Opaque);
  P:=Transparent.PixelPtr[0,0];
  P2:=result.PixelPtr[0,0];
@@ -17074,7 +17071,7 @@ end;
 }
 
 
-procedure NormalizeTransparency(Transparent:TBitmap32);
+procedure NormalizeTransparency(Transparent:TMyBitmap32);
 var J:integer;
 var P: PColor32;
 begin
@@ -17091,7 +17088,7 @@ begin
  end;
 end;
 
-function GetCRCFromBitmap32(b:TBitmap32; w,h:integer; ResumeCrc:DWORD=0):DWORD; overload;
+function GetCRCFromBitmap32(b:TMyBitmap32; w,h:integer; ResumeCrc:DWORD=0):DWORD; overload;
 var y:integer;
 begin
    result:=w;
@@ -17102,10 +17099,10 @@ begin
 //   result:=calc_crc32(b.Width*b.Height*sizeof(TColor32),pchar(b.PixelPtr[0,0]),result);
 end;
 
-function GetCRCFromBitmap32(Transparent,Opaque:TBitmap32; w,h:integer; ResumeCrc:DWORD=0):DWORD; overload;
-var Opaque2:TBitmap32;
+function GetCRCFromBitmap32(Transparent,Opaque:TMyBitmap32; w,h:integer; ResumeCrc:DWORD=0):DWORD; overload;
+var Opaque2:TMyBitmap32;
 begin
- Opaque2:=TBitmap32.Create;
+ Opaque2:=TMyBitmap32.Create;
  Opaque2.Assign(Opaque);
  NormalizeOpaque(Transparent,Opaque2);
  result:=GetCRCFromBitmap32(Opaque2,w,h,ResumeCrc);
@@ -17113,7 +17110,7 @@ begin
 end;
 
 
-procedure TrimBottom(b:TBitmap32; var w,h:integer);
+procedure TrimBottom(b:TMyBitmap32; var w,h:integer);
 var x,y:integer;
 begin
    for y:=h-1 downto 0 do
@@ -17125,7 +17122,7 @@ begin
    end;
 end;
 
-procedure TrimRight(b:TBitmap32; var w,h:integer);
+procedure TrimRight(b:TMyBitmap32; var w,h:integer);
 var x,y:integer;
 begin
    for x:=w-1 downto 0 do
@@ -17137,7 +17134,7 @@ begin
    end;
 end;
 
-procedure TrimRightBottom(b:TBitmap32; var w,h:integer);
+procedure TrimRightBottom(b:TMyBitmap32; var w,h:integer);
 begin
    w:=b.Width;
    h:=b.Height;
@@ -17152,8 +17149,8 @@ end;
 
 
 
-function SaveImg(Opaque:TBitmap32; Transparent:TBitmap32; var RasteringFile:string; CheckBaseRasteringFile:boolean; BaseRasteringFile:string; PhysicalImageFormat:TPhysicalImageFormat; AllowCutWhiteSpace:boolean):boolean;
-var gif_pre:TBitmap32;
+function SaveImg(Opaque:TMyBitmap32; Transparent:TMyBitmap32; var RasteringFile:string; CheckBaseRasteringFile:boolean; BaseRasteringFile:string; PhysicalImageFormat:TPhysicalImageFormat; AllowCutWhiteSpace:boolean):boolean;
+var gif_pre:TMyBitmap32;
     i,w,h:integer;
     _crc:DWORD;
     graph:TGraphic;
@@ -17220,7 +17217,7 @@ function TStyle.PrepareBGRastering:boolean;
 const sst:array[TState] of string=('_mn','_hr','_dn','_hd');
 var pn:TdhCustomPanel;
     R:TRect;
-    Src,Src2:TBitmap32;
+    Src,Src2:TMyBitmap32;
 begin
 
  pn:=TdhCustomPanel(Owner.Control);
@@ -17239,7 +17236,7 @@ begin
    end;
   end;
    OffsetRect(R,-R.Left,-R.Top);
-   Src:=TBitmap32.Create;
+   Src:=TMyBitmap32.Create;
    Src.DrawMode:=dmBlend;
    Src.Width:=R.Right;
    Src.Height:=R.Bottom;
@@ -17247,7 +17244,7 @@ begin
   Owner.ActTopGraph:=Src;
   Src.Clear(clWhite32);
   Owner.SpecialBg(R,R,Src,R,false{,Point(0,0)});
-  Src2:=TBitmap32.Create;
+  Src2:=TMyBitmap32.Create;
   Src2.Assign(Src);
   Src.Clear(clBlack32);
   Owner.SpecialBg(R,R,Src,R,false{,Point(0,0)});
@@ -17274,7 +17271,7 @@ begin
   result:=b;
 end;
 
-function getPhysicalImageFormat(pn:TdhCustomPanel;TransparentTop:TBitmap32):TPhysicalImageFormat;
+function getPhysicalImageFormat(pn:TdhCustomPanel;TransparentTop:TMyBitmap32):TPhysicalImageFormat;
 const LogicalToPhysicalFileFormat:array[TImageFormat] of TPhysicalImageFormat=(pifSaveAsGIF,pifSaveAsGIF,pifSaveAsPNG,pifSaveAsJPEG);
 begin
   result:=LogicalToPhysicalFileFormat[pn.GetImageFormat];
@@ -17291,7 +17288,7 @@ const EqNaming:array[0..2,0..2] of string=(('_topleft','_topmiddle','_topright')
 
 function TStyle.PrepareRastering(addheight:integer; const PostFix:string):boolean;
 var //_BackIsValid,_TopIsValid:boolean;
-    //_TopGraph,_BackGraph,_TransparentTop:TBitmap32;
+    //_TopGraph,_BackGraph,_TransparentTop:TMyBitmap32;
     pn:TdhCustomPanel;
     graph:TGraphic;
     imageIndex,w,h:integer;
@@ -17304,7 +17301,7 @@ var //_BackIsValid,_TopIsValid:boolean;
     PrevSubImage:TGIFSubImage;
     si:TGIFSubImage;
     OldAnimate:boolean;
-    pnTopGraph,pnTransparentTop:TBitmap32;
+    pnTopGraph,pnTransparentTop:TMyBitmap32;
     EqArea:TRect;
     EqX,EqY:integer;
     EqSize:TRect;
@@ -17418,8 +17415,8 @@ begin
      end;
      if (EqArea.Right<>EqArea.Left) and (EqArea.Bottom<>EqArea.Top) or (pn.VariableWidthSize and (EqArea.Right<>EqArea.Left)) or (pn.VariableHeightSize and (EqArea.Top<>EqArea.Bottom)){ or (EqArea.Right-EqArea.Left>=1) and (EqArea.Bottom-EqArea.Top>=1) and pn.VariableSize} then
      begin
-      pnTopGraph:=TBitmap32.Create;
-      pnTransparentTop:=TBitmap32.Create;
+      pnTopGraph:=TMyBitmap32.Create;
+      pnTransparentTop:=TMyBitmap32.Create;
       pnTransparentTop.DrawMode:=pn.TransparentTop.DrawMode;
       try
 
@@ -17537,7 +17534,7 @@ begin
 end;
 
 function TStyle.PrepareBGImage:boolean;
-    //Strech32:TBitmap32;
+    //Strech32:TMyBitmap32;
 var pn:TdhCustomPanel;
     ss:TStringStream;
     NeedSave:boolean;
@@ -17552,7 +17549,7 @@ begin
  FBackgroundImage.RequestGraphic.SaveToStream(ss);
  BGImageFile:=ProposedBackgroundFilename;
 
-  //GetAs32(FBackgroundImage.Graphic,Strech32);
+  //Strech32:=GetAs32(FBackgroundImage.Graphic);
  result:=glSaveBin(calc_crc32_String(ss.DataString),BGImageFile,AbsoluteBGImageFile,false,EmptyStr,NeedSave,false);
 
  if NeedSave then
@@ -17685,7 +17682,7 @@ end;
 
 
 
-procedure SaveBmp32(Transparent,Opaque:TBitmap32; const FileName: string);
+procedure SaveBmp32(Transparent,Opaque:TMyBitmap32; const FileName: string);
 var ext:string;
     g:TGraphic;
 begin
@@ -17720,13 +17717,13 @@ end;
 
 procedure SaveGraphic(g:TGraphic; const FileName: string);
 var ext:string;
-    bmp:TBitmap32;
+    bmp:TMyBitmap32;
 begin
  ext:=lowercase(ExtractFileExt(Filename));
  if GetGraphicExtension(g)=ext then
   g.SaveToFile(FileName) else
  begin
-  GetAs32(g,bmp);
+  bmp:=GetAs32(g);
   try
    SaveBmp32(bmp,bmp,FileName);
   finally
@@ -18290,7 +18287,7 @@ end;
 {$ENDIF}
 
                          
-function TdhCustomPanel.GetOpaquePainting(var TopGraph:TBitmap32):boolean;
+function TdhCustomPanel.GetOpaquePainting(var TopGraph:TMyBitmap32):boolean;
 begin
   AssertTop(0);
   result:=HasSomething(Self.TopGraph);

@@ -5094,10 +5094,19 @@ end;
 
 procedure TTabs.gScrollingClick(Sender: TObject);
 var i:integer;
+    page:TdhPage;
 begin
  if Adjusting then exit;
  for i:=0 to Selection.Count-1 do
-  (TObject(Selection[i]) as TdhPage).Scrolling:=TScrolling(gScrolling.ItemIndex);
+ begin
+  page:=(TObject(Selection[i]) as TdhPage);
+  page.Scrolling:=TScrolling(gScrolling.ItemIndex);
+  if page.Scrolling=scNo then
+  begin
+   page.VertPosition:=0;
+   page.HorzPosition:=0;
+  end;                  
+ end;
  Changed('Change Scrolling');
 end;
 

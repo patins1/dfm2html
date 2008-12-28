@@ -12883,19 +12883,6 @@ begin
  result:=-(R/2-Round(R/2));
 end;
 
-
-procedure StringToFile(const FileName,s:string);
-begin
- with TFileStream.create(FileName,fmCreate) do
- begin
-  if s<>EmptyStr then
-   WriteBuffer(s[1],length(s));
-  Free;
- end;
-end;
-
-
-
 function roundrest(x:double):double;
 begin
  result:=x-round(x);
@@ -17522,6 +17509,30 @@ function TStyle.ProposedBackgroundFilename: String;
 begin
  result:=FinalImageID(Owner)+sst[OwnState]+FBackgroundImage.GraphicExtension
 end;
+                         
+function AsString(graphic:TGraphic):String;
+var
+  Stream: TStringStream;
+begin
+  Stream := TStringStream.Create('');
+  try
+    graphic.SaveToStream(Stream);
+    Result:=Stream.DataString;
+  finally
+    Stream.Free;
+  end;
+end;
+
+function StringFromFile(const FileName:string):string;
+begin
+ with TFileStream.create(FileName,fmOpenRead) do
+ begin
+  SetLength(result,Size);
+  if Size<>0 then
+   ReadBuffer(result[1],Size);
+  Free;
+ end;
+end;
 
 procedure StringToFile(const FileName,s:string);
 begin
@@ -17534,32 +17545,31 @@ begin
 end;
 
 function TStyle.PrepareBGImage:boolean;
-    //Strech32:TMyBitmap32;
-var pn:TdhCustomPanel;
-    ss:TStringStream;
-    NeedSave:boolean;
-    AbsoluteBGImageFile:string;
+var NeedSave:boolean;
+    AbsoluteBGImageFile,StringContent:string;
 begin
  result:=false;
  if not IsPictureStored then
   exit;
- ss:=TStringStream.Create(EmptyStr);
- try
- pn:=Owner;
- FBackgroundImage.RequestGraphic.SaveToStream(ss);
- BGImageFile:=ProposedBackgroundFilename;
 
-  //Strech32:=GetAs32(FBackgroundImage.Graphic);
- result:=glSaveBin(calc_crc32_String(ss.DataString),BGImageFile,AbsoluteBGImageFile,false,EmptyStr,NeedSave,false);
+ StringContent:='';
+ if FBackgroundImage.HasPath then
+ try
+  StringContent:=StringFromFile(FBackgroundImage.GetAbsolutePath);
+ except
+  // let the dummy image be load next
+ end;
+ if StringContent='' then
+  StringContent:=AsString(FBackgroundImage.RequestGraphic);
+
+ BGImageFile:=ProposedBackgroundFilename;
+ result:=glSaveBin(calc_crc32_String(StringContent),BGImageFile,AbsoluteBGImageFile,false,EmptyStr,NeedSave,false);
 
  if NeedSave then
  try
-  StringToFile(AbsoluteBGImageFile,ss.DataString);
+  StringToFile(AbsoluteBGImageFile,StringContent);
   glAfterSaveBin;
  except
- end;
- finally
-  ss.Free;
  end;
  result:=true;
 end;

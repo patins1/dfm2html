@@ -58,11 +58,13 @@ uses
   
 var
   StockBitmap: TBitmap;
+ 
+var _HorzSum:array[0..10000] of integer;
 
 
 procedure TMyBitmap32.RenderTextExtended(X, Y: Integer; const Text: Widestring; AALevel: Integer; Color: TColor32; const SzOri:TPoint; XPadding:integer; LetterSpacing:Integer; WordSpacing:Integer);
 var
-  B, B2: TBitmap32;
+  B, B2: TMyBitmap32;
   Sz: TSize;
   Alpha: TColor32;
   StockCanvas: TCanvas;
@@ -79,7 +81,7 @@ begin
   PaddedText := Text{ + ' '};
 
   { TODO : Optimize Clipping here }
-  B := TBitmap32.Create;
+  B := TMyBitmap32.Create;
   try
     if AALevel = 0 then
     begin
@@ -120,7 +122,7 @@ begin
         if SzOri.X<>0 then
          inc(Sz.cx,Round(XPadding*(Sz.cx/SzOri.X)));
         //GetTextMetrics(StockCanvas.Handle,tm_big);
-        B2 := TBitmap32.Create;
+        B2 := TMyBitmap32.Create;
         try
           B2.SetSize(Sz.Cx, Sz.Cy);
           B2.Clear(0);

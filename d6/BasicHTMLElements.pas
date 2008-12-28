@@ -86,7 +86,7 @@ var dhStrEditDlg:TBasicHTMLElements;
 
 implementation
 
-{$R *.dfm}
+{$R BasicHTMLElements.dfm}
 
 procedure TBasicHTMLElements.Loaded;
 begin

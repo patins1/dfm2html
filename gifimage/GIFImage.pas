@@ -9424,6 +9424,8 @@ begin
    end;
    if (bt<>nil) or (FastPaint<>nil) then
    begin
+    if Height>=1 then
+    begin
     bp:=Scanline[0];
     for Y:=0 to Height-1 do
     begin
@@ -9450,6 +9452,7 @@ begin
       inc(bp);
      end;
      //inc(P,DeltaP);
+    end;
     end;
     if FastPaint=nil then
      TChangableCanvas(ACanvas).Changed;

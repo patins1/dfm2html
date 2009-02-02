@@ -17424,6 +17424,7 @@ begin
       pnTopGraph:=TMyBitmap32.Create;
       pnTransparentTop:=TMyBitmap32.Create;
       pnTransparentTop.DrawMode:=pn.TransparentTop.DrawMode;
+      pn.TransparentTop.DrawMode:=dmOpaque;
       try
 
        EqSizing[0,0]:=Rect(0,0,EqArea.Left,EqArea.Top);
@@ -17459,7 +17460,8 @@ begin
        end;
        RasteringFiles:=RasteringFiles+inttostr(EqArea.Top)+'|'+inttostr(pn.TransparentTop.Height-EqArea.Bottom)+'|'+inttostr(EqArea.Left)+'|'+inttostr(pn.TransparentTop.Width-EqArea.Right)+'|';
        RasteringFile:=RasteringFiles;
-      finally
+      finally     
+       pn.TransparentTop.DrawMode:=pnTransparentTop.DrawMode;
        pnTopGraph.Free;
        pnTransparentTop.Free;
       end;

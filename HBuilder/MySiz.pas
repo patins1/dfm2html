@@ -916,7 +916,7 @@ begin
  NotifyCSSChanged([]);
  UpdateHintWindow;
 end;
-         
+
 
 class function TMySiz.ZGridAdjust(GridBase,Y,FGrid:integer): integer;
 begin
@@ -1291,6 +1291,13 @@ var c1,c2:Int64;
     r:TRect;
 
 begin
+
+ if (key=VK_F2) then
+ begin
+  if Tabs.mText.Visible then
+   Tabs.EditText;
+  exit;
+ end;
 
  if ((key=VK_UP) or (key=VK_DOWN) or (key=VK_LEFT) or (key=VK_RIGHT)) and _RuntimeMode then
  if FindBody<>nil then

@@ -3735,8 +3735,21 @@ begin
      AddAttr('src',s);
      if not IsProp('Loop','False') then
        AddAttr('loop','infinite');
+    { if not IsProp('Loop','False') then
+       AddAttr('loop','true') else
+       AddAttr('loop','false');
+     AddAttr('hidden','true');
+     AddAttr('height','0');
+     AddAttr('width','0');  }
+
+  //würde in IE doppelt abgespielt:
+  //if bAdvPos(r,'<body',ns) and bAdvPos(r,'>',ns,r) then
+  // Insert(CRLF+MakeIndent(2)+'<embed src="'+page_info+'" autostart="true" loop="'+NsLoop+'" hidden="true" height="0" width="0"/>',ns,r+length('>'));
+
+
      //AddStyle('display','none');
      //glStyle:='';
+    { DoEle('embed');     }
      DoEle('bgsound');
     end else
     begin

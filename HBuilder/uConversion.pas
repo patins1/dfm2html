@@ -1601,10 +1601,10 @@ var vv:TList;
 procedure StyleArrange;
 var s:string;
     ss:array[TState] of string;
-    i,ii,p,r:integer;
+    i,ii,p,r,backimgPos,charI:integer;
     ws:boolean;
     sog:tg;
-    backimg:string;
+    backimg,backimgNew,styles:string;
     nest,unest:TNest;
     st:TState;
     OverBasedOnDown:boolean;
@@ -1675,10 +1675,31 @@ begin
    end;
    if (nest.IDs[st]<>'') and (nest.Style[st]<>'') then
    begin
-    //wenn images mit 'Cache-Control: no-cache, must-revalidate' zurückgesendet werden, wird IMMER neuer Server-Kontakt aufgebaut, egal ob preloaded
-    if (st>hsNormal) and sog.Init(nest.Style[st]) and sog.OverPos('background-image:url(''') and sog.SaveOverPos('''',backimg) then
-     AddToPreload(backimg);
-    s:=copy(nest.IDs[st],2,maxint)+IndentSpace+'{'+nest.Style[st]+'}'+CRLF;
+    styles:=nest.Style[st];
+    if sog.Init(styles) and sog.OverPos('background-image:url(''') and sog.getPos(backimgPos) and sog.SaveOverPos('''',backimg) then
+    begin
+     if (st>hsNormal) then
+     begin
+      //wenn images mit 'Cache-Control: no-cache, must-revalidate' zurückgesendet werden, wird IMMER neuer Server-Kontakt aufgebaut, egal ob preloaded
+      AddToPreload(backimg);
+     end;
+     if (cssfile<>'') then
+     begin
+      backimgNew:=backimg;
+      for charI := Length(cssfile) downto 1 do
+      if cssfile[charI]='/' then
+      begin
+       if SubSame(Copy(cssfile,1,charI),backimg) then
+       begin
+        Delete(backimgNew,Length(backimgNew)-Length(backimg)+1,charI);
+        break;
+       end else
+        backimgNew:='../'+backimgNew;
+      end;
+      styles:=CopyInsert(styles,backimgPos,backimgPos+length(backimg),backimgNew);
+     end;
+    end;
+    s:=copy(nest.IDs[st],2,maxint)+IndentSpace+'{'+styles+'}'+CRLF;
     ss[rs[nest.DownOverlayOver,st]]:=s+ss[rs[nest.DownOverlayOver,st]];
    end;
   end;

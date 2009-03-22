@@ -30,4 +30,13 @@ object ObjectExplorer: TObjectExplorer
     ExplicitWidth = 217
     ExplicitHeight = 297
   end
+  object DKLanguageController1: TDKLanguageController
+    IgnoreList.Strings = (
+      'dhLink1.*')
+    Left = 136
+    Top = 40
+    LangData = {
+      0E004F626A6563744578706C6F72657201010000000100000007004361707469
+      6F6E01010000000400747265650000}
+  end
 end

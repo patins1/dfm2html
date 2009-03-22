@@ -3,16 +3,17 @@ unit uObjectExplorer;
 interface
 
 uses
-  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, ComCtrls, Unit3, dhPageControl, MySiz, dhPanel;
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms, TntForms,
+  Dialogs, ComCtrls, Unit3, dhPageControl, MySiz, dhPanel, DKLang;
 
 type
-  TObjectExplorer = class(TForm)
+  TObjectExplorer = class(TTntForm)
     tree: TTreeView;
+    DKLanguageController1: TDKLanguageController;
     procedure treeChange(Sender: TObject; Node: TTreeNode);
   private
     { Private declarations }
-    selecting:Boolean;               
+    selecting:Boolean;
     procedure Select(node:TTreeNode; const selectionid:String);
     procedure AddChildren(parentNode:TTreeNode; parent:TComponent);
   public

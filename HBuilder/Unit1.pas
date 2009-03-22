@@ -465,6 +465,8 @@ var
     s:String;
     iPropsAlign:TAlign;
     sLastUpdateCheck:String;
+    ColorChar:Char;
+    CustomColorName,CustomColorValue:String;
 begin
   firststarted:=true;
   LastUpdateCheck:=NeverCheckedForUpdate;
@@ -522,6 +524,14 @@ begin
   for iPropsAlign:=Low(TAlign) to High(PropsAlign) do
   if sPropsAlign[iPropsAlign]=s then
    PropsAlign:=iPropsAlign;
+
+  for ColorChar:='A' to 'P' do
+  begin
+   CustomColorName:='Color'+ColorChar;
+   CustomColorValue:=ReadString('Custom Colors',CustomColorName,'');
+   if CustomColorValue<>'' then
+    FCustomColors.add(CustomColorName+'='+CustomColorValue);
+  end;
 
       {
   if s='Horizontal' then
@@ -624,8 +634,8 @@ end;
 procedure TdhMainForm.WriteConfig;
 var IniFile:TMemIniFile;
     DefaultFontStyle:integer;
-    i:integer;
-    s:string;
+    i,index:integer;
+    s,CustomColor,CustomColorName,CustomColorValue:string;
 begin
  try
  IniFile:=TMemIniFile.Create(RootDir(configFile));
@@ -671,6 +681,26 @@ begin
   WriteString('General','PropsAlign',sPropsAlign[PropsAlign]);
 
   WriteInteger('General','LANGID',_LANGID);
+
+  if ColorDialog<>nil then
+  begin
+   FCustomColors.Clear;
+   FCustomColors.AddStrings(ColorDialog.CustomColors);
+   FCustomColors.Sort;
+  end;
+  for i:=0 to FCustomColors.Count-1 do
+  begin
+   CustomColor:=FCustomColors[i];
+   index:=Pos('=',CustomColor);
+   if index<>0 then
+   begin
+    CustomColorName:=Copy(CustomColor,1,index-1);
+    CustomColorValue:=Copy(CustomColor,index+1,MaxInt);
+    if CustomColorValue<>'FFFFFFFF' then
+     WriteString('Custom Colors',CustomColorName,CustomColorValue);
+   end;
+  end;
+  
 
   UpdateFile;
  finally 
@@ -3057,7 +3087,7 @@ initialization
 //    WHook := SetWindowsHookEx(WH_CALLWNDPROCRET	 , @CallWndProcHook, 0, GetCurrentThreadId);
 
  CF_COMPONENTS := {QClipbrd.}{$IFDEF CLX}Clipboard.{$ENDIF}RegisterClipboardFormat(sCF_COMPONENTS);
-
+ 
 finalization
 
  FreeAndNil(CrcList);

@@ -39,7 +39,8 @@ type
 
 procedure Register;
 
-var ColorDialog:TColorDialog;
+var ColorDialog:TColorDialog; 
+var FCustomColors : TStringList;
 
 implementation
 
@@ -55,7 +56,10 @@ procedure TdhColorPicker.Click;
 begin
   inherited;
   if ColorDialog=nil then
+  begin
    ColorDialog:=TColorDialog.Create(nil);
+   ColorDialog.CustomColors.AddStrings(FCustomColors);;
+  end;
 
   ColorDialog.Color:=Color;
 
@@ -173,12 +177,15 @@ end;
 
 initialization
   //LateCreateForm(TColorPicker,ColorPicker);
-  //ColorPicker:= TColorPicker.Create(nil);
+  //ColorPicker:= TColorPicker.Create(nil); 
+ FCustomColors:=TStringList.Create;
 
 finalization
 
   //FreeAndNil(ColorPicker);
 
-  FreeAndNil(ColorDialog);
+ FreeAndNil(ColorDialog);
+
+ FreeAndNil(FCustomColors);
 
 end.

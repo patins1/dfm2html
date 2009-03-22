@@ -1,10 +1,10 @@
 object dhMainForm: TdhMainForm
   Tag = 777789
-  Left = 952
-  Top = 176
+  Left = 539
+  Top = 88
   Caption = 'DFM2HTML'
-  ClientHeight = 715
-  ClientWidth = 564
+  ClientHeight = 734
+  ClientWidth = 907
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -39,11 +39,10 @@ object dhMainForm: TdhMainForm
     AutoSizeXY = asNone
     Align = alTop
     Right = 0
-    ExplicitWidth = 0
     object ToolBar1: TTntToolBar
       Left = 0
       Top = 2
-      Width = 564
+      Width = 907
       Height = 31
       ButtonHeight = 30
       ButtonWidth = 31
@@ -334,8 +333,8 @@ object dhMainForm: TdhMainForm
   end
   object StatusBar: TStatusBar
     Left = 0
-    Top = 696
-    Width = 564
+    Top = 715
+    Width = 907
     Height = 19
     Panels = <
       item
@@ -444,7 +443,6 @@ object dhMainForm: TdhMainForm
       Style.BackgroundRepeat = cbrNoRepeat
       AutoSizeXY = asXY
       Align = alTop
-      Right = 2147483647
       StyleDown.PaddingLeft = 1
       StyleDown.PaddingTop = 1
       Layout = ltText
@@ -459,7 +457,6 @@ object dhMainForm: TdhMainForm
       Style.FontSize = '3'
       AutoSizeXY = asY
       Align = alTop
-      Right = 2147483647
     end
     object STYLE_Link14: TdhLink
       Left = 0
@@ -504,7 +501,6 @@ object dhMainForm: TdhMainForm
       Style.Display = cdsBlock
       AutoSizeXY = asY
       Align = alTop
-      Right = 2147483647
     end
   end
   object OpenDialog1: TOpenDialog
@@ -3446,6 +3442,10 @@ object dhMainForm: TdhMainForm
         Caption = 'Presets'
         OnClick = mPresetsClick
       end
+      object mObjectExplorer: TTntMenuItem
+        Caption = 'Object Explorer'
+        OnClick = mObjectExplorerClick
+      end
       object N11: TTntMenuItem
         Caption = '-'
       end
@@ -3685,7 +3685,7 @@ object dhMainForm: TdhMainForm
     Left = 472
     Top = 152
     LangData = {
-      0A0064684D61696E466F726D0001970000000800646850616E656C3100000800
+      0A0064684D61696E466F726D0001980000000800646850616E656C3100000800
       546F6F6C4261723100000F00636F6D7050616765436F6E74726F6C0101000000
       03000000040048696E74000800636F6D70506167650101000000050000000400
       48696E74000900636F6D7050616E656C010100000007000000040048696E7400
@@ -3798,7 +3798,8 @@ object dhMainForm: TdhMainForm
       75726550616E656C00000C00506963747572654C6162656C00000D0050726576
       696577427574746F6E00000A005061696E7450616E656C000008005061696E74
       426F7800000F006D436865636B466F7255706461746501010000008900000007
-      0043617074696F6E00}
+      0043617074696F6E000F006D4F626A6563744578706C6F72657201010000008A
+      000000070043617074696F6E00}
   end
   object GenerateTimer: TTimer
     Enabled = False

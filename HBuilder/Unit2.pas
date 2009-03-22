@@ -789,7 +789,8 @@ function ExtractActiveControl:TControl;
 implementation
 
 uses {Unit1,}MySiz, Unit1, {uTransparencyWizard,} uStyleInfo, uPageWizard,
-  uColorizeImg, uTransparencyWizard, uBorderRadiusWizard,uMoreMisc;
+  uColorizeImg, uTransparencyWizard, uBorderRadiusWizard,uMoreMisc,
+  uObjectExplorer;
 
 {$R *.dfm}
 
@@ -1952,7 +1953,11 @@ begin
    dhMainForm.Act.MySiz.AddSel(Selection);
   end;
   if Selection.Count<>0 then
-   dhMainForm.cbName.ItemIndex:=dhMainForm.cbName.Items.IndexOf(TComponent(Selection[0]).Name) else
+  begin
+   dhMainForm.cbName.ItemIndex:=dhMainForm.cbName.Items.IndexOf(TComponent(Selection[0]).Name);
+   if ObjectExplorer<>nil then
+    ObjectExplorer.UpdateSelection;
+  end else
    dhMainForm.cbName.ItemIndex:=-1;
   //dhMainForm.ToolBar1.DoubleBuffered:=true;
   //np:=dhMainForm.stateNormal.Left+dhMainForm.stateNormal.Width;
@@ -2838,9 +2843,10 @@ end;
 procedure TTabs.mSendToBackClick(Sender: TObject);
 var i:integer;
 begin
- for i:=0 to Selection.Count-1 do                 
+ for i:=0 to Selection.Count-1 do
  //if not((TObject(Selection[i]) as TControl).Parent is TPageContainer) then
   (TObject(Selection[i]) as TControl).SendToBack;
+ if ObjectExplorer<>nil then ObjectExplorer.UpdateRootAndSelection;
  Changed('Send to Back');
 end;
 
@@ -2851,6 +2857,7 @@ begin
  //if not((TObject(Selection[i]) as TControl).Parent is TPageContainer) then
   (TObject(Selection[i]) as TControl).BringToFront;
  dhMainForm.Act.MySiz.BringToFront; //alle Elemente sollten unter MySiz sein
+ if ObjectExplorer<>nil then ObjectExplorer.UpdateRootAndSelection;
  Changed('Bring to Front');
 end;
 

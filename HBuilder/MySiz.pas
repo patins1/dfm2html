@@ -139,6 +139,7 @@ type
     //property Selection:TList read FChildList;
     function GetSelectionIDs: TStringList;
     procedure AddSelectionByIDs(sl: TStringList);
+    procedure AddSelectionByID(const id:String);
     function IsSelected(Control:TControl):boolean;
     function HasSelectedComponents:boolean;
     function HasOneSelectedComponent:boolean;
@@ -164,6 +165,16 @@ function GetCopyComponentsStream(Root: TComponent; const Components: TList):TMem
 
 
 //var IsAlt:boolean;
+
+type TMyList=class(TList)
+    procedure AddDirectChildren(Parent: TComponent);   
+    procedure AddChild(Child: TComponent);
+    procedure AddChildren(Child: TComponent);
+    procedure TopDeleteChildren(Child: TComponent);
+    procedure DeleteChildren(Child: TComponent);
+end;
+
+var PreventFocus:Boolean=false;
 
 procedure Register;
 
@@ -1440,7 +1451,7 @@ begin
  end;
 {$IFNDEF CLX}
  //receive key input and mouse wheel; note that WM_EXIT is not triggered for the active control (and this is not needed)
- if Parent=dhMainForm.Act then
+ if not PreventFocus and (Parent=dhMainForm.Act) then
 //  dhMainForm.Act.SendCancelMode;
   //dhMainForm.ToolBar1.SetFocus;
   Windows.SetFocus(TWinControl(Self.Parent).Handle);
@@ -1778,6 +1789,18 @@ begin
   end;
  end;
  FlushSelection;
+end;
+
+procedure TMySiz.AddSelectionByID(const id:String);
+var sl:TStringList;
+begin
+ sl:=TStringList.Create;
+ try
+  sl.Add(id);
+  AddSelectionByIDs(sl);
+ finally
+  sl.Free;
+ end;
 end;
 
 procedure TMySiz.FlushSelection;
@@ -2150,21 +2173,23 @@ begin
   result:=FindBody;
 end;
 
-
-
-type TMyList=class(TList)
-    procedure AddChildren(Child: TComponent);
-    procedure TopDeleteChildren(Child: TComponent);
-    procedure DeleteChildren(Child: TComponent);
-end;
-
-
 procedure TMyList.AddChildren(Child: TComponent);
 begin
  if IndexOf(Child)<>-1 then exit;
  Add(Child);
  TFakeComponent(Child).GetChildren(AddChildren,Child.Owner);
 end;
+
+procedure TMyList.AddDirectChildren(Parent: TComponent);
+begin
+ TFakeComponent(Parent).GetChildren(AddChild,Parent.Owner);
+end;
+
+procedure TMyList.AddChild(Child: TComponent);
+begin
+ Add(Child);
+end;
+
 
 procedure TMyList.TopDeleteChildren(Child: TComponent);
 begin

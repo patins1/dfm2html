@@ -188,6 +188,8 @@ type
     mExternalizeImages: TTntMenuItem;
     IGNORE_SaveDraggedPictureDialog: TMySavePictureDialog;
     mCheckForUpdate: TTntMenuItem;
+    mObjectExplorer: TTntMenuItem;
+    procedure mObjectExplorerClick(Sender: TObject);
     procedure mCheckForUpdateClick(Sender: TObject);
     procedure mExternalizeImagesClick(Sender: TObject);
     procedure Exit1Click(Sender: TObject);
@@ -377,7 +379,7 @@ var _LANGID:LANGID;
 implementation
 
 uses uWarnings, uPublishLog, uPublishFTP, uTemplates, uPresets, uStartUp,
-  uColorPicker, uPageWizard;
+  uColorPicker, uPageWizard, uObjectExplorer;
 
 {$R *.dfm}
 
@@ -805,8 +807,16 @@ end;
 procedure TdhMainForm.UpdateNames(find:TControl);
 begin
  if _RuntimeMode then
-  cbName.Clear else
-  GetRefs_(cbName,TControl,Act,find,ListName,false)
+ begin
+  cbName.Clear;   
+  if ObjectExplorer<>nil then
+   ObjectExplorer.Clear;
+ end else
+ begin
+  GetRefs_(cbName,TControl,Act,find,ListName,false);
+  if ObjectExplorer<>nil then
+   ObjectExplorer.UpdateRootAndSelection;
+ end;
 end;
 
 
@@ -2009,17 +2019,10 @@ end;
 
 
 procedure TdhMainForm.cbNameChange(Sender: TObject);
-var sl:TStringList;
 begin
  //if (cbName.ItemIndex<>-1) and (cbName.Items[cbName.ItemIndex]<>cbName.Text) then exit;
  if cbName.DroppedDown or (Act=nil) or _RuntimeMode then exit;
- sl:=TStringList.Create;
- try
-  sl.Add(cbName.Text);
-  Act.MySiz.AddSelectionByIDs(sl);
- finally
-  sl.Free;
- end;
+ Act.MySiz.AddSelectionByID(cbName.Text);
 end;
 
 procedure TdhMainForm.PageControl1Changing(Sender: TObject;
@@ -2213,6 +2216,18 @@ begin
  //TdhPage(Tabs.Selection[0]).PageControl:=nil;
  //TdhCustomPanel(Tabs.Selection[0]).Parent:=TdhCustomPanel(Tabs.Selection[0]).Parent.Parent;
  //LangManager.
+end;
+
+procedure TdhMainForm.mObjectExplorerClick(Sender: TObject);
+begin
+ LateCreateForm(TObjectExplorer,ObjectExplorer);
+ ObjectExplorer.UpdateRootAndSelection;     
+ if not ObjectExplorer.Visible then
+ begin
+  ObjectExplorer.Top:=dhMainForm.Top+90;
+  ObjectExplorer.Left:=dhMainForm.Width-ObjectExplorer.Width-20;
+ end;
+ ObjectExplorer.Show;
 end;
 
 procedure TdhMainForm.mOpenOutputDirectoryClick(Sender: TObject);

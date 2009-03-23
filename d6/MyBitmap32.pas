@@ -58,9 +58,6 @@ uses
   
 var
   StockBitmap: TBitmap;
- 
-var _HorzSum:array[0..10000] of integer;
-
 
 procedure TMyBitmap32.RenderTextExtended(X, Y: Integer; const Text: Widestring; AALevel: Integer; Color: TColor32; const SzOri:TPoint; XPadding:integer; LetterSpacing:Integer; WordSpacing:Integer);
 var
@@ -202,6 +199,8 @@ var
   NX,NNX,NY,NNY,DeltaY,DeltaX,Rarefaction,S,S1,S2:DWORD;
   HorzSumNew,HorzSum,VertSumNew,VertSum,VertHorzSumNew,VertHorzSum,VertHorzSumHelper:DWORD;
   AlignToOri:double;
+var _HorzSum:array of integer;
+
 const Denominator=(1 shl 16); //to avoid floating point operations, we model
                               //the "scaling difference" (the ratio) between e.g. B2.Width and B.Width
                               //as a natural number devided by this constant
@@ -213,7 +212,8 @@ const Denominator=(1 shl 16); //to avoid floating point operations, we model
       DenominatorToDelta=Denominator div DeltaRange;
 begin
   //Assert(Denominator>=DeltaRange);
-  Assert(B.Width-1<=High(_HorzSum));
+
+  SetLength(_HorzSum,B.Width);
   Dst := B.PixelPtr[0, 0];
   ScaleX:=B2.Width/B.Width;
   ScaleY:=B2.Height/B.Height;

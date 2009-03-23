@@ -477,7 +477,8 @@ type
     property OnChange: TNotifyEvent read FOnChange write FOnChange;
     procedure SetPath(const Path:String);
     function GetRelativePath:String;
-    function GetAbsolutePath:String;
+    function GetAbsolutePath:String; 
+    procedure UpdateAnimationState;
   published
     property Path:String read GetRelativePath write SetPath;
     property State:TImageState read FImageState write FImageState stored StoreCalculations;
@@ -5458,6 +5459,19 @@ begin
  result:=(GetGraphic<>nil) or HasPath;
 end;
 
+procedure TLocationImage.UpdateAnimationState;
+begin                     
+ if (Owner<>nil) and (Owner.Owner<>nil) and (GetGraphic is TGIFImage) then
+ if csDesigning in Owner.Owner.ComponentState then
+ begin
+  TGIFImage(GetGraphic).SetAnimateSilent(false);
+  TGIFImage(GetGraphic).ForceFrame:=0;
+ end else
+ begin 
+  TGIFImage(GetGraphic).SetAnimateSilent(true);
+ end;
+end;
+
 procedure TLocationImage.UpdateCalculations;
 begin
  if GetGraphic=nil then
@@ -5479,6 +5493,7 @@ begin
   if CalculateAnimatedGIF then
   begin
    FImageState:=dhPanel.isAnimatedGIF;
+   UpdateAnimationState;
   end else
   begin
    FImageState:=isAnalyzed;
@@ -7333,12 +7348,16 @@ begin
 end;  }
 
 
-procedure TdhCustomPanel.DesignPaintingChanged;
+procedure TdhCustomPanel.DesignPaintingChanged;           
+var State:TState;
 begin
  BackIsValid:=false;
  TopIsValid:=false;
  if HandleAllocated then
   Invalidate;
+ for State:=low(TState) to high(TState) do
+ if StyleArr[State]<>nil then
+  StyleArr[State].BackgroundImage.UpdateAnimationState;
 end;
 
 function GetSimplifiedAnchors(Anchors:TAnchors; ParentAnchors:TAnchors; StopSimplifyingRight,StopSimplifyingBottom:boolean):TAnchors;
@@ -15250,17 +15269,17 @@ begin
   i:=CSSRight;
   WeakToStrong(true);
   CSSRight:=i;
- end else
+ end{ else
  if not HasActiveStrong([akBottom]) then
-  CSSBottom:=InvalidCSSPos;
+  CSSBottom:=InvalidCSSPos};
  if CSSRight=InvalidCSSPos then
  begin
   i:=CSSBottom;
   WeakToStrong(true);
   CSSBottom:=i;
- end else
+ end{ else
  if not HasActiveStrong([akRight]) then
-  CSSRight:=InvalidCSSPos;
+  CSSRight:=InvalidCSSPos};
  DoCalcStrongToWeak(ALeft,ATop,AWidth,AHeight,GetLocalClientBound(Parent),Anchors,CSSRight,CSSBottom);
 
  {

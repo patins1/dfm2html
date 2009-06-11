@@ -1109,11 +1109,12 @@ begin
 // if SubSameEnd('.pas',FrameFile) then FrameFile:=Copy(FrameFile,1,Length(FrameFile)-Length('.pas'))+'.dfm';
  try
  LateCreateForm(TFormWarnings,FormWarnings);
- WarningsCount:=FormWarnings.Memo1.Lines.Count;;
+ WarningsCount:=FormWarnings.Memo1.Lines.Count;
+ FFileName := AFileName; // in order that readdfm works!
+ ReadDFM(StringFromFile(AFileName));
  if not SetUntitled then
   FileName := AFileName else
   FileName := DefaultFileName;
- ReadDFM(StringFromFile(AFileName));
 // dhMainForm.Realign;
  Application.ProcessMessages; //damit width sich anpaﬂt
  //Self.Font.Assign(FuncSettings.DefaultFont);

@@ -1,9 +1,9 @@
 object PageContainer: TPageContainer
   Left = 207
   Top = 241
-  Width = 488
-  Height = 285
   Caption = 'Untitled'
+  ClientHeight = 258
+  ClientWidth = 480
   Color = clWhite
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText

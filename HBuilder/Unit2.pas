@@ -1826,6 +1826,12 @@ begin
   Bitmap.Canvas.Font.Style:=Bitmap.Canvas.Font.Style+[fsBold];
  tab.Caption:='';
  TextWidth:=WideCanvasTextWidth(Bitmap.Canvas,tab.Hint); //Bitmap.Canvas.TextWidth(tab.Hint);
+ {if Bold and (TextWidth>ImageList.Width) then
+ begin
+  //Bitmap.Canvas.Font.Size:=Bitmap.Canvas.Font.Size-2;
+  //Bitmap.Canvas.Font.Style:=Bitmap.Canvas.Font.Style-[fsBold]+[fsUnderline];
+  //TextWidth:=WideCanvasTextWidth(Bitmap.Canvas,tab.Hint); //Bitmap.Canvas.TextWidth(tab.Hint);
+ end;  }
  WideCanvasTextOut(Bitmap.Canvas,(ImageList.Width-TextWidth) div 2,0,tab.Hint);//Bitmap.Canvas.TextOut((ImageList.Width-TextWidth) div 2,0,tab.Hint);
  ImageList.AddMasked(Bitmap,Bitmap.Canvas.Brush.Color);
 end;
@@ -1837,7 +1843,7 @@ begin
  Bitmap:=TBitmap.Create;
  try
  ImageList:=TImageList.Create(Self);
- ImageList.Width:=38;
+ ImageList.Width:=49;
  ImageList.Height:=13;
  for Bold:=False to True do
  begin

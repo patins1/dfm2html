@@ -13,11 +13,13 @@ uses
 {$ENDIF}
   dhPanel, dhLabel, dhPageControl, MySpinEdit, MyPageControl, dhStyleSheet, DKLang;
 
-
+            
+type TLaunchAction=(suaChoice,suaLast,suaNone);
 type TFuncSettings=object
-     DefaultFont:TFont;  
+     DefaultFont:TFont;
      LRUfiles:TStringList;
      Compress:boolean;
+     LaunchAction:TLaunchAction;
 end;
 
 
@@ -62,6 +64,7 @@ type
     lDirectoryCache: TdhLabel;
     TabSheet6: TTntTabSheet;
     cAutoUpdate: TTntCheckBox;
+    gStartUpAction: TTntRadioGroup;
     procedure spGridXChange(Sender: TObject);
     procedure Button2Click(Sender: TObject);
     procedure Button3Click(Sender: TObject);
@@ -120,6 +123,11 @@ begin
   alNone: RadioGroup1.ItemIndex:=4;
   alClient: RadioGroup1.ItemIndex:=5;
   end;
+  case LaunchAction of
+  suaChoice: gStartUpAction.ItemIndex:=0;
+  suaLast: gStartUpAction.ItemIndex:=1;
+  suaNone: gStartUpAction.ItemIndex:=2;
+  end;
   bApplyFont.Enabled:=dhMainForm.Act<>nil;
   cClearCache.Enabled:=Length(Uploaded)<>0;
   bClearFocusedCache.Enabled:=false;
@@ -152,6 +160,11 @@ begin
   3: PropsAlign:=alRight;
   4: PropsAlign:=alNone;
   5: PropsAlign:=alClient;
+  end;
+  case gStartUpAction.ItemIndex of
+  0: LaunchAction:=suaChoice;
+  1: LaunchAction:=suaLast;
+  2: LaunchAction:=suaNone;
   end;
   if not FSmartPublishing then
    SetLength(Uploaded,0);

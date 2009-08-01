@@ -1,6 +1,6 @@
 object Tabs: TTabs
-  Left = 207
-  Top = 622
+  Left = 217
+  Top = 618
   Caption = 'Object Properties'
   ClientHeight = 196
   ClientWidth = 968
@@ -41,10 +41,10 @@ object Tabs: TTabs
       Top = 2
       Width = 925
       Height = 204
-      ActivePage = AnchorEffects
+      ActivePage = AnchorPage
       TabOrder = 0
       TabStop = False
-      TabWidth = 43
+      TabWidth = 54
       OnChange = PageControl1Change
       OnChanging = PageControl1Changing
       Color = clBtnFace
@@ -241,14 +241,14 @@ object Tabs: TTabs
           Left = 8
           Top = 1
           Width = 209
-          Height = 99
+          Height = 101
           Style.MarginRight = '10'
           AutoSizeXY = asNone
           object cEdgeRight: TdhLink
-            Left = 77
+            Left = 80
             Top = 23
             Width = 22
-            Height = 52
+            Height = 55
             Text = 'Right'
             Style.BorderBottom.Width = 0
             Style.PaddingTop = 4
@@ -275,9 +275,9 @@ object Tabs: TTabs
           end
           object cEdgeBottom: TdhLink
             Left = 25
-            Top = 75
-            Width = 52
-            Height = 23
+            Top = 78
+            Width = 55
+            Height = 21
             Text = 'Bottom'
             Style.BorderTop.Width = 0
             Style.PaddingTop = 1
@@ -296,9 +296,9 @@ object Tabs: TTabs
           end
           object cEdgeTop: TdhLink
             Left = 25
-            Top = 1
-            Width = 52
-            Height = 22
+            Top = 2
+            Width = 55
+            Height = 21
             Text = 'Top'
             Style.BorderBottom.Width = 0
             Style.PaddingTop = 3
@@ -319,7 +319,7 @@ object Tabs: TTabs
             Left = 3
             Top = 23
             Width = 22
-            Height = 52
+            Height = 55
             Text = 'Left'
             Style.BorderBottom.Width = 0
             Style.PaddingTop = 4
@@ -348,8 +348,8 @@ object Tabs: TTabs
           object cEdgeAll: TdhLink
             Left = 24
             Top = 22
-            Width = 54
-            Height = 54
+            Width = 57
+            Height = 57
             Text = 'All'
             Style.PaddingTop = 19
             Style.ZIndex = -1
@@ -362,8 +362,8 @@ object Tabs: TTabs
             Options = [loDownIfMenu, loDownIfMouseDown, loDownIfURL]
           end
           object dhPanel3: TdhPanel
-            Left = 107
-            Top = 0
+            Left = 110
+            Top = 2
             Width = 96
             Height = 96
             Style.BackgroundImage.Data = {
@@ -620,9 +620,10 @@ object Tabs: TTabs
             Style.Effects.AntiAliasing = False
             Style.Effects.Text = etInclude
             Style.Effects.Alpha = 100
-            Style.BorderRadius.All = '100 100'
+            Style.BorderRadius.All = '10 10'
             AutoSizeXY = asNone
             Align = alTop
+            Right = 24
             StyleDown.Effects.Enabled = True
             StyleDown.Effects.AntiAliasing = False
             StyleDown.Effects.Text = etInclude
@@ -660,6 +661,7 @@ object Tabs: TTabs
             Style.BorderRadius.All = '115'
             AutoSizeXY = asXY
             Align = alTop
+            Right = 20
             StyleDown.BorderTop.Color = ThreeDDarkShadow
             StyleDown.BorderBottom.Color = White
             StyleDown.BorderLeft.Color = ThreeDDarkShadow
@@ -703,6 +705,7 @@ object Tabs: TTabs
             Style.BorderRadius.All = '5'
             AutoSizeXY = asXY
             Align = alTop
+            Right = 20
             StyleDown.Border.Color = ThreeDShadow
             StyleDown.Border.Style = cbsSolid
             StyleDown.BackgroundImage.Data = {
@@ -1248,8 +1251,6 @@ object Tabs: TTabs
               Top = 1
               AutoSizeXY = asNone
               Align = alClient
-              Right = 1
-              Bottom = 1
               UseIFrame = False
               object cAntiAliasing: TTntCheckBox
                 Left = 16
@@ -1288,12 +1289,12 @@ object Tabs: TTabs
               end
             end
             object TabSheet8: TdhPage
-              Left = 1
-              Top = 1
+              Left = 0
+              Top = 0
               AutoSizeXY = asNone
               Align = alClient
-              Right = 1
-              Bottom = 1
+              Right = 0
+              Bottom = 0
               UseIFrame = False
               object dhPanel4: TdhPanel
                 Left = 3
@@ -1585,8 +1586,6 @@ object Tabs: TTabs
               Top = 1
               AutoSizeXY = asNone
               Align = alClient
-              Right = 1
-              Bottom = 1
               UseIFrame = False
               object Panel3: TMyPanel
                 Left = 256
@@ -2486,7 +2485,7 @@ object Tabs: TTabs
         object bMoreMisc: TTntButton
           Left = 672
           Top = 40
-          Width = 105
+          Width = 121
           Height = 25
           Caption = 'Special Styles..'
           TabOrder = 4
@@ -3032,18 +3031,18 @@ object Tabs: TTabs
           Caption = 'Page Control Options'
           TabOrder = 0
           object cDynamicNavigation: TTntCheckBox
-            Left = 16
+            Left = 13
             Top = 48
-            Width = 185
+            Width = 189
             Height = 17
             Caption = 'One HTML page per Page object'
             TabOrder = 0
             OnClick = cDynamicNavigationClick
           end
           object cFixedHeight: TTntCheckBox
-            Left = 16
-            Top = 24
-            Width = 185
+            Left = 13
+            Top = 25
+            Width = 189
             Height = 17
             Caption = 'Same height for all pages'
             TabOrder = 1
@@ -3431,7 +3430,7 @@ object Tabs: TTabs
           Caption = 'Open Menu By'
           TabOrder = 3
           object IGNORE_Label22: TdhLabel
-            Left = 120
+            Left = 131
             Top = 64
             Width = 25
             Height = 13
@@ -3459,7 +3458,7 @@ object Tabs: TTabs
             OnClick = cOpenByOverClick
           end
           object spReactionTime: TMySpinEdit
-            Left = 67
+            Left = 78
             Top = 56
             Width = 42
             Height = 22

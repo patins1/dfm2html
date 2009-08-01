@@ -12,7 +12,7 @@ uses
   dhPanel, dhLabel, dhMenu, dhStyleSheet, DKLang;
 
 type
-  TStartUpAction=(suNothing,suNewPage,suLastPage,suTutorial,suTemplates,su5minGuide);
+  TStartUpAction=(suNothing,suNewPage,suLastPage,suTutorial,suTemplates,su5minGuide,suOpen);
   TStartUp = class(TTntForm)
     dhStyleSheet1: TdhStyleSheet;
     STYLE_Link1: TdhLink;
@@ -22,6 +22,8 @@ type
     dhLink4: TdhLink;
     dhLink2: TdhLink;
     DKLanguageController1: TDKLanguageController;
+    dhOpen: TdhLink;
+    procedure dhOpenClick(Sender: TObject);
     procedure dhLink1Click(Sender: TObject);
     procedure dhLink4Click(Sender: TObject);
     procedure cTemplateClick(Sender: TObject);
@@ -65,6 +67,12 @@ end;
 procedure TStartUp.dhLink4Click(Sender: TObject);
 begin
  res:=suNewPage;
+ ModalResult:=mrOk;
+end;
+
+procedure TStartUp.dhOpenClick(Sender: TObject);
+begin 
+ res:=suOpen;
  ModalResult:=mrOk;
 end;
 

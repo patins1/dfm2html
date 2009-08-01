@@ -65,6 +65,7 @@
 <_><src>C:\HBuilder\Language\Slovak.lng</><dest>custom</><custom>#setuppath#\Language</><ifexist>overnewer</><recurs>0</></>
 <_><src>C:\HBuilder\Language\Italian.lng</><dest>custom</><custom>#setuppath#\Language</><ifexist>overnewer</><recurs>0</></>
 <_><src>C:\HBuilder\Language\Portuguese.lng</><dest>custom</><custom>#setuppath#\Language</><ifexist>overnewer</><recurs>0</></>
+<_><src>C:\HBuilder\Language\Spanish.lng</><dest>custom</><custom>#setuppath#\Language</><ifexist>overnewer</><recurs>0</></>
 
    </files>
    <runx listview >

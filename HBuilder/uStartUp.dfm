@@ -1,9 +1,9 @@
 object StartUp: TStartUp
-  Left = 122
-  Top = 82
-  Width = 312
-  Height = 283
+  Left = 810
+  Top = 122
   Caption = 'Start Up'
+  ClientHeight = 301
+  ClientWidth = 304
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -67,7 +67,7 @@ object StartUp: TStartUp
   end
   object cTemplate: TdhLink
     Left = 8
-    Top = 104
+    Top = 152
     Width = 296
     Height = 45
     Text = 'New From Template'
@@ -79,7 +79,7 @@ object StartUp: TStartUp
   end
   object dhLink3: TdhLink
     Left = 8
-    Top = 152
+    Top = 200
     Width = 296
     Height = 45
     Text = 'Read Tutorial'
@@ -103,7 +103,7 @@ object StartUp: TStartUp
   end
   object dhLink2: TdhLink
     Left = 8
-    Top = 200
+    Top = 248
     Width = 296
     Height = 45
     Text = 'Guide'
@@ -113,17 +113,30 @@ object StartUp: TStartUp
     PreferDownStyles = False
     Options = [loDownIfMenu, loDownIfMouseDown, loDownIfURL]
   end
+  object dhOpen: TdhLink
+    Left = 8
+    Top = 104
+    Width = 296
+    Height = 45
+    Text = 'Open File'
+    Use = STYLE_Link1
+    AutoSizeXY = asY
+    OnClick = dhOpenClick
+    PreferDownStyles = False
+    Options = [loDownIfMenu, loDownIfMouseDown, loDownIfURL]
+  end
   object DKLanguageController1: TDKLanguageController
     IgnoreList.Strings = (
       'STYLE_*')
     Left = 144
     Top = 128
     LangData = {
-      070053746172745570010100000001000000070043617074696F6E0107000000
+      070053746172745570010100000001000000070043617074696F6E0108000000
       0D0064685374796C6553686565743100000B005354594C455F4C696E6B310000
       070064684C696E6B310101000000040000000400546578740009006354656D70
       6C61746501010000000500000004005465787400070064684C696E6B33010100
       00000600000004005465787400070064684C696E6B3401010000000700000004
-      005465787400070064684C696E6B3201010000000800000004005465787400}
+      005465787400070064684C696E6B320101000000080000000400546578740006
+      0064684F70656E01010000000900000004005465787400}
   end
 end

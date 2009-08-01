@@ -3,7 +3,7 @@ object Options: TOptions
   Top = 137
   Caption = 'Options'
   ClientHeight = 241
-  ClientWidth = 346
+  ClientWidth = 364
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -15,18 +15,14 @@ object Options: TOptions
   Position = poScreenCenter
   OnCreate = FormCreate
   OnKeyPress = FormKeyPress
-  DesignSize = (
-    346
-    241)
   PixelsPerInch = 96
   TextHeight = 13
   object PageControl11: TMyPageControl
     Left = 8
     Top = 8
-    Width = 329
+    Width = 347
     Height = 193
-    ActivePage = TabSheet6
-    Anchors = [akTop]
+    ActivePage = TabSheet5
     TabOrder = 0
     TabStop = False
     object TabSheet1: TTntTabSheet
@@ -112,6 +108,7 @@ object Options: TOptions
     object TabSheet2: TTntTabSheet
       Caption = 'Font'
       ImageIndex = 1
+      ExplicitWidth = 331
       object Label5: TdhLabel
         Left = 8
         Top = 8
@@ -203,6 +200,7 @@ object Options: TOptions
     object TabSheet4: TTntTabSheet
       Caption = 'Publish'
       ImageIndex = 3
+      ExplicitWidth = 331
       object Label8: TdhLabel
         Left = 32
         Top = 32
@@ -296,7 +294,7 @@ object Options: TOptions
           Style.BorderRadius.All = '6'
           AutoSizeXY = asY
           Align = alTop
-          Right = 2147483647
+          Right = 12
         end
       end
       object cClearCache: TTntButton
@@ -325,9 +323,9 @@ object Options: TOptions
       ExplicitWidth = 0
       ExplicitHeight = 0
       object RadioGroup1: TTntRadioGroup
-        Left = 8
+        Left = 6
         Top = 8
-        Width = 201
+        Width = 161
         Height = 145
         Caption = 'Position of Tabs'
         Items.Strings = (
@@ -340,11 +338,23 @@ object Options: TOptions
         TabOrder = 0
         OnClick = RadioGroup1Click
       end
+      object gStartUpAction: TTntRadioGroup
+        Left = 173
+        Top = 8
+        Width = 161
+        Height = 82
+        Caption = 'Action at Program Start-Up'
+        Items.Strings = (
+          'Show Selection Window'
+          'Open Last Recently File'
+          'No Action')
+        TabOrder = 1
+        OnClick = RadioGroup1Click
+      end
     end
     object TabSheet6: TTntTabSheet
       Caption = 'Update'
-      ExplicitLeft = 0
-      ExplicitTop = 31
+      ExplicitWidth = 331
       object cAutoUpdate: TTntCheckBox
         Left = 16
         Top = 16
@@ -357,7 +367,7 @@ object Options: TOptions
     end
   end
   object Button1: TTntButton
-    Left = 262
+    Left = 280
     Top = 210
     Width = 75
     Height = 25
@@ -392,7 +402,7 @@ object Options: TOptions
     Left = 32
     Top = 208
     LangData = {
-      07004F7074696F6E73010100000001000000070043617074696F6E0126000000
+      07004F7074696F6E73010100000001000000070043617074696F6E0127000000
       0D0050616765436F6E74726F6C31310000090054616253686565743101010000
       0002000000070043617074696F6E0006004C6162656C31010100000021000000
       0400546578740006004C6162656C320101000000220000000400546578740006
@@ -423,6 +433,7 @@ object Options: TOptions
       656E4469616C6F6731010100000020000000060046696C746572000F006C4469
       726563746F727943616368650000090054616253686565743601010000002A00
       0000070043617074696F6E000B00634175746F55706461746501010000002B00
-      0000070043617074696F6E00}
+      0000070043617074696F6E000E006753746172745570416374696F6E01020000
+      002C000000070043617074696F6E2D00000005004974656D7300}
   end
 end

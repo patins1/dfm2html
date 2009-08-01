@@ -1,9 +1,9 @@
 object dhMainForm: TdhMainForm
   Tag = 777789
-  Left = 539
-  Top = 88
+  Left = 382
+  Top = 93
   Caption = 'DFM2HTML'
-  ClientHeight = 734
+  ClientHeight = 753
   ClientWidth = 907
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -333,7 +333,7 @@ object dhMainForm: TdhMainForm
   end
   object StatusBar: TStatusBar
     Left = 0
-    Top = 715
+    Top = 734
     Width = 907
     Height = 19
     Panels = <
@@ -349,6 +349,7 @@ object dhMainForm: TdhMainForm
       item
         Width = 50
       end>
+    ExplicitTop = 715
   end
   object STYLE_dhStyleSheet1: TdhStyleSheet
     Left = 576
@@ -3218,7 +3219,7 @@ object dhMainForm: TdhMainForm
       end
       object mOpen: TTntMenuItem
         Caption = 'Open'
-        OnClick = Openproject1Click
+        OnClick = mOpenClick
       end
       object mReopen: TTntMenuItem
         Caption = 'Reopen'

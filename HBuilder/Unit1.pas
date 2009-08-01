@@ -198,7 +198,7 @@ type
     procedure csEndSize(Sender: TObject);
     procedure shMouseUp(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
-    procedure Openproject1Click(Sender: TObject);
+    procedure mOpenClick(Sender: TObject);
     procedure Edit2Click(Sender: TObject);
     procedure mCopyClick(Sender: TObject);
     procedure mPasteClick(Sender: TObject);
@@ -409,6 +409,8 @@ end;
 
 const sPropsAlign:array[TAlign] of string=('Horizontal', 'Top', 'Bottom', 'Left', 'Right', 'Vertical','x');
 
+const sLaunchAction:array[TLaunchAction] of string=('Choice', 'Last', 'None');
+
 function EncodePsw(const s:String):string;
 var i:integer;
 begin
@@ -466,6 +468,7 @@ var
     i:integer;
     s:String;
     iPropsAlign:TAlign;
+    iLaunchAction:TLaunchAction;
     sLastUpdateCheck:String;
     ColorChar:Char;
     CustomColorName,CustomColorValue:String;
@@ -526,6 +529,11 @@ begin
   for iPropsAlign:=Low(TAlign) to High(PropsAlign) do
   if sPropsAlign[iPropsAlign]=s then
    PropsAlign:=iPropsAlign;
+   
+  s:=ReadString('General','StartUpAction',EmptyStr);
+  for iLaunchAction:=Low(TLaunchAction) to High(TLaunchAction) do
+  if sLaunchAction[iLaunchAction]=s then
+   FuncSettings.LaunchAction:=iLaunchAction;
 
   for ColorChar:='A' to 'P' do
   begin
@@ -681,6 +689,7 @@ begin
    WriteString('LRU','File'+inttostr(i),FuncSettings.LRUfiles[i]);
 
   WriteString('General','PropsAlign',sPropsAlign[PropsAlign]);
+  WriteString('General','StartUpAction',sLaunchAction[FuncSettings.LaunchAction]);
 
   WriteInteger('General','LANGID',_LANGID);
 
@@ -1144,7 +1153,7 @@ end;
 
 
 
-procedure TdhMainForm.Openproject1Click(Sender: TObject);
+procedure TdhMainForm.mOpenClick(Sender: TObject);
 var i:integer;
 begin  {
  s:=StringFromFile('C:\DFM2HTML_bei18\onebyone.gif');
@@ -2753,6 +2762,8 @@ begin
  end;
 
  su:=suLastPage;
+ if FuncSettings.LaunchAction=suaChoice then
+ begin
 {$IFDEF FINALV}
  //Show;
  //LateCreateForm(TStartUp,StartUp);
@@ -2766,6 +2777,11 @@ begin
   FreeAndNil(StartUp);
  end;
 {$ENDIF}
+ end else
+ if FuncSettings.LaunchAction=suaLast then
+  su:=suLastPage else
+  su:=suNothing;
+
  glLockWindowUpdate(true,lLock);
  try
  case su of
@@ -2777,6 +2793,7 @@ begin
  suTutorial: mTutorialClick(nil);
  su5minGuide: m5minGuideClick(nil);
  suTemplates: mNewFromTemplateClick(nil);
+ suOpen: mOpenClick(nil);
  end;
  finally
   glLockWindowUpdate(false,lLock);

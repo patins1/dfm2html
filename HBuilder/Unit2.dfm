@@ -41,7 +41,7 @@ object Tabs: TTabs
       Top = 2
       Width = 925
       Height = 204
-      ActivePage = AnchorPage
+      ActivePage = AnchorBackground
       TabOrder = 0
       TabStop = False
       TabWidth = 54
@@ -623,7 +623,6 @@ object Tabs: TTabs
             Style.BorderRadius.All = '10 10'
             AutoSizeXY = asNone
             Align = alTop
-            Right = 24
             StyleDown.Effects.Enabled = True
             StyleDown.Effects.AntiAliasing = False
             StyleDown.Effects.Text = etInclude
@@ -661,7 +660,6 @@ object Tabs: TTabs
             Style.BorderRadius.All = '115'
             AutoSizeXY = asXY
             Align = alTop
-            Right = 20
             StyleDown.BorderTop.Color = ThreeDDarkShadow
             StyleDown.BorderBottom.Color = White
             StyleDown.BorderLeft.Color = ThreeDDarkShadow
@@ -705,7 +703,6 @@ object Tabs: TTabs
             Style.BorderRadius.All = '5'
             AutoSizeXY = asXY
             Align = alTop
-            Right = 20
             StyleDown.Border.Color = ThreeDShadow
             StyleDown.Border.Style = cbsSolid
             StyleDown.BackgroundImage.Data = {
@@ -787,7 +784,7 @@ object Tabs: TTabs
           object ComboBox1: ThComboBox
             Left = 16
             Top = 21
-            Width = 105
+            Width = 177
             Height = 21
             Style = csDropDownList
             ItemHeight = 13
@@ -795,7 +792,7 @@ object Tabs: TTabs
             Items.Strings = (
               'Tile'
               'Stretch'
-              'Image'
+              'Image in original size'
               'Split')
             ValueChange = ComboBox1ValueChange
             ChangeReason = 'Change Image Type'

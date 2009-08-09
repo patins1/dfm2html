@@ -1899,6 +1899,7 @@ procedure TdhCustomLabel.GetAutoRect(AllowModifyX,AllowModifyY:boolean; var NewW
 begin
  if GetSuperiorAutoRect(AllowModifyX,AllowModifyY,NewWidth,NewHeight) then exit;
  with GetAutoRectPoint(AllowModifyX,AllowModifyY,NewWidth,NewHeight) do
+ if (X<>0) and (Y<>0) then
  begin
   NewWidth:=X;
   NewHeight:=Y;

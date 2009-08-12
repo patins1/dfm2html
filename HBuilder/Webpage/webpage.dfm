@@ -42,14 +42,14 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1_1
       'HTML editor, web page maker, web design creator, anti aliasing, ' +
       'mouse over buttons, WYSIWYG, absolute positioning, site manageme' +
       'nt, authoring'
-    FTPURL = 'ftp://p8288468:5yMTPDtZ@kiegeland.com/dfm2html_de/'
+    FTPURL = 'ftp://p8288468:5yMTPDtZ@kiegeland.com/dfm2html/'
     HTTPURL = 'http://www.dfm2html.com/'
     GeneratedImageFolder = 'images'
     GeneratedCSSFile = 'dfm2html'
     object Panel4: TdhPanel
       Top = 4
       Width = 758
-      Height = 648
+      Height = 2372
       Style.Border.Width = 1
       Style.Border.Color = 15461355
       Style.Border.Style = cbsSolid
@@ -88,7 +88,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1_1
         Top = 88
         Width = 24
         Height = 24
-        ActivePage = Page1
+        ActivePage = history
         FixedHeight = False
         object Page1: TdhPage
           Left = 192
@@ -102,7 +102,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1_1
             Left = 16
             Top = 48
             Width = 456
-            Height = 346
+            Height = 330
             Text = 
               '<en>'#10'DFM2HTML is an easy to use WYSIWYG HTML editor. Sophisticat' +
               'ed web sites can be composed within minutes using drag&drop and ' +
@@ -167,7 +167,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1_1
           object Link21: TdhLink
             Left = 32
             Top = 424
-            Width = 110
+            Width = 104
             Height = 16
             Text = #9658' <en>Version history</en><de>Versionshistorie</de>'
             Style.TextDecoration = [ctdNone]
@@ -1198,7 +1198,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1_1
           object Label27: TdhLabel
             Left = 24
             Top = 24
-            Width = 304
+            Width = 281
             Height = 16
             Text = 
               #9658' <en>Reported bugs are fixed as fast as possible</en><de>Bugs w' +
@@ -1373,8 +1373,8 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1_1
           object Label44: TdhLabel
             Left = 24
             Top = 472
-            Width = 442
-            Height = 64
+            Width = 386
+            Height = 49
             Text = 
               '<en><code>New in version 3.2:'#10'* The path of generated artifacts ' +
               'can be adapted'#10'* "Check for update" functionality</code></en>'#10'<d' +
@@ -1389,8 +1389,8 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1_1
           object Label46: TdhLabel
             Left = 24
             Top = 384
-            Width = 322
-            Height = 80
+            Width = 346
+            Height = 65
             Text = 
               '<en><code>New in version 3.3:'#10'* Italian language is added '#10'  (th' +
               'anks to Rinaldo M. aka Whiteshark!)'#10'* Fixed bug with IE7 and aut' +
@@ -1404,9 +1404,9 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1_1
           end
           object Label50: TdhLabel
             Left = 24
-            Top = 232
-            Width = 346
-            Height = 176
+            Top = 224
+            Width = 370
+            Height = 129
             Text = 
               '<en><code>New in version 3.4:'#10'* 83% Portuguese language support'#10 +
               '  (thanks to Alex Albino de Almeida Barros!)'#10'* adjusted dfm2html' +
@@ -1433,8 +1433,13 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1_1
               'anks to Fernando Deambrosio!)'#10'* added 33 new templates in the "W' +
               'orkshop" folder'#10'  (which more than doubled the size of DFM2HTML)' +
               #10'  (thanks to Andrea Claudia Delp (amaveo.de)!)'#10'* fixed bug with' +
-              ' generated PNG images'#10'* The default startup action can not be '#10' ' +
-              ' choosen in the options'#10#10'</code></de>'
+              ' generated PNG images'#10'* The default startup action can now '#10'  be' +
+              ' choosen in the options'#10#10'</code></en><de><code>New in version 3.' +
+              '5:'#10'* Spanische Sprache hinzugef'#252'gt'#10'  (dank Fernando Deambrosio!)' +
+              #10'* 33 neue Vorlagen unter "Workshop"'#10'  (Downloadgr'#246#223'e hat sich m' +
+              'ehr als verdoppelt)'#10'  (dank Andrea Claudia Delp (amaveo.de)!)'#10'* ' +
+              'Bug fix f'#252'r generierte PNG-Dateien'#10'* Die Programmstart-Aktion ka' +
+              'nn nun '#10'  in den Optionen eingestellt werden'#10#10'</code></de>'
             Style.PaddingRight = 2
             Style.WhiteSpace = cwsPre
             Style.Color = Red
@@ -2112,7 +2117,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1_1
         object Link7: TdhLink
           Left = 0
           Top = 59
-          Height = 45
+          Height = 29
           Text = '<en>User Pages</en><de>Benutzer- seiten</de>'
           Use = Link3
           AutoSizeXY = asY
@@ -2124,7 +2129,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1_1
         end
         object Link4: TdhLink
           Left = 0
-          Top = 223
+          Top = 207
           Height = 29
           Text = '<en>Contact</en><de>Impressum</de>'
           Use = Link3
@@ -2137,8 +2142,8 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1_1
         end
         object TdhAnchor2: TdhLink
           Left = 0
-          Top = 252
-          Height = 45
+          Top = 236
+          Height = 29
           Text = '<en>Disclaimer</en>'#10'<de>Haftungs- ausschluss</de>'
           Use = Link3
           AutoSizeXY = asY
@@ -2153,7 +2158,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1_1
         end
         object Link19: TdhLink
           Left = 0
-          Top = 149
+          Top = 133
           Height = 29
           Text = 'FAQ'
           Use = Link3
@@ -2166,7 +2171,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1_1
         end
         object Link20: TdhLink
           Left = 0
-          Top = 104
+          Top = 88
           Height = 45
           Text = '<en>Version history</en>'#10'<de>Versions- historie</de>'
           Use = Link3
@@ -2179,7 +2184,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1_1
         end
         object Link13: TdhLink
           Left = 0
-          Top = 178
+          Top = 162
           Height = 45
           Text = 'Tips & Tricks'
           Use = Link3
@@ -2192,7 +2197,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1_1
         end
         object Link40: TdhLink
           Left = 0
-          Top = 297
+          Top = 265
           Height = 45
           Text = '<en>More Programs</en><de>Weitere Programme</de>'
           Use = Link3
@@ -2420,7 +2425,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1_1
         Top = 0
         Height = 16
         Text = 'de'
-        Style.Display = cdsInline
+        Style.Display = cdsNone
         AutoSizeXY = asY
         Align = alTop
         Right = 0
@@ -2430,7 +2435,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1_1
         Top = 16
         Height = 16
         Text = 'en'
-        Style.Display = cdsNone
+        Style.Display = cdsInline
         AutoSizeXY = asY
         Align = alTop
         Right = 0

@@ -16,7 +16,6 @@ unit TntWideStrings;
 interface
 
 {$IFDEF COMPILER_10_UP}
-  {$MESSAGE FATAL 'Do not refer to TntWideStrings.pas.  It works correctly in Delphi 2006.'}
 {$ENDIF}
 
 uses
@@ -30,7 +29,8 @@ uses
 {         Which is only available on Windows NT+.                              }
 {                                                                              }
 {******************************************************************************}
-
+                     
+{$IFNDEF COMPILER_10_UP}
 type
   TWideStrings = class;
 
@@ -157,11 +157,16 @@ type
   PWideStringItemList = ^TWideStringItemList;
   TWideStringItemList = array[0..MaxListSize] of TWideStringItem;
 
+
+{$ENDIF}
 implementation
 
 uses
   Windows, SysUtils, TntSystem, {$IFDEF COMPILER_9_UP} WideStrUtils, {$ELSE} TntWideStrUtils, {$ENDIF}
   TntSysUtils, TntClasses;
+
+  
+{$IFNDEF COMPILER_10_UP}
 
 { TWideStringsEnumerator }
 
@@ -827,5 +832,8 @@ begin
   else
     if Index >= 0 then Delete(Index);
 end;
+
+
+{$ENDIF}
 
 end.

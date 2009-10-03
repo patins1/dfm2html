@@ -101,6 +101,9 @@
 			<Compiler Name="OptionTruncated" Type="Boolean">True</Compiler>
 			<Compiler Name="WideCharReduced" Type="Boolean">True</Compiler>
 			<Compiler Name="DuplicatesIgnored" Type="Boolean">True</Compiler>
+			<Compiler Name="UnitInitSeq">True</Compiler>
+			<Compiler Name="LocalPInvoke">True</Compiler>
+			<Compiler Name="CodePage"></Compiler>
 		</Compiler>
 		<Linker>
 			<Linker Name="MapFile" Type="Integer">0</Linker>
@@ -113,6 +116,7 @@
 			<Linker Name="MaxStackSize" Type="Integer">1048576</Linker>
 			<Linker Name="ImageBase" Type="Integer">4194304</Linker>
 			<Linker Name="ExeDescription" Type="String">Tnt Unicode Controls</Linker>
+			<Linker Name="GenerateHpps">False</Linker>
 		</Linker>
 		<Directories>
 			<Directories Name="OutputDir" Type="String"></Directories>
@@ -136,6 +140,9 @@
 			<Parameters Name="RemoteLauncher" Type="String"></Parameters>
 			<Parameters Name="RemoteCWD" Type="String"></Parameters>
 			<Parameters Name="RemoteDebug" Type="Boolean">False</Parameters>
+			<Parameters Name="Debug Symbols Search Path"></Parameters>
+			<Parameters Name="LoadAllSymbols">True</Parameters>
+			<Parameters Name="LoadUnspecifiedSymbols">False</Parameters>
 		</Parameters>
 		<Language>
 			<Language Name="ActiveLang" Type="String"></Language>
@@ -167,6 +174,8 @@
 			<VersionInfoKeys Name="OriginalFilename" Type="String"></VersionInfoKeys>
 			<VersionInfoKeys Name="ProductName" Type="String"></VersionInfoKeys>
 			<VersionInfoKeys Name="ProductVersion" Type="String">2.3.0.1</VersionInfoKeys>
-		</VersionInfoKeys>
-	</Delphi.Personality>
+		</VersionInfoKeys>  <Excluded_Packages>
+      <Excluded_Packages Name="C:\Dokumente und Einstellungen\JoeKey\Eigene Dateien\Borland Studio Projects\Bpl\hbcomps.bpl">(untitled)</Excluded_Packages>
+    </Excluded_Packages>
+  </Delphi.Personality>
 </BorlandProject>

@@ -24,11 +24,11 @@ package dcldklang10;
 {$IMAGEBASE $25200000}
 {$DESCRIPTION 'DKLang Localization Package'}
 {$DESIGNONLY}
-{$IMPLICITBUILD ON}
+{$IMPLICITBUILD OFF}
 
 requires
   designide,
-  TntUnicodeVcl,
+  TntUnicodeVcl_D90,
   dklang10;
 
 contains

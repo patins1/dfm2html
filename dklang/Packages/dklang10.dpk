@@ -29,7 +29,7 @@ package dklang10;
 requires
   vcl,
   rtl,
-  TntUnicodeVcl;
+  TntUnicodeVcl_D90;
 
 contains
   DKLang in '..\DKLang.pas';

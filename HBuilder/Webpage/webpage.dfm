@@ -5,8 +5,8 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1_1
   VertScrollBar.Tracking = True
   Anchors = [akLeft, akTop, akRight, akBottom]
   Caption = 'webpage.dfm'
-  ClientHeight = 726
-  ClientWidth = 1600
+  ClientHeight = 799
+  ClientWidth = 1680
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clBlack
   Font.Height = -13
@@ -42,14 +42,14 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1_1
       'HTML editor, web page maker, web design creator, anti aliasing, ' +
       'mouse over buttons, WYSIWYG, absolute positioning, site manageme' +
       'nt, authoring'
-    FTPURL = 'ftp://p8288468:5yMTPDtZ@kiegeland.com/dfm2html/'
+    FTPURL = 'ftp://p8288468:5yMTPDtZ@kiegeland.com/dfm2html_de/'
     HTTPURL = 'http://www.dfm2html.com/'
     GeneratedImageFolder = 'images'
     GeneratedCSSFile = 'dfm2html'
     object Panel4: TdhPanel
       Top = 4
       Width = 758
-      Height = 2372
+      Height = 2132
       Style.Border.Width = 1
       Style.Border.Color = 15461355
       Style.Border.Style = cbsSolid
@@ -88,7 +88,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1_1
         Top = 88
         Width = 24
         Height = 24
-        ActivePage = history
+        ActivePage = userpages
         FixedHeight = False
         object Page1: TdhPage
           Left = 192
@@ -102,7 +102,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1_1
             Left = 16
             Top = 48
             Width = 456
-            Height = 330
+            Height = 346
             Text = 
               '<en>'#10'DFM2HTML is an easy to use WYSIWYG HTML editor. Sophisticat' +
               'ed web sites can be composed within minutes using drag&drop and ' +
@@ -167,7 +167,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1_1
           object Link21: TdhLink
             Left = 32
             Top = 424
-            Width = 104
+            Width = 110
             Height = 16
             Text = #9658' <en>Version history</en><de>Versionshistorie</de>'
             Style.TextDecoration = [ctdNone]
@@ -275,7 +275,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1_1
             Width = 27
             Height = 22
             AutoSizeXY = asXY
-            FileName = 'C:\HBuilder\CreateInstall\dfm2html_inst.exe'
+            FileName = 'C:\Delphi\HBuilder\CreateInstall\dfm2html_inst.exe'
             Linked = True
           end
           object pad_file: TdhFile
@@ -284,7 +284,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1_1
             Width = 27
             Height = 22
             AutoSizeXY = asXY
-            FileName = 'C:\HBuilder\pad_file.xml'
+            FileName = 'C:\Delphi\HBuilder\pad_file.xml'
             Linked = True
           end
           object CurrentVersion: TdhFile
@@ -293,7 +293,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1_1
             Width = 27
             Height = 22
             AutoSizeXY = asXY
-            FileName = 'C:\HBuilder\CurrentVersion.txt'
+            FileName = 'C:\Delphi\HBuilder\CurrentVersion.txt'
             Linked = True
           end
           object Label49: TdhLabel
@@ -624,7 +624,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1_1
           object Label16: TdhLabel
             Left = 16
             Top = 24
-            Width = 274
+            Width = 115
             Height = 16
             Text = 
               #9658' <en>Contact us if your site shall be listed here</en><de>Benut' +
@@ -635,7 +635,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1_1
           end
           object Label19: TdhLabel
             Left = 16
-            Top = 760
+            Top = 776
             Width = 320
             Height = 16
             Text = 
@@ -645,7 +645,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1_1
           end
           object Image1: TdhLink
             Left = 168
-            Top = 984
+            Top = 1000
             Width = 144
             Height = 144
             ImageType = bitStretch
@@ -662,7 +662,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1_1
           end
           object Link6: TdhLink
             Left = 168
-            Top = 1688
+            Top = 1704
             Width = 144
             Height = 144
             ImageType = bitStretch
@@ -679,7 +679,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1_1
           end
           object Link11: TdhLink
             Left = 168
-            Top = 1336
+            Top = 1352
             Width = 144
             Height = 144
             ImageType = bitStretch
@@ -696,17 +696,17 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1_1
           end
           object StyleSheet5: TdhStyleSheet
             Left = 16
-            Top = 787
+            Top = 803
             Width = 28
             Height = 28
             Expanded = False
-            VertPosition = 376
+            VertPosition = 408
             ExpandedWidth = 240
             ExpandedHeight = 216
             Expanded = False
             object Link12: TdhLink
               Left = 0
-              Top = -376
+              Top = -408
               Height = 16
               Text = 'Link12'
               AutoSizeXY = asXY
@@ -717,7 +717,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1_1
             end
             object Link17: TdhLink
               Left = 0
-              Top = -360
+              Top = -392
               Height = 16
               Text = 'http://www.pletsch.info'
               AutoSizeXY = asXY
@@ -729,7 +729,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1_1
             end
             object Link16: TdhLink
               Left = 0
-              Top = -344
+              Top = -376
               Height = 16
               Text = 'http://www.qv90.de'
               AutoSizeXY = asXY
@@ -741,7 +741,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1_1
             end
             object Link24: TdhLink
               Left = 0
-              Top = -328
+              Top = -360
               Height = 16
               Text = 'http://ronspctech.com/'
               AutoSizeXY = asXY
@@ -753,7 +753,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1_1
             end
             object Link31: TdhLink
               Left = 0
-              Top = -312
+              Top = -344
               Height = 16
               Text = 'http://homepages.rtlnet.de/debecher07381/'
               AutoSizeXY = asXY
@@ -765,7 +765,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1_1
             end
             object Link34: TdhLink
               Left = 0
-              Top = -296
+              Top = -328
               Height = 16
               Text = 'http://web.yeahost.com'
               AutoSizeXY = asXY
@@ -777,7 +777,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1_1
             end
             object Label15: TdhLabel
               Left = 0
-              Top = -280
+              Top = -312
               Height = 16
               Text = 'Label15'
               Style.Color = Red
@@ -787,7 +787,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1_1
             end
             object Link32: TdhLink
               Left = 0
-              Top = -264
+              Top = -296
               Height = 16
               Text = 'http://server.jungle.googlepages.com/index.html'
               AutoSizeXY = asXY
@@ -799,7 +799,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1_1
             end
             object Link36: TdhLink
               Left = 0
-              Top = -248
+              Top = -280
               Height = 16
               Text = 'http://www.folkclub-hattersheim.de'
               AutoSizeXY = asXY
@@ -811,7 +811,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1_1
             end
             object Link18: TdhLink
               Left = 0
-              Top = -232
+              Top = -264
               Height = 16
               Text = 'http://www.fool-house.com/'
               AutoSizeXY = asXY
@@ -823,7 +823,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1_1
             end
             object Link30: TdhLink
               Left = 0
-              Top = -216
+              Top = -248
               Height = 16
               Text = 'http://www.witches-of-monklake.de'
               AutoSizeXY = asXY
@@ -835,7 +835,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1_1
             end
             object Link39: TdhLink
               Left = 0
-              Top = -200
+              Top = -232
               Height = 16
               Text = 'http://www.samesame-online.de'
               AutoSizeXY = asXY
@@ -847,7 +847,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1_1
             end
             object Link42: TdhLink
               Left = 0
-              Top = -184
+              Top = -216
               Height = 16
               Text = 'http://www.ichrr.de'
               AutoSizeXY = asXY
@@ -859,7 +859,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1_1
             end
             object Link43: TdhLink
               Left = 0
-              Top = -168
+              Top = -200
               Height = 16
               Text = 'http://www.haus-charlotte.de.ms'
               AutoSizeXY = asXY
@@ -871,7 +871,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1_1
             end
             object Link44: TdhLink
               Left = 0
-              Top = -152
+              Top = -184
               Height = 16
               Text = 'http://www.santamas.org'
               AutoSizeXY = asXY
@@ -883,7 +883,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1_1
             end
             object Link46: TdhLink
               Left = 0
-              Top = -136
+              Top = -168
               Height = 16
               Text = 'http://www.steadystand.de'
               AutoSizeXY = asXY
@@ -895,7 +895,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1_1
             end
             object Link47: TdhLink
               Left = 0
-              Top = -120
+              Top = -152
               Height = 16
               Text = 'http://www.bueroorganisation-roth.de'
               AutoSizeXY = asXY
@@ -907,7 +907,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1_1
             end
             object Link48: TdhLink
               Left = 0
-              Top = -104
+              Top = -136
               Height = 16
               Text = 'http://cursogalileu.googlepages.com/index.html'
               AutoSizeXY = asXY
@@ -919,7 +919,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1_1
             end
             object Link49: TdhLink
               Left = 0
-              Top = -88
+              Top = -120
               Height = 16
               Text = 'http://www.jungle-networks.com'
               AutoSizeXY = asXY
@@ -931,7 +931,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1_1
             end
             object Link50: TdhLink
               Left = 0
-              Top = -72
+              Top = -104
               Height = 16
               Text = 'http://www.biker-altenberge.de'
               AutoSizeXY = asXY
@@ -943,7 +943,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1_1
             end
             object Link51: TdhLink
               Left = 0
-              Top = -56
+              Top = -88
               Height = 16
               Text = 'http://www.animecube.co.cc/'
               AutoSizeXY = asXY
@@ -955,7 +955,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1_1
             end
             object Link53: TdhLink
               Left = 0
-              Top = -40
+              Top = -72
               Height = 16
               Text = 'http://www.club500vomano.it'
               AutoSizeXY = asXY
@@ -967,7 +967,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1_1
             end
             object Link55: TdhLink
               Left = 0
-              Top = -24
+              Top = -56
               Height = 16
               Text = 'http://gianni65.interfree.it'
               AutoSizeXY = asXY
@@ -979,7 +979,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1_1
             end
             object Link57: TdhLink
               Left = 0
-              Top = -8
+              Top = -40
               Height = 16
               Text = 'http://www.rechtsanwalt-deibert.de'
               AutoSizeXY = asXY
@@ -991,7 +991,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1_1
             end
             object Link58: TdhLink
               Left = 0
-              Top = 8
+              Top = -24
               Height = 16
               Text = 'http://musical.mildtor.de'
               AutoSizeXY = asXY
@@ -1003,7 +1003,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1_1
             end
             object Link59: TdhLink
               Left = 0
-              Top = 24
+              Top = -8
               Height = 16
               Text = 'http://www.leocavalcante.biteiro.com.br/StageAdjust/'
               AutoSizeXY = asXY
@@ -1015,7 +1015,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1_1
             end
             object Link60: TdhLink
               Left = 0
-              Top = 40
+              Top = 8
               Height = 16
               Text = 'http://www.dertagdanach.com'
               AutoSizeXY = asXY
@@ -1027,8 +1027,8 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1_1
             end
             object Label45: TdhLabel
               Left = 0
-              Top = 56
-              Width = 26
+              Top = 24
+              Width = 100
               Height = 100
               Text = 'Label45'
               ImageType = bitImage
@@ -1042,7 +1042,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1_1
             end
             object Link63: TdhLink
               Left = 0
-              Top = 156
+              Top = 124
               Height = 16
               Text = 'http://www.agip-piesche.de'
               AutoSizeXY = asXY
@@ -1054,7 +1054,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1_1
             end
             object Link52: TdhLink
               Left = 0
-              Top = 172
+              Top = 140
               Height = 16
               Text = 'http://www.incontro-ducati.de'
               AutoSizeXY = asXY
@@ -1064,10 +1064,34 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1_1
               Options = [loDownIfMenu, loDownIfMouseDown, loDownIfURL]
               Link = 'http://www.incontro-ducati.de'
             end
+            object Link56: TdhLink
+              Left = 0
+              Top = 156
+              Height = 16
+              Text = 'http://www.technicans.de'
+              AutoSizeXY = asXY
+              Align = alTop
+              Right = 0
+              PreferDownStyles = True
+              Options = [loDownIfMenu, loDownIfMouseDown, loDownIfURL]
+              Link = 'http://www.technicans.de'
+            end
+            object Link70: TdhLink
+              Left = 0
+              Top = 172
+              Height = 16
+              Text = 'http://ibmklub-mainz.de/motorrad'
+              AutoSizeXY = asXY
+              Align = alTop
+              Right = 0
+              PreferDownStyles = True
+              Options = [loDownIfMenu, loDownIfMouseDown, loDownIfURL]
+              Link = 'http://ibmklub-mainz.de/motorrad'
+            end
           end
           object Link14: TdhLink
             Left = 168
-            Top = 1512
+            Top = 1528
             Width = 144
             Height = 144
             ImageType = bitStretch
@@ -1086,7 +1110,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1_1
             Left = 24
             Top = 48
             Width = 345
-            Height = 674
+            Height = 706
             Text = 
               '<i><en>music</en><de>Musik</de></i>'#10'<ul>'#10'<li><Link18>http://www.' +
               'fool-house.com</Link18></li>'#10'<li><Link36>http://www.folkclub-hat' +
@@ -1097,31 +1121,33 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1_1
               'ttp://www.qv90.de</Link16></li>'#10'<li><Link59>http://www.leocavalc' +
               'ante.biteiro.com.br/StageAdjust/</Link59></li>'#10'</ul>'#10'<i><en>othe' +
               'r</en><de>andere Themen</de></i>'#10'<ul>'#10'<li><Link50>http://www.bik' +
-              'er-altenberge.de</Link50></li>'#10'<li><Link52>http://www.incontro-d' +
-              'ucati.de</Link52></li>'#10'<li><Link55>http://gianni65.interfree.it<' +
-              '/Link55></li>'#10'<li><Link53>http://www.club500vomano.it</Link53></' +
-              'li>'#10'<li><Link30>http://www.witches-of-monklake.de</Link30></li>'#10 +
-              '<li><Link32>http://server.jungle.googlepages.com/index.html</Lin' +
-              'k32></li>'#10'<li><Link17>http://www.pletsch.info</Link17></li>'#10'<li>' +
-              '<Link69>http://www.kunstguss-ranft.de</Link69></li>'#10'<li><Link47>' +
-              'http://www.bueroorganisation-roth.de</Link47></li>'#10'<li><Link57>h' +
-              'ttp://www.rechtsanwalt-deibert.de</Link57></li>'#10'<li><Link48>http' +
-              '://cursogalileu.googlepages.com/index.html</Link48></li>'#10'<li><Li' +
-              'nk49>http://www.jungle-networks.com</Link49></li>'#10'<li><Link51>ht' +
-              'tp://www.animecube.co.cc</Link51></li>'#10'<li><Link43>http://www.ha' +
-              'us-charlotte.de.ms</Link43></li>'#10'<li><Link44>http://www.santamas' +
-              '.org</Link44></li>'#10'<li><Link42>http://www.ichrr.de</Link42></li>' +
-              #10'<li><Link31>http://homepages.rtlnet.de/debecher07381/</Link31><' +
-              '/li>'#10'<li><Link46>http://www.steadystand.de</Link46></li>'#10'<li><Li' +
-              'nk60>http://www.dertagdanach.com<Label45></Label45></Link60></li' +
-              '>'#10'<li><Link63>http://www.agip-piesche.de</Link63></li>'#10'<li><Link' +
-              '65>http://www.kronehattersheim.de</Link65></li>'#10'<li><Link68>http' +
-              '://poltech.110mb.com</Link68></li>'#10'</ul>'
+              'er-altenberge.de</Link50></li>'#10'<li><Link70>http://ibmklub-mainz.' +
+              'de/motorrad</Link70></li>'#10'<li><Link52>http://www.incontro-ducati' +
+              '.de</Link52></li>'#10'<li><Link56>http://www.technicans.de</Link56><' +
+              '/li>'#10'<li><Link55>http://gianni65.interfree.it</Link55></li>'#10'<li>' +
+              '<Link53>http://www.club500vomano.it</Link53></li>'#10'<li><Link30>ht' +
+              'tp://www.witches-of-monklake.de</Link30></li>'#10'<li><Link32>http:/' +
+              '/server.jungle.googlepages.com/index.html</Link32></li>'#10'<li><Lin' +
+              'k17>http://www.pletsch.info</Link17></li>'#10'<li><Link69>http://www' +
+              '.kunstguss-ranft.de</Link69></li>'#10'<li><Link47>http://www.bueroor' +
+              'ganisation-roth.de</Link47></li>'#10'<li><Link57>http://www.rechtsan' +
+              'walt-deibert.de</Link57></li>'#10'<li><Link48>http://cursogalileu.go' +
+              'oglepages.com/index.html</Link48></li>'#10'<li><Link49>http://www.ju' +
+              'ngle-networks.com</Link49></li>'#10'<li><Link51>http://www.animecube' +
+              '.co.cc</Link51></li>'#10'<li><Link43>http://www.haus-charlotte.de.ms' +
+              '</Link43></li>'#10'<li><Link44>http://www.santamas.org</Link44></li>' +
+              #10'<li><Link42>http://www.ichrr.de</Link42></li>'#10'<li><Link31>http:' +
+              '//homepages.rtlnet.de/debecher07381/</Link31></li>'#10'<li><Link46>h' +
+              'ttp://www.steadystand.de</Link46></li>'#10'<li><Link60>http://www.de' +
+              'rtagdanach.com<Label45></Label45></Link60></li>'#10'<li><Link63>http' +
+              '://www.agip-piesche.de</Link63></li>'#10'<li><Link65>http://www.kron' +
+              'ehattersheim.de</Link65></li>'#10'<li><Link68>http://poltech.110mb.c' +
+              'om</Link68></li>'#10'</ul>'
             AutoSizeXY = asXY
           end
           object Link10: TdhLink
             Left = 168
-            Top = 1160
+            Top = 1176
             Width = 144
             Height = 144
             ImageType = bitStretch
@@ -1138,7 +1164,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1_1
           end
           object Link27: TdhLink
             Left = 168
-            Top = 808
+            Top = 824
             Width = 144
             Height = 144
             ImageType = bitStretch
@@ -1636,7 +1662,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1_1
             Width = 27
             Height = 22
             AutoSizeXY = asXY
-            FileName = 'C:\HBuilder\iFrames.dfm'
+            FileName = 'C:\Delphi\HBuilder\iFrames.dfm'
             Linked = True
           end
         end
@@ -2117,7 +2143,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1_1
         object Link7: TdhLink
           Left = 0
           Top = 59
-          Height = 29
+          Height = 45
           Text = '<en>User Pages</en><de>Benutzer- seiten</de>'
           Use = Link3
           AutoSizeXY = asY
@@ -2129,7 +2155,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1_1
         end
         object Link4: TdhLink
           Left = 0
-          Top = 207
+          Top = 223
           Height = 29
           Text = '<en>Contact</en><de>Impressum</de>'
           Use = Link3
@@ -2142,8 +2168,8 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1_1
         end
         object TdhAnchor2: TdhLink
           Left = 0
-          Top = 236
-          Height = 29
+          Top = 252
+          Height = 45
           Text = '<en>Disclaimer</en>'#10'<de>Haftungs- ausschluss</de>'
           Use = Link3
           AutoSizeXY = asY
@@ -2158,7 +2184,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1_1
         end
         object Link19: TdhLink
           Left = 0
-          Top = 133
+          Top = 149
           Height = 29
           Text = 'FAQ'
           Use = Link3
@@ -2171,7 +2197,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1_1
         end
         object Link20: TdhLink
           Left = 0
-          Top = 88
+          Top = 104
           Height = 45
           Text = '<en>Version history</en>'#10'<de>Versions- historie</de>'
           Use = Link3
@@ -2184,7 +2210,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1_1
         end
         object Link13: TdhLink
           Left = 0
-          Top = 162
+          Top = 178
           Height = 45
           Text = 'Tips & Tricks'
           Use = Link3
@@ -2197,7 +2223,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1_1
         end
         object Link40: TdhLink
           Left = 0
-          Top = 265
+          Top = 297
           Height = 45
           Text = '<en>More Programs</en><de>Weitere Programme</de>'
           Use = Link3
@@ -2417,15 +2443,18 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1_1
     object StyleSheet8: TdhStyleSheet
       Left = 8
       Top = 8
-      Width = 232
-      Height = 296
-      Expanded = True
+      Width = 28
+      Height = 28
+      Expanded = False
+      ExpandedWidth = 232
+      ExpandedHeight = 296
+      Expanded = False
       object de: TdhLabel
         Left = 0
         Top = 0
         Height = 16
         Text = 'de'
-        Style.Display = cdsNone
+        Style.Display = cdsInline
         AutoSizeXY = asY
         Align = alTop
         Right = 0
@@ -2435,7 +2464,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1_1
         Top = 16
         Height = 16
         Text = 'en'
-        Style.Display = cdsInline
+        Style.Display = cdsNone
         AutoSizeXY = asY
         Align = alTop
         Right = 0

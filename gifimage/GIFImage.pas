@@ -5191,7 +5191,7 @@ var
     Pal.palNumEntries := 256;
     for i := 0 to 255 do
     begin
-      with (Pal.palPalEntry[i]) do
+      with Pal.palPalEntry[i] do
       begin
         peRed := i;
         peGreen := i;
@@ -5214,7 +5214,7 @@ var
     Pal.palNumEntries := 2;
     for i := 0 to 1 do
     begin
-      with (Pal.palPalEntry[i]) do
+      with Pal.palPalEntry[i] do
       begin
         peRed := Values[i];
         peGreen := Values[i];
@@ -5237,7 +5237,7 @@ var
     Pal.palNumEntries := 4;
     for i := 0 to 3 do
     begin
-      with (Pal.palPalEntry[i]) do
+      with Pal.palPalEntry[i] do
       begin
         peRed := Values[i];
         peGreen := Values[i];
@@ -8601,7 +8601,7 @@ begin
     Error(sBadPixelCoordinates);
   if Value >= ActiveColorMap.FCount then
     Error(sBadColorIndex);
-  BYTE(PChar(longInt(Scanline[y]) + x)^) := Value;
+  PByte(PChar(longInt(Scanline[y]) + x))^ := Value;
 end;
 // 2006.10.09 <-
 

@@ -87,9 +87,9 @@ object TransparencyWizard: TTransparencyWizard
     Top = 112
     Width = 271
     Height = 33
-    Max = 100
+    Max = 255
     PageSize = 25
-    Frequency = 25
+    Frequency = 64
     Position = 100
     TabOrder = 3
     TabStop = False

@@ -892,13 +892,13 @@ end;
 
 function Adj255to100(i:integer):integer;
 begin
- result:=round(i*100/255);
+ result:=i;
 end;
 
 
 function Adj100to255(i:integer):DWORD;
 begin
- result:=round(i*255/100);
+ result:=i;
 end;
 
 function NormalizeDegree(Degree:integer):integer;

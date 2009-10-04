@@ -1409,7 +1409,7 @@ object Tabs: TTabs
                   Top = 2
                   Width = 42
                   Height = 22
-                  MaxValue = 100
+                  MaxValue = 255
                   MinValue = 0
                   TabOrder = 0
                   Value = 0
@@ -1489,7 +1489,7 @@ object Tabs: TTabs
                   Top = 1
                   Width = 98
                   Height = 22
-                  Max = 100
+                  Max = 255
                   TabOrder = 7
                 end
               end
@@ -1693,7 +1693,7 @@ object Tabs: TTabs
                   Top = 71
                   Width = 98
                   Height = 22
-                  Max = 100
+                  Max = 255
                   PageSize = 25
                   TabOrder = 6
                 end
@@ -1702,7 +1702,7 @@ object Tabs: TTabs
                   Top = 71
                   Width = 47
                   Height = 22
-                  MaxValue = 100
+                  MaxValue = 255
                   MinValue = 0
                   TabOrder = 7
                   Value = 0

@@ -24,7 +24,7 @@
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Base)'!=''">
 			<DCC_CBuilderOutput>All</DCC_CBuilderOutput>
-			<DCC_DependencyCheckOutputName>C:\Documents and Settings\All Users\Documents\RAD Studio\6.0\Bpl\TMSUnicodeDED2009.bpl</DCC_DependencyCheckOutputName>
+			<DCC_DependencyCheckOutputName>C:\Dokumente und Einstellungen\All Users\Dokumente\RAD Studio\7.0\Bpl\TMSUnicodeDED2009.bpl</DCC_DependencyCheckOutputName>
 			<DCC_ImageBase>00400000</DCC_ImageBase>
 			<DCC_Description>TMS Unicode Component Pack</DCC_Description>
 			<DCC_TypedAtParameter>true</DCC_TypedAtParameter>

@@ -39,6 +39,7 @@ type
   public
     { Public declarations }
     sw,sh:integer;
+    LivePreview:TList;
     procedure GetBG(pic: TPersistent; w, h: integer);
     procedure Prepare(pn:TdhCustomPanel; w,h:integer);
   end;
@@ -173,9 +174,19 @@ end;
 
 
 procedure TGradientWizard.BGChanged;
+var I:integer;
+    ActStyle:TStyle;
 begin
  GetBG(SampleGradient.Style.BackgroundImage,SampleGradient.Width,SampleGradient.Height);
  SampleGradient.DesignPaintingChanged;
+ if LivePreview<>nil then
+ for I := 0 to LivePreview.Count - 1 do
+ begin
+  ActStyle:=TStyle(LivePreview[i]);
+  GetBG(ActStyle.BackgroundImage,sw,sh);
+  ActStyle.BackgroundRepeat:=SampleGradient.Style.BackgroundRepeat;
+  ActStyle.BackgroundPosition:=SampleGradient.Style.BackgroundPosition;
+ end;
 end;
 
 procedure TGradientWizard.FormCreate(Sender: TObject);
@@ -252,7 +263,8 @@ begin
  end else
  begin
   sw:=spMasterAlpha.Value;
- end;
+ end;                   
+ BGChanged;
 end;
 
 procedure TGradientWizard.rgDirectionClick(Sender: TObject);

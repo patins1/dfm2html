@@ -34,7 +34,8 @@ type
     procedure BGChanged;
     { Private declarations }
   public
-    { Public declarations }    
+    { Public declarations }        
+    LivePreview:TList;
     procedure GetBG(pic: TPersistent; w, h: integer);
     procedure Prepare(Pn: TdhCustomPanel);
 
@@ -92,10 +93,20 @@ begin
  BGChanged;
 end;
              
-procedure TTransparencyWizard.BGChanged;
+procedure TTransparencyWizard.BGChanged;    
+var I:integer;
+    ActStyle:TStyle;
 begin
  GetBG(SampleGradient.Style.BackgroundImage,SampleGradient.Width,SampleGradient.Height);
  SampleGradient.DesignPaintingChanged;
+ if LivePreview<>nil then
+ for I := 0 to LivePreview.Count - 1 do
+ begin
+  ActStyle:=TStyle(LivePreview[i]);
+  GetBG(ActStyle.BackgroundImage,ActStyle.Owner.Width,ActStyle.Owner.Height);
+  ActStyle.BackgroundRepeat:=SampleGradient.Style.BackgroundRepeat;
+  ActStyle.BackgroundPosition:=SampleGradient.Style.BackgroundPosition;
+ end;
 end;
 
 procedure TTransparencyWizard.FirstColorColorChanged(Sender: TObject);

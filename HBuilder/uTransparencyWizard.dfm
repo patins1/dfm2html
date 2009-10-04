@@ -1,7 +1,6 @@
 object TransparencyWizard: TTransparencyWizard
   Left = 300
   Top = 130
-  AutoScroll = False
   Caption = 'Color Transparency Wizard'
   ClientHeight = 183
   ClientWidth = 289

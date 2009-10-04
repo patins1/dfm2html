@@ -27,7 +27,7 @@ uses
   dhOleContainer,dhFile,dhHiddenField,GR32,
   MyPageControl, MyFontDialog,
   MySpinEdit, MyTrackBar, hCheckBox, dhSelect, UseFastStrings, DKLang,UIConstants,uWException,
-  MyGroupBox, MyPanel, MyForm;
+  MyGroupBox, MyPanel, MyForm, Contnrs;
 
 
 var PropsAlign:TAlign=alBottom;
@@ -2158,18 +2158,36 @@ end;
 
 
 procedure TTabs.dhAnchor4Click(Sender: TObject);
+var backup:TObjectList;
+    backupItem:TStyle;
+    i:integer;
 begin
  LateCreateForm(TGradientWizard,GradientWizard);
+ backup:=TObjectList.Create;
+ GradientWizard.LivePreview:=TList.Create;
+ try                        
+ backup.OwnsObjects:=true;
+ for i:=0 to Selection.Count-1 do
+ begin
+  GradientWizard.LivePreview.add((TObject(Selection[i]) as TdhCustomPanel).ActStyle);
+  backupItem:=TStyle.Create(nil,hsNormal);
+  backupItem.Assign((TObject(Selection[i]) as TdhCustomPanel).ActStyle);
+  backup.Add(backupItem);
+ end;
  with {ActPn.BorderClientRect}ActPn.ScrollArea do
  GradientWizard.Prepare(ActPn,Right-Left,Bottom-Top);
  if GradientWizard.ShowModal=mrOk then
  begin
-  with TObject(Selection[0]) as TdhCustomPanel do
-   GradientWizard.GetBG(ActStyle.BackgroundImage,{Width,Height}GradientWizard.sw,GradientWizard.sh);
-  ActStyle.BackgroundRepeat:=GradientWizard.SampleGradient.Style.BackgroundRepeat;
-  ActStyle.BackgroundPosition:=GradientWizard.SampleGradient.Style.BackgroundPosition;
   LiveBackgroundChanged;
   Changed('Image From Gradient');
+ end else
+ begin
+  for i:=0 to Selection.Count-1 do
+   (TObject(Selection[i]) as TdhCustomPanel).ActStyle.Assign(TPersistent(backup[i]));
+ end;
+ finally
+  FreeAndNil(GradientWizard.LivePreview);
+  backup.Free;
  end;
 end;
 
@@ -3517,18 +3535,36 @@ begin
  UpdatePageDisplay;
 end;
 
-procedure TTabs.Button17Click(Sender: TObject);
+procedure TTabs.Button17Click(Sender: TObject);   
+var backup:TObjectList;
+    backupItem:TStyle;
+    i:integer;
 begin
  LateCreateForm(TTransparencyWizard,TransparencyWizard);
+ backup:=TObjectList.Create;
+ TransparencyWizard.LivePreview:=TList.Create;
+ try
+ backup.OwnsObjects:=true;
+ for i:=0 to Selection.Count-1 do
+ begin
+  TransparencyWizard.LivePreview.add((TObject(Selection[i]) as TdhCustomPanel).ActStyle);
+  backupItem:=TStyle.Create(nil,hsNormal);
+  backupItem.Assign((TObject(Selection[i]) as TdhCustomPanel).ActStyle);
+  backup.Add(backupItem);
+ end;
  TransparencyWizard.Prepare(ActPn);
  if TransparencyWizard.ShowModal=mrOk then
  begin
-  with TObject(Selection[0]) as TdhCustomPanel do
-   TransparencyWizard.GetBG(ActStyle.BackgroundImage,Width,Height);
-  ActStyle.BackgroundRepeat:=TransparencyWizard.SampleGradient.Style.BackgroundRepeat;
-  ActStyle.BackgroundPosition:=TransparencyWizard.SampleGradient.Style.BackgroundPosition;
   LiveBackgroundChanged;
   Changed('Image From Color');
+ end else
+ begin
+  for i:=0 to Selection.Count-1 do
+   (TObject(Selection[i]) as TdhCustomPanel).ActStyle.Assign(TPersistent(backup[i]));
+ end;
+ finally
+  FreeAndNil(TransparencyWizard.LivePreview);
+  backup.Free;
  end;
 end;
 
@@ -4314,16 +4350,19 @@ begin
 end;
 
 procedure TTabs.bBorderRadiusClick(Sender: TObject);
-var sBorderRadius:TList;
+var backup:TObjectList;
+    backupItem:TCSSBorderRadius;
     i:integer;
 begin
  LateCreateForm(TBorderRadiusWizard,BorderRadiusWizard);
- sBorderRadius:=TList.Create;
+ backup:=TObjectList.Create;
  try
+ backup.OwnsObjects:=true;
  for i:=0 to Selection.Count-1 do
  begin
-  sBorderRadius.Add(TCSSBorderRadius.Create(nil));
-  TCSSBorderRadius(sBorderRadius[i]).Assign((TObject(Selection[i]) as TdhCustomPanel).ActStyle.BorderRadius);
+  backupItem:=TCSSBorderRadius.Create(nil);
+  backupItem.Assign((TObject(Selection[i]) as TdhCustomPanel).ActStyle.BorderRadius);
+  backup.Add(backupItem);
  end;
  BorderRadiusWizard.Prepare(Selection);
  if BorderRadiusWizard.ShowModal=mrOk then
@@ -4334,12 +4373,10 @@ begin
  end else
  begin          
   for i:=0 to Selection.Count-1 do
-   (TObject(Selection[i]) as TdhCustomPanel).ActStyle.BorderRadius.Assign(TCSSBorderRadius(sBorderRadius[i]));
+   (TObject(Selection[i]) as TdhCustomPanel).ActStyle.BorderRadius.Assign(TPersistent(backup[i]));
  end;
  finally
-  for i:=0 to Selection.Count-1 do
-   TCSSBorderRadius(sBorderRadius[i]).Free;
-  sBorderRadius.Free;
+  backup.Free;
  end;
 end;
 

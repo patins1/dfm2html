@@ -41,7 +41,7 @@ object Tabs: TTabs
       Top = 2
       Width = 925
       Height = 204
-      ActivePage = AnchorBackground
+      ActivePage = AnchorBorder
       TabOrder = 0
       TabStop = False
       TabWidth = 54
@@ -53,10 +53,6 @@ object Tabs: TTabs
         Hint = 'Font'
         Caption = 'Font'
         OnShow = AnchorFontShow
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
         object GroupBox3: TMyGroupBox
           Left = 16
           Top = 0
@@ -233,10 +229,6 @@ object Tabs: TTabs
         Caption = 'Edge'
         ImageIndex = 1
         OnShow = AnchorBorderShow
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
         object EdgeNavigation: TdhPanel
           Left = 8
           Top = 1
@@ -723,10 +715,6 @@ object Tabs: TTabs
         Caption = 'Image'
         ImageIndex = 2
         OnShow = AnchorBackgroundShow
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
         object GroupBox9: TMyGroupBox
           Left = 8
           Top = 0
@@ -744,8 +732,8 @@ object Tabs: TTabs
             OnClick = dhAnchor3Click
           end
           object Button12: TTntButton
-            Left = 8
-            Top = 40
+            Left = 9
+            Top = 38
             Width = 113
             Height = 20
             Caption = 'From gradient..'
@@ -969,10 +957,6 @@ object Tabs: TTabs
         Caption = 'Effect'
         ImageIndex = 4
         OnShow = AnchorEffectsShow
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
         object cEffectsEnabled: TTntCheckBox
           Left = 8
           Top = 8
@@ -1248,6 +1232,8 @@ object Tabs: TTabs
               Top = 1
               AutoSizeXY = asNone
               Align = alClient
+              Right = 1
+              Bottom = 1
               UseIFrame = False
               object cAntiAliasing: TTntCheckBox
                 Left = 16
@@ -1286,12 +1272,12 @@ object Tabs: TTabs
               end
             end
             object TabSheet8: TdhPage
-              Left = 0
-              Top = 0
+              Left = 1
+              Top = 1
               AutoSizeXY = asNone
               Align = alClient
-              Right = 0
-              Bottom = 0
+              Right = 1
+              Bottom = 1
               UseIFrame = False
               object dhPanel4: TdhPanel
                 Left = 3
@@ -1583,6 +1569,8 @@ object Tabs: TTabs
               Top = 1
               AutoSizeXY = asNone
               Align = alClient
+              Right = 1
+              Bottom = 1
               UseIFrame = False
               object Panel3: TMyPanel
                 Left = 256
@@ -2183,10 +2171,6 @@ object Tabs: TTabs
         Caption = 'Misc'
         ImageIndex = 3
         OnShow = AnchorMiscShow
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
         object GroupBox26: TMyGroupBox
           Left = 8
           Top = 0
@@ -2493,10 +2477,6 @@ object Tabs: TTabs
         Caption = 'Object'
         ImageIndex = -1
         OnShow = AnchorNameShow
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
         object GroupBox21: TMyGroupBox
           Left = 8
           Top = 0
@@ -2671,10 +2651,6 @@ object Tabs: TTabs
         Caption = 'Pos.'
         ImageIndex = -1
         OnShow = AnchorPositionShow
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
         object GroupBox4: TMyGroupBox
           Left = 8
           Top = 0
@@ -3051,10 +3027,6 @@ object Tabs: TTabs
         Caption = 'Page'
         ImageIndex = -1
         OnShow = AnchorPageShow
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
         object gPageProperties: TMyGroupBox
           Left = 16
           Top = 0
@@ -3236,10 +3208,6 @@ object Tabs: TTabs
         Caption = 'Check'
         ImageIndex = -1
         OnShow = AnchorCheckBoxShow
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
         object IGNORE_cRightJustify: TTntCheckBox
           Left = 512
           Top = 32
@@ -3285,10 +3253,6 @@ object Tabs: TTabs
         Caption = 'Form'
         ImageIndex = -1
         OnShow = AnchorFormShow
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
         object cbMethod: TTntRadioGroup
           Left = 8
           Top = 0
@@ -3361,10 +3325,6 @@ object Tabs: TTabs
         Caption = 'Menu'
         ImageIndex = -1
         OnShow = AnchorMenuShow
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
         object CheckGroupBox1: TMyGroupBox
           Left = 296
           Top = 0
@@ -3539,10 +3499,6 @@ object Tabs: TTabs
         Caption = 'Link'
         ImageIndex = -1
         OnShow = AnchorLinkShow
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
         object GroupBox11: TMyGroupBox
           Left = 8
           Top = 0
@@ -3792,10 +3748,6 @@ object Tabs: TTabs
         Caption = 'OLE '
         ImageIndex = -1
         OnShow = AnchorOleShow
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
         object Button2: TTntButton
           Left = 8
           Top = 8
@@ -3850,10 +3802,6 @@ object Tabs: TTabs
         Caption = 'List'
         ImageIndex = -1
         OnShow = AnchorSelectShow
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
         object GroupBox19: TMyGroupBox
           Left = 544
           Top = -1
@@ -4038,10 +3986,6 @@ object Tabs: TTabs
         Caption = 'File'
         ImageIndex = -1
         OnShow = AnchorFileShow
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
         object Panel7: TPanel
           Left = 8
           Top = 8

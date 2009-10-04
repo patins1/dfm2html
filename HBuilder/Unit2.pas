@@ -2613,16 +2613,6 @@ begin
  cAntiAliasing.Checked:=tt.AntiAliasing;
  cTextOnly.Checked:=tt.TextOnly;
  cExcludeText.Checked:=tt.TextExclude;
- with getblur(tt) do
- begin
-  spBlurAlpha.StoredValue:=Adj255to100(Alpha);
-  cpBlurColor.Color:=Color;
-  spBlurRadius.StoredValue:=DeciRadius;
-  spBlurFlood.StoredValue:=Flood;
-  spBlurDistance.StoredValue:=Distance;
-  spBlurDegree.StoredValue:=Degree;
-  cBlurEnabled.Checked:=Enabled;
- end;
 
  ShadowExt:=BlurIndex<=1;
  lDistance.Visible:=ShadowExt;
@@ -2644,6 +2634,18 @@ begin
  slBlurFlood.Visible:=GlowExt;
 // spFloodUnit.Visible:=GlowExt;
  lFlood.Visible:=GlowExt;
+ 
+ with getblur(tt) do
+ begin
+  spBlurAlpha.StoredValue:=Adj255to100(Alpha);
+  cpBlurColor.Color:=Color;
+  spBlurRadius.StoredValue:=DeciRadius;
+  spBlurFlood.StoredValue:=Flood;
+  spBlurDistance.StoredValue:=Distance;
+  spBlurDegree.StoredValue:=Degree;
+  cBlurEnabled.Checked:=Enabled;
+ end;
+
 
  UpdateEffectsDisplay2;
 

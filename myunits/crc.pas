@@ -4,8 +4,8 @@ interface
 
 type DWORD=cardinal;
 
-function calc_crc32(ByteCount:Integer; p:pchar; ResumeCrc:DWORD=0):DWORD;
-function calc_crc32_String(const s:String; ResumeCrc:DWORD=0):DWORD; 
+function calc_crc32(ByteCount:Integer; p:PByte; ResumeCrc:DWORD=0):DWORD;
+function calc_crc32_String(const s:String; ResumeCrc:DWORD=0):DWORD;
 
 implementation
 
@@ -83,18 +83,18 @@ const
 
 function calc_crc32_String(const s:String; ResumeCrc:DWORD=0):DWORD;
 begin
- result:=calc_crc32(length(s),PChar(s),ResumeCrc);
+ result:=calc_crc32(length(s),PByte(s),ResumeCrc);
 end;
 
-function calc_crc32(ByteCount:Integer; p:pchar; ResumeCrc:DWORD=0):DWORD;
+function calc_crc32(ByteCount:Integer; p:PByte; ResumeCrc:DWORD=0):DWORD;
 var
   i:integer;
 begin
   result:=ResumeCrc xor $ffffffff;
   for i:=0 to ByteCount-1 do
-  if p[i]<>#0 then
-    result:=(result shr 8) xor table[byte(p[i]) xor (result and $FF)] else
-    result:=(result shr 8) xor table[byte(p[i]) xor (result and $FF)];
+  if p[i]<>0 then
+    result:=(result shr 8) xor table[p[i] xor (result and $FF)] else
+    result:=(result shr 8) xor table[p[i] xor (result and $FF)];
   result:=result xor $ffffffff;
 end;
 

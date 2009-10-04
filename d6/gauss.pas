@@ -433,7 +433,7 @@ begin
 
     //adj:=1-(1-1/K.Weights[0])*flood;
     //adj:=1/((GetWeight(K,(K.Size-1)*flood)/gTemp)/K.Weights[0]);
-    adj:=1/((GetWeight(K,(K.dSize{.9999})*flood)/gTemp)/K.Weights[0]);
+    adj:=1/((GetWeight(K,(K.dSize-1)*flood)/gTemp)/K.Weights[0]);
 
     eigen:=K.Weights[0]/adj;
 //    eigen:=sqrt(eigen);

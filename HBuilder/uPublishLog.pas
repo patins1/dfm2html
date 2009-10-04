@@ -10,7 +10,7 @@ uses
   Controls, Windows, Messages, Graphics, Forms, ComCtrls, Dialogs,
   ShellAPI, Mask, ExtCtrls, StdCtrls,  Variants, clipbrd, gifimage,Spin, Buttons, TntForms, TntStdCtrls, TntButtons,
 {$ENDIF}
-  UseFastStrings,SysUtils, Classes, {$IFDEF MSWINDOWS}FtpCli,HttpProt,{$ELSE}{IcsUrl,}{$ENDIF} dhPageControl,
+  UseFastStrings,SysUtils, Classes, {$IFDEF MSWINDOWS}OverbyteIcsFtpCli,OverbyteIcsUrl,{$ELSE}{IcsUrl,}{$ENDIF} dhPageControl,
   DKLang, UIConstants, MyForm;
 
 type

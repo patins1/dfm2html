@@ -12,7 +12,7 @@ uses
   Controls, Windows, Messages, Graphics, Forms, Dialogs,
   ShellAPI, Mask, ExtCtrls, StdCtrls, TntStdCtrls, TntForms,
 {$ENDIF}
-  {$IFDEF MSWINDOWS}HttpProt,{$ELSE}{IcsUrl,}{$ENDIF}unit3, dhPanel,MyMaskEdit,
+  {$IFDEF MSWINDOWS}OverbyteIcsUrl,{$ELSE}{IcsUrl,}{$ENDIF}unit3, dhPanel,MyMaskEdit,
   DKLang, dhLabel, MyPanel;
 
 type

@@ -18,7 +18,7 @@ uses
   {Mask, }ToolWin, ImgList,   AppEvnts, {IECache,} URLDropTarget, XPMan, TntStdCtrls,TntSysUtils,TntSystem, TntMenus, TntComCtrls,//XPdesign,
 {$ENDIF}
   Unit2, dhDirectHTML,
-  MySpeedButton, dhPanel, htmlrout, {$IFDEF MSWINDOWS}HttpProt,{$ELSE}{IcsUrl,}{$ENDIF}
+  MySpeedButton, dhPanel, htmlrout, {$IFDEF MSWINDOWS}OverbyteIcsHttpProt,{$ELSE}{IcsUrl,}{$ENDIF}
   funcutils, dhHTMLForm,  dhPageControl,  dhStyleSheet,
   dhMenu, dhLabel, dhEdit, MySpinEdit,
   UseFastStrings, crc, math,

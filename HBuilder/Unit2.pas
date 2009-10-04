@@ -1869,7 +1869,7 @@ var i:integer;
     s:string;
     ws:WideString;
 begin
- result:=(Selection.Count<>0) and not (OnlyOne and (Selection.Count<>1));
+ result:=(Selection.Count<>0);
  for i :=0 to Selection.Count-1  do
  if not (csDestroying in TComponent(Selection[i]).ComponentState) and not (TObject(Selection[i]).InheritsFrom(c) and
  not((ts.PageIndex<PAGE_STYLES) and ((TObject(Selection[i]) is TdhPageControl) or (TObject(Selection[i]) is TdhStyleSheet) or (TObject(Selection[i]) is TdhHiddenField))) and
@@ -1918,7 +1918,7 @@ begin
 
  end;
  if (menuitem<>nil){ and Assigned(menuitem.OnClick)} then
-  menuitem.Visible:=result;
+  menuitem.Visible:=result and not (OnlyOne and (Selection.Count<>1));
 end;
 
 function FirstCandidate:TControl;
@@ -2028,7 +2028,7 @@ begin
  if HasCommon(AnchorPage,TdhPage,false,mPageProperties) then
  begin
  end;
- if HasCommon(AnchorMenu,TdhMenu,true,mMenu) then
+ if HasCommon(AnchorMenu,TdhMenu,true,mMenu,true) then
  begin
  end;
  if HasCommon(AnchorOle,TdhOleContainer,false,mOle) then
@@ -2038,7 +2038,7 @@ begin
  begin
  end;
  if dhMainForm.compMenu.Visible then
-  HasCommon(AnchorLink,TdhLink,false,mSubMenu) else
+  HasCommon(AnchorLink,TdhLink,false,mSubMenu,true) else
   HasCommon(AnchorLink,TdhLink);
  if HasCommon(AnchorText,TdhLabel,false,mText) then
  begin

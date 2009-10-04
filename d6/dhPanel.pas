@@ -226,7 +226,7 @@ type
     FDegree: integer;
     FDistance: integer;
     FAlpha: byte;
-    FRadius: integer;
+    FDeciRadius: integer;
     FColor: TCSSColor;
     FFlood: integer;
     FEnabled: boolean;
@@ -237,7 +237,9 @@ type
     procedure SetDistance(const Value: integer);
     procedure SetFlood(const Value: integer);
     procedure SetRadius(const Value: integer);
+    procedure SetDeciRadius(const Value: integer);
     procedure SetEnabled(const Value: boolean);
+    function GetDoubleRadius:double;
   protected
     procedure Changed;
   public
@@ -247,7 +249,8 @@ type
     property Degree:integer read FDegree write SetDegree;
     property Distance:integer read FDistance write SetDistance default 5;
     property Alpha:byte read FAlpha write SetAlpha;
-    property Radius:integer read FRadius write SetRadius;
+    property Radius:integer write SetRadius;
+    property DeciRadius:integer read FDeciRadius write SetDeciRadius;
     property Color:TCSSColor read FColor write SetColor;
     property Flood:integer read FFlood write SetFlood;
     procedure Assign(Source: TPersistent); override;
@@ -263,6 +266,7 @@ type
     function IsCleared:boolean; Override;
     property Alpha default 191;
     property Radius default 5;
+    property DeciRadius default 50;
     property Color default clBlack;
     property Flood default 0;
     property Degree default 120;
@@ -277,6 +281,7 @@ type
   published
     property Alpha default 191;
     property Radius default 5;
+    property DeciRadius default 50;
     property Color default $BEFFFF;
     property Flood default 0;
   end;
@@ -288,6 +293,7 @@ type
     function IsCleared:boolean; Override;
   published
     property Radius default 5;
+    property DeciRadius default 50;
     //property Flood default 0;
   end;
 
@@ -12752,7 +12758,7 @@ begin
   inc(P);
  end;
 
- gauss.Blur(PDWORD(_Src.PixelPtr[0, 0]),_Src.Width,_Src.Height,Blur.Radius,Blur.FFlood/100,inv);
+ gauss.Blur(PDWORD(_Src.PixelPtr[0, 0]),_Src.Width,_Src.Height,Blur.GetDoubleRadius,Blur.FFlood/100,inv);
 
 
  P:=Src.PixelPtr[0, 0];
@@ -12844,7 +12850,7 @@ begin
  end;*)
 
 
- gauss.Blur(PDWORD(_Src.PixelPtr[0, 0]),_Src.Width,_Src.Height,Blur.Radius,Blur.FFlood/100,inv);
+ gauss.Blur(PDWORD(_Src.PixelPtr[0, 0]),_Src.Width,_Src.Height,Blur.GetDoubleRadius,Blur.FFlood/100,inv);
 
  P:=Src.PixelPtr[0, 0];
  P2:=_Src.PixelPtr[0, 0];
@@ -16483,7 +16489,7 @@ procedure TShadow.Clear;
 begin
   FEnabled:=false;
   FAlpha:=191;
-  FRadius:=5;
+  FDeciRadius:=50;
   FColor:=clBlack;
   FFlood:=0;
   FDegree:=120;
@@ -16492,7 +16498,7 @@ end;
 
 function TShadow.IsCleared:boolean;
 begin
- result:=not FEnabled and (FAlpha=191) and (FRadius=5) and (FColor=clBlack) and (FFlood=0) and (FDegree=120) and (FDistance=5);
+ result:=not FEnabled and (FAlpha=191) and (FDeciRadius=50) and (FColor=clBlack) and (FFlood=0) and (FDegree=120) and (FDistance=5);
 end;
 
 
@@ -16512,7 +16518,7 @@ begin
     Self.FDegree:=FDegree;
     Self.FDistance:=FDistance;
     Self.FAlpha:=FAlpha;
-    Self.FRadius:=FRadius;
+    Self.FDeciRadius:=FDeciRadius;
     Self.FColor:=FColor;
     Self.FFlood:=FFlood;
     Self.FEnabled:=FEnabled;
@@ -16523,7 +16529,7 @@ end;
 function TBlurEffect.MaxJitter:integer;
 begin
  if FEnabled then
-  result:=FRadius+FDistance else
+  result:=Ceil(GetDoubleRadius)+FDistance else
   result:=0;
 end;
 
@@ -16537,12 +16543,12 @@ end;
 procedure TBlur.Clear;
 begin
  FEnabled:=false;
- FRadius:=5;
+ FDeciRadius:=50;
 end;
 
 function TBlur.IsCleared:boolean;
 begin
- result:=not FEnabled and (FRadius=5);
+ result:=not FEnabled and (FDeciRadius=50);
 end;
 
 
@@ -16552,14 +16558,14 @@ procedure TGlow.Clear;
 begin
   FEnabled:=false;
   FAlpha:=191;
-  FRadius:=5;
+  FDeciRadius:=50;
   FColor:=$BEFFFF;
   FFlood:=0;
 end;
 
 function TGlow.IsCleared:boolean;
 begin
- result:=not FEnabled and (FAlpha=191) and (FRadius=5) and (FColor=$BEFFFF) and (FFlood=0);
+ result:=not FEnabled and (FAlpha=191) and (FDeciRadius=50) and (FColor=$BEFFFF) and (FFlood=0);
 end;
 
 
@@ -17672,8 +17678,19 @@ end;
 
 procedure TBlurEffect.SetRadius(const Value: integer);
 begin
-  FRadius := Value;
+  DeciRadius:=Value*10;
+end;
+
+procedure TBlurEffect.SetDeciRadius(const Value: integer);
+begin
+  FDeciRadius := Value;
   Changed;
+end;
+
+
+function TBlurEffect.GetDoubleRadius:double;
+begin
+  result:=DeciRadius/10;
 end;
 
 procedure TdhCustomPanel.SetImageType(const Value:TImageType);

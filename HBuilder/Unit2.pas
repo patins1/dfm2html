@@ -2561,7 +2561,7 @@ begin
  begin
   Alpha:=Adj100to255(spBlurAlpha.Value);
   Color:=cpBlurColor.Color;
-  Radius:=spBlurRadius.Value;
+  DeciRadius:=spBlurRadius.Value;
   Flood:=spBlurFlood.Value;
   Distance:=spBlurDistance.Value;
   Degree:=NormalizeDegree(spBlurDegree.Value);
@@ -2617,7 +2617,7 @@ begin
  begin
   spBlurAlpha.StoredValue:=Adj255to100(Alpha);
   cpBlurColor.Color:=Color;
-  spBlurRadius.StoredValue:=Radius;
+  spBlurRadius.StoredValue:=DeciRadius;
   spBlurFlood.StoredValue:=Flood;
   spBlurDistance.StoredValue:=Distance;
   spBlurDegree.StoredValue:=Degree;

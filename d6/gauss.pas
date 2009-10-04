@@ -53,7 +53,7 @@ type
 
 function GetWeight(var K: TKernel; J:double):double;
 begin
- result:=Sqr(K.dSize-J+1);
+ result:=Sqr(K.dSize-J);
 // result:=(K.Size-J)*(K.Size-J);
 // result:=K.Size*K.Size-J*J
 end;
@@ -90,7 +90,6 @@ begin                     {
   K.dSize:=Radius+1;
   for J := 0 to K.Size-1 do
   begin             
-    Temp := J / Radius;
     K.Weights[J] := GetWeight(K,J);//}Exp(-4*(K.Size-1-J) / Radius * (K.Size-1-J) / Radius / 2);;
   end;
   Temp := 0;

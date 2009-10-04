@@ -1548,7 +1548,7 @@ object Tabs: TTabs
                   Top = 67
                   Width = 98
                   Height = 22
-                  Max = 20
+                  Max = 100
                   TabOrder = 1
                 end
                 object cBlurEnabled: TTntCheckBox
@@ -2904,6 +2904,10 @@ object Tabs: TTabs
         Caption = 'Text'
         ImageIndex = -1
         OnShow = AnchorTextShow
+        ExplicitLeft = 0
+        ExplicitTop = 0
+        ExplicitWidth = 0
+        ExplicitHeight = 0
         object Label31: TdhLabel
           Left = 24
           Top = 16
@@ -3027,6 +3031,10 @@ object Tabs: TTabs
         Caption = 'Page'
         ImageIndex = -1
         OnShow = AnchorPageShow
+        ExplicitLeft = 0
+        ExplicitTop = 0
+        ExplicitWidth = 0
+        ExplicitHeight = 0
         object gPageProperties: TMyGroupBox
           Left = 16
           Top = 0
@@ -3110,6 +3118,10 @@ object Tabs: TTabs
         Caption = 'Edit'
         ImageIndex = -1
         OnShow = AnchorEditShow
+        ExplicitLeft = 0
+        ExplicitTop = 0
+        ExplicitWidth = 0
+        ExplicitHeight = 0
         object GroupBox15: TMyGroupBox
           Left = 8
           Top = 0
@@ -3158,6 +3170,10 @@ object Tabs: TTabs
         Caption = 'Memo'
         ImageIndex = -1
         OnShow = AnchorMemoShow
+        ExplicitLeft = 0
+        ExplicitTop = 0
+        ExplicitWidth = 0
+        ExplicitHeight = 0
         object Label35: TdhLabel
           Left = 8
           Top = 16
@@ -3208,6 +3224,10 @@ object Tabs: TTabs
         Caption = 'Check'
         ImageIndex = -1
         OnShow = AnchorCheckBoxShow
+        ExplicitLeft = 0
+        ExplicitTop = 0
+        ExplicitWidth = 0
+        ExplicitHeight = 0
         object IGNORE_cRightJustify: TTntCheckBox
           Left = 512
           Top = 32
@@ -3726,6 +3746,10 @@ object Tabs: TTabs
         Caption = 'Hidden'
         ImageIndex = -1
         OnShow = AnchorHiddenShow
+        ExplicitLeft = 0
+        ExplicitTop = 0
+        ExplicitWidth = 0
+        ExplicitHeight = 0
         object GroupBox31: TMyGroupBox
           Left = 8
           Top = 0
@@ -3748,6 +3772,10 @@ object Tabs: TTabs
         Caption = 'OLE '
         ImageIndex = -1
         OnShow = AnchorOleShow
+        ExplicitLeft = 0
+        ExplicitTop = 0
+        ExplicitWidth = 0
+        ExplicitHeight = 0
         object Button2: TTntButton
           Left = 8
           Top = 8
@@ -3953,6 +3981,10 @@ object Tabs: TTabs
         Caption = 'HTML'
         ImageIndex = -1
         OnShow = AnchorPureHTMLShow
+        ExplicitLeft = 0
+        ExplicitTop = 0
+        ExplicitWidth = 0
+        ExplicitHeight = 0
         object Label32: TdhLabel
           Left = 8
           Top = 16
@@ -3986,6 +4018,10 @@ object Tabs: TTabs
         Caption = 'File'
         ImageIndex = -1
         OnShow = AnchorFileShow
+        ExplicitLeft = 0
+        ExplicitTop = 0
+        ExplicitWidth = 0
+        ExplicitHeight = 0
         object Panel7: TPanel
           Left = 8
           Top = 8
@@ -4047,7 +4083,7 @@ object Tabs: TTabs
           Style.Effects.Text = etInclude
           Style.Effects.OuterShadow.Enabled = True
           Style.Effects.OuterShadow.Alpha = 122
-          Style.Effects.OuterShadow.Radius = 3
+          Style.Effects.OuterShadow.DeciRadius = 30
           Style.Effects.OuterShadow.Distance = 4
           AutoSizeXY = asNone
         end

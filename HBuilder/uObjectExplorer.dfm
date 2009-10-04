@@ -24,11 +24,12 @@ object ObjectExplorer: TObjectExplorer
     Align = alClient
     HideSelection = False
     Indent = 19
+    MultiSelect = True
+    MultiSelectStyle = [msControlSelect, msShiftSelect]
     ReadOnly = True
     TabOrder = 0
     OnChange = treeChange
-    ExplicitWidth = 217
-    ExplicitHeight = 297
+    OnMouseDown = treeMouseDown
   end
   object DKLanguageController1: TDKLanguageController
     IgnoreList.Strings = (

@@ -4,17 +4,19 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms, TntForms,
-  Dialogs, ComCtrls, Unit3, dhPageControl, MySiz, dhPanel, DKLang;
+  Dialogs, ComCtrls, Unit2, dhPageControl, MySiz, dhPanel, DKLang;
 
 type
   TObjectExplorer = class(TTntForm)
     tree: TTreeView;
     DKLanguageController1: TDKLanguageController;
+    procedure treeMouseDown(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
     procedure treeChange(Sender: TObject; Node: TTreeNode);
   private
     { Private declarations }
-    selecting:Boolean;
-    procedure Select(node:TTreeNode; const selectionid:String);
+    selecting,InEvent:Boolean;
+    procedure Select(node:TTreeNode; const selectionids:TStringList; const Nodes: TList);
     procedure AddChildren(parentNode:TTreeNode; parent:TComponent);
   public
     { Public declarations }
@@ -33,23 +35,18 @@ uses Unit1;
 
 {$R *.dfm}
 
-procedure TObjectExplorer.Select(node:TTreeNode; const selectionid:String);
+procedure TObjectExplorer.Select(node:TTreeNode; const selectionids:TStringList; const Nodes: TList);
 var childNode:TTreeNode;
 begin
-  if node.Text=selectionid then
+  if selectionids.IndexOf(node.Text)<>-1 then
   begin
-   selecting:=true;
-   try
-    tree.Select(node);
-   finally
-     selecting:=false;
-   end;
-   exit;
+   Nodes.add(node);
   end;
   childNode:=node.getFirstChild;
   while childNode<>nil do
   begin
-   Select(childNode,selectionid);
+   Select(childNode,selectionids,Nodes);
+   if selectionids.Count=Nodes.Count then exit;
    childNode:=node.GetNextChild(childNode);
   end;
 end;
@@ -80,22 +77,57 @@ end;
 
 procedure TObjectExplorer.UpdateSelection;
 var SelectionID:String;
+    selectionids:TStringList;
+    Nodes: TList;
+    I:Integer;
 begin
+ if InEvent then exit;
  if tree.Items.Count<>0 then
  begin
-  Select(tree.Items[0],dhMainForm.cbName.Text);
+  selectionids:=TStringList.Create;
+  Nodes:=TList.Create;
+  try
+   for I := 0 to Tabs.Selection.Count - 1 do
+      selectionids.add(TComponent(Tabs.Selection[i]).Name);
+   Select(tree.Items[0],selectionids,Nodes);
+   selecting:=true;
+   try
+    tree.Select(Nodes);
+   finally
+     selecting:=false;
+   end;
+  finally
+   Nodes.Free;
+   selectionids.Free;
+  end;
  end;
 end;
 
 procedure TObjectExplorer.treeChange(Sender: TObject; Node: TTreeNode);
+var selectionids:TStringList;
+    I:Integer;
 begin
  if selecting or (tree.Selected=nil) or (dhMainForm.Act=nil) or _RuntimeMode then exit;
  PreventFocus:=true;
+ InEvent:=true;
+ selectionids:=TStringList.Create;
  try
-  dhMainForm.Act.MySiz.AddSelectionByID(tree.Selected.Text);
+  for I := 1 to tree.SelectionCount do
+   selectionids.Add(tree.Selections[I-1].Text);
+  dhMainForm.Act.MySiz.AddSelectionByIDs(selectionids);
  finally
+   selectionids.Free;
+   InEvent:=false;
    PreventFocus:=false;
  end;
+end;
+
+procedure TObjectExplorer.treeMouseDown(Sender: TObject; Button: TMouseButton;
+  Shift: TShiftState; X, Y: Integer);
+begin
+  // toggling selection using CTRL+mouseclick not fires a tree change, so simulate it here
+  if ssCtrl in Shift then
+   treeChange(Sender,nil);
 end;
 
 procedure TObjectExplorer.AddChildren(parentNode:TTreeNode; parent:TComponent);

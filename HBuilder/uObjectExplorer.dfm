@@ -26,6 +26,7 @@ object ObjectExplorer: TObjectExplorer
     Indent = 19
     MultiSelect = True
     MultiSelectStyle = [msControlSelect, msShiftSelect]
+    PopupMenu = Tabs.PopupMenu2
     ReadOnly = True
     TabOrder = 0
     OnChange = treeChange

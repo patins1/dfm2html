@@ -125,9 +125,8 @@ end;
 procedure TObjectExplorer.treeMouseDown(Sender: TObject; Button: TMouseButton;
   Shift: TShiftState; X, Y: Integer);
 begin
-  // toggling selection using CTRL+mouseclick not fires a tree change, so simulate it here
-  if ssCtrl in Shift then
-   treeChange(Sender,nil);
+  // toggling selection using CTRL+mouseclick or right-click-select not fires a tree change, so simulate it here
+  treeChange(Sender,nil);
 end;
 
 procedure TObjectExplorer.AddChildren(parentNode:TTreeNode; parent:TComponent);

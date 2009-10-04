@@ -9,7 +9,7 @@ uses
   {$ELSE}
   Dialogs, Controls, Windows, Messages, Graphics, Forms,
   {$ENDIF}
-  SysUtils, Classes,{$IFDEF MSWINDOWS}HttpProt,{$ELSE}{IcsUrl,}{$ENDIF}
+  SysUtils, Classes,{$IFDEF MSWINDOWS}OverbyteIcsUrl,{$ELSE}{IcsUrl,}{$ENDIF}
   dhPanel,dhLabel,GR32,UseFastStrings,MyBitmap32;
 
 {$R 'dhPageControl.dcr'}

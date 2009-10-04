@@ -2167,7 +2167,7 @@ end;
 procedure TdhCustomLabel.CalcCharWidths;
 var bs,vn,ii,toleft,toright,Fit:integer;
     StyleTree:TStyleTree;
-    teil:string;
+    teil:AnsiString;
     Sz:TSize;
     Canvas:TCanvas;
     pi:^Integer;
@@ -2236,7 +2236,7 @@ begin
     if sz.cx=-20 then
     begin
      teil:=AnsiString(_WStr(PWideChar(@gltext[vn]),bs-vn));
-     GetTextExtentExPointA(Canvas.Handle, PChar(teil),length(teil), high(smallint), @Fit, PInteger(@P[vn]), Sz);
+     GetTextExtentExPointA(Canvas.Handle, PAnsiChar(teil),length(teil), high(smallint), @Fit, PInteger(@P[vn]), Sz);
     end;
 {$ENDIF}
    for ii:=bs-1 downto vn+1 do

@@ -7285,7 +7285,7 @@ begin
  result:=height>=2;
  if result then
  begin
-  linesize:=(PChar(bt.ScanLine[0])-PChar(bt.ScanLine[1]));
+  linesize:=(PByte(bt.ScanLine[0])-PByte(bt.ScanLine[1]));
   len:=linesize*height;
   data:=bt.ScanLine[height-1];
  end;
@@ -16912,6 +16912,18 @@ end;
 
 *)
 
+type TFakeChunkPLTE=class(TChunkPLTE);
+
+procedure SetPaletteColorCount(png:TPNGObject; Count:integer);
+var j:integer;
+begin
+  FOR j := 0 TO png.Chunks.Count - 1 DO
+  if png.Chunks.Item[j] is TChunkPLTE then
+  begin
+   TFakeChunkPLTE(png.Chunks.Item[j]).fCount:=Count;
+  end;
+end;
+
 {$IFNDEF CLX}
 
 function GetPNGObjectPTFromGifAndBitmap32(Transparent:TMyBitmap32; gif:TGIFImage):TPNGObject;
@@ -16944,10 +16956,10 @@ begin
   gif.Images[0].GraphicControlExtension.TransparentColor;
 //  result.transparentcolor:=gif.Images[0].GraphicControlExtension.TransparentColor;
 
-  PaletteColorCount:=gif.Header.ColorMap.Count;
 
 
   result.AssignHandle(bt.Handle,true,{ TColor($112211)}{bt.TransparentColor} gif.Images[0].GraphicControlExtension.TransparentColor);
+  SetPaletteColorCount(result,gif.Header.ColorMap.Count);
   //result.TransparentColor:=gif.Images[0].GraphicControlExtension.TransparentColor;
   result.TransparentColor:=gif.Images[0].GraphicControlExtension.TransparentColor;
   begin
@@ -16964,13 +16976,10 @@ begin
     end;
    end;
   end;
-  PaletteColorCount:=-1;
-
  end else
  begin
-  PaletteColorCount:=gif.Header.ColorMap.Count-1;
   result.AssignHandle(bt.Handle,false,0);
-  PaletteColorCount:=-1;
+  SetPaletteColorCount(result,gif.Header.ColorMap.Count-1);
  end;
  //result.Palette:=gif.Palette;
  {if gif.Transparent then
@@ -17101,7 +17110,7 @@ begin
    result:=calc_crc32(sizeof(result),@result,ResumeCrc);
    if w<>0 then
    for y:=0 to {b.Height}h-1 do
-    result:=calc_crc32(w*sizeof(TColor32),pchar(b.PixelPtr[0,y]),result);
+    result:=calc_crc32(w*sizeof(TColor32),PByte(b.PixelPtr[0,y]),result);
 //   result:=calc_crc32(b.Width*b.Height*sizeof(TColor32),pchar(b.PixelPtr[0,0]),result);
 end;
 

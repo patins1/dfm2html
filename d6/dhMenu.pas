@@ -2795,7 +2795,7 @@ begin
 end;
 
 
-  procedure WriteSet(TypeInfo:PTypeInfo; Value:Integer; Writer: TWriter);
+ { procedure WriteSet(TypeInfo:PTypeInfo; Value:Integer; Writer: TWriter);
   var
     I: Integer;
     BaseType: PTypeInfo;
@@ -2806,7 +2806,7 @@ end;
       if I in TIntegerSet(Value) then
        Writer.WriteStr(GetEnumName(BaseType, I));
     Writer.WriteStr('');
-  end;
+  end;   }
            {
 type topts=record
  end;gh      }

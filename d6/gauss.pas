@@ -303,7 +303,7 @@ begin
    for J:=0 to Size - 1 do //second data stride operation. time comsuming since no data locality
    begin
     //P2^:=P3^ div (256*256*256*256*256){shr (4*8)}*100;
-    //P2^:=PDWORD(PChar(P3)+4)^ shr 16{ shr 8 *1000};
+    //P2^:=PDWORD(PByte(P3)+4)^ shr 16{ shr 8 *1000};
     P2^:=P3^;
     inc(P3);
     inc(P2,Stride);
@@ -507,7 +507,7 @@ begin
       for Row:=0 to Height - 1 do //second data stride operation. time comsuming since no data locality
       begin
        //P2^:=P3^ div (256*256*256*256*256){shr (4*8)}*100;
-       //P2^:=PDWORD(PChar(P3)+4)^ shr 16{ shr 8 *1000};
+       //P2^:=PDWORD(PByte(P3)+4)^ shr 16{ shr 8 *1000};
        if AsFloat then
         PSingle(P2)^:=P3^ else
         {P2^:=P3^};

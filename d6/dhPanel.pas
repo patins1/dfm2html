@@ -7285,7 +7285,7 @@ begin
  result:=height>=2;
  if result then
  begin
-  linesize:=(PByte(bt.ScanLine[0])-PByte(bt.ScanLine[1]));
+  linesize:=(PAnsiChar(bt.ScanLine[0])-PAnsiChar(bt.ScanLine[1]));
   len:=linesize*height;
   data:=bt.ScanLine[height-1];
  end;

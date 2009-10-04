@@ -31,7 +31,6 @@ requires
   vcljpg,
   dhcomps,
   dklang10,
-  GR32_D2005,
   TntUnicodeVcl_R90,
   vclactnband,
   vclx,

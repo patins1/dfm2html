@@ -89,12 +89,16 @@ end;
 function calc_crc32(ByteCount:Integer; p:PByte; ResumeCrc:DWORD=0):DWORD;
 var
   i:integer;
+  b:Byte;
 begin
   result:=ResumeCrc xor $ffffffff;
   for i:=0 to ByteCount-1 do
-  if p[i]<>0 then
-    result:=(result shr 8) xor table[p[i] xor (result and $FF)] else
-    result:=(result shr 8) xor table[p[i] xor (result and $FF)];
+  begin
+    b:=PByte(PAnsiChar(p)+i)^;
+    if b<>0 then
+      result:=(result shr 8) xor table[b xor (result and $FF)] else
+      result:=(result shr 8) xor table[b xor (result and $FF)];
+  end;
   result:=result xor $ffffffff;
 end;
 

@@ -20,7 +20,7 @@ package dhcomps;
 {$REFERENCEINFO ON}
 {$SAFEDIVIDE OFF}
 {$STACKFRAMES ON}
-{$TYPEDADDRESS ON}
+{$TYPEDADDRESS OFF}
 {$VARSTRINGCHECKS ON}
 {$WRITEABLECONST OFF}
 {$MINENUMSIZE 1}
@@ -30,7 +30,6 @@ package dhcomps;
 
 requires
   designide,
-  GR32_D2005,
   vcljpg,
   vcl,
   rtl;

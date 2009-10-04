@@ -65,6 +65,13 @@
 
 {$ifdef Win32}
 
+  {$ifdef VER210}
+    {$define COMPILER_10}
+    {$define DELPHI}
+    {$define DELPHI_10}
+    {$define DELPHI_UNICODE}
+  {$endif}
+
   {$ifdef VER200}
     {$define COMPILER_10}
     {$define DELPHI}

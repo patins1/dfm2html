@@ -252,6 +252,7 @@ function GoodLocalPath(const path:string):string;
 function GoodPathDelimiters(const path:string):string;
 function GoodWebPathDelimiters(const path:string):string;
 function AdjustAlternativeRastering(const TopPC,ID:String; var Rastering:String):boolean;
+function IsAbsolute(s:String):boolean;
 
 function FinalGeneratedJavaScriptFile(const GeneratedJavaScriptFile:String):String;
 function FinalGeneratedImageFolder(const GeneratedImageFolder:String):String;
@@ -947,6 +948,20 @@ begin
  end;
 end;
 
+function IsAbsolute(s:String):boolean;
+begin
+ if (length(s)>=2) and (s[2]=DriveDelim) then
+ begin
+  result:=true;
+  exit;
+ end;
+ if (length(s)>=1) and (s[1]=PathDelim) then
+ begin
+  result:=true;
+  exit;
+ end;
+ result:=false;
+end;
 
 function TdhPage.CanBeTopPC:boolean;
 begin
@@ -1472,7 +1487,7 @@ begin
 end;
 
 function GoodLocalPath(const path:string):string;
-begin        
+begin
  result:=path;
  if (result<>'') and not (result[length(result)] in ['/','\']) then
   result:=result+PathDelim;
@@ -1734,7 +1749,7 @@ end;
 
 function FinalGeneratedJavaScriptFile(const GeneratedJavaScriptFile:String):String;
 begin
- if GeneratedJavaScriptFile='' then
+ if (GeneratedJavaScriptFile='') or IsAbsolute(GoodWebPathDelimiters(GeneratedJavaScriptFile)) then
   result:='dfm2html.js' else
   begin
    result:=GeneratedJavaScriptFile;
@@ -1747,7 +1762,7 @@ end;
 function FinalGeneratedImageFolder(const GeneratedImageFolder:String):String;
 begin
  result:=GeneratedImageFolder;
- if result='' then
+ if (result='') or IsAbsolute(GoodWebPathDelimiters(GeneratedImageFolder)) then
   result:='.';
  result:=GoodLocalPath(result);
  result:=GoodWebPathDelimiters(result);
@@ -1755,7 +1770,7 @@ end;
 
 function FinalGeneratedCSSFile(const GeneratedCSSFile:String):String;
 begin
- if GeneratedCSSFile='' then
+ if (GeneratedCSSFile='') or IsAbsolute(GoodWebPathDelimiters(GeneratedCSSFile)) then
   result:='' else
   begin
    result:=GeneratedCSSFile;

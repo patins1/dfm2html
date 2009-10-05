@@ -362,8 +362,6 @@ type TFakeWinControl=class(TWinControl);
 function ExtractUrlAimedFilenameToWindowsFilename(const URL: string): string;
 function GetLanguageDFM(const prefix:String):String;
 function RootDir(const s:string): string;
-function isAbsolute(s:String):boolean;
-
 var
   CF_COMPONENTS: Word;
 const sCF_COMPONENTS={'Delphi Components'}'application/delphi.component';
@@ -1538,21 +1536,6 @@ var c1,c2:tlargeinteger;
  QueryPerformanceCounter(c2);
  WithMeta:=false;
  showmessage(' - time of comparison: '+inttostr((c2-c1) div 100));}
-end;
-          
-function isAbsolute(s:String):boolean;
-begin
- if (length(s)>=2) and (s[2]=DriveDelim) then
- begin
-  result:=true;
-  exit;
- end;
- if (length(s)>=1) and (s[1]=PathDelim) then
- begin
-  result:=true;
-  exit;
- end;
- result:=false;
 end;
 
 Function GetTMPDir: String;

@@ -10,6 +10,9 @@ type
   TObjectExplorer = class(TTntForm)
     tree: TTreeView;
     DKLanguageController1: TDKLanguageController;
+    procedure treeDragDrop(Sender, Source: TObject; X, Y: Integer);
+    procedure treeDragOver(Sender, Source: TObject; X, Y: Integer;
+      State: TDragState; var Accept: Boolean);
     procedure treeMouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
     procedure treeChange(Sender: TObject; Node: TTreeNode);
@@ -18,6 +21,7 @@ type
     selecting,InEvent:Boolean;
     procedure Select(node:TTreeNode; const selectionids:TStringList; const Nodes: TList);
     procedure AddChildren(parentNode:TTreeNode; parent:TComponent);
+    function IsContainedInSelection(Child:TControl):boolean;
   public
     { Public declarations }
     procedure UpdateRoot;
@@ -31,7 +35,7 @@ var
 
 implementation
 
-uses Unit1;
+uses Unit1, Unit3;
 
 {$R *.dfm}
 
@@ -71,6 +75,7 @@ begin
  tree.Items.Clear;
  if dhMainForm.Act=nil then exit;
  body:=dhMainForm.Act.MySiz.FindBody;
+ if body=nil then exit;
  rootNode:=tree.Items.AddFirst(nil,body.Name);
  AddChildren(rootNode,body);
 end;
@@ -84,11 +89,9 @@ begin
  if InEvent then exit;
  if tree.Items.Count<>0 then
  begin
-  selectionids:=TStringList.Create;
+  selectionids:=dhMainForm.Act.MySiz.GetSelectionIDs;
   Nodes:=TList.Create;
   try
-   for I := 0 to Tabs.Selection.Count - 1 do
-      selectionids.add(TComponent(Tabs.Selection[i]).Name);
    Select(tree.Items[0],selectionids,Nodes);
    selecting:=true;
    try
@@ -119,6 +122,108 @@ begin
    selectionids.Free;
    InEvent:=false;
    PreventFocus:=false;
+ end;
+end;
+
+type TFakeWinControl=class(TWinControl);
+
+function IsContained(Parent,Child:TControl):boolean;
+begin
+   Child:=GetVirtualParent(Child);
+   while Child<>nil do
+   begin
+    if Parent=Child then
+    begin
+     Result:=True;
+     exit;
+    end;
+    Child:=GetVirtualParent(Child);
+   end;
+   Result:=False;
+end;
+
+function TObjectExplorer.IsContainedInSelection(Child:TControl):boolean;
+var I:Integer;
+    Parent:TControl;
+begin
+   for I := 1 to tree.SelectionCount do
+   begin
+    Parent:=TControl(dhMainForm.Act.FindComponent(tree.Selections[I-1].Text));
+    if IsContained(Parent,Child) then
+    begin
+      result:=true;
+      exit;
+    end;
+   end;
+   result:=false;
+end;
+
+procedure TObjectExplorer.treeDragDrop(Sender, Source: TObject; X, Y: Integer);
+var I,Position:Integer;
+    SourcePn,TargetPn:TControl;
+    NewParent:TWinControl;
+    PageControl:TdhPageControl;
+begin
+  TargetPn:=TControl(dhMainForm.Act.FindComponent(tree.DropTarget.Text));
+  NewParent:=TargetPn.Parent;
+  PageControl:=nil;
+  if (TargetPn is TdhPage) and (TdhPage(TargetPn).PageControl<>nil) then
+  begin
+   PageControl:=TdhPage(TargetPn).PageControl;
+  end;
+  for I := tree.SelectionCount downto 1 do
+  begin
+   SourcePn:=TControl(dhMainForm.Act.FindComponent(tree.Selections[I-1].Text));
+   if not IsContainedInSelection(SourcePn) then
+   if PageControl<>nil then
+   begin
+    Position:=TdhPage(TargetPn).PageIndex;
+    TdhPage(SourcePn).PageIndex:=Position;
+    if Position>TdhPage(TargetPn).PageIndex then
+     TargetPn:=SourcePn;
+   end else
+   begin
+    SourcePn.Parent:=NewParent;         
+    Position:=GetChildPosition(TargetPn);
+    TFakeWinControl(NewParent).SetChildOrder(SourcePn,Position);
+    if Position>GetChildPosition(TargetPn) then
+     TargetPn:=SourcePn;
+   end;
+  end;
+  UpdateRootAndSelection;
+  Tabs.Changed('Drag&Drop');
+end;
+
+procedure TObjectExplorer.treeDragOver(Sender, Source: TObject; X, Y: Integer;
+  State: TDragState; var Accept: Boolean);
+var I:Integer;
+    SourcePn,TargetPn:TControl;
+    PageControl:TdhPageControl;
+begin
+ Accept:=false;
+ if (Sender=Source) and (tree.DropTarget<>nil) and (tree.SelectionCount<>0) then
+ begin
+  TargetPn:=TControl(dhMainForm.Act.FindComponent(tree.DropTarget.Text));
+  PageControl:=nil;
+  if (TargetPn is TdhPage) and (TdhPage(TargetPn).PageControl<>nil) then
+  begin
+   PageControl:=TdhPage(TargetPn).PageControl;
+  end;
+  if (TargetPn=nil) or (TargetPn=dhMainForm.Act.MySiz.FindBody) then exit;
+  for I := 1 to tree.SelectionCount do
+  begin
+   SourcePn:=TControl(dhMainForm.Act.FindComponent(tree.Selections[I-1].Text));
+   if (SourcePn=nil) or (SourcePn=TargetPn) or IsContained(SourcePn,TargetPn) then exit;
+   if not IsContainedInSelection(SourcePn) then
+   if PageControl<>nil then
+   begin
+     if not (SourcePn is TdhPage) or (TdhPage(SourcePn).PageControl<>PageControl) then exit;
+   end else
+   begin
+     if (SourcePn is TdhPage) and (TdhPage(SourcePn).PageControl<>nil) then exit;
+   end;
+  end;
+  Accept:=true;
  end;
 end;
 

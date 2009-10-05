@@ -22,6 +22,7 @@ object ObjectExplorer: TObjectExplorer
     Width = 247
     Height = 392
     Align = alClient
+    DragMode = dmAutomatic
     HideSelection = False
     Indent = 19
     MultiSelect = True
@@ -30,6 +31,8 @@ object ObjectExplorer: TObjectExplorer
     ReadOnly = True
     TabOrder = 0
     OnChange = treeChange
+    OnDragDrop = treeDragDrop
+    OnDragOver = treeDragOver
     OnMouseDown = treeMouseDown
   end
   object DKLanguageController1: TDKLanguageController

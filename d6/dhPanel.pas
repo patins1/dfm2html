@@ -2331,6 +2331,8 @@ begin
 
   if (Source is TLocationImage) then
   begin
+   FWidth:=TLocationImage(Source).FWidth;
+   FHeight:=TLocationImage(Source).FHeight;
    if TLocationImage(Source).HasPath then
    begin
     Path:=TLocationImage(Source).GetAbsolutePath;

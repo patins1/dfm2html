@@ -455,6 +455,7 @@ type
     FImageState:TImageState;
     FWidth,FHeight:Integer;
     Owner:TStyle;
+    InChange:Boolean;
     procedure DefineProperties(Filer: TFiler); override;
     procedure Changed(Sender: TObject);
     function CalculateImgCanT1X1:boolean;
@@ -2359,7 +2360,13 @@ end;
 
 procedure TLocationImage.Changed(Sender: TObject);
 begin
+ if InChange then exit; // prevent LoadFromFile -> PictureChange -> UpdateCalculations -> TGIFImage.SetForceFrame -> PictureChange
+ InChange:=true;
+ try
   if Assigned(FOnChange) then FOnChange(Self);
+ finally
+   InChange:=false;
+ end;
 end;
 
 var

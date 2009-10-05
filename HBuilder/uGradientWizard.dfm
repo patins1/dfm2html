@@ -99,7 +99,7 @@ object GradientWizard: TGradientWizard
     MaxValue = 1000000
     MinValue = 1
     TabOrder = 3
-    Value = 0
+    Value = 1
     Alignment = taRightJustify
     ValueChange = spMasterAlphaValueChange
   end

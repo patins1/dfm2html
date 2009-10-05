@@ -2161,18 +2161,23 @@ procedure TTabs.dhAnchor4Click(Sender: TObject);
 var backup:TObjectList;
     backupItem:TStyle;
     i:integer;
+    pn:TdhCustomPanel;
+    backupImageType:array of TImageType;
 begin
  LateCreateForm(TGradientWizard,GradientWizard);
  backup:=TObjectList.Create;
+ SetLength(backupImageType,Selection.Count);
  GradientWizard.LivePreview:=TList.Create;
- try                        
+ try
  backup.OwnsObjects:=true;
  for i:=0 to Selection.Count-1 do
  begin
-  GradientWizard.LivePreview.add((TObject(Selection[i]) as TdhCustomPanel).ActStyle);
+  pn:=TObject(Selection[i]) as TdhCustomPanel;
+  GradientWizard.LivePreview.add(pn.ActStyle);
   backupItem:=TStyle.Create(nil,hsNormal);
-  backupItem.Assign((TObject(Selection[i]) as TdhCustomPanel).ActStyle);
+  backupItem.Assign(pn.ActStyle);
   backup.Add(backupItem);
+  backupImageType[i]:=pn.ImageType;
  end;
  with {ActPn.BorderClientRect}ActPn.ScrollArea do
  GradientWizard.Prepare(ActPn,Right-Left,Bottom-Top);
@@ -2183,7 +2188,11 @@ begin
  end else
  begin
   for i:=0 to Selection.Count-1 do
-   (TObject(Selection[i]) as TdhCustomPanel).ActStyle.Assign(TPersistent(backup[i]));
+  begin
+   pn:=TObject(Selection[i]) as TdhCustomPanel;
+   pn.ActStyle.Assign(TPersistent(backup[i]));
+   pn.ImageType:=backupImageType[i];
+  end;
  end;
  finally
   FreeAndNil(GradientWizard.LivePreview);
@@ -3541,18 +3550,23 @@ procedure TTabs.Button17Click(Sender: TObject);
 var backup:TObjectList;
     backupItem:TStyle;
     i:integer;
+    pn:TdhCustomPanel;
+    backupImageType:array of TImageType;
 begin
  LateCreateForm(TTransparencyWizard,TransparencyWizard);
- backup:=TObjectList.Create;
+ backup:=TObjectList.Create;                 
+ SetLength(backupImageType,Selection.Count);
  TransparencyWizard.LivePreview:=TList.Create;
  try
  backup.OwnsObjects:=true;
  for i:=0 to Selection.Count-1 do
  begin
-  TransparencyWizard.LivePreview.add((TObject(Selection[i]) as TdhCustomPanel).ActStyle);
+  pn:=TObject(Selection[i]) as TdhCustomPanel;
+  TransparencyWizard.LivePreview.add(pn.ActStyle);
   backupItem:=TStyle.Create(nil,hsNormal);
-  backupItem.Assign((TObject(Selection[i]) as TdhCustomPanel).ActStyle);
-  backup.Add(backupItem);
+  backupItem.Assign(pn.ActStyle);
+  backup.Add(backupItem);  
+  backupImageType[i]:=pn.ImageType;
  end;
  TransparencyWizard.Prepare(ActPn);
  if TransparencyWizard.ShowModal=mrOk then
@@ -3562,7 +3576,11 @@ begin
  end else
  begin
   for i:=0 to Selection.Count-1 do
-   (TObject(Selection[i]) as TdhCustomPanel).ActStyle.Assign(TPersistent(backup[i]));
+  begin
+   pn:=TObject(Selection[i]) as TdhCustomPanel;
+   pn.ActStyle.Assign(TPersistent(backup[i]));
+   pn.ImageType:=backupImageType[i];
+  end;
  end;
  finally
   FreeAndNil(TransparencyWizard.LivePreview);

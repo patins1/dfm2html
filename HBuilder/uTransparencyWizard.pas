@@ -22,7 +22,6 @@ type
     Button1: TTntButton; 
     Label5: TdhLabel;
     spMasterAlpha: TMySpinEdit;
-    Label17: TLabel;
     slMasterAlpha: TMyTrackBar;
     DKLanguageController1: TDKLanguageController;
     procedure FirstColorColorChanged(Sender: TObject);
@@ -83,7 +82,7 @@ var FPicture:TGraphic;
 begin
  SampleGradient.Style.BackgroundRepeat:=cbrRepeat;
  SampleGradient.Style.BackgroundPosition:='';
- if Pn.HasBackgroundImage(FPicture) then
+ if Pn.HasBackgroundImage(FPicture) and (FPicture.Width=1) and (FPicture.Height=1) then
  begin
   //if cVert.Checked then
   Bitmap:=GetAs32(FPicture);
@@ -103,6 +102,7 @@ begin
  for I := 0 to LivePreview.Count - 1 do
  begin
   ActStyle:=TStyle(LivePreview[i]);
+  ActStyle.Owner.ImageType:=bitTile;
   GetBG(ActStyle.BackgroundImage,ActStyle.Owner.Width,ActStyle.Owner.Height);
   ActStyle.BackgroundRepeat:=SampleGradient.Style.BackgroundRepeat;
   ActStyle.BackgroundPosition:=SampleGradient.Style.BackgroundPosition;
@@ -116,7 +116,7 @@ end;
 
 procedure TTransparencyWizard.FormCreate(Sender: TObject);
 begin
- spMasterAlpha.StoredValue:=100;  
+ spMasterAlpha.StoredValue:=128;  
  FixDialogBorderStyle(Self);
 end;
 

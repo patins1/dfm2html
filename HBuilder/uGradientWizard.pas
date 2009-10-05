@@ -9,7 +9,7 @@ uses
   Controls, Windows, Messages, Graphics, StdCtrls, ShellAPI, Mask, Forms, Buttons, Spin, TntForms, TntStdCtrls, TntButtons, TntExtCtrls,
   {$ENDIF}
   SysUtils, Classes,
-  dhLabel, dhMenu, dhPanel, dhColorPicker, gr32, DKLang, MySpinEdit;
+  dhLabel, dhMenu, dhPanel, dhColorPicker, gr32, DKLang, MySpinEdit, Math;
 
 type
   TGradientWizard = class(TTntForm)
@@ -183,6 +183,7 @@ begin
  for I := 0 to LivePreview.Count - 1 do
  begin
   ActStyle:=TStyle(LivePreview[i]);
+  ActStyle.Owner.ImageType:=bitTile;
   GetBG(ActStyle.BackgroundImage,sw,sh);
   ActStyle.BackgroundRepeat:=SampleGradient.Style.BackgroundRepeat;
   ActStyle.BackgroundPosition:=SampleGradient.Style.BackgroundPosition;
@@ -208,7 +209,7 @@ begin
   rgDirection.ItemIndex:=1;
 
  AdjSize;
- if pn.HasBackgroundImage(FPicture) then
+ if pn.HasBackgroundImage(FPicture) and ((FPicture.Width=1) and (FPicture.Height>=1) or (FPicture.Height=1) and (FPicture.Width>=1)) then
  begin
   //if cVert.Checked then
   Bitmap:=GetAs32(FPicture);
@@ -259,10 +260,10 @@ procedure TGradientWizard.spMasterAlphaValueChange(Sender: TObject;
 begin
  if rgDirection.ItemIndex=0 then
  begin
-  sh:=spMasterAlpha.Value;
+  sh:=max(1,spMasterAlpha.Value);
  end else
  begin
-  sw:=spMasterAlpha.Value;
+  sw:=max(1,spMasterAlpha.Value);
  end;                   
  BGChanged;
 end;

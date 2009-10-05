@@ -97,7 +97,7 @@ object GradientWizard: TGradientWizard
     Width = 58
     Height = 22
     MaxValue = 1000000
-    MinValue = 0
+    MinValue = 1
     TabOrder = 3
     Value = 0
     Alignment = taRightJustify

@@ -1,6 +1,7 @@
 object TransparencyWizard: TTransparencyWizard
   Left = 300
   Top = 130
+  ActiveControl = spMasterAlpha
   Caption = 'Color Transparency Wizard'
   ClientHeight = 183
   ClientWidth = 289
@@ -33,13 +34,6 @@ object TransparencyWizard: TTransparencyWizard
     PopupMenu = ColorPicker.PopupMenu1
     OnColorChanged = FirstColorColorChanged
     Color = clYellow
-  end
-  object Label17: TLabel
-    Left = 120
-    Top = 80
-    Width = 11
-    Height = 13
-    Caption = ' %'
   end
   object Label5: TdhLabel
     Left = 20
@@ -74,23 +68,23 @@ object TransparencyWizard: TTransparencyWizard
     Top = 72
     Width = 42
     Height = 22
-    MaxValue = 100
+    MaxValue = 255
     MinValue = 0
     TabOrder = 2
-    Value = 0
+    Value = 255
     Alignment = taRightJustify
     ValueChange = spMasterAlphaValueChange
     TrackBar = slMasterAlpha
   end
   object slMasterAlpha: TMyTrackBar
-    Left = 10
+    Left = 5
     Top = 112
-    Width = 271
+    Width = 282
     Height = 33
     Max = 255
     PageSize = 25
     Frequency = 64
-    Position = 100
+    Position = 255
     TabOrder = 3
     TabStop = False
     TickMarks = tmBottomRight
@@ -101,10 +95,10 @@ object TransparencyWizard: TTransparencyWizard
     Top = 88
     LangData = {
       12005472616E73706172656E637957697A617264010100000001000000070043
-      617074696F6E01070000000A004669727374436F6C6F72010100000002000000
+      617074696F6E01060000000A004669727374436F6C6F72010100000002000000
       070043617074696F6E0006004C6162656C350101000000050000000400546578
-      740007004C6162656C313700000E0053616D706C654772616469656E74000007
-      00427574746F6E31010100000004000000070043617074696F6E000D0073704D
-      6173746572416C70686100000D00736C4D6173746572416C7068610000}
+      74000E0053616D706C654772616469656E7400000700427574746F6E31010100
+      000004000000070043617074696F6E000D0073704D6173746572416C70686100
+      000D00736C4D6173746572416C7068610000}
   end
 end

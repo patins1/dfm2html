@@ -5,7 +5,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1_1
   VertScrollBar.Tracking = True
   Anchors = [akLeft, akTop, akRight, akBottom]
   Caption = 'webpage.dfm'
-  ClientHeight = 799
+  ClientHeight = 776
   ClientWidth = 1680
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clBlack
@@ -49,7 +49,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1_1
     object Panel4: TdhPanel
       Top = 4
       Width = 758
-      Height = 2132
+      Height = 648
       Style.Border.Width = 1
       Style.Border.Color = 15461355
       Style.Border.Style = cbsSolid
@@ -60,7 +60,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1_1
       Style.Padding = 0
       Style.Margin = '14'
       Style.Effects.OuterShadow.Enabled = True
-      Style.Effects.OuterShadow.Radius = 3
+      Style.Effects.OuterShadow.DeciRadius = 30
       Style.Effects.OuterShadow.Distance = 4
       Style.BorderRadius.BottomRight = '23'
       Style.BorderRadius.TopRight = '24'
@@ -75,7 +75,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1_1
         Style.BackgroundColor = Black
         Style.Effects.OuterShadow.Enabled = True
         Style.Effects.Blur.Enabled = True
-        Style.Effects.Blur.Radius = 0
+        Style.Effects.Blur.DeciRadius = 0
         Style.BorderRadius.BottomRight = '71'
         Use = Label22
         AutoSizeXY = asNone
@@ -88,7 +88,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1_1
         Top = 88
         Width = 24
         Height = 24
-        ActivePage = userpages
+        ActivePage = Page1
         FixedHeight = False
         object Page1: TdhPage
           Left = 192
@@ -175,25 +175,6 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1_1
             PreferDownStyles = True
             Options = [loDownIfMenu, loDownIfMouseDown, loDownIfURL]
             LinkPage = history
-          end
-          object Image2: TdhLabel
-            Left = 272
-            Top = 369
-            Width = 72
-            Height = 72
-            ImageType = bitImage
-            Style.BackgroundImage.Path = 'Images\Image2_nm.jpg'
-            Style.BackgroundImage.State = isAnalyzed
-            Style.BackgroundImage.Width = 82
-            Style.BackgroundImage.Height = 82
-            Style.Effects.Rotation = 46
-            Style.Effects.ScaleX = 62
-            Style.Effects.ScaleY = 62
-            Style.Effects.Enabled = True
-            Style.Effects.AntiAliasing = False
-            Style.Effects.Text = etInclude
-            Style.BorderRadius.All = '144'
-            AutoSizeXY = asNone
           end
           object StyleSheet1: TdhStyleSheet
             Left = 216
@@ -303,6 +284,38 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1_1
             Height = 16
             Text = '<de><Link66>Durchstarten mit der eigenen Homepage</Link66></de>'
             AutoSizeXY = asXY
+          end
+          object Donate: TdhDirectHTML
+            Left = 280
+            Top = 392
+            Width = 20
+            Height = 19
+            Use = en
+            AutoSizeXY = asXY
+            InnerHTML = 
+              '<form action="https://www.paypal.com/cgi-bin/webscr" method="pos' +
+              't">'#13#10'<input type="hidden" name="cmd" value="_s-xclick">'#13#10'<input ' +
+              'type="hidden" name="hosted_button_id" value="8714394">'#13#10'<input t' +
+              'ype="image" src="https://www.paypal.com/en_US/i/btn/btn_donate_L' +
+              'G.gif" border="0" name="submit" alt="PayPal - The safer, easier ' +
+              'way to pay online!">'#13#10'<img alt="" border="0" src="https://www.pa' +
+              'ypal.com/en_US/i/scr/pixel.gif" width="1" height="1">'#13#10'</form>'#13#10
+          end
+          object DonateDE: TdhDirectHTML
+            Left = 280
+            Top = 392
+            Width = 20
+            Height = 19
+            Use = de
+            AutoSizeXY = asXY
+            InnerHTML = 
+              '<form action="https://www.paypal.com/cgi-bin/webscr" method="pos' +
+              't">'#13#10'<input type="hidden" name="cmd" value="_s-xclick">'#13#10'<input ' +
+              'type="hidden" name="hosted_button_id" value="8718382">'#13#10'<input t' +
+              'ype="image" src="https://www.paypal.com/en_US/i/btn/btn_donate_L' +
+              'G.gif" border="0" name="submit" alt="PayPal - The safer, easier ' +
+              'way to pay online!">'#13#10'<img alt="" border="0" src="https://www.pa' +
+              'ypal.com/en_US/i/scr/pixel.gif" width="1" height="1">'#13#10'</form>'#13#10
           end
         end
         object register: TdhPage
@@ -624,7 +637,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1_1
           object Label16: TdhLabel
             Left = 16
             Top = 24
-            Width = 115
+            Width = 274
             Height = 16
             Text = 
               #9658' <en>Contact us if your site shall be listed here</en><de>Benut' +
@@ -1028,7 +1041,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1_1
             object Label45: TdhLabel
               Left = 0
               Top = 24
-              Width = 100
+              Width = 26
               Height = 100
               Text = 'Label45'
               ImageType = bitImage
@@ -2054,7 +2067,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1_1
         Style.BackgroundColor = 8909820
         Style.Effects.OuterShadow.Enabled = True
         Style.Effects.Blur.Enabled = True
-        Style.Effects.Blur.Radius = 0
+        Style.Effects.Blur.DeciRadius = 0
         Style.BorderRadius.BottomRight = '0'
         Style.BorderRadius.TopRight = '23'
         Use = Label22
@@ -2443,12 +2456,9 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1_1
     object StyleSheet8: TdhStyleSheet
       Left = 8
       Top = 8
-      Width = 28
-      Height = 28
-      Expanded = False
-      ExpandedWidth = 232
-      ExpandedHeight = 296
-      Expanded = False
+      Width = 232
+      Height = 296
+      Expanded = True
       object de: TdhLabel
         Left = 0
         Top = 0

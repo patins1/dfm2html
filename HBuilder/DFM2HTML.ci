@@ -1,6 +1,6 @@
 <*project
-      version = 4 civer = "Free v4.12.2" winver = "2.6/5.1.2600" > 
-   <output> c:\HBuilder\CreateInstall</>
+      version = 4 civer = "Free v4.14.5" winver = "2.6/5.1.2600" > 
+   <output> c:\Delphi\HBuilder\CreateInstall</>
    <exename> dfm2html_inst.exe</>
    <digitsign> </>
    <appname> DFM2HTML</>
@@ -18,15 +18,16 @@
    <chkmsg> </>
    <dlgfont> Verdana,8</>
    <lang> english</>
+   <theme> Color</>
    <iface> leftlogo</>
-   <leftlogo> Install</>
-   <logo> Default</>
+   <leftlogo> </>
+   <logo> </>
    <vb> </>
    <dao> </>
    <background> 0</>
    <dlgwelcome> 1</>
-   <dlgreadme> C:\HBuilder\Readme.txt</>
-   <dlglic> C:\HBuilder\LICENSE.TXT</>
+   <dlgreadme> C:\Delphi\HBuilder\Readme.txt</>
+   <dlglic> C:\Delphi\HBuilder\LICENSE.TXT</>
    <dlgcustpath> </>
    <dlgenfpath> </>
    <dlgsavepath> 1</>
@@ -35,6 +36,7 @@
    <comptype> ppmdmax</>
    <solid> 1</>
    <srcfolder> </>
+   <ifexist> </>
    <runafter> dfm2html.exe</>
    <runconfirm> 1</>
    <uninclude> 1</>
@@ -46,27 +48,33 @@
    <unautoclose> 0</>
    <unfinish> 0</>
    <bl> CreateInstall Free</>
+   <blurl> </>
+   <bghead> </>
+   <bgfoot> </> 
+   <bgback> </>
    <files listview >
-      <_><src>C:\HBuilder\DFM2HTML.exe</><dest>inst</><custom></><ifexist>over</><recurs></></>
-<_><src>C:\HBuilder\Tutorial\*.dfm</><dest>custom</><custom>#setuppath#\Tutorial</><ifexist>over</><recurs>0</></>
-<_><src>C:\HBuilder\Tutorial\Images\*</><dest>custom</><custom>#setuppath#\Tutorial\Images</><ifexist>over</><recurs>0</></>
-<_><src>C:\HBuilder\TutorialMenus\*.dfm</><dest>custom</><custom>#setuppath#\TutorialMenus</><ifexist>over</><recurs>0</></>
-<_><src>C:\HBuilder\Guide\*.dfm</><dest>custom</><custom>#setuppath#\Guide</><ifexist>over</><recurs>0</></>
-<_><src>C:\HBuilder\Guide\Images\*</><dest>custom</><custom>#setuppath#\Guide\Images</><ifexist>over</><recurs>0</></>
-<_><src>C:\HBuilder\GuideExamples\*.dfm</><dest>custom</><custom>#setuppath#\GuideExamples</><ifexist>over</><recurs>0</></>
-<_><src>C:\HBuilder\Readme.txt</><dest>inst</><custom></><ifexist>over</><recurs></></>
-<_><src>C:\HBuilder\LICENSE.TXT</><dest>inst</><custom></><ifexist>over</><recurs></></>
-<_><src>C:\HBuilder\Presets\*.dfm</><dest>custom</><custom>#setuppath#\Presets</><ifexist>over</><recurs></></>
-<_><src>C:\HBuilder\Presets\Images\Links\*</><dest>custom</><custom>#setuppath#\Presets\Images\Links</><ifexist>over</><recurs>0</></>
-<_><src>C:\HBuilder\Templates\Frames\*.dfm</><dest>custom</><custom>#setuppath#\Templates\Frames</><ifexist>overnewer</><recurs></></>
-<_><src>C:\HBuilder\Templates\No Frames\*.dfm</><dest>custom</><custom>#setuppath#\Templates\No Frames</><ifexist>overnewer</><recurs></></>
-<_><src>C:\HBuilder\Templates\Workshop</><dest>custom</><custom>#setuppath#\Templates</><ifexist>overnewer</><recurs>0</></>
-<_><src>C:\HBuilder\DFM2HTML.dklang</><dest>inst</><custom></><ifexist>over</><recurs>0</></>
-<_><src>C:\HBuilder\Language\German.lng</><dest>custom</><custom>#setuppath#\Language</><ifexist>overnewer</><recurs>0</></>
-<_><src>C:\HBuilder\Language\Slovak.lng</><dest>custom</><custom>#setuppath#\Language</><ifexist>overnewer</><recurs>0</></>
-<_><src>C:\HBuilder\Language\Italian.lng</><dest>custom</><custom>#setuppath#\Language</><ifexist>overnewer</><recurs>0</></>
-<_><src>C:\HBuilder\Language\Portuguese.lng</><dest>custom</><custom>#setuppath#\Language</><ifexist>overnewer</><recurs>0</></>
-<_><src>C:\HBuilder\Language\Spanish.lng</><dest>custom</><custom>#setuppath#\Language</><ifexist>overnewer</><recurs>0</></>
+      <_><src>C:\Delphi\HBuilder\DFM2HTML.exe</><dest>inst</><custom></><ifexist>over</><recurs>0</></>
+<_><src>C:\Delphi\HBuilder\Tutorial\*.dfm</><dest>custom</><custom>#setuppath#\Tutorial</><ifexist>over</><recurs>0</></>
+<_><src>C:\Delphi\HBuilder\Tutorial\Images\*</><dest>custom</><custom>#setuppath#\Tutorial\Images</><ifexist>over</><recurs>0</></>
+<_><src>C:\Delphi\HBuilder\TutorialMenus\*.dfm</><dest>custom</><custom>#setuppath#\TutorialMenus</><ifexist>over</><recurs>0</></>
+<_><src>C:\Delphi\HBuilder\Guide\*.dfm</><dest>custom</><custom>#setuppath#\Guide</><ifexist>over</><recurs>0</></>
+<_><src>C:\Delphi\HBuilder\Guide\Images\*</><dest>custom</><custom>#setuppath#\Guide\Images</><ifexist>over</><recurs>0</></>
+<_><src>C:\Delphi\HBuilder\GuideExamples\*.dfm</><dest>custom</><custom>#setuppath#\GuideExamples</><ifexist>over</><recurs>0</></>
+<_><src>C:\Delphi\HBuilder\Readme.txt</><dest>inst</><custom></><ifexist>over</><recurs>0</></>
+<_><src>C:\Delphi\HBuilder\icon_desktop.ico</><dest>inst</><custom></><ifexist>over</><recurs>0</></>
+<_><src>C:\Delphi\HBuilder\LICENSE.TXT</><dest>inst</><custom></><ifexist>over</><recurs>0</></>
+<_><src>C:\Delphi\HBuilder\Presets\*.dfm</><dest>custom</><custom>#setuppath#\Presets</><ifexist>over</><recurs>0</></>
+<_><src>C:\Delphi\HBuilder\Presets\Images\Links\*</><dest>custom</><custom>#setuppath#\Presets\Images\Links</><ifexist>over</><recurs>0</></>
+<_><src>C:\Delphi\HBuilder\Templates\Frames\*.dfm</><dest>custom</><custom>#setuppath#\Templates\Frames</><ifexist>overnewer</><recurs>0</></>
+<_><src>C:\Delphi\HBuilder\Templates\No Frames\*.dfm</><dest>custom</><custom>#setuppath#\Templates\No Frames</><ifexist>overnewer</><recurs>0</></>
+<_><src>C:\Delphi\HBuilder\Templates\Workshop</><dest>custom</><custom>#setuppath#\Templates</><ifexist>overnewer</><recurs>0</></>
+<_><src>C:\Delphi\HBuilder\DFM2HTML.dklang</><dest>inst</><custom></><ifexist>over</><recurs>0</></>
+<_><src>C:\Delphi\HBuilder\Language\German.lng</><dest>custom</><custom>#setuppath#\Language</><ifexist>overnewer</><recurs>0</></>
+<_><src>C:\Delphi\HBuilder\Language\Slovak.lng</><dest>custom</><custom>#setuppath#\Language</><ifexist>overnewer</><recurs>0</></>
+<_><src>C:\Delphi\HBuilder\Language\Italian.lng</><dest>custom</><custom>#setuppath#\Language</><ifexist>overnewer</><recurs>0</></>
+<_><src>C:\Delphi\HBuilder\Language\Portuguese.lng</><dest>custom</><custom>#setuppath#\Language</><ifexist>overnewer</><recurs>0</></>
+<_><src>C:\Delphi\HBuilder\Language\Spanish.lng</><dest>custom</><custom>#setuppath#\Language</><ifexist>overnewer</><recurs>0</></>
+<_><src>C:\Delphi\HBuilder\Language\French.lng</><dest>custom</><custom>#setuppath#\Language</><ifexist>overnewer</><recurs>0</></>
 
    </files>
    <runx listview >
@@ -80,7 +88,7 @@
    <shcut listview >
       <_><shpath>prog</><shname>DFM2HTML</><tarpath>inst</><tarname>dfm2html.exe</><cmdline></><workpath>def</><workcust></><icon></></>
 <_><shpath>prog</><shname>Uninstall</><tarpath>inst</><tarname>uninstall.exe</><cmdline></><workpath>def</><workcust></><icon></></>
-<_><shpath>desk</><shname>DFM2HTML</><tarpath>inst</><tarname>dfm2html.exe</><cmdline></><workpath>def</><workcust></><icon></></>
+<_><shpath>desk</><shname>DFM2HTML</><tarpath>inst</><tarname>dfm2html.exe</><cmdline></><workpath>def</><workcust></><icon>icon_desktop.ico</></>
 
    </shcut>
    <ini listview >

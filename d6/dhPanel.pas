@@ -922,6 +922,7 @@ type
     function HasImage: boolean; overload;
     function HasImage(var PicWidth, PicHeight: integer): boolean; overload;
     function GetImageDir:String; virtual;
+    procedure SetChildOrder(Child: TComponent; Order: Integer); override;
 
   public
     function HasBackgroundImage(var FPicture: TGraphic): boolean; overload;
@@ -10806,6 +10807,13 @@ end;
 function TdhCustomPanel.GetImageDir:String;
 begin
  result:='';
+end;
+
+procedure TdhCustomPanel.SetChildOrder(Child: TComponent; Order: Integer);
+begin
+  inherited;
+  if Child is TdhCustomPanel then
+    TdhCustomPanel(Child).NotifyCSSChanged([wcZIndex,wcNoOwnCSS]);
 end;
         {
 

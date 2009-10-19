@@ -94,6 +94,8 @@ type
     { Public declarations }
     LiveReason:string;
     MySiz: TMySiz;
+    procedure ValidateRename(AComponent: TComponent;
+      const CurName, NewName: string); override;
     procedure SetDesigning(Designing,Transient:boolean);
     constructor Create(AOwner:TComponent); override;
     destructor Destroy; override;
@@ -184,6 +186,8 @@ uses Unit1, Unit2, uOptions, uWarnings, uPresets;
 const DefaultFileName=EmptyStr;
       MarkContentBegin='MarkContentBegin';
 
+var TurnOffNameValidation:boolean=false;
+
 {$R *.dfm}
                 
 procedure TPageContainer.DoDragOver(Sender, Source: TObject; X, Y: Integer;
@@ -244,6 +248,11 @@ begin
  end;
 end;
 
+procedure TPageContainer.ValidateRename(AComponent: TComponent; const CurName, NewName: string);
+begin
+ if TurnOffNameValidation then exit;
+ inherited;
+end;
 
 procedure TPageContainer.SetDesigning(Designing,Transient:boolean);
 var i:integer;
@@ -265,6 +274,7 @@ end;
 
 type TMyReader=class(TReader)
  FrameClassName:string;
+ AlreadyReadNames:TStringList;
  procedure ReaderSetName(Reader: TReader; Component: TComponent; var Name: string);
  procedure ReaderReferenceName(Reader: TReader; var Name: string);
  constructor Create(Stream: TStream; BufSize: Integer);
@@ -485,6 +495,17 @@ end;
 
 procedure TMyReader.ReaderSetName(Reader: TReader; Component: TComponent; var Name: string);
 begin
+ if TurnOffNameValidation then
+ begin
+  if AlreadyReadNames.IndexOf(Name)<>-1 then
+  begin
+   TurnOffNameValidation:=False;
+  end else
+  begin
+   AlreadyReadNames.Add(Name);
+   Exit;
+  end;
+ end;
  if (Reader.Root <> nil) and (Reader.Root.FindComponent(Name) <> nil) then
  begin
     RenamedNames.AddObject(Name,Component);
@@ -893,6 +914,9 @@ end;
 constructor TMyReader.Create(Stream: TStream; BufSize: Integer);
 begin
  Inherited;
+ AlreadyReadNames:=TStringList.Create;
+ AlreadyReadNames.Sorted:=True;
+ AlreadyReadNames.CaseSensitive:=False;
  OnFindComponentClass:=FindComponentClass;
  OnCreateComponent:=CreateComponentEvent;
  OnReferenceName:=ReaderReferenceName;
@@ -925,6 +949,7 @@ end;
 
 destructor TMyReader.Destroy;
 begin
+ FreeAndNil(AlreadyReadNames);
  FreeAndNil(RenamedNames);
  Inherited;
 end;
@@ -1056,6 +1081,7 @@ var
 
 begin
  glLockWindowUpdate(true,lLock);
+ TurnOffNameValidation:=True;//for speed
  try
  LastAct:=Tabs.PageControl1.ActivePage;
  sl:=MySiz.GetSelectionIDs;
@@ -1088,6 +1114,7 @@ begin
   Tabs.PageControl1.ActivePage:=LastAct;
 
  finally
+  TurnOffNameValidation:=False;
   glLockWindowUpdate(false,lLock);
  end;
 end;

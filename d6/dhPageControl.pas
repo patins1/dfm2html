@@ -600,7 +600,8 @@ end;
 
 begin
 // CancelCheckDesignState:=false;
-// for i:=0 to PageCount-1 do
+// for i:=0 to PageCount-1 do   
+ if not (csLoading in DownForURLAnchor.ComponentState) then //for speed
  for ii:=0 to {Pages[i].}FDownForURLAnchors.Count-1 do
  begin
  DownForURLAnchor:={Pages[i].}FDownForURLAnchors[ii];
@@ -1580,6 +1581,11 @@ end;
 function TdhPage.InLinkedRange(link:TControl):boolean;
 var i,i2:integer;
 begin
+  if TdhLink(link).PageRange=0 then //for speed
+  begin
+    result:=Self=FPageControl.GetTop;
+    exit;
+  end;
   i:=FPageControl.FPages.IndexOf(FPageControl.GetTop);
   i2:=FPageControl.FPages.IndexOf(Self);
   result:=(i>=i2) and (i<=i2+Abs(TdhLink(link).PageRange));
@@ -1589,7 +1595,7 @@ end;
 function TdhPage.AllowDownIfURL(c:TControl): boolean;
 begin
  if (FPageControl<>nil) and (FPageControl.GetTop<>nil) and (c is TdhLink) and (FPageControl.FDownForURLAnchors.Count<>0) and
-    (FPageControl.FDynamicNavigation and (FPageControl.FDownForURLAnchors.Last=c) or not FPageControl.FDynamicNavigation and (FPageControl.FDownForURLAnchors.IndexOf(c)>=0) and (TdhLink(c).PageRange=0)) then
+    (FPageControl.FDynamicNavigation and (FPageControl.FDownForURLAnchors.Last=c) or not FPageControl.FDynamicNavigation and (TdhLink(c).LinkPage=Self) and (TdhLink(c).PageRange=0)) then
  begin
   result:=Self.InLinkedRange(TdhLink(c)) and FPageControl.IsGlobalActive;
  end else

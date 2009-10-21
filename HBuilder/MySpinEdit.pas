@@ -39,6 +39,7 @@ type
     procedure Change{$IFDEF CLX}(AValue: Integer){$ENDIF}; override;
     procedure DoExit; override;
     procedure KeyPress(var Key: Char); override;
+    procedure UpdateTrackBar;
   public
     { Public declarations }
     constructor Create (AOwner : TComponent); override;
@@ -157,15 +158,20 @@ begin
  if Assigned(FOnChange) then FOnChange(Self);
 {$ENDIF}
  if InvalidValue then exit;
- if (TrackBar<>nil) and not TrackBar.Updating then
+ UpdateTrackBar;
+ if Updating then exit;
+ FModified:=true;
+ Select(lcLive);
+end;
+
+procedure TMySpinEdit.UpdateTrackBar;
+begin
+  if (TrackBar<>nil) and not TrackBar.Updating then
  begin
   TrackBar.Updating:=true;
   TrackBar.Value:=Value;
   TrackBar.Updating:=false;
  end;
- if Updating then exit;
- FModified:=true;
- Select(lcLive);
 end;
 
 function TMySpinEdit.Commit:boolean;
@@ -249,6 +255,7 @@ begin
   end;
   Updating:=true;
   Value:=DisplayValue;
+  UpdateTrackBar;
   Updating:=false;
 end;
 

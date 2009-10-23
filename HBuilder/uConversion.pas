@@ -3476,7 +3476,7 @@ const sDelphiBorderCorner:array[TEdgeAlign] of string=('All','TopLeft','BottomRi
 var P:TPoint;
     s:string;
 begin
-  if UseCSSBorderRadius and HasProp(sty+'BorderRadius.'+sDelphiBorderCorner[al],s) and
+  if UseCSS3 and HasProp(sty+'BorderRadius.'+sDelphiBorderCorner[al],s) and
      GetBorderRadiusPixels(s,P) then
   begin
    if P.X<>P.Y then

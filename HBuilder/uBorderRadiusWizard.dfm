@@ -1,7 +1,6 @@
 object BorderRadiusWizard: TBorderRadiusWizard
   Left = 158
   Top = 112
-  AutoScroll = False
   Caption = 'Border Radius'
   ClientHeight = 298
   ClientWidth = 404
@@ -24,19 +23,20 @@ object BorderRadiusWizard: TBorderRadiusWizard
     Width = 28
     Height = 28
     Expanded = False
+    VertPosition = 49
     ExpandedWidth = 129
     ExpandedHeight = 100
     Expanded = False
     object STYLE_Link1: TdhLink
       Left = 0
-      Top = 0
+      Top = -49
       Height = 18
       Text = 'STYLE_Link1'
       Style.Border.Width = 1
       Style.Border.Color = White
       Style.Border.Style = cbsSolid
-      Style.BorderBottom.Color = ThreeDDarkShadow
-      Style.BorderRight.Color = ThreeDDarkShadow
+      Style.BorderBottom.Color = Black
+      Style.BorderRight.Color = Black
       Style.PaddingLeft = 2
       Style.PaddingTop = 1
       Style.PaddingRight = 2
@@ -46,10 +46,10 @@ object BorderRadiusWizard: TBorderRadiusWizard
       Style.TextAlign = ctaCenter
       AutoSizeXY = asXY
       Align = alTop
-      Right = 20
-      StyleDown.BorderTop.Color = ThreeDDarkShadow
+      Right = 0
+      StyleDown.BorderTop.Color = Black
       StyleDown.BorderBottom.Color = White
-      StyleDown.BorderLeft.Color = ThreeDDarkShadow
+      StyleDown.BorderLeft.Color = Black
       StyleDown.BorderRight.Color = White
       StyleDown.PaddingLeft = 3
       StyleDown.PaddingTop = 2
@@ -61,50 +61,50 @@ object BorderRadiusWizard: TBorderRadiusWizard
     end
     object STYLE_nob: TdhLabel
       Left = 0
-      Top = 18
+      Top = -31
       Height = 13
       Text = 'STYLE_nob'
       Style.FontWeight = cfwNormal
       Use = STYLE_Label4
       AutoSizeXY = asY
       Align = alTop
-      Right = 2147483647
+      Right = 0
     end
     object STYLE_Label4: TdhLabel
       Left = 0
-      Top = 31
+      Top = -18
       Height = 13
       Text = 'STYLE_Label4'
       Style.FontWeight = cfwBold
       AutoSizeXY = asY
       Align = alTop
-      Right = 2147483647
+      Right = 0
     end
     object STYLE_Label3: TdhLabel
       Left = 0
-      Top = 44
+      Top = -5
       Height = 24
       Text = 'STYLE_Label3'
       Style.PaddingTop = 11
       Style.Display = cdsBlock
       AutoSizeXY = asY
       Align = alTop
-      Right = 2147483647
+      Right = 0
     end
     object STYLE_Label5: TdhLabel
       Left = 0
-      Top = 68
+      Top = 19
       Height = 29
       Text = 'STYLE_Label5'
       Style.PaddingTop = 16
       Style.Display = cdsBlock
       AutoSizeXY = asY
       Align = alTop
-      Right = 2147483647
+      Right = 0
     end
     object STYLE_Link2: TdhLink
       Left = 0
-      Top = 97
+      Top = 48
       Height = 24
       Text = 'STYLE_Link2'
       ImageType = bitTile
@@ -120,7 +120,7 @@ object BorderRadiusWizard: TBorderRadiusWizard
       Style.BorderRadius.All = '0'
       AutoSizeXY = asNone
       Align = alTop
-      Right = 24
+      Right = 0
       StyleDown.ZIndex = 1
       StyleDown.Effects.Enabled = True
       StyleDown.Effects.AntiAliasing = False

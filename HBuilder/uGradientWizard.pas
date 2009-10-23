@@ -85,7 +85,7 @@ end;
 
 function MischCol(c1,c2:TColor32; f1,f2:extended):TColor32;
 begin
- result:=Color32(Round(f1*RedComponent(c1)+f2*RedComponent(c2)),Round(f1*GreenComponent(c1)+f2*GreenComponent(c2)),Round(f1*BlueComponent(c1)+f2*BlueComponent(c2)));
+ result:=Color32(Round(f1*RedComponent(c1)+f2*RedComponent(c2)),Round(f1*GreenComponent(c1)+f2*GreenComponent(c2)),Round(f1*BlueComponent(c1)+f2*BlueComponent(c2)),Round(f1*AlphaComponent(c1)+f2*AlphaComponent(c2)));
 end;
 
 
@@ -115,6 +115,8 @@ end;
 
 begin
  Bitmap:=TBitmap32.Create;
+ if not IsOpaqueColor(FirstColor.CSSColor) or not IsOpaqueColor(SecondColor.CSSColor) then
+  Bitmap.DrawMode:=dmBlend;
 
  //Bitmap.PixelFormat:=pf32bit;
  if rgDirection.ItemIndex=0 then
@@ -131,8 +133,8 @@ begin
  for i:=0 to c do
  begin
   if c<=0 then
-   Col:=FirstColor.Color else
-   Col:=MischCol(Color32(FirstColor.Color),Color32(SecondColor.Color),(c-i)/c,i/c);
+   Col:=CSSColorToColor32(FirstColor.CSSColor) else
+   Col:=MischCol(CSSColorToColor32(FirstColor.CSSColor),CSSColorToColor32(SecondColor.CSSColor),(c-i)/c,i/c);
   SetPixel(i,Col);
  end;
  (*P1:=Point(0,0);
@@ -192,8 +194,8 @@ end;
 
 procedure TGradientWizard.FormCreate(Sender: TObject);
 begin
- FirstColor.Color:=clWhite;
- SecondColor.Color:=clYellow;
+ FirstColor.CSSColor:=ColorToCSSColor(clWhite);
+ SecondColor.CSSColor:=ColorToCSSColor(clYellow);
  BGChanged;
  FixDialogBorderStyle(Self);
 end;
@@ -204,20 +206,15 @@ var FPicture:TGraphic;
 begin
  sw:=w;
  sh:=h;
- if pn.BackgroundRepeat=cbrRepeatX then
-  rgDirection.ItemIndex:=0 else
-  rgDirection.ItemIndex:=1;
-
- AdjSize;
  if pn.HasBackgroundImage(FPicture) and ((FPicture.Width=1) and (FPicture.Height>=1) or (FPicture.Height=1) and (FPicture.Width>=1)) then
  begin
   //if cVert.Checked then
   Bitmap:=GetAs32(FPicture);
   try
-  FirstColor.Color:=WinColor(Bitmap.Pixels[0,0]);
+  FirstColor.CSSColor:=Color32ToCSSColor(Bitmap.Pixels[0,0]);
   if rgDirection.ItemIndex=0 then
-   SecondColor.Color:=WinColor(Bitmap.Pixels[0,Bitmap.Height-1]) else
-   SecondColor.Color:=WinColor(Bitmap.Pixels[Bitmap.Width-1,0]);
+   SecondColor.CSSColor:=Color32ToCSSColor(Bitmap.Pixels[0,Bitmap.Height-1]) else
+   SecondColor.CSSColor:=Color32ToCSSColor(Bitmap.Pixels[Bitmap.Width-1,0]);
   finally
    Bitmap.Free;
   end;
@@ -229,7 +226,12 @@ begin
    SecondColor.Color:=Bitmap.Canvas.Pixels[0,Bitmap.Height-1] else
    SecondColor.Color:=Bitmap.Canvas.Pixels[Bitmap.Width-1,0];
   Bitmap.Free; }
- end;      
+ end;
+ if pn.BackgroundRepeat=cbrRepeatX then
+  rgDirection.ItemIndex:=0 else
+  rgDirection.ItemIndex:=1;
+
+ AdjSize;
  BGChanged;
 end;
 
@@ -247,11 +249,11 @@ begin
 end;
 
 procedure TGradientWizard.dhLink1Click(Sender: TObject);
-var c:TColor;
+var c:TCSSColor;
 begin
- c:=FirstColor.Color;
- FirstColor.Color:=SecondColor.Color;
- SecondColor.Color:=c;
+ c:=FirstColor.CSSColor;
+ FirstColor.CSSColor:=SecondColor.CSSColor;
+ SecondColor.CSSColor:=c;
  BGChanged;
 end;
 

@@ -65,6 +65,9 @@ type
     TabSheet6: TTntTabSheet;
     cAutoUpdate: TTntCheckBox;
     gStartUpAction: TTntRadioGroup;
+    cCSS3: TTntCheckBox;
+    lCSS3Warning: TdhLabel;
+    procedure cCSS3Click(Sender: TObject);
     procedure spGridXChange(Sender: TObject);
     procedure Button2Click(Sender: TObject);
     procedure Button3Click(Sender: TObject);
@@ -112,6 +115,7 @@ begin
   spGridY.StoredValue:=FGridY;
   cbGridDisplay.ItemIndex:=Integer(FGridDisplay);
   cCompress.Checked:=Compress;
+  cCSS3.Checked:=UseCSS3;
   eViewer.Text:=FViewer;
   cSmartPublishing.Checked:=FSmartPublishing;
   cPassiveFTP.Checked:=FPassiveFTP;
@@ -150,6 +154,7 @@ begin
   FGridY:=spGridY.Value;
   FGridDisplay:=TGridDisplay(cbGridDisplay.ItemIndex);
   Compress:=cCompress.Checked;
+  UseCSS3:=cCSS3.Checked;
   FViewer:=eViewer.Text;
   FSmartPublishing:=cSmartPublishing.Checked;
   FPassiveFTP:=cPassiveFTP.Checked;
@@ -252,6 +257,12 @@ procedure TOptions.cClearCacheClick(Sender: TObject);
 begin
  SetLength(Uploaded,0);
  cSmartPublishingClick(nil);
+end;
+
+procedure TOptions.cCSS3Click(Sender: TObject);
+begin
+  eViewerChange(Sender);
+  lCSS3Warning.Visible:=UseCSS3;
 end;
 
 procedure TOptions.bClearFocusedCacheClick(Sender: TObject);

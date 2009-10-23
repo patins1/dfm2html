@@ -33,7 +33,7 @@ object TransparencyWizard: TTransparencyWizard
     ParentFont = False
     PopupMenu = ColorPicker.PopupMenu1
     OnColorChanged = FirstColorColorChanged
-    Color = clYellow
+    OnPreviewColorChanged = FirstColorColorChanged
   end
   object Label5: TdhLabel
     Left = 20

@@ -8,16 +8,20 @@ uses
   {$ELSE}
   Forms, Controls, Windows, Messages, Graphics, StdCtrls, ShellAPI, Mask, dialogs,Buttons, TntButtons,
   {$ENDIF}
-  SysUtils, Classes, types, uColorPicker, funcutils;
+  SysUtils, Classes, types, uColorPicker, funcutils,AColorPickerAX_TLB, dhPanel;
 
-type                                   
+type
   //TNotifyEvent = procedure(Sender: TObject; Color:TColor) of object;
+  
+  TColorBackupEvent = procedure(Sender: TObject; backup:TList; restore:Boolean) of object;
   TdhColorPicker = class(TTntSpeedButton)
   private
     { Private declarations }
     FOnColorChanged: TNotifyEvent;
-    function GetTransparentColor: boolean;
-    procedure SetTransparentColor(const Value: boolean);
+    FOnPreviewColorChanged: TNotifyEvent;
+    FOnBackup: TColorBackupEvent;
+    FCSSColor: TCSSColor;
+    procedure SetCSSColor(const Value:TCSSColor);
   protected
     { Protected declarations }
     procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X,
@@ -27,20 +31,26 @@ type
     procedure Click; Override;
     constructor Create(AOwner: TComponent); override;
     procedure Paint; override;
-    procedure DoColorChange(Color:TColor);
-    property TransparentColor:boolean read GetTransparentColor write SetTransparentColor;
-
+    procedure DoColorChange(Color:TCSSColor);
+    procedure DoPreviewColorChange(Color:TCSSColor);
+    procedure DoBackup(backup:TList; restore:Boolean);
+    //property TransparentColor:boolean read GetTransparentColor write SetTransparentColor;
+    function GetTransparentColor: boolean;
+    property CSSColor:TCSSColor read FCSSColor write SetCSSColor;
   published
     { Published declarations }
     property OnColorChanged:TNotifyEvent read FOnColorChanged write FOnColorChanged;
+    property OnPreviewColorChanged:TNotifyEvent read FOnPreviewColorChanged write FOnPreviewColorChanged;
+    property OnBackup:TColorBackupEvent read FOnBackup write FOnBackup;
     property Flat default false;
-    property Color stored true;
+    property Color stored false;
   end;
 
 procedure Register;
 
-var ColorDialog:TColorDialog; 
+var ColorDialog:TAColorDialog;
 var FCustomColors : TStringList;
+var ActivePicker:TdhColorPicker;
 
 implementation
 
@@ -53,27 +63,67 @@ end;
 { TdhColorPicker }
 
 procedure TdhColorPicker.Click;
+var Executed:Boolean;   
+    backup:TList;
+    backupCSSColor:TCSSColor;
 begin
   inherited;
   if ColorDialog=nil then
   begin
-   ColorDialog:=TColorDialog.Create(nil);
-   ColorDialog.CustomColors.AddStrings(FCustomColors);;
+   ColorDialog:= TAColorDialog.Create(nil);
+//   ColorDialog.CustomColors.AddStrings(FCustomColors);;
+   ColorDialog.UseAlpha:=true;
+   ColorDialog.ShowCaption:=true;
   end;
 
-  ColorDialog.Color:=Color;
+  backupCSSColor:=CSSColor;
+  if CSSColor<>colTransparent then
+   ColorDialog.RGBA:=Integer(CSSColor xor CSSAlphaInverter);
 
   Parent.SetFocus; //CommitChanges purpose
-  if not (csDesigning in ComponentState) then
-  if ColorDialog.Execute then
-   DoColorChange(ColorDialog.Color);
+  if csDesigning in ComponentState then exit;
+
+  backup:=TList.Create;
+  try
+   DoBackup(backup,false);
+   ActivePicker:=Self;
+   try
+     Executed:=ColorDialog.Execute;
+   finally
+    ActivePicker:=nil;
+   end;
+   if Executed then
+   begin
+    DoColorChange(TCSSColor(ColorDialog.RGBA xor CSSAlphaInverter));
+   end else
+   begin
+    DoBackup(backup,true);
+    CSSColor:=backupCSSColor;
+   end;
+  finally
+   backup.Free;
+  end;
 end;
 
-procedure TdhColorPicker.DoColorChange(Color:TColor);
+procedure TdhColorPicker.DoColorChange(Color:TCSSColor);
 begin
-   Self.Color:=Color;
+   Self.CSSColor:=Color;
    if Assigned(FOnColorChanged) then
     FOnColorChanged(Self);
+end;
+
+
+procedure TdhColorPicker.DoPreviewColorChange(Color:TCSSColor);
+begin
+   Self.CSSColor:=Color;
+   if Assigned(FOnPreviewColorChanged) then
+    FOnPreviewColorChanged(Self);
+end;
+
+procedure TdhColorPicker.DoBackup(backup:TList; restore:Boolean);
+begin      
+   if Assigned(FOnBackup) then
+    FOnBackup(Self,backup,restore);
 end;
 
 
@@ -167,12 +217,15 @@ end;
 
 function TdhColorPicker.GetTransparentColor: boolean;
 begin
- result:=Color=clNone;
+ result:=CSSColor=colTransparent;
 end;
 
-procedure TdhColorPicker.SetTransparentColor(const Value: boolean);
+procedure TdhColorPicker.SetCSSColor(const Value:TCSSColor);
 begin
- Color:=clNone;
+ FCSSColor:=Value;
+ if GetTransparentColor then
+  Color:=clNone else
+  Color:=CSSColorToColor(FCSSColor);
 end;
 
 initialization

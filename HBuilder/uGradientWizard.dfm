@@ -32,7 +32,7 @@ object GradientWizard: TGradientWizard
     ParentFont = False
     PopupMenu = ColorPicker.PopupMenu1
     OnColorChanged = FirstColorColorChanged
-    Color = clRed
+    OnPreviewColorChanged = FirstColorColorChanged
   end
   object SecondColor: TdhColorPicker
     Left = 8
@@ -49,7 +49,7 @@ object GradientWizard: TGradientWizard
     ParentFont = False
     PopupMenu = ColorPicker.PopupMenu1
     OnColorChanged = FirstColorColorChanged
-    Color = clRed
+    OnPreviewColorChanged = FirstColorColorChanged
   end
   object lWidth: TdhLabel
     Left = 8

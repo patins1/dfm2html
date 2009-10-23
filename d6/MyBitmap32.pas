@@ -82,18 +82,11 @@ begin
   try
     if AALevel = 0 then
     begin
-{$IFDEF CLX}
+      B.SetSize(SzOri.x+XPadding, SzOri.y);
       B.Font := Font;
-      Sz := B.TextExtentW(PaddedText);
-      B.SetSize(Sz.cX, Sz.cY);
-{$ELSE}
-      Sz := TextExtentW(PaddedText);
-      B.SetSize(Sz.cX, Sz.cY);
-      B.Font := Font;
-{$ENDIF}
       B.Clear(0);
       B.Font.Color := clWhite;
-      B.TextoutW(0, 0, Text);
+      B.TextoutW(0, 0, Text, LetterSpacing, WordSpacing);
       TextBlueToAlpha(B, Color);
     end
     else

@@ -108,7 +108,10 @@ object Options: TOptions
     object TabSheet2: TTntTabSheet
       Caption = 'Font'
       ImageIndex = 1
-      ExplicitWidth = 331
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object Label5: TdhLabel
         Left = 8
         Top = 8
@@ -146,10 +149,10 @@ object Options: TOptions
       ExplicitWidth = 0
       ExplicitHeight = 0
       object Label4: TdhLabel
-        Left = 8
-        Top = 32
-        Width = 265
-        Height = 26
+        Left = 111
+        Top = 8
+        Width = 218
+        Height = 39
         Text = 
           'If compression is enabled, superfluous whitespaces are cut from ' +
           'generated HTML files.'
@@ -157,9 +160,9 @@ object Options: TOptions
       end
       object Label7: TdhLabel
         Left = 8
-        Top = 80
-        Width = 230
-        Height = 39
+        Top = 96
+        Width = 297
+        Height = 26
         Text = 
           'You can select a program which is invoked for a preview (if left' +
           ' blank, the default HTML viewer is started):'
@@ -167,7 +170,7 @@ object Options: TOptions
       end
       object cCompress: TTntCheckBox
         Left = 8
-        Top = 8
+        Top = 3
         Width = 97
         Height = 17
         Caption = 'Compress'
@@ -196,11 +199,33 @@ object Options: TOptions
           'firefox'
           'netscape')
       end
+      object cCSS3: TTntCheckBox
+        Left = 8
+        Top = 56
+        Width = 105
+        Height = 17
+        Caption = 'CSS3'
+        TabOrder = 5
+        OnClick = cCSS3Click
+      end
+      object lCSS3Warning: TdhLabel
+        Left = 111
+        Top = 53
+        Width = 210
+        Height = 26
+        Text = 'Attention: Most browsers do not support CSS3 yet!'
+        Style.Color = Red
+        AutoSizeXY = asY
+        Visible = False
+      end
     end
     object TabSheet4: TTntTabSheet
       Caption = 'Publish'
       ImageIndex = 3
-      ExplicitWidth = 331
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object Label8: TdhLabel
         Left = 32
         Top = 32
@@ -354,7 +379,10 @@ object Options: TOptions
     end
     object TabSheet6: TTntTabSheet
       Caption = 'Update'
-      ExplicitWidth = 331
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cAutoUpdate: TTntCheckBox
         Left = 16
         Top = 16
@@ -402,7 +430,7 @@ object Options: TOptions
     Left = 32
     Top = 208
     LangData = {
-      07004F7074696F6E73010100000001000000070043617074696F6E0127000000
+      07004F7074696F6E73010100000001000000070043617074696F6E0129000000
       0D0050616765436F6E74726F6C31310000090054616253686565743101010000
       0002000000070043617074696F6E0006004C6162656C31010100000021000000
       0400546578740006004C6162656C320101000000220000000400546578740006
@@ -434,6 +462,8 @@ object Options: TOptions
       726563746F727943616368650000090054616253686565743601010000002A00
       0000070043617074696F6E000B00634175746F55706461746501010000002B00
       0000070043617074696F6E000E006753746172745570416374696F6E01020000
-      002C000000070043617074696F6E2D00000005004974656D7300}
+      002C000000070043617074696F6E2D00000005004974656D7300050063435353
+      3301010000002E000000070043617074696F6E000C006C435353335761726E69
+      6E6701010000002F00000004005465787400}
   end
 end

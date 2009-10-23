@@ -449,6 +449,18 @@ type
     cMenuAuto: TTntCheckBox;
     mSetBackgroundColorTransparent: TTntMenuItem;
     mCopyOverStylesToDownStyles: TTntMenuItem;
+    procedure cpBlurColorPreviewColorChanged(Sender: TObject);
+    procedure cpBlurColorBackup(Sender: TObject; backup: TList;
+      restore: Boolean);
+    procedure cpFontColorBackup(Sender: TObject; backup: TList;
+      restore: Boolean);
+    procedure cpBackgroundColorBackup(Sender: TObject; backup: TList;
+      restore: Boolean);
+    procedure cpBackgroundColorPreviewColorChanged(Sender: TObject);
+    procedure cpFontColorPreviewColorChanged(Sender: TObject);
+    procedure cpBorderColorBackup(Sender: TObject; backup: TList;
+      restore: Boolean);
+    procedure cpBorderColorPreviewColorChanged(Sender: TObject);
     procedure IGNORE_Button1Click(Sender: TObject);
     procedure bClearEdgeClick(Sender: TObject);
     procedure ClearFontClick(Sender: TObject);
@@ -650,6 +662,13 @@ type
     procedure mCopyOverStylesToDownStylesClick(Sender: TObject);
   private
     FAdjusting:boolean;
+
+    procedure AssignFontColor;
+    procedure AssignBackgroundColor(Sender: TObject);
+    procedure AssignSingleBackgroundColor(Control:TControl; Color:TCSSColor);
+    function GetSingleBackgroundColor(Control:TControl):TCSSColor;
+    procedure AssignSingleFontColor(Control:TControl; Color:TCSSColor);
+    function GetSingleFontColor(Control:TControl):TCSSColor;
     function DoNotUpdateDisplay:boolean;
     procedure SetAdjusting(Value:boolean);
 //    gpc:TdhPageControl;
@@ -1173,7 +1192,7 @@ begin
  spBorder.SetDetailedStoredValue(ActStyle.GetBorder(EdgeAlign).IsWidthCleared,ActPn.BorderWidth(EdgeAlign));
  spPadding.SetDetailedStoredValue(ActStyle.IsPaddingCleared(EdgeAlign),ActPn.PaddingWidth(EdgeAlign));
  dhComboBox1.SetDetailedStoredItemIndex(ActStyle.GetBorder(EdgeAlign).Style=Low(TCSSBorderStyle),max(0,Integer(ActPn.BorderStyle(EdgeAlign))-1));
- cpBorderColor.Color:=ActPn.BorderColor(EdgeAlign);
+ cpBorderColor.CSSColor:=ActPn.BorderColor(EdgeAlign);
  SampleBorder.Style.AssignComputedEdge(ealRight,ActPn);
  SampleBorder.Style.AssignComputedEdge(ealTop,ActPn);
  SampleBorder.Style.AssignComputedEdge(ealBottom,ActPn);
@@ -1329,22 +1348,18 @@ begin
   ActPn.CSSToFont(Font) else
   Font.Assign(TFakeControl(Selection[0]).Font);
  cOverline.Checked:=(TObject(Selection[0]) is TdhCustomPanel) and ActPn.Overline;
- if (TObject(Selection[0]) is TdhCustomPanel) then
-  cpBackgroundColor.Color:=ActPn.BackgroundColor else
- if not TFakeControl(Selection[0]).ParentColor then
-  cpBackgroundColor.Color:=TFakeControl(Selection[0]).Color else
-  cpBackgroundColor.TransparentColor:=true;
- cTransparent.Checked:=cpBackgroundColor.TransparentColor;
+ cpBackgroundColor.CSSColor:=GetSingleBackgroundColor(TControl(Selection[0]));
+ cTransparent.Checked:=cpBackgroundColor.GetTransparentColor;
  //FontStatus.Text:=Font.Name+#13#10+inttostr(-Font.Height)+'px';
  cBold.Checked:=fsBold in Font.Style;
  cItalic.Checked:=fsItalic in Font.Style;
  cUnderline.Checked:=fsUnderline in Font.Style;
  cLineThrough.Checked:=fsStrikeOut in Font.Style;
- cpFontColor.Color:=Font.Color;
+ cpFontColor.CSSColor:=GetSingleFontColor(TControl(Selection[0]));
  SetClearState(bClearFont,IsFontCleared);
 
  with Font do IGNORE_SampleFont.ActStyle.GetFontDifferences(Style,Color,Name,Height);
- IGNORE_SampleFont.ActStyle.BackgroundColor:=cpBackgroundColor.Color;
+ IGNORE_SampleFont.ActStyle.BackgroundColor:=cpBackgroundColor.CSSColor;
  IGNORE_SampleFont.Overline:=cOverline.Checked;
  IGNORE_SampleFont.Update;
  finally
@@ -2569,7 +2584,7 @@ begin
  with getblur(tt) do
  begin
   Alpha:=Adj100to255(spBlurAlpha.Value);
-  Color:=cpBlurColor.Color;
+  Color:=cpBlurColor.CSSColor;
   DeciRadius:=spBlurRadius.Value;
   Flood:=spBlurFlood.Value;
   Distance:=spBlurDistance.Value;
@@ -2647,7 +2662,7 @@ begin
  with getblur(tt) do
  begin
   spBlurAlpha.StoredValue:=Adj255to100(Alpha);
-  cpBlurColor.Color:=Color;
+  cpBlurColor.CSSColor:=Color;
   spBlurRadius.StoredValue:=DeciRadius;
   spBlurFlood.StoredValue:=Flood;
   spBlurDistance.StoredValue:=Distance;
@@ -2677,28 +2692,117 @@ begin
  BuildTransformations;
 end;
 
-procedure TTabs.cpFontColorColorChanged(Sender: TObject);
+procedure TTabs.cpFontColorBackup(Sender: TObject; backup: TList;
+  restore: Boolean);
 var i:integer;
-begin               
- if Adjusting then exit;    
+begin
  dhMainForm.Act.MySiz.DoInval(true);
  try
   for i:=0 to Selection.Count-1 do
-  if TObject(Selection[i]) is TdhCustomPanel then
-   TdhCustomPanel(TObject(Selection[i])).ActStyle.Color:=cpFontColor.Color else
-   TFakeControl(Selection[i]).Font.Color:=cpFontColor.Color;
+  if restore then
+   AssignSingleFontColor(TControl(Selection[i]),TCSSColor(backup[i])) else
+   backup.add(Pointer(GetSingleFontColor(TControl(Selection[i]))));
  finally
   dhMainForm.Act.MySiz.DoInval(false);
- end;
+ end
+end;
+
+procedure TTabs.cpFontColorColorChanged(Sender: TObject);
+begin
+ if Adjusting then exit;
+ AssignFontColor;
  UpdateFontDisplay;
  Changed('Change Font Color');
 end;
 
+procedure TTabs.cpFontColorPreviewColorChanged(Sender: TObject);
+begin
+ AssignFontColor;
+end;
+
+procedure TTabs.AssignFontColor;
+var i:integer;
+begin
+ dhMainForm.Act.MySiz.DoInval(true);
+ try
+  for i:=0 to Selection.Count-1 do
+   AssignSingleFontColor(TControl(Selection[i]),cpFontColor.CSSColor);
+ finally
+  dhMainForm.Act.MySiz.DoInval(false);
+ end
+end;
+
+procedure TTabs.AssignSingleFontColor(Control:TControl; Color:TCSSColor);
+var i:integer;
+begin
+ if Control is TdhCustomPanel then
+  TdhCustomPanel(Control).ActStyle.Color:=Color else
+  TFakeControl(Control).Font.Color:=CSSColorToColor(Color);
+end;
+
+
+procedure TTabs.cpBackgroundColorBackup(Sender: TObject; backup: TList;
+  restore: Boolean);
+var i:integer;
+begin
+ dhMainForm.Act.MySiz.DoInval(true);
+ try
+  for i:=0 to Selection.Count-1 do
+  if restore then
+   AssignSingleBackgroundColor(TControl(Selection[i]),TCSSColor(backup[i])) else
+   backup.add(Pointer(GetSingleBackgroundColor(TControl(Selection[i]))));
+ finally
+  dhMainForm.Act.MySiz.DoInval(false);
+ end
+end;
+
+procedure TTabs.cpBackgroundColorPreviewColorChanged(Sender: TObject);
+begin
+ AssignBackgroundColor(Sender);
+end;
+
+procedure TTabs.cpBlurColorBackup(Sender: TObject; backup: TList;
+  restore: Boolean);
+var i:integer;
+begin
+ for i:=0 to Selection.Count-1 do
+ with getblur((TObject(Selection[i]) as TdhCustomPanel).ActStyle.Effects) do
+ if restore then
+  Color:=TCSSColor(backup[i]) else
+  backup.add(Pointer(Color));
+end;
+
+procedure TTabs.cpBlurColorPreviewColorChanged(Sender: TObject);
+var i:integer;
+begin
+ for i:=0 to Selection.Count-1 do
+ with getblur((TObject(Selection[i]) as TdhCustomPanel).ActStyle.Effects) do
+  Color:=cpBlurColor.CSSColor;
+end;
+
+procedure TTabs.cpBorderColorBackup(Sender: TObject; backup: TList;
+  restore: Boolean);
+var i:integer;
+begin
+ for i:=0 to Selection.Count-1 do
+ with (TObject(Selection[i]) as TdhCustomPanel).ActStyle.Borders[EdgeAlign] do
+ if restore then
+  Color:=TCSSColor(backup[i]) else
+  backup.add(Pointer(Color));
+end;
+
 procedure TTabs.cpBorderColorColorChanged(Sender: TObject);
 begin
-  ActStyle.Borders[EdgeAlign].Color:=cpBorderColor.Color;
+  ActStyle.Borders[EdgeAlign].Color:=cpBorderColor.CSSColor;
  LiveBorderChanged;
  Changed('Border Color');
+end;
+
+procedure TTabs.cpBorderColorPreviewColorChanged(Sender: TObject);
+var i:integer;
+begin
+ for i:=0 to Selection.Count-1 do
+  (TObject(Selection[i]) as TdhCustomPanel).ActStyle.Borders[EdgeAlign].Color:=cpBorderColor.CSSColor;
 end;
 
 procedure TTabs.ClearAllStyles(ClearUse:boolean);
@@ -2898,11 +3002,20 @@ end;
 
 procedure TTabs.cTransparentClick(Sender: TObject);
 var OldTrans:boolean;
-    i:integer;
 begin
  if Adjusting then exit;
  OldTrans:=cTransparent.Checked;
+ AssignBackgroundColor(Sender);
+ UpdateFontDisplay;
+ Changed('Change Background Color');
 
+ if (Sender=cTransparent) and (OldTrans<>cTransparent.Checked) then
+  showmessage(DKFormat(UNSUPPORTEDSTYLE));
+end;
+
+procedure TTabs.AssignBackgroundColor(Sender: TObject);
+var i:integer;
+begin
  dhMainForm.Act.MySiz.DoInval(true);
  try
  for i:=0 to Selection.Count-1 do
@@ -2910,9 +3023,7 @@ begin
  begin
   if Sender=cpBackgroundColor then
   begin
-   if TObject(Selection[i]) is TdhCustomPanel then
-    TdhCustomPanel(TObject(Selection[i])).ActStyle.BackgroundColor:=cpBackgroundColor.Color else
-    TFakeControl(Selection[i]).Color:=cpBackgroundColor.Color;
+   AssignSingleBackgroundColor(TControl(Selection[i]),cpBackgroundColor.CSSColor);
   end else
   begin
    if TObject(Selection[i]) is TdhCustomPanel then
@@ -2923,12 +3034,29 @@ begin
  finally
   dhMainForm.Act.MySiz.DoInval(false);
  end;
+end;
 
- UpdateFontDisplay;
- Changed('Change Background Color');
+procedure TTabs.AssignSingleBackgroundColor(Control:TControl; Color:TCSSColor);
+begin            
+ if Control is TdhCustomPanel then
+  TdhCustomPanel(Control).ActStyle.BackgroundColor:=Color else
+  TFakeControl(Control).Color:=CSSColorToColor(Color);
+end;
 
- if (Sender=cTransparent) and (OldTrans<>cTransparent.Checked) then
-  showmessage(DKFormat(UNSUPPORTEDSTYLE));
+function TTabs.GetSingleBackgroundColor(Control:TControl):TCSSColor;
+begin
+ if Control is TdhCustomPanel then
+  Result:=TdhCustomPanel(Control).BackgroundColor else
+ if not TFakeControl(Control).ParentColor then
+  Result:=ColorToCSSColor(TFakeControl(Control).Color) else
+  Result:=colTransparent;
+end;
+
+function TTabs.GetSingleFontColor(Control:TControl):TCSSColor;
+begin  
+ if Control is TdhCustomPanel then
+  Result:=TdhCustomPanel(Control).FontColor else
+  Result:=ColorToCSSColor(TFakeControl(Control).Font.Color);
 end;
 
 procedure TTabs.cFixedHeightClick(Sender: TObject);
@@ -4195,7 +4323,7 @@ end;
 procedure TTabs.mChangeColorsClick(Sender: TObject);
 begin
  LateCreateForm(TColorizeImg,ColorizeImg);
- if ColorizeImg.Prepare(dhPanel1.Style.BackgroundImage.RequestGraphic,(TObject(Selection[0]) as TdhCustomPanel).GetVirtualBGColor) then
+ if ColorizeImg.Prepare(dhPanel1.Style.BackgroundImage.RequestGraphic,CSSColorToColor((TObject(Selection[0]) as TdhCustomPanel).GetVirtualBGColor)) then
  begin                           
   if not CommitChanges then exit;
   with TObject(Selection[0]) as TdhCustomPanel do

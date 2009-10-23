@@ -30,7 +30,7 @@ object Tabs: TTabs
     Style.BorderRight.Color = Black
     Style.BorderRight.Style = cbsNone
     Style.PaddingTop = 1
-    Style.BackgroundColor = ButtonFace
+    Style.BackgroundColor = Silver
     AutoSizeXY = asNone
     Align = alClient
     Right = 0
@@ -41,7 +41,7 @@ object Tabs: TTabs
       Top = 2
       Width = 925
       Height = 204
-      ActivePage = AnchorBorder
+      ActivePage = AnchorEffects
       TabOrder = 0
       TabStop = False
       TabWidth = 54
@@ -170,7 +170,8 @@ object Tabs: TTabs
             ParentFont = False
             PopupMenu = ColorPicker.PopupMenu1
             OnColorChanged = cTransparentClick
-            Color = clRed
+            OnPreviewColorChanged = cpBackgroundColorPreviewColorChanged
+            OnBackup = cpBackgroundColorBackup
           end
           object cpFontColor: TdhColorPicker
             Left = 16
@@ -187,7 +188,8 @@ object Tabs: TTabs
             ParentFont = False
             PopupMenu = ColorPicker.PopupMenu1
             OnColorChanged = cpFontColorColorChanged
-            Color = clRed
+            OnPreviewColorChanged = cpFontColorPreviewColorChanged
+            OnBackup = cpFontColorBackup
           end
           object cTransparent: TTntCheckBox
             Left = 120
@@ -507,7 +509,8 @@ object Tabs: TTabs
             ParentFont = False
             PopupMenu = ColorPicker.PopupMenu1
             OnColorChanged = cpBorderColorColorChanged
-            Color = clRed
+            OnPreviewColorChanged = cpBorderColorPreviewColorChanged
+            OnBackup = cpBorderColorBackup
           end
           object slBorder: TMyTrackBar
             Left = 104
@@ -639,8 +642,8 @@ object Tabs: TTabs
             Style.Border.Width = 1
             Style.Border.Color = White
             Style.Border.Style = cbsSolid
-            Style.BorderBottom.Color = ThreeDDarkShadow
-            Style.BorderRight.Color = ThreeDDarkShadow
+            Style.BorderBottom.Color = Black
+            Style.BorderRight.Color = Black
             Style.PaddingLeft = 2
             Style.PaddingTop = 1
             Style.PaddingRight = 2
@@ -652,9 +655,9 @@ object Tabs: TTabs
             Style.BorderRadius.All = '115'
             AutoSizeXY = asXY
             Align = alTop
-            StyleDown.BorderTop.Color = ThreeDDarkShadow
+            StyleDown.BorderTop.Color = Black
             StyleDown.BorderBottom.Color = White
-            StyleDown.BorderLeft.Color = ThreeDDarkShadow
+            StyleDown.BorderLeft.Color = Black
             StyleDown.BorderRight.Color = White
             StyleDown.PaddingLeft = 3
             StyleDown.PaddingTop = 2
@@ -679,7 +682,7 @@ object Tabs: TTabs
             Top = 0
             Height = 18
             Text = 'Link1'
-            Style.Border.Color = ThreeDShadow
+            Style.Border.Color = Gray
             Style.Border.Style = cbsSolid
             Style.BackgroundImage.Data = {
               0A54504E474F626A65637489504E470D0A1A0A0000000D494844520000000100
@@ -695,7 +698,7 @@ object Tabs: TTabs
             Style.BorderRadius.All = '5'
             AutoSizeXY = asXY
             Align = alTop
-            StyleDown.Border.Color = ThreeDShadow
+            StyleDown.Border.Color = Gray
             StyleDown.Border.Style = cbsSolid
             StyleDown.BackgroundImage.Data = {
               0A54504E474F626A65637489504E470D0A1A0A0000000D494844520000000100
@@ -1518,7 +1521,8 @@ object Tabs: TTabs
                   ParentFont = False
                   PopupMenu = ColorPicker.PopupMenu1
                   OnColorChanged = cRenderClick
-                  Color = clRed
+                  OnPreviewColorChanged = cpBlurColorPreviewColorChanged
+                  OnBackup = cpBlurColorBackup
                 end
                 object Label11: TdhLabel
                   Top = 76
@@ -2904,10 +2908,6 @@ object Tabs: TTabs
         Caption = 'Text'
         ImageIndex = -1
         OnShow = AnchorTextShow
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
         object Label31: TdhLabel
           Left = 24
           Top = 16
@@ -3031,10 +3031,6 @@ object Tabs: TTabs
         Caption = 'Page'
         ImageIndex = -1
         OnShow = AnchorPageShow
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
         object gPageProperties: TMyGroupBox
           Left = 16
           Top = 0
@@ -3118,10 +3114,6 @@ object Tabs: TTabs
         Caption = 'Edit'
         ImageIndex = -1
         OnShow = AnchorEditShow
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
         object GroupBox15: TMyGroupBox
           Left = 8
           Top = 0
@@ -3170,10 +3162,6 @@ object Tabs: TTabs
         Caption = 'Memo'
         ImageIndex = -1
         OnShow = AnchorMemoShow
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
         object Label35: TdhLabel
           Left = 8
           Top = 16
@@ -3224,10 +3212,6 @@ object Tabs: TTabs
         Caption = 'Check'
         ImageIndex = -1
         OnShow = AnchorCheckBoxShow
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
         object IGNORE_cRightJustify: TTntCheckBox
           Left = 512
           Top = 32
@@ -3746,10 +3730,6 @@ object Tabs: TTabs
         Caption = 'Hidden'
         ImageIndex = -1
         OnShow = AnchorHiddenShow
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
         object GroupBox31: TMyGroupBox
           Left = 8
           Top = 0
@@ -3772,10 +3752,6 @@ object Tabs: TTabs
         Caption = 'OLE '
         ImageIndex = -1
         OnShow = AnchorOleShow
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
         object Button2: TTntButton
           Left = 8
           Top = 8
@@ -3981,10 +3957,6 @@ object Tabs: TTabs
         Caption = 'HTML'
         ImageIndex = -1
         OnShow = AnchorPureHTMLShow
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
         object Label32: TdhLabel
           Left = 8
           Top = 16
@@ -4018,10 +3990,6 @@ object Tabs: TTabs
         Caption = 'File'
         ImageIndex = -1
         OnShow = AnchorFileShow
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
         object Panel7: TPanel
           Left = 8
           Top = 8

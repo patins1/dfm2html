@@ -66,12 +66,14 @@ begin
 
  Bitmap.Width:=1;
  Bitmap.Height:=1;
- Bitmap.Pixels[0,0]:=(Color32(FirstColor.Color) and $FFFFFF)  or (Adj100to255(spMasterAlpha.Value) shl 24);
+ Col:=DWORD(CSSColorToColor32(FirstColor.CSSColor) and $FFFFFF)  or (Adj100to255(spMasterAlpha.Value) shl 24);
+ Bitmap.Pixels[0,0]:=Col;
 
  src:=GetPNGObjectFromBitmap32(Bitmap{,true});
  pic.Assign(src);
  Bitmap.Free;
  src.Free;
+ FirstColor.CSSColor:=Color32ToCSSColor(Col);
 
 
 end;
@@ -86,7 +88,7 @@ begin
  begin
   //if cVert.Checked then
   Bitmap:=GetAs32(FPicture);
-  FirstColor.Color:=WinColor(Bitmap.Pixels[0,Bitmap.Height-1]);
+  FirstColor.CSSColor:=Color32ToCSSColor(Bitmap.Pixels[0,Bitmap.Height-1]);
   spMasterAlpha.Value:=Adj255to100(Bitmap.Pixels[0,Bitmap.Height-1] shr 24 and $FF);
  end;
  BGChanged;
@@ -111,6 +113,7 @@ end;
 
 procedure TTransparencyWizard.FirstColorColorChanged(Sender: TObject);
 begin
+ spMasterAlpha.StoredValue:=Adj255to100((FirstColor.CSSColor xor CSSAlphaInverter) shr 24);
  BGChanged;
 end;
 

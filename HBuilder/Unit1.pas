@@ -25,7 +25,7 @@ uses
   MySiz, Unit3, uConversion,
   dhRadioButton, dhMemo, dhFileField,  MyToolButton,
   dhColorPicker,IniFiles,gr32, uOptions, menuhelper,
-  pngimage, Contnrs,hEdit,hComboBox,hMemo, UIConstants,DKLang, OpenSave;
+  pngimage, Contnrs,hEdit,hComboBox,hMemo, UIConstants,DKLang, OpenSave,AColorPickerAX_TLB;
 
 //const WM_PUSHUP=WM_USER+33;
 
@@ -189,6 +189,8 @@ type
     IGNORE_SaveDraggedPictureDialog: TMySavePictureDialog;
     mCheckForUpdate: TTntMenuItem;
     mObjectExplorer: TTntMenuItem;
+    ColorPreviewTimer: TTimer;
+    procedure ColorPreviewTimerTimer(Sender: TObject);
     procedure mObjectExplorerClick(Sender: TObject);
     procedure mCheckForUpdateClick(Sender: TObject);
     procedure mExternalizeImagesClick(Sender: TObject);
@@ -377,7 +379,7 @@ var _LANGID:LANGID;
 implementation
 
 uses uWarnings, uPublishLog, uPublishFTP, uTemplates, uPresets, uStartUp,
-  uColorPicker, uPageWizard, uObjectExplorer;
+  uColorPicker, uPageWizard, uObjectExplorer, OleCtrls;
 
 {$R *.dfm}
 
@@ -504,6 +506,7 @@ begin
   end;
 
   FuncSettings.Compress:=ReadBool('General','Compress',false);
+  UseCSS3:=ReadBool('General','CSS3',false);
 
   FuncSettings.DefaultFont.Name:=ReadString('General','Default Font Name','Arial');
   FuncSettings.DefaultFont.Size:=ReadInteger('General','Default Font Size',12);
@@ -675,6 +678,7 @@ begin
   end;
 
   WriteBool('General','Compress',FuncSettings.Compress);
+  WriteBool('General','CSS3',UseCSS3);
 
   WriteString('General','Default Font Name',FuncSettings.DefaultFont.Name);
   WriteInteger('General','Default Font Size',FuncSettings.DefaultFont.Size);
@@ -694,7 +698,7 @@ begin
   if ColorDialog<>nil then
   begin
    FCustomColors.Clear;
-   FCustomColors.AddStrings(ColorDialog.CustomColors);
+   //FCustomColors.AddStrings(ColorDialog.CustomColors);
    FCustomColors.Sort;
   end;
   for i:=0 to FCustomColors.Count-1 do
@@ -2002,6 +2006,14 @@ end;
 procedure TdhMainForm.stateNormalClick(Sender: TObject);
 begin
  SetDesignStyle(hsNormal,false);
+end;
+
+procedure TdhMainForm.ColorPreviewTimerTimer(Sender: TObject);
+begin
+ if ActivePicker<>nil then
+ begin
+  ActivePicker.DoPreviewColorChange(TCSSColor(ColorDialog.RGBA xor CSSAlphaInverter));
+ end;
 end;
 
 procedure TdhMainForm.ToolButton1Click(Sender: TObject);

@@ -3,7 +3,7 @@ object dhMainForm: TdhMainForm
   Left = 382
   Top = 93
   Caption = 'DFM2HTML'
-  ClientHeight = 772
+  ClientHeight = 810
   ClientWidth = 907
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -29,10 +29,10 @@ object dhMainForm: TdhMainForm
     Top = 0
     Height = 34
     Style.BorderTop.Width = 1
-    Style.BorderTop.Color = AppWorkSpace
+    Style.BorderTop.Color = Gray
     Style.BorderTop.Style = cbsSolid
     Style.BorderBottom.Width = 1
-    Style.BorderBottom.Color = AppWorkSpace
+    Style.BorderBottom.Color = Gray
     Style.BorderBottom.Style = cbsSolid
     Style.PaddingTop = 1
     Style.BackgroundColor = White
@@ -237,7 +237,7 @@ object dhMainForm: TdhMainForm
         Top = 0
         Width = 295
         Height = 30
-        Style.BackgroundColor = ButtonFace
+        Style.BackgroundColor = Silver
         AutoSizeXY = asNone
         object stateNormal: TdhLink
           Left = 58
@@ -333,7 +333,7 @@ object dhMainForm: TdhMainForm
   end
   object StatusBar: TStatusBar
     Left = 0
-    Top = 753
+    Top = 791
     Width = 907
     Height = 19
     Panels = <
@@ -349,7 +349,6 @@ object dhMainForm: TdhMainForm
       item
         Width = 50
       end>
-    ExplicitTop = 734
   end
   object STYLE_dhStyleSheet1: TdhStyleSheet
     Left = 576
@@ -368,8 +367,8 @@ object dhMainForm: TdhMainForm
       Style.Border.Width = 1
       Style.Border.Color = White
       Style.Border.Style = cbsSolid
-      Style.BorderBottom.Color = ThreeDDarkShadow
-      Style.BorderRight.Color = ThreeDDarkShadow
+      Style.BorderBottom.Color = Black
+      Style.BorderRight.Color = Black
       Style.PaddingLeft = 2
       Style.PaddingTop = 1
       Style.PaddingRight = 2
@@ -384,9 +383,9 @@ object dhMainForm: TdhMainForm
       AutoSizeXY = asXY
       Align = alTop
       Right = 18
-      StyleDown.BorderTop.Color = ThreeDDarkShadow
+      StyleDown.BorderTop.Color = Black
       StyleDown.BorderBottom.Color = White
-      StyleDown.BorderLeft.Color = ThreeDDarkShadow
+      StyleDown.BorderLeft.Color = Black
       StyleDown.BorderRight.Color = White
       StyleDown.BackgroundColor = Yellow
       Layout = ltText
@@ -411,8 +410,8 @@ object dhMainForm: TdhMainForm
       Style.Border.Width = 1
       Style.Border.Color = White
       Style.Border.Style = cbsSolid
-      Style.BorderBottom.Color = ThreeDDarkShadow
-      Style.BorderRight.Color = ThreeDDarkShadow
+      Style.BorderBottom.Color = Black
+      Style.BorderRight.Color = Black
       Style.PaddingLeft = 2
       Style.PaddingTop = 1
       Style.PaddingRight = 2
@@ -424,9 +423,9 @@ object dhMainForm: TdhMainForm
       AutoSizeXY = asXY
       Align = alTop
       Right = 20
-      StyleDown.BorderTop.Color = ThreeDDarkShadow
+      StyleDown.BorderTop.Color = Black
       StyleDown.BorderBottom.Color = White
-      StyleDown.BorderLeft.Color = ThreeDDarkShadow
+      StyleDown.BorderLeft.Color = Black
       StyleDown.BorderRight.Color = White
       StyleDown.PaddingLeft = 3
       StyleDown.PaddingTop = 2
@@ -467,8 +466,8 @@ object dhMainForm: TdhMainForm
       Style.Border.Width = 1
       Style.Border.Color = White
       Style.Border.Style = cbsSolid
-      Style.BorderBottom.Color = ThreeDDarkShadow
-      Style.BorderRight.Color = ThreeDDarkShadow
+      Style.BorderBottom.Color = Black
+      Style.BorderRight.Color = Black
       Style.PaddingLeft = 2
       Style.PaddingTop = 1
       Style.PaddingRight = 2
@@ -481,9 +480,9 @@ object dhMainForm: TdhMainForm
       AutoSizeXY = asXY
       Align = alTop
       Right = 20
-      StyleDown.BorderTop.Color = ThreeDDarkShadow
+      StyleDown.BorderTop.Color = Black
       StyleDown.BorderBottom.Color = White
-      StyleDown.BorderLeft.Color = ThreeDDarkShadow
+      StyleDown.BorderLeft.Color = Black
       StyleDown.BorderRight.Color = White
       StyleDown.PaddingLeft = 3
       StyleDown.PaddingTop = 2
@@ -517,7 +516,7 @@ object dhMainForm: TdhMainForm
     Left = 668
     Top = 48
     Bitmap = {
-      494C010121002200040018001800FFFFFFFFFF00FFFFFFFFFFFFFFFF424D3600
+      494C010121002200040018001800FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       000000000000360000002800000060000000D800000001002000000000000044
       0100000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -3194,7 +3193,8 @@ object dhMainForm: TdhMainForm
       FFC00003C00003000001FF81FFC00003C00003000001FF83FFC00003C0000300
       0001FF83FFC00003C00003000001FFFFFFC00003C00003000001FFFFFFC00003
       C00003FFFFFFFFFFFFC00003FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-      FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF}
+      FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF00000000000000000000000000000000
+      000000000000}
   end
   object SaveDialog1: TSaveDialog
     DefaultExt = 'dfm'
@@ -3682,10 +3682,10 @@ object dhMainForm: TdhMainForm
       'OpenDialog1.*'
       'SaveDialog1*'
       'STYLE_*')
-    Left = 472
+    Left = 464
     Top = 152
     LangData = {
-      0A0064684D61696E466F726D0001980000000800646850616E656C3100000800
+      0A0064684D61696E466F726D0001990000000800646850616E656C3100000800
       546F6F6C4261723100000F00636F6D7050616765436F6E74726F6C0101000000
       03000000040048696E74000800636F6D70506167650101000000050000000400
       48696E74000900636F6D7050616E656C010100000007000000040048696E7400
@@ -3799,7 +3799,8 @@ object dhMainForm: TdhMainForm
       696577427574746F6E00000A005061696E7450616E656C000008005061696E74
       426F7800000F006D436865636B466F7255706461746501010000008900000007
       0043617074696F6E000F006D4F626A6563744578706C6F72657201010000008A
-      000000070043617074696F6E00}
+      000000070043617074696F6E001100436F6C6F725072657669657754696D6572
+      0000}
   end
   object GenerateTimer: TTimer
     Enabled = False
@@ -3813,5 +3814,11 @@ object dhMainForm: TdhMainForm
     Options = [ofOverwritePrompt, ofHideReadOnly, ofPathMustExist, ofEnableSizing]
     Left = 528
     Top = 144
+  end
+  object ColorPreviewTimer: TTimer
+    Interval = 100
+    OnTimer = ColorPreviewTimerTimer
+    Left = 744
+    Top = 208
   end
 end

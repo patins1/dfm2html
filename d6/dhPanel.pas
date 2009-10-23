@@ -135,12 +135,17 @@ Const
 //WM_CHECKDESIGNSTATE
 
 const
+  CSSAlphaInverter=$FF000000;
+  clBlackCSS=clBlack32 xor CSSAlphaInverter;
+  clWhiteCSS=clWhite32 xor CSSAlphaInverter;
   srInherit=EmptyStr;
   vsrInherit=MaxInt;
   scolInherit=EmptyStr;
-  colInherit=MaxInt;
+  colInherit=$12345678 xor CSSAlphaInverter;
+  colGlowDefault=$FFBEFFFF xor CSSAlphaInverter;
+  colShadowDefault=clBlackCSS;
   scolTransparent='Transparent';
-  colTransparent=clNone;
+  colTransparent=$00456789 xor CSSAlphaInverter;
 type
   TCSSCursor=(ccuInherit,ccuAuto,ccuCrosshair, ccuDefault, ccuPointer, ccuMove,
     ccuEResize, ccuNeResize, ccuNwResize, ccuNResize, ccuSeResize, ccuSwResize, ccuSResize, ccuWResize,
@@ -152,8 +157,8 @@ const CSSCursorMap:array[TCSSCursor] of TCursor=
    crIBeam,crHourGlass,crHelp);
 
 
-type TRasterType=(rsNo,rsFull,rsRounded,rsSemi,rsStretch,rsSplit,rsFullWithoutText);
-const rasterReason:array[TRasterType] of string=(EmptyStr,'enabled Effects','rounded corners','a semi-transparent image','the image type "Stretch"','the image type "Split"','enabled Effects (not applying to textual content)');
+type TRasterType=(rsNo,rsFull,rsRounded,rsRGBA,rsSemi,rsStretch,rsSplit,rsFullWithoutText);
+const rasterReason:array[TRasterType] of string=(EmptyStr,'enabled Effects','rounded corners','RGBA colors','a semi-transparent image','the image type "Stretch"','the image type "Split"','enabled Effects (not applying to textual content)');
 
 const EnableIgnoreCSS=True;
 
@@ -171,7 +176,7 @@ type
   TCSSFontFamily=type string;
   TSlidePixel=1..9999;
   TReactionTime=0..9999;
-  TCSSColor=type TColor;
+  TCSSColor=type TColor32;
   TCSSInteger=type Integer;
   TCSSCardinal=0..MaxInt;
   TCSSBackgroundAttachment=(cbaInherit,cbaScroll,cbaFixed);
@@ -267,7 +272,7 @@ type
     property Alpha default 191;
     property Radius default 5;
     property DeciRadius default 50;
-    property Color default clBlack;
+    property Color default colShadowDefault;
     property Flood default 0;
     property Degree default 120;
     property Distance default 5;
@@ -282,7 +287,7 @@ type
     property Alpha default 191;
     property Radius default 5;
     property DeciRadius default 50;
-    property Color default $BEFFFF;
+    property Color default colGlowDefault;
     property Flood default 0;
   end;
 
@@ -751,7 +756,7 @@ type
     procedure Clear;
     constructor Create(AOwner:IChangeReceiver; OwnState:TState);
     destructor Destroy; override;
-    procedure GetFontDifferences({const Font:TFont}FontStyle:TFontStyles; FontColor:TColor; FontName:TFontName; FontHeight:Integer);
+    procedure GetFontDifferences({const Font:TFont}FontStyle:TFontStyles; FontColor:TCSSColor; FontName:TFontName; FontHeight:Integer);
 //    function IsMeasureStored(Index:integer):boolean;
     function GetInfo:string;
     function IsStyleStored:boolean;
@@ -1037,6 +1042,7 @@ type
     function BorderWidth(const Align:TEdgeAlign):integer;
     function DisplayBorderWidth(const Align:TEdgeAlign):integer;
     function TransparencyOfBorderWidth(const Align:TEdgeAlign):integer;
+    function SemiTransparencyOfBorderWidth(const Align:TEdgeAlign):integer;
     function PaddingWidth(const Align:TEdgeAlign):integer;
     function BorderStyle(const Align:TEdgeAlign):TCSSBorderStyle;
     function BorderColor(const Align:TEdgeAlign):TCSSColor;
@@ -1232,6 +1238,7 @@ type
     procedure AdjustScrolling(var R: TRect);
     function Opaque:boolean;
     function TransparentEdges:TRect;
+    function SemiTransparentEdges:TRect;
     procedure PaintWhiteBackground(ref_brct: TRect; Src: TMyBitmap32; const brct: TRect); virtual;
     function SomethingIsFixed: boolean; //virtual;
     function SomethingIsScrolled: boolean; virtual;
@@ -1419,6 +1426,7 @@ type
     procedure SetName(const Value: TComponentName); override;
     procedure Loaded; override; 
     function GetTransparent:boolean;
+    function SemiTransparent:boolean;
     procedure SetTransparent(Value: boolean);
     procedure ReadAutoSizeVerticalOnly(Reader:TReader);
     procedure ReadAutoSize(Reader:TReader);
@@ -1546,7 +1554,7 @@ type
     function DesignHitTest:boolean;
 
     function FinalShowing:boolean; virtual;
-    function GetVirtualBGColor: TColor;
+    function GetVirtualBGColor: TCSSColor;
     function ScrollArea: TRect;
     function ClientBound:TRect;
     function PhysicalClientBound:TRect;
@@ -1725,8 +1733,9 @@ function FindForm(Value:string; var f:TForm):boolean;
 function GetCRCFromBitmap32(b:TMyBitmap32; w,h:integer; ResumeCrc:DWORD=0):DWORD;
 
 //function ColorToIdent(Color: Longint; var Ident: string): Boolean;
-function IdentToColor(const Ident: string; var Color: Integer): Boolean;
-function ColorToString(Color: TColor): string;
+function IdentToColor(const Ident: string; var Color: Longint): Boolean;
+function ColorToString(Color: TCSSColor): string; overload;
+function ColorToString(Color: Longint): string; overload;
 function CursorToString(Cursor: TCSSCursor): string;
 //function HasCommon(Control:TPersistent; var Common:TCommon):boolean;
 
@@ -1777,6 +1786,27 @@ const
   {$EXTERNALSYM COLOR_3DHILIGHT}
   COLOR_3DHILIGHT = COLOR_BTNHIGHLIGHT;
 *)                        //PaleGreen
+
+var
+  TrueColors: array[0..17] of TIdentMapEntry = (
+    (Value: colInherit; Name: scolInherit),
+    (Value: colTransparent; Name: scolTransparent),
+    (Value: clBlack; Name: 'Black'),
+    (Value: clMaroon; Name: 'Maroon'),
+    (Value: clGreen; Name: 'Green'),
+    (Value: clOlive; Name: 'Olive'),
+    (Value: clNavy; Name: 'Navy'),
+    (Value: clPurple; Name: 'Purple'),
+    (Value: clTeal; Name: 'Teal'),
+    (Value: clGray; Name: 'Gray'),
+    (Value: clSilver ; Name: 'Silver'),
+    (Value: clRed; Name: 'Red'),
+    (Value: clLime; Name: 'Lime'),
+    (Value: clYellow; Name: 'Yellow'),
+    (Value: clBlue; Name: 'Blue'),
+    (Value: clFuchsia; Name: 'Fuchsia'),
+    (Value: clAqua; Name: 'Aqua'),
+    (Value: clWhite; Name: 'White'));
 
   Colors: array[0..43] of TIdentMapEntry = (
     (Value: colInherit; Name: scolInherit),
@@ -1974,7 +2004,7 @@ const VertScrollbar=16;
       VertScrollbarButtonHeight=16;
       HorzScrollbarButtonWidth=16;
 
-const UseCSSBorderRadius=not true;
+var UseCSS3:boolean=false;
 function GetBorderRadiusPixels(Value:string; var res:TPoint):boolean;overload;
 function GetBorderRadiusString(al:TEdgeAlign):string;
 function GetBorderRadiusStringMoz(al:TEdgeAlign):string;
@@ -2034,6 +2064,12 @@ function HasSubTS(p:TdhCustomPanel):boolean;
 
 function GetPixelCombineNormal(F: TColor32; B: TColor32; M: TColor32=255):TColor32;
 Function ApplyDark(Color:TColor; HowMuch:Byte):TColor;
+
+function CSSColorToColor(const Color:TCSSColor):TColor;
+function ColorToCSSColor(const Color:TColor):TCSSColor;
+function CSSColorToColor32(const Color:TCSSColor):TColor32;
+function Color32ToCSSColor(const Color:TColor32):TCSSColor;
+function IsOpaqueColor(Color:TCSSColor): boolean;
 
 function WFormat(const c:WideString; const Args: array of const):WideString;
 
@@ -2492,6 +2528,31 @@ begin
  result:=ColorSwap(ColorToRGB(Color)) or $FF000000;
 end;
 
+
+function ColorToCSSColor(const Color:TColor):TCSSColor;
+begin
+ result:=ColorToRGB(Color) or ($FF000000 xor CSSAlphaInverter);
+end;
+
+function CSSColorToColor(const Color:TCSSColor):TColor;
+begin
+ result:=Color and $FFFFFF;
+end;
+
+function CSSColorToColor32(const Color:TCSSColor):TColor32;
+begin
+ result:=(ColorSwap(Color and $FFFFFF) and $FFFFFF) or ((Color xor CSSAlphaInverter) and $FF000000);
+end;
+
+function Color32ToCSSColor(const Color:TColor32):TCSSColor;
+begin
+ result:=(ColorSwap(Color and $FFFFFF) and $FFFFFF) or ((Color xor CSSAlphaInverter) and $FF000000);
+end;
+
+function IsOpaqueColor(Color:TCSSColor): boolean;
+begin
+ Result:=(Color xor CSSAlphaInverter) and $FF000000 = $FF000000;
+end;
 
 type PBoolean=^Boolean;
 
@@ -2982,8 +3043,8 @@ end;
 procedure TdhCustomPanel.CSSToColor;
 begin
  if Transparent then
-  Color:={TFakeControl(Control.Parent).Color}GetVirtualBGColor else
-  Color:=BackgroundColor;
+  Color:={TFakeControl(Control.Parent).Color}CSSColorToColor(GetVirtualBGColor) else
+  Color:=CSSColorToColor(BackgroundColor);
 end;
 
 
@@ -3304,7 +3365,7 @@ function TdhCustomPanel.GetFontColor:TCSSColor;
 begin
  if GetVal(pcColor) then
   result:=Cascaded.Color else
-  result:=clWindowText;
+  result:=clBlackCSS;
 end;
 
 function TdhCustomPanel.ComputedFontSize:integer;
@@ -3352,7 +3413,7 @@ begin
  //Font.Charset:=THAI_CHARSET;//ANSI_CHARSET;//TURKISH_CHARSET;//ANSI_CHARSET;//GetCharset;
 
 
- Font.Color:=FontColor;
+ Font.Color:=CSSColorToColor(FontColor);
 
  _FontStyle:=[];
  if Bold then
@@ -3379,7 +3440,7 @@ begin
   //InNotifyCSSChanged:=true; //bei SetTextDecoration, ActStyle.TextDecoration:=ActStyle.TextDecoration;
   //try
    with Font do
-    ActStyle.GetFontDifferences(Style,Color,Name,Height);
+    ActStyle.GetFontDifferences(Style,ColorToCSSColor(Color),Name,Height);
   //finally
    //InNotifyCSSChanged:=false;
   //end;
@@ -3394,8 +3455,8 @@ begin
  if not InCSSToWinControl then
  begin
   //if not (Transparent and (TFakeWinControl(Parent).Color=Color)) then
-  if BackgroundColor<>Color then
-   ActStyle.BackgroundColor:=Color;
+  if BackgroundColor<>ColorToCSSColor(Color) then
+   ActStyle.BackgroundColor:=ColorToCSSColor(Color);
   NotifyCSSChanged([wcColor]);
  end;
 end;
@@ -4552,9 +4613,15 @@ begin
    SetPreferStyle(StyleArr[state],true,true);
    try
 
-   if not UseCSSBorderRadius and HasBorderRadii then
+   if not UseCSS3 and HasBorderRadii then
    begin
     result:=rsRounded;
+    exit;
+   end;
+   
+   if not UseCSS3 and (not IsNullRect(SemiTransparentEdges) or SemiTransparent and not Transparent or not IsOpaqueColor(FontColor)) then
+   begin
+    result:=rsRGBA;
     exit;
    end;
 
@@ -4656,7 +4723,7 @@ end;
 
 
 
-procedure TStyle.GetFontDifferences({const Font:TFont}FontStyle:TFontStyles; FontColor:TColor; FontName:TFontName; FontHeight:Integer );
+procedure TStyle.GetFontDifferences({const Font:TFont}FontStyle:TFontStyles; FontColor:TCSSColor; FontName:TFontName; FontHeight:Integer );
 var OldOnChange:TNotifyEvent;
 begin
 
@@ -6885,7 +6952,13 @@ var
       {AlignInfo.AlignList := AlignList;
       AlignInfo.ControlIndex := I;
       AlignInfo.Align := AAlign;!}
-      DoPosition(TControl(AlignList[I]), AAlign{, AlignInfo!});
+      Control:=TControl(AlignList[I]);
+      DoPosition(Control, AAlign{, AlignInfo!});
+      if AAlign=alTop then
+      begin
+       if GetChildPosition(Control)<>I then
+        TFakeWinControl(Self).SetChildOrder(Control,I);
+      end;
     end;
   end;
 
@@ -7824,10 +7897,6 @@ begin
   begin
    if Transparent then
     ActStyle.BackgroundColor:=GetVirtualBGColor;
-
-{  if ActStyle.BackgroundColor<>colInherit then
-   ActStyle.BackgroundColor:=colTransparent else
-}
   end else
   begin
    if not Transparent then
@@ -8338,23 +8407,31 @@ end;
 
 function ColorToIdent(Color: Longint; var Ident: string): Boolean;
 begin
-  Result := IntToIdent(Color, Ident, Colors);
+  Result := IntToIdent(Color, Ident, TrueColors);
 end;
 
-function IdentToColor(const Ident: string; var Color: Integer): Boolean;
+function IdentToColor(const Ident: string; var Color: Longint): Boolean;
 begin
-  Result := IdentToInt(Ident, Color, Colors) or {$IFDEF CLX}QGraphics{$ELSE}Graphics{$ENDIF}.IdentToColor(Ident,Color){falls jmd in dfm direkt z.b. clRed einträgt};
+  Result := IdentToInt(Ident, Color, Colors);
 end;
 
 
-function ColorToIntString(Color: TColor): string;
+function ColorToIntString(Color: TCSSColor): string;
 var Col:TColor32;
 begin
-  Col:=ColorToColor32(Color);
-  Result:='#'+inttohex((Col shr 16) and 255,2)+inttohex((Col shr 8) and 255,2)+inttohex(Col and 255,2);
+  Col:=CSSColorToColor32(Color);
+  if IsOpaqueColor(Color) then
+   Result:='#'+inttohex(RedComponent(Col),2)+inttohex(GreenComponent(Col),2)+inttohex(BlueComponent(Col),2) else
+   Result:='rgba('+inttostr(RedComponent(Col))+','+inttostr(GreenComponent(Col))+','+inttostr(BlueComponent(Col))+','+FloatToStrF(AlphaComponent(Col)/255,ffFixed,10,3)+')';
 end;
 
-function ColorToString(Color: TColor): string;
+function ColorToString(Color: TCSSColor): string;
+begin
+  if not dhPanel.ColorToIdent(Color, Result) then
+   Result:=ColorToIntString(Color);
+end;
+
+function ColorToString(Color: Longint): string;
 begin
   if not dhPanel.ColorToIdent(Color, Result) then
    Result:=ColorToIntString(Color);
@@ -8892,9 +8969,12 @@ begin
 end;
 
 procedure TStyle.SetColor(Value:TCSSColor);
-begin
- FColor:=Value;
- pc(pcColor);
+begin              
+ if FColor<>Value then
+ begin
+  FColor:=Value;
+  pc(pcColor);
+ end;
 end;
 
 procedure TStyle.SetFontStyle(Value:TCSSFontStyle);
@@ -9737,7 +9817,7 @@ begin
   case PropChoose of
   pcFontSize: AStyle.FFontSize:=inttostr(Abs(TFakeControl(P).Font.Height));
   pcFontFamily: AStyle.FFontFamily:=TFakeControl(P).Font.Name;
-  pcColor: AStyle.FColor:=TFakeControl(P).Font.Color;
+  pcColor: AStyle.FColor:=ColorToCSSColor(TFakeControl(P).Font.Color);
   pcFontStyle: AStyle.FFontStyle:=GetItalicFontStyle[fsItalic in TFakeControl(P).Font.Style];
   pcFontWeight: AStyle.FFontWeight:=GetBoldFontWeight[fsBold in TFakeControl(P).Font.Style];
   pcTextDecoration:
@@ -9827,6 +9907,12 @@ begin
 end;
 
 
+function TdhCustomPanel.SemiTransparent:boolean;
+begin
+ result:=not IsOpaqueColor(BackgroundColor);
+end;
+
+
 function IsNullRect(const R:TRect):boolean;
 begin
  result:=(R.Left=0) and (R.Right=0) and (R.Bottom=0) and (R.Top=0);     
@@ -9849,6 +9935,22 @@ begin
  result.Right:=TransparencyOfBorderWidth(ealRight);
 end;
 
+function TdhCustomPanel.SemiTransparentEdges:TRect;
+var tt:TTransformations;
+begin
+ if IsScrollArea and EdgesInScrolledArea then
+ begin
+  result:=Rect(0,0,0,0);
+  exit;
+ end;
+ result:=MarginPure;
+ if not IsNullRect(result) then exit;
+ result.Left:=SemiTransparencyOfBorderWidth(ealLeft);
+ result.Top:=SemiTransparencyOfBorderWidth(ealTop);
+ result.Bottom:=SemiTransparencyOfBorderWidth(ealBottom);
+ result.Right:=SemiTransparencyOfBorderWidth(ealRight);
+end;
+
 function TdhCustomPanel.IsRasterized:boolean;
 var tt:TTransformations;
 begin
@@ -9858,7 +9960,7 @@ end;
 
 function TdhCustomPanel.Opaque:boolean;
 begin
- result:=not Transparent and {IsNullRect(ClientEdgesPure}{EqualRect(ScrollAreaWithScrollbars,Rect(0,0,Width,Height))}IsNullRect(TransparentEdges) and not IsRasterized and Visibility;
+ result:=not SemiTransparent and {IsNullRect(ClientEdgesPure}{EqualRect(ScrollAreaWithScrollbars,Rect(0,0,Width,Height))}IsNullRect(TransparentEdges) and not IsRasterized and Visibility;
 end;
 
 
@@ -9891,8 +9993,19 @@ begin
 end;
 
 function TdhCustomPanel.TransparencyOfBorderWidth(const Align:TEdgeAlign):integer;
+var Style:TCSSBorderStyle;
 begin
- if BorderStyle(Align) in [cbsNone,cbsHidden,cbsSolid,cbsGroove,cbsRidge,cbsInset,cbsOutset] then
+ Style:=BorderStyle(Align);
+ if (Style in [cbsNone,cbsHidden]) or (Style in [cbsSolid,cbsGroove,cbsRidge,cbsInset,cbsOutset]) and IsOpaqueColor(BorderColor(Align)) then
+  result:=0 else
+  result:=BorderWidth(Align);
+end;
+
+function TdhCustomPanel.SemiTransparencyOfBorderWidth(const Align:TEdgeAlign):integer;
+var Style:TCSSBorderStyle;
+begin
+ Style:=BorderStyle(Align);
+ if (Style in [cbsNone,cbsHidden]) or IsOpaqueColor(BorderColor(Align)) then
   result:=0 else
   result:=BorderWidth(Align);
 end;
@@ -9908,7 +10021,7 @@ function TdhCustomPanel.BorderColor(const Align:TEdgeAlign):TCSSColor;
 begin
  if GetVal(pcBorderColor,Align) then
   result:=Cascaded.Color else
-  result:=clBlack{FontColor};
+  result:=clBlackCSS{FontColor};
 end;
 
 
@@ -9988,7 +10101,7 @@ end;
 
 
 
-function TdhCustomPanel.GetVirtualBGColor:TColor;
+function TdhCustomPanel.GetVirtualBGColor:TCSSColor;
 var p:TControl;
 begin
  p:=Self;
@@ -10000,8 +10113,8 @@ begin
  end else
   p:=p.Parent;
  if p is TControl then
-  result:=TFakeControl(p).Color else
-  result:=clWhite;
+  result:=ColorToCSSColor(TFakeControl(p).Color) else
+  result:=clWhiteCSS;
 end;
 
 
@@ -10010,12 +10123,11 @@ end;
 procedure TdhCustomPanel.Frame3D(Border:TEdgeAlign; Points: array of TPoint);
 var BottomRight:boolean;
     bs:TCSSBorderStyle;
-    bc:TCSSColor;
+    bc:TColor;
     L,bw:integer;
     P0,P1:TPoint;
-    Canvas:TCanvas;
     AdjDivX,AdjDivY:integer;
-    Color1,Color2,Col:TCSSColor;
+    Color1,Color2,Col:TColor;
 var ColorDefined:boolean;
 const hell:array[0..3] of TColor=($FFFFFF,$C8D0D4,$404040,$808080);
 
@@ -10040,39 +10152,11 @@ begin
 end;
 
 
-
+procedure DrawToCanvas(const Canvas:TCanvas);
 begin
- if (Points[0].X=Points[1].X) and (Points[1].X=Points[2].X) and (Points[2].X=Points[3].X) or
-    (Points[0].Y=Points[1].Y) and (Points[1].Y=Points[2].Y) and (Points[2].Y=Points[3].Y) then exit;
-
- Canvas:=GetCanvas;
-
- if DisplayBorderWidth(Border)=0 then
- begin        {
- if (csDesigning in ComponentState) and Transparent then
- begin
-  Canvas.Brush.Color:=clBtnShadow;
-  Canvas.Pen.Style := psDash;
-  Canvas.Brush.Style := bsClear;
-//  Canvas.MoveTo(Points[0].X,Points[0].Y);
-//  Canvas.LineTo(Points[1].X,Points[1].Y);
-  rct.TopLeft:=Points[0];
-  rct.BottomRight:=Points[1];
-  Canvas.Rectangle(rct);
- end;     }
-{
- if (csDesigning in ComponentState) and FTransparent then
- begin
-  Canvas.Brush.Color:=clBtnShadow;
-  Canvas.Pen.Style := psDash;
-  Canvas.Brush.Style := bsClear;
-  Canvas.Rectangle(ClientRect);
- end;  }
- exit;
- end;
 
   bs:=BorderStyle(Border);
-  bc:=BorderColor(Border);
+  bc:=CSSColorToColor(BorderColor(Border));
   ColorDefined:=HasVal(pcBorderColor,Border);
   {if not ColorDefined and (IsButton or IsEdit) and (bs in [cbsGroove,cbsRidge,cbsInset,cbsOutSet])  then
    bc:=clWhite;  }
@@ -10206,6 +10290,75 @@ begin
   end;
 end;
 
+var
+  I: Integer;
+  P: PColor32;
+  C,Alpha32: TColor32;
+  bitmap:TBitmap32;
+begin
+
+ if (Points[0].X=Points[1].X) and (Points[1].X=Points[2].X) and (Points[2].X=Points[3].X) or
+    (Points[0].Y=Points[1].Y) and (Points[1].Y=Points[2].Y) and (Points[2].Y=Points[3].Y) then exit;
+
+
+ if DisplayBorderWidth(Border)=0 then
+ begin        {
+ if (csDesigning in ComponentState) and Transparent then
+ begin
+  Canvas.Brush.Color:=clBtnShadow;
+  Canvas.Pen.Style := psDash;
+  Canvas.Brush.Style := bsClear;
+//  Canvas.MoveTo(Points[0].X,Points[0].Y);
+//  Canvas.LineTo(Points[1].X,Points[1].Y);
+  rct.TopLeft:=Points[0];
+  rct.BottomRight:=Points[1];
+  Canvas.Rectangle(rct);
+ end;     }
+{
+ if (csDesigning in ComponentState) and FTransparent then
+ begin
+  Canvas.Brush.Color:=clBtnShadow;
+  Canvas.Pen.Style := psDash;
+  Canvas.Brush.Style := bsClear;
+  Canvas.Rectangle(ClientRect);
+ end;  }
+ exit;
+ end;
+
+ if not IsOpaqueColor(BorderColor(Border)) then
+ begin
+  bitmap:=TBitmap32.Create;
+  try
+    bitmap.SetSize(ActTopGraph.Width,ActTopGraph.Height);
+    bitmap.Clear($FF000000);
+ 
+    DrawToCanvas(bitmap.Canvas);
+
+    Alpha32:=CSSColorToColor32(BorderColor(Border)) and $FF000000;
+    P := @bitmap.Bits[0];
+    for I := 0 to bitmap.Width * bitmap.Height - 1 do
+    begin
+      C := P^;
+      if C and $FF000000 = $FF000000 then
+      begin
+        P^ := 0;
+      end else 
+      begin
+        P^:=C or Alpha32; 
+      end;
+      Inc(P);
+    end;
+
+    bitmap.DrawMode := dmBlend;
+    bitmap.DrawTo(ActTopGraph, 0, 0);
+  finally
+   bitmap.Free;
+  end;
+ end else
+ begin
+  DrawToCanvas(GetCanvas);
+ end;
+end;
 
 
 
@@ -11368,6 +11521,8 @@ var
   x1,x2,y1,y2,i:integer;
   Strech32,Strech32Mult:TMyBitmap32;
   R,R2,ref:TRect;
+  Col:TColor32;
+  P:PColor32;
 
 
 procedure cp(const R1,R2:TRect);
@@ -11418,7 +11573,22 @@ begin
  begin
   {Canvas.Brush.Color := BackgroundColor;
   Canvas.FillRect(rct);}
-  Src.FillRectS(brct,Color32(BackgroundColor));
+  if IsOpaqueColor(BackgroundColor) then
+  begin
+   Src.FillRectS(brct,CSSColorToColor32(BackgroundColor))
+  end else
+  begin
+   Col:=CSSColorToColor32(BackgroundColor);
+   for Y:= brct.Top to brct.Bottom-1 do
+   begin
+    P:=Src.PixelPtr[brct.Left,Y];
+    for X:= brct.Left to brct.Right-1 do
+    begin
+      P^:=GetPixelCombineNormal(Col,P^);
+      Inc(P);
+    end;
+   end;
+  end;
  end;
  if IsFixed then
   ref:=ref_fixed else
@@ -12872,8 +13042,8 @@ begin
  P:=Src.PixelPtr[0, 0];
  P2:=_Src.PixelPtr[0, 0];
 // P3:=SrcFinal.PixelPtr[0, 0];
- a:=Blur.Alpha;
- col:=ColorToColor32(Blur.Color) and $FFFFFF;
+ a:=(Blur.Alpha*(CSSColorToColor32(Blur.Color) shr 24)) div 255;
+ col:=CSSColorToColor32(Blur.Color) and $FFFFFF;
  (*if inv then
  begin
  for j := 0 to _Src.Height*_Src.Width - 1 do
@@ -16507,7 +16677,7 @@ begin
   FEnabled:=false;
   FAlpha:=191;
   FDeciRadius:=50;
-  FColor:=clBlack;
+  FColor:=colShadowDefault;
   FFlood:=0;
   FDegree:=120;
   FDistance:=5;
@@ -16515,7 +16685,7 @@ end;
 
 function TShadow.IsCleared:boolean;
 begin
- result:=not FEnabled and (FAlpha=191) and (FDeciRadius=50) and (FColor=clBlack) and (FFlood=0) and (FDegree=120) and (FDistance=5);
+ result:=not FEnabled and (FAlpha=191) and (FDeciRadius=50) and (FColor=colShadowDefault) and (FFlood=0) and (FDegree=120) and (FDistance=5);
 end;
 
 
@@ -16576,13 +16746,13 @@ begin
   FEnabled:=false;
   FAlpha:=191;
   FDeciRadius:=50;
-  FColor:=$BEFFFF;
+  FColor:=colGlowDefault;
   FFlood:=0;
 end;
 
 function TGlow.IsCleared:boolean;
 begin
- result:=not FEnabled and (FAlpha=191) and (FDeciRadius=50) and (FColor=$BEFFFF) and (FFlood=0);
+ result:=not FEnabled and (FAlpha=191) and (FDeciRadius=50) and (FColor=colGlowDefault) and (FFlood=0);
 end;
 
 
@@ -17665,8 +17835,11 @@ end;
 
 procedure TBlurEffect.SetColor(const Value: TCSSColor);
 begin
+ if FColor <> Value then
+ begin
   FColor := Value;
   Changed;
+ end;
 end;
 
 procedure TBlurEffect.SetDegree(const Value: integer);
@@ -18813,6 +18986,7 @@ end;
 {$ENDIF}
 
 var PropChoose:TPropChoose;
+    iColor:Integer;
 initialization
 
  for PropChoose:=Low(TPropChoose) to high(TPropChoose) do
@@ -18861,7 +19035,8 @@ initialization
  showmessage('exp in ini');
  end;
 
-
+ for iColor := 2 to High(Colors) do Colors[iColor].Value:=Integer(ColorToCSSColor(Colors[iColor].Value));
+ for iColor := 2 to High(TrueColors) do TrueColors[iColor].Value:=Integer(ColorToCSSColor(TrueColors[iColor].Value));
  RegisterIntegerConsts(TypeInfo(TCSSColor), dhPanel.IdentToColor, dhPanel.ColorToIdent);
 
  glBinList:=TBinList.Create;

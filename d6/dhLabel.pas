@@ -3221,6 +3221,7 @@ var
 {$ENDIF}
   Canvas:TCanvas;
   OldClipRect:TRect;
+  level:Integer;
 begin
 // if (csLoading in ComponentState) then exit;
 
@@ -3351,7 +3352,7 @@ begin
 
     toba:=not toba;
 
-    if not _AntiAliasing then
+    if not _AntiAliasing and IsOpaqueColor(FontColor) then
     begin
 {$IFDEF CLX}
      Canvas.TextRect(ClpRct, TextRct.Left, TextRct.Top, copy(gltext,vn, bs-vn));
@@ -3415,7 +3416,10 @@ begin
     ActTopGraph.Font.Assign(Canvas.Font);
     OldClipRect:=ActTopGraph.ClipRect;
     ActTopGraph.ClipRect:=ClpRct;
-    ActTopGraph.RenderTextExtended(TextRct.Left, TextRct.Top, copy(gltext,vn,bs-vn), AALevel,{ $FF000000 or }Color32(Canvas.Font.Color),Point(TextRct.Right-TextRct.Left,TextRct.Bottom-TextRct.Top),AddP(bs-1,bs),LetterSpacing,WordSpacing);
+    if _AntiAliasing then
+     level:=AALevel else
+     level:=0;
+    ActTopGraph.RenderTextExtended(TextRct.Left, TextRct.Top, copy(gltext,vn,bs-vn), level,CSSColorToColor32(FontColor),Point(TextRct.Right-TextRct.Left,TextRct.Bottom-TextRct.Top),AddP(bs-1,bs),LetterSpacing,WordSpacing);
     ActTopGraph.ClipRect:=OldClipRect;
    end;
 

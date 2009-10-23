@@ -163,14 +163,15 @@ end;
 
 procedure TColorPicker.CopyColortoClipboard1Click(Sender: TObject);
 var col:TColor;
+    picker:TdhColorPicker;
 begin
- col:=(PopupMenu1.PopupComponent as TdhColorPicker).Color;
- if col=clNone then
+ picker:=PopupMenu1.PopupComponent as TdhColorPicker;
+ if picker.GetTransparentColor then
  begin
   ShowMessage('No color defined.');
   exit;
  end;
- Clipboard.AsText:=dhPanel.ColorToString(col);//'#'+IntToHex(ExchOneThree(col),6);
+ Clipboard.AsText:=dhPanel.ColorToString(picker.CSSColor);//'#'+IntToHex(ExchOneThree(col),6);
 end;
 
 procedure TColorPicker.GetColorfromClipboard1Click(Sender: TObject);

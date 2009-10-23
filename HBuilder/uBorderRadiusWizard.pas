@@ -80,11 +80,11 @@ uses Unit2;
 procedure TBorderRadiusWizard.FormCreate(Sender: TObject);
 var Alpha:Byte;
 
-function Mix(c1,c2:TColor):TColor;
+function Mix(c1:TColor; c2:TCSSColor):TCSSColor;
 var r:TColor32;
 begin
- r:=GetPixelCombineNormal(Color32(c2),Color32(c1),Alpha);
- result:=WinColor(r);
+ r:=GetPixelCombineNormal(CSSColorToColor32(c2),Color32(c1),Alpha);
+ result:=Color32ToCSSColor(r);
 end;
 
 begin
@@ -186,7 +186,7 @@ end;
 
 procedure TBorderRadiusWizard.UpdateAllBorders;
 
-function GetBorderColor(c:TdhLink):TColor;
+function GetBorderColor(c:TdhLink):TCSSColor;
 begin
  result:=STYLE_Link2.Style.Border.Color;
  if (c.State in [hsDown,hsOverDown]) then

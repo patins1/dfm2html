@@ -1132,7 +1132,6 @@ type
     procedure PaintHidden;
     procedure BeginPainting(bmp:TMyBitmap32);
     procedure EndPainting;
-    procedure SetASXY(const Value: TASXY);
     procedure PixelCombineNormal(F: TColor32; var B: TColor32;
       M: TColor32);
     procedure PixelCombineMultiply(F: TColor32; var B: TColor32;
@@ -1208,6 +1207,7 @@ type
     //FBaseOverOnDown{,FBaseDownOnOverDown}:boolean;
     //LogMsg:string;
 
+    procedure SetASXY(const Value: TASXY); virtual;
     procedure GetChildren(Proc: TGetChildProc; Root: TComponent); override;
 
     function PreventFull(Cause:TTransformations):boolean; virtual;

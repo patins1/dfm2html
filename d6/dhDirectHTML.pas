@@ -22,6 +22,7 @@ type
     { Protected declarations }
     procedure DoTopPainting; override;
     function NeedPadding(HasRastering:TRasterType): boolean; override;
+    procedure SetASXY(const Value: TASXY); override;
   public
     { Public declarations }
     constructor Create(AOwner: TComponent); override;
@@ -46,6 +47,11 @@ begin
   RegisterComponents('DFM2HTML', [TdhDirectHTML]);
 end;
 
+procedure TdhDirectHTML.SetASXY(const Value: TASXY);
+begin
+ Inherited;
+ NotifyCSSChanged([wcNoOwnCSS,wcNoComputedCSS]);
+end;
 
 function TdhDirectHTML.AllHTMLCode:HypeString;
 begin
@@ -116,7 +122,7 @@ begin
 
 
  begin
-  PaintOuterBorder;
+  if FAutoSize<>asXY then PaintBorder else PaintOuterBorder;
   PaintOuterBg;
   DrawFrame;
  end;

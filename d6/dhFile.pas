@@ -36,6 +36,7 @@ type
     //procedure CreateParams(var Params: TCreateParams); override;
     procedure DefineProperties(Filer: TFiler); override;
     function GetData(var FileData:String):boolean;
+    procedure SetASXY(const Value: TASXY); override;
   public
     function ProposedFileName: String;
     function HasFile:Boolean;
@@ -147,6 +148,11 @@ begin
 end;
 
 
+procedure TdhFile.SetASXY(const Value: TASXY);
+begin
+ Inherited;
+ NotifyCSSChanged([wcNoOwnCSS,wcNoComputedCSS]);
+end;
 
 
 procedure TdhFile.DefineProperties(Filer: TFiler);
@@ -263,7 +269,7 @@ begin
  end;
 
  begin
-  PaintOuterBorder;
+  if FAutoSize<>asXY then PaintBorder else PaintOuterBorder;
   PaintOuterBg;
   DrawFrame;
  end;

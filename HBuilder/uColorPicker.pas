@@ -8,7 +8,7 @@ uses
   {$ELSE}
   Forms, Controls, Windows, Messages, Graphics, StdCtrls, Buttons, ExtCtrls, Menus, clipbrd, Dialogs, TntForms, TntStdCtrls,
   {$ENDIF}
-  SysUtils, Classes, types, dhPanel, dhLabel, DKLang, MyForm{$IFDEF LINUX},libc{$ENDIF};
+  SysUtils, Classes, types, dhPanel, dhLabel, DKLang, uSearchStr, Gr32, MyForm{$IFDEF LINUX},libc{$ENDIF};
 
 type
   TColorPicker = class(TMyForm)
@@ -156,38 +156,42 @@ begin
  (PopupMenu1.PopupComponent as TControl).Parent.SetFocus; //CommitChanges purpose
 end;
 
-function ExchOneThree(d:Integer):Integer;
-begin
- result:=(d and $00FF00) or (d and $0000FF shl 16) or (d and $FF0000 shr 16);
-end;
-
 procedure TColorPicker.CopyColortoClipboard1Click(Sender: TObject);
 var col:TColor;
     picker:TdhColorPicker;
 begin
  picker:=PopupMenu1.PopupComponent as TdhColorPicker;
- if picker.GetTransparentColor then
- begin
-  ShowMessage('No color defined.');
-  exit;
- end;
- Clipboard.AsText:=dhPanel.ColorToString(picker.CSSColor);//'#'+IntToHex(ExchOneThree(col),6);
+ Clipboard.AsText:=dhPanel.ColorToString(picker.CSSColor);
 end;
 
 procedure TColorPicker.GetColorfromClipboard1Click(Sender: TObject);
-var icol:Integer;
-    s:string;
+var icol:Longint;
+    s,sred,sblue,sgreen,salpha:string;
+    g:tg;
+    SaveSeparator:Char;
 begin
- s:=Clipboard.AsText;
+ s:=LowerCase(Trim(Clipboard.AsText));
  if not dhPanel.IdentToColor(s,icol) then
  if (s<>'') and (s[1]='#') and TryStrToInt('$'+Copy(s,2,maxint),icol) then
-  icol:=ExchOneThree(icol) else
+ begin
+  icol:=Longint(Color32ToCSSColor(TColor32(icol) or $FF000000));
+ end else
+ if g.init(s) and g.Over('rgba(') and g.SaveOverPos(',',sred) and g.SaveOverPos(',',sgreen) and g.SaveOverPos(',',sblue) and g.SaveOverPos(')',salpha) then
+ begin
+   SaveSeparator := DecimalSeparator;
+   DecimalSeparator := '.';
+   try
+    icol:=Longint(Color32ToCSSColor(Color32(StrToInt(Trim(sred)),StrToInt(Trim(sgreen)),StrToInt(Trim(sblue)),Round(255*StrToFloat(Trim(salpha))))));
+   finally
+    DecimalSeparator := SaveSeparator;
+   end;
+ end else
  if not TryStrToInt(s,icol) then
  begin
-  ShowMessage('Found no HTML color format in clipboard. The format must be #RRGGBB or a valid color name.');
+  ShowMessage('Found no HTML color format in clipboard. The format must be #RRGGBB, rgba(0 - 255,0 - 255,0 - 255,0.0 - 1.0) or a valid color name.');
   exit;
  end;
- (PopupMenu1.PopupComponent as TdhColorPicker).DoColorChange(icol);
+ (PopupMenu1.PopupComponent as TdhColorPicker).DoColorChange(TCSSColor(icol));
 end;
 
 

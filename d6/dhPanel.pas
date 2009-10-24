@@ -8418,11 +8418,22 @@ end;
 
 function ColorToIntString(Color: TCSSColor): string;
 var Col:TColor32;
+    salpha:String;
+    SaveSeparator:Char;
 begin
   Col:=CSSColorToColor32(Color);
   if IsOpaqueColor(Color) then
    Result:='#'+inttohex(RedComponent(Col),2)+inttohex(GreenComponent(Col),2)+inttohex(BlueComponent(Col),2) else
-   Result:='rgba('+inttostr(RedComponent(Col))+','+inttostr(GreenComponent(Col))+','+inttostr(BlueComponent(Col))+','+FloatToStrF(AlphaComponent(Col)/255,ffFixed,10,3)+')';
+  begin
+   SaveSeparator := DecimalSeparator;
+   DecimalSeparator := '.';
+   try
+    salpha:=FloatToStrF(AlphaComponent(Col)/255,ffFixed,10,3);
+   finally
+    DecimalSeparator := SaveSeparator;
+   end;
+   Result:='rgba('+inttostr(RedComponent(Col))+','+inttostr(GreenComponent(Col))+','+inttostr(BlueComponent(Col))+','+salpha+')';
+  end;
 end;
 
 function ColorToString(Color: TCSSColor): string;

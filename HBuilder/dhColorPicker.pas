@@ -94,7 +94,7 @@ begin
    end;
    if Executed then
    begin
-    DoColorChange(TCSSColor(ColorDialog.RGBA xor CSSAlphaInverter));
+    DoColorChange(TCSSColor(ColorDialog.RGBA) xor CSSAlphaInverter);
    end else
    begin
     DoBackup(backup,true);

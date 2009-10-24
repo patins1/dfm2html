@@ -1789,8 +1789,8 @@ const
 
 var
   TrueColors: array[0..17] of TIdentMapEntry = (
-    (Value: colInherit; Name: scolInherit),
-    (Value: colTransparent; Name: scolTransparent),
+    (Value: Integer(colInherit); Name: scolInherit),
+    (Value: Integer(colTransparent); Name: scolTransparent),
     (Value: clBlack; Name: 'Black'),
     (Value: clMaroon; Name: 'Maroon'),
     (Value: clGreen; Name: 'Green'),
@@ -1809,8 +1809,8 @@ var
     (Value: clWhite; Name: 'White'));
 
   Colors: array[0..43] of TIdentMapEntry = (
-    (Value: colInherit; Name: scolInherit),
-    (Value: colTransparent; Name: scolTransparent),
+    (Value: Integer(colInherit); Name: scolInherit),
+    (Value: Integer(colTransparent); Name: scolTransparent),
     (Value: clBlack; Name: 'Black'),
     (Value: clMaroon; Name: 'Maroon'),
     (Value: clGreen; Name: 'Green'),

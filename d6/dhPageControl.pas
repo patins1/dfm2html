@@ -601,7 +601,7 @@ end;
 begin
 // CancelCheckDesignState:=false;
 // for i:=0 to PageCount-1 do   
- if not (csLoading in DownForURLAnchor.ComponentState) then //for speed
+ if not (csLoading in ComponentState) then //for speed
  for ii:=0 to {Pages[i].}FDownForURLAnchors.Count-1 do
  begin
  DownForURLAnchor:={Pages[i].}FDownForURLAnchors[ii];

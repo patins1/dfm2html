@@ -139,6 +139,7 @@ var SearchRec: TSearchRec;
     dfmfile,pngfile,purename:string;
     pc:TPageContainer;
     c1,c2:int64;
+    dfmfileAge,pngfileAge:TDateTime;
 
 begin
 { if ListBox1.ItemIndex>0 then
@@ -162,9 +163,9 @@ begin
   dfmfile:=GetDir+SearchRec.Name;
   purename:=Copy(SearchRec.Name,1,Length(SearchRec.Name)-length('.dfm'));
   pngfile:=GetRootTemplatesDir+preview+PathDelim+ListBox1.Items[ListBox1.ItemIndex]+'-'+purename+'.png';
-
+  if FileAge(dfmfile,dfmfileAge) then
   try
-  if not(FileExists(pngfile) and (FileAge(pngfile)>=FileAge(dfmfile))) then
+  if not(FileAge(pngfile,pngfileAge) and (pngfileAge>=dfmfileAge)) then
   begin
    pc:=dhMainForm.Open(dfmfile,true,true);
    try
@@ -173,7 +174,7 @@ begin
     pc.Free;
    end;
   end;
-  if FileExists(pngfile) and (FileAge(pngfile)>=FileAge(dfmfile)) then
+  if FileAge(pngfile,pngfileAge) and (pngfileAge>=dfmfileAge) then
   begin
    graph:=TPNGObject.Create;
    try

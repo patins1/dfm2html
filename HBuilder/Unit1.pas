@@ -1592,7 +1592,7 @@ end;
 type TSaveBinItem=class
       id_crc:DWORD;
       data_crc:DWORD;
-      FileAge:integer;
+      FileAge:TDateTime;
       FileName:string;
      end;
 
@@ -1628,6 +1628,7 @@ var id_crc:DWORD;
     server_crc:DWORD;
     sb:TSaveBinItem;
     AbsoluteBaseRasteringFile:string;
+    age:TDateTime;
 begin
   NeedSave:=false;
   server_crc:=_crc;//calc_crc32_String(RasteringFile,_crc);
@@ -1642,7 +1643,7 @@ begin
 
   sb:=FindIdCrc(id_crc);
   if sb<>nil then
-  if (sb.FileAge<>FileAge(sb.FileName)) or (sb.FileName<>AbsoluteRasteringFile) and (GeneratedFiles.IndexOf(sb.FileName)=-1) { or not SameText(RasteringSaveDir,ExtractFileDir(CrcList[i])+PathDelim)} then
+  if not FileAge(sb.FileName,age) or (sb.FileAge<>age) or (sb.FileName<>AbsoluteRasteringFile) and (GeneratedFiles.IndexOf(sb.FileName)=-1) { or not SameText(RasteringSaveDir,ExtractFileDir(CrcList[i])+PathDelim)} then
   begin
    CrcList.Remove(sb);
   end else
@@ -2012,7 +2013,7 @@ procedure TdhMainForm.ColorPreviewTimerTimer(Sender: TObject);
 begin
  if ActivePicker<>nil then
  begin
-  ActivePicker.DoPreviewColorChange(TCSSColor(ColorDialog.RGBA xor CSSAlphaInverter));
+  ActivePicker.DoPreviewColorChange(TCSSColor(ColorDialog.RGBA) xor CSSAlphaInverter);
  end;
 end;
 
@@ -2423,9 +2424,12 @@ begin
  PublishLog.DoUpload(Act.MySiz.FindBody.FTPURL);
 end;
 
-procedure AfterSaveBin;
-begin
- AfterSaveBinI.FileAge:=FileAge(AfterSaveBinI.FileName);
+procedure AfterSaveBin;      
+var age:TDateTime;
+begin                 
+ if FileAge(AfterSaveBinI.FileName,age) then
+  AfterSaveBinI.FileAge:=age else
+  AfterSaveBinI.FileAge:=-1;
 end;
 
 

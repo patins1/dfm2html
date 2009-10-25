@@ -184,7 +184,7 @@ type
     mStyles: TTntMenuItem;
     mPushStylesToUse: TTntMenuItem;
     mGetUseStyles: TTntMenuItem;
-    MClearAllStyles: TTntMenuItem;
+    mClearAllStyles: TTntMenuItem;
     AnchorMemo: TTntTabSheet;
     eMemo: ThMemo;
     Label35: TdhLabel;
@@ -449,6 +449,8 @@ type
     cMenuAuto: TTntCheckBox;
     mSetBackgroundColorTransparent: TTntMenuItem;
     mCopyOverStylesToDownStyles: TTntMenuItem;
+    mClearStyles: TTntMenuItem;
+    procedure mClearStylesClick(Sender: TObject);
     procedure cpBlurColorPreviewColorChanged(Sender: TObject);
     procedure cpBlurColorBackup(Sender: TObject; backup: TList;
       restore: Boolean);
@@ -608,7 +610,7 @@ type
     procedure mPushStylesToUseClick(Sender: TObject);
     procedure Button5Click(Sender: TObject);
     procedure bDeleteItemClick(Sender: TObject);
-    procedure MClearAllStylesClick(Sender: TObject);
+    procedure mClearAllStylesClick(Sender: TObject);
     procedure mGetUseStylesClick(Sender: TObject);
     procedure bMoveItemUpClick(Sender: TObject);
     procedure eSelectLabelValueChange(Sender: TObject; Clear: Boolean);
@@ -5104,9 +5106,18 @@ begin
  Changed('Delete Item');
 end;
 
-procedure TTabs.MClearAllStylesClick(Sender: TObject);
+procedure TTabs.mClearAllStylesClick(Sender: TObject);
 begin
  ClearAllStyles(false);
+ StylesChanged;
+ UpdateSel;
+end;
+
+procedure TTabs.mClearStylesClick(Sender: TObject);
+var i:integer;
+begin
+ for i:=0 to Selection.Count-1 do
+  (TObject(Selection[i]) as TdhCustomPanel).ActStyle.Clear;
  StylesChanged;
  UpdateSel;
 end;

@@ -3483,6 +3483,7 @@ begin
     s:=inttostr(P.X)+'px '+inttostr(P.Y)+'px' else
     s:=inttostr(P.X)+'px';
    AddStyle(GetBorderRadiusString(al),s);
+   AddStyle(GetBorderRadiusStringSafari(al),s);
    AddStyle(GetBorderRadiusStringMoz(al),s);
   end;
 end;

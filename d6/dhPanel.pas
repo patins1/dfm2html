@@ -2007,6 +2007,7 @@ const VertScrollbar=16;
 var UseCSS3:boolean=false;
 function GetBorderRadiusPixels(Value:string; var res:TPoint):boolean;overload;
 function GetBorderRadiusString(al:TEdgeAlign):string;
+function GetBorderRadiusStringSafari(al:TEdgeAlign):string;
 function GetBorderRadiusStringMoz(al:TEdgeAlign):string;
 
 
@@ -8677,10 +8678,15 @@ begin
  result:='border'+sBorderCorner[al]+'-radius';
 end;
 
-function GetBorderRadiusStringMoz(al:TEdgeAlign):string;
-const sBorderCorner:array[TEdgeAlign] of string=(EmptyStr,'-TopLeft','-BottomRight','-BottomLeft','-TopRight');
+function GetBorderRadiusStringSafari(al:TEdgeAlign):string;
 begin
- result:='-Moz-Border-Radius'+sBorderCorner[al];
+ result:='-webkit-'+GetBorderRadiusString(al);
+end;
+
+function GetBorderRadiusStringMoz(al:TEdgeAlign):string;
+const sBorderCorner:array[TEdgeAlign] of string=(EmptyStr,'-topleft','-bottomright','-bottomleft','-topright');
+begin
+ result:='-moz-border-radius'+sBorderCorner[al];
 end;
 
 

@@ -190,6 +190,8 @@ type
     mCheckForUpdate: TTntMenuItem;
     mObjectExplorer: TTntMenuItem;
     ColorPreviewTimer: TTimer;
+    mResourceExplorer: TTntMenuItem;
+    procedure mResourceExplorerClick(Sender: TObject);
     procedure ColorPreviewTimerTimer(Sender: TObject);
     procedure mObjectExplorerClick(Sender: TObject);
     procedure mCheckForUpdateClick(Sender: TObject);
@@ -379,7 +381,7 @@ var _LANGID:LANGID;
 implementation
 
 uses uWarnings, uPublishLog, uPublishFTP, uTemplates, uPresets, uStartUp,
-  uColorPicker, uPageWizard, uObjectExplorer, OleCtrls;
+  uColorPicker, uPageWizard, uObjectExplorer, OleCtrls, uResourceExplorer;
 
 {$R *.dfm}
 
@@ -894,6 +896,7 @@ begin
  mReplace.Enabled:=mFind.Enabled;
  
  mExternalizeImages.Enabled:=(Act<>nil);
+ mResourceExplorer.Enabled:=(Act<>nil);
 
  if SiteChange then
   UpdateNames(nil);
@@ -2164,6 +2167,13 @@ begin
  AddStringsTo(mReopen,LRUitemClick,false,lsl,false,true,false);
 end;
 
+procedure TdhMainForm.mResourceExplorerClick(Sender: TObject);
+begin
+ LateCreateForm(TResourceExplorer,ResourceExplorer);
+ ResourceExplorer.UpdateListing;
+ ResourceExplorer.Show;
+end;
+
 procedure TdhMainForm.LRUitemClick(Sender: TObject);
 begin
  if FuncSettings.LRUfiles.Count<>0{für *EMPTY*} then
@@ -2226,7 +2236,7 @@ end;
 procedure TdhMainForm.mObjectExplorerClick(Sender: TObject);
 begin
  LateCreateForm(TObjectExplorer,ObjectExplorer);
- ObjectExplorer.UpdateRootAndSelection;     
+ ObjectExplorer.UpdateRootAndSelection;
  if not ObjectExplorer.Visible then
  begin
   ObjectExplorer.Top:=dhMainForm.Top+90;

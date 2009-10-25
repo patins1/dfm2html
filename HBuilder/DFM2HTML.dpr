@@ -30,9 +30,10 @@ uses
   uFind in 'uFind.pas' {FindText},
   UIConstants in 'UIConstants.pas',
   dhMultilineCaptionEdit in 'dhMultilineCaptionEdit.pas' {dhMultilineCaptionEdit2},
-  BasicHTMLElements in 'BasicHTMLElements.pas' {BasicHTMLElements: TFrame},
+  BasicHTMLElements in '..\d6\BasicHTMLElements.pas',
   uChooseWide in 'uChooseWide.pas' {ChooseUnicode},
-  uObjectExplorer in 'uObjectExplorer.pas' {ObjectExplorer};
+  uObjectExplorer in 'uObjectExplorer.pas' {ObjectExplorer},
+  uResourceExplorer in 'uResourceExplorer.pas' {ResourceExplorer};
 
 {$ELSE}
 
@@ -64,5 +65,6 @@ begin
   Application.HelpFile := '';
   Application.CreateForm(TdhMainForm, dhMainForm);
   Application.CreateForm(TTabs, Tabs);
+  Application.CreateForm(TResourceExplorer, ResourceExplorer);
   Application.Run;
 end.

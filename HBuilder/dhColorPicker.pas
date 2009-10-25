@@ -74,6 +74,7 @@ begin
 //   ColorDialog.CustomColors.AddStrings(FCustomColors);;
    ColorDialog.UseAlpha:=true;
    ColorDialog.ShowCaption:=true;
+   ColorDialog.Caption:='';
   end;
 
   backupCSSColor:=CSSColor;

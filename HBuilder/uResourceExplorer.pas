@@ -53,6 +53,8 @@ begin
 end;   
 
 Begin
+ if dhMainForm.Act=nil then exit; 
+
  RichEdit1.Clear;
 
  sl:=TStringList.Create;

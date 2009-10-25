@@ -9,16 +9,13 @@ web page: http://www.dfm2html.com
             L I C E N S E   A G R E E M E N T
 
 
-You should carefully read the following terms and conditions
-before using this software. Your use of this software indicates
-your acceptance of this license agreement and warranty stipulation.
-
-
 DFM2HTML is freeware, so no registration is required.
 
-All web pages generated with DFM2HTML can of course be used for commercial purposes. However it is not allowed to sell DFM2HTML itself.
+Continuous users of DFM2HTML have to recommend this software to TWO OF THEIR BEST FRIENDS.
 
+All web pages generated with DFM2HTML can be used for any (commercial) purposes. However it is not allowed to sell DFM2HTML itself.
 
+You should carefully read the following terms and conditions before using this software. Your use of this software indicates your acceptance of this license agreement and warranty stipulation.
 
 Disclaimer of Warranty
 

@@ -54,6 +54,7 @@
    <bgback> </>
    <files listview >
       <_><src>C:\Delphi\HBuilder\DFM2HTML.exe</><dest>inst</><custom></><ifexist>over</><recurs>0</></>
+<_><src>C:\Delphi\HBuilder\colorpicker\Absolute Color Picker ActiveX Control\AColorPickerAXOEM.ocx</><dest>inst</><custom></><ifexist>over</><recurs>0</></>
 <_><src>C:\Delphi\HBuilder\Tutorial\*.dfm</><dest>custom</><custom>#setuppath#\Tutorial</><ifexist>over</><recurs>0</></>
 <_><src>C:\Delphi\HBuilder\Tutorial\Images\*</><dest>custom</><custom>#setuppath#\Tutorial\Images</><ifexist>over</><recurs>0</></>
 <_><src>C:\Delphi\HBuilder\TutorialMenus\*.dfm</><dest>custom</><custom>#setuppath#\TutorialMenus</><ifexist>over</><recurs>0</></>
@@ -98,7 +99,8 @@
       
    </copy>
    <activex listview >
-      
+      <_><path>inst</><name>AColorPickerAXOEM.ocx</></>
+
    </activex>
    <font listview >
       

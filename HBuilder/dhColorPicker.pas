@@ -54,6 +54,7 @@ var ActivePicker:TdhColorPicker;
 
 implementation
 
+uses OleCtrls;
 
 procedure Register;
 begin
@@ -67,6 +68,21 @@ begin
   result:=ColorToCSSColor(TColorDialog(ColorDialog).Color);
 end;
 
+const MyLicenseKey=('HP25W0-D98KR4-DQCM31-9ZQXQR-04PMG4-C6PMA7-CC47EE-EDF383-FAE388-769053-44D5E4-528106');
+
+type TMyAColorDialog=class(TAColorDialog)
+  protected
+    procedure InitControlData; override;
+  end;
+  TFakeWinControl=class(TWinControl);
+
+procedure TMyAColorDialog.InitControlData;
+begin
+  inherited;
+  ControlData.LicenseKey:=PChar(MyLicenseKey);
+end;
+
+
 { TdhColorPicker }
 
 procedure TdhColorPicker.Click;
@@ -79,7 +95,7 @@ begin
   inherited;
   if ColorDialog=nil then
   try
-   AColorDialog:= TAColorDialog.Create(nil);
+   AColorDialog:= TMyAColorDialog.Create(nil);
    AColorDialog.UseAlpha:=true;
    AColorDialog.ShowCaption:=true;
    AColorDialog.Caption:='';

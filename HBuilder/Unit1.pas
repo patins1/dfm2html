@@ -697,10 +697,10 @@ begin
 
   WriteInteger('General','LANGID',_LANGID);
 
-  if ColorDialog<>nil then
+  if ColorDialog is TColorDialog then
   begin
    FCustomColors.Clear;
-   //FCustomColors.AddStrings(ColorDialog.CustomColors);
+   FCustomColors.AddStrings(TColorDialog(ColorDialog).CustomColors);
    FCustomColors.Sort;
   end;
   for i:=0 to FCustomColors.Count-1 do
@@ -2016,7 +2016,7 @@ procedure TdhMainForm.ColorPreviewTimerTimer(Sender: TObject);
 begin
  if ActivePicker<>nil then
  begin
-  ActivePicker.DoPreviewColorChange(TCSSColor(ColorDialog.RGBA) xor CSSAlphaInverter);
+  ActivePicker.DoPreviewColorChange;
  end;
 end;
 

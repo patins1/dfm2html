@@ -32,7 +32,7 @@ type
     constructor Create(AOwner: TComponent); override;
     procedure Paint; override;
     procedure DoColorChange(Color:TCSSColor);
-    procedure DoPreviewColorChange(Color:TCSSColor);
+    procedure DoPreviewColorChange;
     procedure DoBackup(backup:TList; restore:Boolean);
     //property TransparentColor:boolean read GetTransparentColor write SetTransparentColor;
     function GetTransparentColor: boolean;
@@ -48,7 +48,7 @@ type
 
 procedure Register;
 
-var ColorDialog:TAColorDialog;
+var ColorDialog:TComponent;
 var FCustomColors : TStringList;
 var ActivePicker:TdhColorPicker;
 
@@ -60,26 +60,41 @@ begin
   RegisterComponents('Additional', [TdhColorPicker]);
 end;
 
+function GetCSSColorFromDialog:TCSSColor;
+begin            
+ if ColorDialog is TAColorDialog then
+  result:=TCSSColor(TAColorDialog(ColorDialog).RGBA) xor CSSAlphaInverter else
+  result:=ColorToCSSColor(TColorDialog(ColorDialog).Color);
+end;
+
 { TdhColorPicker }
 
 procedure TdhColorPicker.Click;
 var Executed:Boolean;   
     backup:TList;
     backupCSSColor:TCSSColor;
+    AColorDialog:TAColorDialog;
+    NormalColorDialog:TColorDialog;
 begin
   inherited;
   if ColorDialog=nil then
-  begin
-   ColorDialog:= TAColorDialog.Create(nil);
-//   ColorDialog.CustomColors.AddStrings(FCustomColors);;
-   ColorDialog.UseAlpha:=true;
-   ColorDialog.ShowCaption:=true;
-   ColorDialog.Caption:='';
+  try
+   AColorDialog:= TAColorDialog.Create(nil);
+   AColorDialog.UseAlpha:=true;
+   AColorDialog.ShowCaption:=true;
+   AColorDialog.Caption:='';
+   ColorDialog:=AColorDialog;
+  except
+   NormalColorDialog:=TColorDialog.Create(nil);
+   NormalColorDialog.CustomColors.AddStrings(FCustomColors);
+   ColorDialog:=NormalColorDialog;
   end;
 
   backupCSSColor:=CSSColor;
   if CSSColor<>colTransparent then
-   ColorDialog.RGBA:=Integer(CSSColor xor CSSAlphaInverter);
+  if ColorDialog is TAColorDialog then
+   TAColorDialog(ColorDialog).RGBA:=Integer(CSSColor xor CSSAlphaInverter) else
+   TColorDialog(ColorDialog).Color:=CSSColorToColor(CSSColor);
 
   Parent.SetFocus; //CommitChanges purpose
   if csDesigning in ComponentState then exit;
@@ -89,13 +104,15 @@ begin
    DoBackup(backup,false);
    ActivePicker:=Self;
    try
-     Executed:=ColorDialog.Execute;
+    if ColorDialog is TAColorDialog then
+     Executed:=TAColorDialog(ColorDialog).Execute else
+     Executed:=TColorDialog(ColorDialog).Execute;
    finally
     ActivePicker:=nil;
    end;
    if Executed then
    begin
-    DoColorChange(TCSSColor(ColorDialog.RGBA) xor CSSAlphaInverter);
+    DoColorChange(GetCSSColorFromDialog);
    end else
    begin
     DoBackup(backup,true);
@@ -114,9 +131,9 @@ begin
 end;
 
 
-procedure TdhColorPicker.DoPreviewColorChange(Color:TCSSColor);
+procedure TdhColorPicker.DoPreviewColorChange;
 begin
-   Self.CSSColor:=Color;
+   Self.CSSColor:=GetCSSColorFromDialog;
    if Assigned(FOnPreviewColorChanged) then
     FOnPreviewColorChanged(Self);
 end;

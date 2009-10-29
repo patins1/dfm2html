@@ -8,7 +8,7 @@ uses
   {$ELSE}
   Forms, Controls, Windows, Messages, Graphics, StdCtrls, ShellAPI, Mask, dialogs,Buttons, TntButtons,
   {$ENDIF}
-  SysUtils, Classes, types, uColorPicker, funcutils,AColorPickerAX_TLB, dhPanel;
+  SysUtils, Classes, types, uColorPicker, funcutils,AColorPickerAX_TLB, dhPanel, gr32;
 
 type
   //TNotifyEvent = procedure(Sender: TObject; Color:TColor) of object;
@@ -64,7 +64,7 @@ end;
 function GetCSSColorFromDialog:TCSSColor;
 begin            
  if ColorDialog is TAColorDialog then
-  result:=TCSSColor(TAColorDialog(ColorDialog).RGBA) xor CSSAlphaInverter else
+  result:=Color32ToCSSColor(Color32(TAColorDialog(ColorDialog).RGB_R,TAColorDialog(ColorDialog).RGB_G,TAColorDialog(ColorDialog).RGB_B,TAColorDialog(ColorDialog).Alpha)) else
   result:=ColorToCSSColor(TColorDialog(ColorDialog).Color);
 end;
 
@@ -97,7 +97,6 @@ begin
   try
    AColorDialog:= TMyAColorDialog.Create(nil);
    AColorDialog.UseAlpha:=true;
-   AColorDialog.ShowCaption:=true;
    AColorDialog.Caption:='';
    ColorDialog:=AColorDialog;
   except
@@ -149,6 +148,7 @@ end;
 
 procedure TdhColorPicker.DoPreviewColorChange;
 begin
+   TAColorDialog(ColorDialog).RGB_R:=TAColorDialog(ColorDialog).RGB_R; //update TAColorDialog.Alpha
    Self.CSSColor:=GetCSSColorFromDialog;
    if Assigned(FOnPreviewColorChanged) then
     FOnPreviewColorChanged(Self);

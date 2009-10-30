@@ -23,6 +23,7 @@ type
     dhLink1: TdhLink;
     DKLanguageController1: TDKLanguageController;
     lHeight: TdhLabel;
+    procedure TntFormClose(Sender: TObject; var Action: TCloseAction);
     procedure cVertClick(Sender: TObject);
     procedure cHorzClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -212,7 +213,7 @@ begin
   Bitmap:=GetAs32(FPicture);
   try
   FirstColor.CSSColor:=Color32ToCSSColor(Bitmap.Pixels[0,0]);
-  if rgDirection.ItemIndex=0 then
+  if pn.BackgroundRepeat=cbrRepeatX then
    SecondColor.CSSColor:=Color32ToCSSColor(Bitmap.Pixels[0,Bitmap.Height-1]) else
    SecondColor.CSSColor:=Color32ToCSSColor(Bitmap.Pixels[Bitmap.Width-1,0]);
   finally
@@ -226,10 +227,10 @@ begin
    SecondColor.Color:=Bitmap.Canvas.Pixels[0,Bitmap.Height-1] else
    SecondColor.Color:=Bitmap.Canvas.Pixels[Bitmap.Width-1,0];
   Bitmap.Free; }
+  if pn.BackgroundRepeat=cbrRepeatX then
+   rgDirection.ItemIndex:=0 else
+   rgDirection.ItemIndex:=1;
  end;
- if pn.BackgroundRepeat=cbrRepeatX then
-  rgDirection.ItemIndex:=0 else
-  rgDirection.ItemIndex:=1;
 
  AdjSize;
  BGChanged;
@@ -268,6 +269,12 @@ begin
   sw:=max(1,spMasterAlpha.Value);
  end;                   
  BGChanged;
+end;
+
+procedure TGradientWizard.TntFormClose(Sender: TObject;
+  var Action: TCloseAction);
+begin
+ ActiveControl:=nil; //otherwise wrong direction radio button is selected at next form open!
 end;
 
 procedure TGradientWizard.rgDirectionClick(Sender: TObject);

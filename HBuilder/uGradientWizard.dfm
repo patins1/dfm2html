@@ -13,6 +13,7 @@ object GradientWizard: TGradientWizard
   KeyPreview = True
   OldCreateOrder = False
   Position = poScreenCenter
+  OnClose = TntFormClose
   OnCreate = FormCreate
   OnKeyDown = FormKeyDown
   PixelsPerInch = 96
@@ -112,7 +113,7 @@ object GradientWizard: TGradientWizard
     Style.PaddingLeft = 1
     Style.FontSize = '24'
     Style.FontFamily = 'Arial'
-    Style.Color = WindowText
+    Style.Color = Black
     Style.TextDecoration = [ctdNone]
     AutoSizeXY = asNone
     OnClick = dhLink1Click

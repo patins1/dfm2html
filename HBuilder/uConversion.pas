@@ -21,7 +21,7 @@ uses
 const directIE=false;
 type TBounds=record Left, Top, Width, Height: Longint; end;
 
-var DFM2HTML_VERSION:string='DFM2HTML v3.5';
+var DFM2HTML_VERSION:string='DFM2HTML v4.0';
 var Registered:boolean=false;
 //var DFM2HTML_REG:string='';
 

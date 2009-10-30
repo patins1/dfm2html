@@ -217,7 +217,7 @@ procedure TPageContainer.SetControlDesigning(c:TComponent; Designing,Transient:b
 var i:integer;
     OldComponentState:TComponentState;
 begin
- if (c.Owner<>nil) and not (c.Owner is TCustomForm) then exit;
+ if (c.Owner<>Self) then exit;
  OldComponentState:=c.ComponentState;
  if Designing then
   PComponentState(@c.ComponentState)^:=c.ComponentState+[csDesigning] else

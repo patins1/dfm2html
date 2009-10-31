@@ -130,8 +130,8 @@ begin
     DoColorChange(GetCSSColorFromDialog);
    end else
    begin
-    DoBackup(backup,true);
     CSSColor:=backupCSSColor;
+    DoBackup(backup,true);
    end;
   finally
    backup.Free;
@@ -155,9 +155,12 @@ begin
 end;
 
 procedure TdhColorPicker.DoBackup(backup:TList; restore:Boolean);
-begin      
+begin
    if Assigned(FOnBackup) then
-    FOnBackup(Self,backup,restore);
+    FOnBackup(Self,backup,restore) else
+   if restore then
+   if Assigned(FOnPreviewColorChanged) then
+    FOnPreviewColorChanged(Self);
 end;
 
 

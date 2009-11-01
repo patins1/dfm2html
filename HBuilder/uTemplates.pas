@@ -71,7 +71,7 @@ end;
 
 procedure TTemplatesWizard.ListBox1Click(Sender: TObject);
 
-function GetGraph(graph:TGraphic; const purename:string): boolean;
+function GetGraph(graph:TBitmap32; const purename:string): boolean;
 var
     bmp,bmp2:TBitmap32;
     b:TBitmap;
@@ -85,12 +85,12 @@ begin
   bmp2:=nil;
   b:=TBitmap.Create;
   try
-   bmp:=GetAs32(graph);
+   bmp:=graph;//GetAs32(graph);
    with STYLE_Link1.AllEdgesPure do
     b.Width:=ScrollBox1.Width-16-(Left+Right);
    with STYLE_Link1.AllEdgesPure do
     b.Height:=min(maxint,Ceil(b.Width/graph.Width*graph.Height));
-   bmp.StretchFilter:=sfLanczos;
+   bmp.StretchFilter:=sfDraft;
    bmp2:=TBitmap32.Create;
    bmp2.SetSize(b.Width,b.Height);
    bmp.DrawTo(bmp2,bmp2.BoundsRect,bmp.BoundsRect);
@@ -123,7 +123,7 @@ begin
 }
 
   finally
-   FreeAndNil(bmp);
+   //FreeAndNil(bmp);
    FreeAndNil(bmp2);
    FreeAndNil(b);
   end;
@@ -135,7 +135,7 @@ begin
 end;
 
 var SearchRec: TSearchRec;
-    graph:TGraphic;
+    graph:TBitmap32;
     dfmfile,pngfile,purename:string;
     pc:TPageContainer;
     c1,c2:int64;
@@ -176,7 +176,7 @@ begin
   end;
   if FileAge(pngfile,pngfileAge) and (pngfileAge>=dfmfileAge) then
   begin
-   graph:=TBitmap.Create;
+   graph:=TBitmap32.Create;
    try
     graph.LoadFromFile(pngfile);
     if GetGraph(Graph,purename) then

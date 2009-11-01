@@ -49,7 +49,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1_1
     object Panel4: TdhPanel
       Top = 4
       Width = 758
-      Height = 648
+      Height = 1392
       Style.Border.Width = 1
       Style.Border.Color = 15461355
       Style.Border.Style = cbsSolid
@@ -134,7 +134,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1_1
         Top = 88
         Width = 24
         Height = 24
-        ActivePage = Page1
+        ActivePage = tips
         FixedHeight = False
         object Page1: TdhPage
           Left = 192
@@ -148,7 +148,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1_1
             Left = 16
             Top = 48
             Width = 456
-            Height = 330
+            Height = 346
             Text = 
               '<en>'#10'DFM2HTML is an easy to use WYSIWYG HTML editor. Sophisticat' +
               'ed web sites can be composed within minutes using drag&drop and ' +
@@ -213,7 +213,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1_1
           object Link21: TdhLink
             Left = 24
             Top = 424
-            Width = 104
+            Width = 110
             Height = 16
             Text = #9658' <en>Version history</en><de>Versionshistorie</de>'
             Style.TextDecoration = [ctdNone]
@@ -1625,7 +1625,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1_1
             Left = 16
             Top = 56
             Width = 440
-            Height = 917
+            Height = 1043
             Text = 
               '<en><FAQ_question>HTML pages do not properly display in my brows' +
               'er.</FAQ_question>'#10'<br/>'#10'You have to enabled JavaScript in the o' +
@@ -1803,7 +1803,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1_1
           Left = 192
           Top = 96
           Width = 488
-          Height = 1200
+          Height = 1240
           AutoSizeXY = asNone
           UseIFrame = False
           object Label26: TdhLabel
@@ -1849,6 +1849,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1_1
               'hmen</code> Typ (Rand-Tab -> Rahmen) mit geeigneter Rahmenbreite' +
               ' und definiere den gew'#252'nschten Rundungsradius, wie im folgenden ' +
               'Beispiel geschehen:'#10'</de>'
+            Style.BackgroundColor = Transparent
             Style.TextAlign = ctaJustify
             AutoSizeXY = asY
           end
@@ -1971,7 +1972,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1_1
           end
           object Label36: TdhLabel
             Left = 16
-            Top = 568
+            Top = 640
             Width = 440
             Height = 392
             Text = 
@@ -2085,7 +2086,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1_1
           end
           object Label51: TdhLabel
             Left = 24
-            Top = 1064
+            Top = 1136
             Width = 464
             Height = 58
             Text = 
@@ -2097,6 +2098,21 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1_1
               'h-dfm2html</Link76></li>'#10'<li><Link64>I-Frames und Schwebende Bro' +
               'wserfenster</Link64></li>'#10'<li><Link77>Handbuch als PDF</Link77><' +
               '/li>'#10'</ul>'#10'</de>'
+            Style.TextAlign = ctaJustify
+            AutoSizeXY = asY
+          end
+          object Label52: TdhLabel
+            Left = 16
+            Top = 568
+            Width = 440
+            Height = 48
+            Text = 
+              '<en>'#10'<FAQ_question>Context menu on color button</FAQ_question>'#10'<' +
+              'br/>'#10'Every color button has a context menu, allowing you e.g. to' +
+              ' copy a color to/from clipboard.'#10'</en>'#10#10'<de><FAQ_question>Kontex' +
+              'tmen'#252' eines Farbbuttons</FAQ_question>'#10'<br/>'#10'Jeder Farbbutton ha' +
+              't ein Kontextmen'#252', mit dem man z.B. eine Farbe in die/von der Zw' +
+              'ischenablage kopieren kann.'#10'</de>'
             Style.TextAlign = ctaJustify
             AutoSizeXY = asY
           end

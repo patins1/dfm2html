@@ -71,7 +71,7 @@ end;
 
 procedure TTemplatesWizard.ListBox1Click(Sender: TObject);
 
-function GetGraph(graph:TPNGObject; const purename:string): boolean;
+function GetGraph(graph:TGraphic; const purename:string): boolean;
 var
     bmp,bmp2:TBitmap32;
     b:TBitmap;
@@ -85,7 +85,7 @@ begin
   bmp2:=nil;
   b:=TBitmap.Create;
   try
-   bmp:=GetBitmap32FromPNGObject(graph);
+   bmp:=GetAs32(graph);
    with STYLE_Link1.AllEdgesPure do
     b.Width:=ScrollBox1.Width-16-(Left+Right);
    with STYLE_Link1.AllEdgesPure do
@@ -135,7 +135,7 @@ begin
 end;
 
 var SearchRec: TSearchRec;
-    graph:TPNGObject;
+    graph:TGraphic;
     dfmfile,pngfile,purename:string;
     pc:TPageContainer;
     c1,c2:int64;
@@ -162,7 +162,7 @@ begin
   Update;
   dfmfile:=GetDir+SearchRec.Name;
   purename:=Copy(SearchRec.Name,1,Length(SearchRec.Name)-length('.dfm'));
-  pngfile:=GetRootTemplatesDir+preview+PathDelim+ListBox1.Items[ListBox1.ItemIndex]+'-'+purename+'.png';
+  pngfile:=GetRootTemplatesDir+preview+PathDelim+ListBox1.Items[ListBox1.ItemIndex]+'-'+purename+'.bmp';
   if FileAge(dfmfile,dfmfileAge) then
   try
   if not(FileAge(pngfile,pngfileAge) and (pngfileAge>=dfmfileAge)) then
@@ -176,7 +176,7 @@ begin
   end;
   if FileAge(pngfile,pngfileAge) and (pngfileAge>=dfmfileAge) then
   begin
-   graph:=TPNGObject.Create;
+   graph:=TBitmap.Create;
    try
     graph.LoadFromFile(pngfile);
     if GetGraph(Graph,purename) then

@@ -140,29 +140,31 @@ var SearchRec: TSearchRec;
     pc:TPageContainer;
     c1,c2:int64;
     dfmfileAge,pngfileAge:TDateTime;
+    ItemIndex:integer;
 
 begin
+ ItemIndex:=ListBox1.ItemIndex;
 { if ListBox1.ItemIndex>0 then
  //dhMainForm.Open('C:\HBuilder\Tutorial.dfm',false,true);
  dhMainForm.Open('C:\HBuilder\Templates\Frames\Template1frames.dfm',false,true);
  exit;
  }
  //QueryPerformanceCounter(c1);
- if OldIndex=ListBox1.ItemIndex then exit;
- OldIndex:=ListBox1.ItemIndex;
+ if OldIndex=ItemIndex then exit;
+ OldIndex:=ItemIndex;
 
  ActDown:='';
  Button1.Enabled:=false;
  while tt.ControlCount>0 do
   tt.Controls[0].Free;
- if ListBox1.ItemIndex<0 then exit;
+ if ItemIndex<0 then exit;
  lEmpty.Visible:=false;
+ Update;
  if FindFirst(GetDir+'*.dfm',faAnyFile,SearchRec)=0 then
  repeat
-  Update;
   dfmfile:=GetDir+SearchRec.Name;
   purename:=Copy(SearchRec.Name,1,Length(SearchRec.Name)-length('.dfm'));
-  pngfile:=GetRootTemplatesDir+preview+PathDelim+ListBox1.Items[ListBox1.ItemIndex]+'-'+purename+'.bmp';
+  pngfile:=GetRootTemplatesDir+preview+PathDelim+ListBox1.Items[ItemIndex]+'-'+purename+'.bmp';
   if FileAge(dfmfile,dfmfileAge) then
   try
   if not(FileAge(pngfile,pngfileAge) and (pngfileAge>=dfmfileAge)) then
@@ -187,8 +189,8 @@ begin
   end;
   except
   end;
-
- until FindNext(SearchRec)<>0;
+  Update;
+ until (FindNext(SearchRec)<>0) or (ItemIndex<>ListBox1.ItemIndex);
  SysUtils.FindClose(SearchRec);
  lEmpty.Visible:=tt.ControlCount=0;
 

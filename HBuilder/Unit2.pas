@@ -5657,6 +5657,7 @@ procedure TTabs.FormCreate(Sender: TObject);
 begin           
 //SendMessage(PageControl1.Handle, WM_SIZE, SIZE_RESTORED,
 //        Word(PageControl1.Width) or Word(PageControl1.Height) shl 16);
+  Panel1.Style.BackgroundColor:=ColorToCSSColor(clBtnFace);
   PageControl1.Align:=alClient;
   Adjusting:=true;
   EdgeAlign:=ealNone;

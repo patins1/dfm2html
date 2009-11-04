@@ -985,6 +985,7 @@ procedure TdhMainForm.FormCreate(Sender: TObject);
 var iLanguage:integer;
 var lsl:TStringList;
 begin
+ dhPanel2.Style.BackgroundColor:=ColorToCSSColor(ToolBar1.Color);
   //LateCreateForm(TPropsPC,Tabs);
 
 //DKLanguageController1.IgnoreList.Delete(5);

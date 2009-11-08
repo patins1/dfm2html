@@ -181,8 +181,7 @@ begin
    graph:=TBitmap32.Create;
    try
     graph.LoadFromFile(pngfile);
-    if GetGraph(Graph,purename) then
-     continue;
+    GetGraph(Graph,purename);
    finally
     graph.Free;
    end;

@@ -62,7 +62,6 @@
 <_><src>C:\Delphi\HBuilder\Guide\Images\*</><dest>custom</><custom>#setuppath#\Guide\Images</><ifexist>over</><recurs>0</></>
 <_><src>C:\Delphi\HBuilder\GuideExamples\*.dfm</><dest>custom</><custom>#setuppath#\GuideExamples</><ifexist>over</><recurs>0</></>
 <_><src>C:\Delphi\HBuilder\Readme.txt</><dest>inst</><custom></><ifexist>over</><recurs>0</></>
-<_><src>C:\Delphi\HBuilder\icon_desktop.ico</><dest>inst</><custom></><ifexist>over</><recurs>0</></>
 <_><src>C:\Delphi\HBuilder\LICENSE.TXT</><dest>inst</><custom></><ifexist>over</><recurs>0</></>
 <_><src>C:\Delphi\HBuilder\Presets\*.dfm</><dest>custom</><custom>#setuppath#\Presets</><ifexist>over</><recurs>0</></>
 <_><src>C:\Delphi\HBuilder\Presets\Images\Links\*</><dest>custom</><custom>#setuppath#\Presets\Images\Links</><ifexist>over</><recurs>0</></>
@@ -90,7 +89,7 @@
    <shcut listview >
       <_><shpath>prog</><shname>DFM2HTML</><tarpath>inst</><tarname>dfm2html.exe</><cmdline></><workpath>def</><workcust></><icon></></>
 <_><shpath>prog</><shname>Uninstall</><tarpath>inst</><tarname>uninstall.exe</><cmdline></><workpath>def</><workcust></><icon></></>
-<_><shpath>desk</><shname>DFM2HTML</><tarpath>inst</><tarname>dfm2html.exe</><cmdline></><workpath>def</><workcust></><icon>icon_desktop.ico</></>
+<_><shpath>desk</><shname>DFM2HTML</><tarpath>inst</><tarname>dfm2html.exe</><cmdline></><workpath>def</><workcust></><icon></></>
 
    </shcut>
    <ini listview >

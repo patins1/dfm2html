@@ -160,6 +160,7 @@ begin
  if ItemIndex<0 then exit;
  lEmpty.Visible:=false;
  Update;
+ try
  if FindFirst(GetDir+'*.dfm',faAnyFile,SearchRec)=0 then
  repeat
   dfmfile:=GetDir+SearchRec.Name;
@@ -176,6 +177,7 @@ begin
     pc.Free;
    end;
   end;
+  if ItemIndex<>ListBox1.ItemIndex then exit;
   if FileAge(pngfile,pngfileAge) and (pngfileAge>=dfmfileAge) then
   begin
    graph:=TBitmap32.Create;
@@ -189,8 +191,11 @@ begin
   except
   end;
   Update;
- until (FindNext(SearchRec)<>0) or (ItemIndex<>ListBox1.ItemIndex);
- SysUtils.FindClose(SearchRec);
+  if ItemIndex<>ListBox1.ItemIndex then exit;
+ until FindNext(SearchRec)<>0;
+ finally
+  SysUtils.FindClose(SearchRec);
+ end;
  lEmpty.Visible:=tt.ControlCount=0;
 
  //QueryPerformanceCounter(c2);

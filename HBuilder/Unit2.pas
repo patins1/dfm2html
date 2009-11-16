@@ -4912,7 +4912,10 @@ begin
  cbParentMenuItem.ItemIndex:=GoodIndex(cbParentMenuItem.ItemIndex);
  c:=dhMainForm.Act.FindComponent(cbParentMenuItem.Text);
  if (c is TdhLink) or (c=nil) and (cbParentMenuItem.Text=EmptyStr) then
-  (TObject(Selection[0]) as TdhMenu).ParentMenuItem:=TdhLink(c);
+ begin
+   (ChooseTwice(0,TdhMenu) as TdhMenu).ParentMenuItem:=TdhLink(c);
+   if ObjectExplorer<>nil then ObjectExplorer.UpdateRootAndSelection;
+ end;
  MenuChanged;
 end;
 
@@ -5760,7 +5763,7 @@ begin
   asked:=false;
   for i:=0 to Selection.Count-1 do
   begin
-   menu:=TObject(Selection[i]) as TdhMenu;
+   menu:=ChooseTwice(i,TdhMenu) as TdhMenu;
    mm:=menu.ComputedMenu;
    if (mm<>nil) and (mm<>menu) then
    begin

@@ -480,6 +480,7 @@ begin
  body.Name:='index';
  body.Align:=alClient;
  body.Visible:=true;
+ body.GeneratedCSSFile:='dfm2html.css';
  body.Parent:=Self;
  //body.Font.Assign(FuncSettings.DefaultFont);
  Self.Font.Assign(FuncSettings.DefaultFont);  

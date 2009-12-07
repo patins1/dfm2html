@@ -49,7 +49,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1_1_1
     object Panel4: TdhPanel
       Top = 4
       Width = 758
-      Height = 2132
+      Height = 664
       Style.Border.Width = 1
       Style.Border.Color = 15461355
       Style.Border.Style = cbsSolid
@@ -134,13 +134,13 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1_1_1
         Top = 88
         Width = 24
         Height = 24
-        ActivePage = userpages
+        ActivePage = Page1
         FixedHeight = False
         object Page1: TdhPage
           Left = 192
           Top = 96
           Width = 488
-          Height = 496
+          Height = 512
           Style.TextAlign = ctaJustify
           AutoSizeXY = asNone
           UseIFrame = False
@@ -165,29 +165,30 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1_1_1
               'y HTML pages in one document</li>'#10'<li>graphical effects (e.g. an' +
               'ti-aliasing, shadow, glow, rounded corners)</li>'#10'<li>HTML forms<' +
               '/li>'#10'<li>CSS3 capable HTML code generation</li>'#10'<li>Unicode</li>' +
-              #10'<li>PHP</li>'#10'<li>DHTML menu</li>'#10'</ul>'#10'</en>'#10'<de>'#10'DFM2HTML ist ' +
-              'ein WYSIWYG HTML-Editor, mit dem man per Drag&Drop Webseiten ohn' +
-              'e Kenntnisse von HTML professionell erstellen kann. Effekte wie ' +
-              'Schatten/Rotation/Anti-Aliasing/Runde Ecken  machen Bildbearbeit' +
-              'ungsprogramme '#252'berfl'#252'ssig. Mit dem integrierten FTP-Upload-Manag' +
-              'er k'#246'nnen Webseiten auf Knopfdruck auf einen Server geladen werd' +
-              'en. DFM2HTML stellt viele fertige Webseiten-Schablonen und Mouse' +
-              '-Over-Buttons bereit. HTML-Formulare und HTML-Frames k'#246'nnen eben' +
-              'falls WYSIWYG-m'#228#223'ig erstellt werden. Der Stylesheet-Mechanismus ' +
-              'unterst'#252'tzt eine systematische Entwicklung von Webseiten und kan' +
-              'n daher viel Arbeit ersparen. Mit dem neuen Unicode-Feature k'#246'nn' +
-              'en Webseiten in jeder Sprache erstellt werden.'#10'<ul>'#10'<li><Label10' +
-              '>Freeware</Label10></li>'#10'<li>WYSIWYG in Kombination mit Styleshe' +
-              'et-basiertem Design</li> '#10'<li>Mehrere HTML-Seiten k'#246'nnen in eine' +
-              'm Dokument verwaltet werden</li>'#10'<li>Graphische Effekte (z.B. An' +
-              'ti-Aliasing, Schatten, Runde Ecken)</li>'#10'<li>HTML-Formulare</li>' +
-              #10'<li>CSS3-f'#228'hige HTML-Code-Generierung</li>'#10'<li>Unicode</li>'#10'<li' +
-              '>PHP</li>'#10'<li>DHTML-Men'#252's</li>'#10'</ul>'#10'</de>'
+              #10'<li>PHP</li>'#10'<li>DHTML menu</li>'#10'<li>RGBA colors</li>'#10'</ul>'#10'</e' +
+              'n>'#10'<de>'#10'DFM2HTML ist ein WYSIWYG HTML-Editor, mit dem man per Dr' +
+              'ag&Drop Webseiten ohne Kenntnisse von HTML professionell erstell' +
+              'en kann. Effekte wie Schatten/Rotation/Anti-Aliasing/Runde Ecken' +
+              '  machen Bildbearbeitungsprogramme '#252'berfl'#252'ssig. Mit dem integrie' +
+              'rten FTP-Upload-Manager k'#246'nnen Webseiten auf Knopfdruck auf eine' +
+              'n Server geladen werden. DFM2HTML stellt viele fertige Webseiten' +
+              '-Schablonen und Mouse-Over-Buttons bereit. HTML-Formulare und HT' +
+              'ML-Frames k'#246'nnen ebenfalls WYSIWYG-m'#228#223'ig erstellt werden. Der St' +
+              'ylesheet-Mechanismus unterst'#252'tzt eine systematische Entwicklung ' +
+              'von Webseiten und kann daher viel Arbeit ersparen. Mit dem neuen' +
+              ' Unicode-Feature k'#246'nnen Webseiten in jeder Sprache erstellt werd' +
+              'en.'#10'<ul>'#10'<li><Label10>Freeware</Label10></li>'#10'<li>WYSIWYG in Kom' +
+              'bination mit Stylesheet-basiertem Design</li> '#10'<li>Mehrere HTML-' +
+              'Seiten k'#246'nnen in einem Dokument verwaltet werden</li>'#10'<li>Graphi' +
+              'sche Effekte (z.B. Anti-Aliasing, Schatten, Runde Ecken)</li>'#10'<l' +
+              'i>HTML-Formulare</li>'#10'<li>CSS3-f'#228'hige HTML-Code-Generierung</li>' +
+              #10'<li>Unicode</li>'#10'<li>PHP</li>'#10'<li>DHTML-Men'#252's</li>'#10'<li>RGBA-Far' +
+              'ben</li>'#10'</ul>'#10'</de>'
             AutoSizeXY = asY
           end
           object Link1: TdhLink
             Left = 16
-            Top = 392
+            Top = 408
             Width = 224
             Height = 22
             Text = 'Download DFM2HTML 4.0'
@@ -199,7 +200,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1_1_1
           end
           object Link9: TdhLink
             Left = 24
-            Top = 448
+            Top = 464
             Width = 83
             Height = 16
             Text = #9658' Screenshot'
@@ -212,8 +213,8 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1_1_1
           end
           object Link21: TdhLink
             Left = 24
-            Top = 424
-            Width = 110
+            Top = 440
+            Width = 104
             Height = 16
             Text = #9658' <en>Version history</en><de>Versionshistorie</de>'
             Style.TextDecoration = [ctdNone]
@@ -224,7 +225,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1_1_1
           end
           object StyleSheet1: TdhStyleSheet
             Left = 208
-            Top = 416
+            Top = 432
             Width = 28
             Height = 28
             Expanded = False
@@ -286,7 +287,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1_1_1
           end
           object Label9: TdhLabel
             Left = 368
-            Top = 456
+            Top = 472
             Width = 21
             Height = 19
             Text = 
@@ -325,7 +326,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1_1_1
           end
           object Label49: TdhLabel
             Left = 24
-            Top = 472
+            Top = 488
             Width = 233
             Height = 16
             Text = '<de><Link66>Durchstarten mit der eigenen Homepage</Link66></de>'
@@ -333,7 +334,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1_1_1
           end
           object Donate: TdhDirectHTML
             Left = 272
-            Top = 392
+            Top = 408
             Width = 20
             Height = 19
             Use = en
@@ -349,7 +350,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1_1_1
           end
           object DonateDE: TdhDirectHTML
             Left = 272
-            Top = 392
+            Top = 408
             Width = 20
             Height = 19
             Use = de
@@ -756,9 +757,12 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1_1_1
           object StyleSheet5: TdhStyleSheet
             Left = 16
             Top = 739
-            Width = 240
-            Height = 216
-            Expanded = True
+            Width = 28
+            Height = 28
+            Expanded = False
+            ExpandedWidth = 240
+            ExpandedHeight = 216
+            Expanded = False
             object Link12: TdhLink
               Left = 0
               Top = 0
@@ -2499,12 +2503,9 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1_1_1
     object StyleSheet8: TdhStyleSheet
       Left = 8
       Top = 8
-      Width = 28
-      Height = 28
-      Expanded = False
-      ExpandedWidth = 232
-      ExpandedHeight = 296
-      Expanded = False
+      Width = 232
+      Height = 296
+      Expanded = True
       object de: TdhLabel
         Left = 0
         Top = 0

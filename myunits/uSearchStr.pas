@@ -2,7 +2,7 @@ unit uSearchStr;
 
 interface
 
-uses FastStringFuncs,UseFastStrings;
+uses UseFastStrings,dhStrUtils;
 
 const DomCommentTagName='!';
 
@@ -10,7 +10,7 @@ const valfirstpas=['_','a'..'z','A'..'Z'];
       valsecpas=['0'..'9'] + valfirstpas;
 
 type
- tcharset=set of char;
+ tcharset=set of AnsiChar;
 
  tg=object
     private
@@ -61,14 +61,11 @@ type
     function Within(const f:String):boolean;
     function WithinPos(const f:String):boolean;
     function OverPos(const f:String):boolean;
-    function OverPosNoCase(const f:String):boolean;
     function OverPosTil(const f:String; bis:integer):boolean;
     function Pos(const f:String):boolean;
     function PosBck(const f:String):boolean;
     function OverPosBck(const f:String):boolean;
-    function PosNoCase(const f:String):boolean;
     function SaveOverPos(const f:string; var s:string): boolean;
-    function SaveOverPosNoCase(const f:string; var s:string): boolean;
     function SaveOverPosTrim(const f:string; var s:string): boolean;
 {    function relPos(const f:String; jump_over:boolean=false):boolean;
     function absPos(const f:String; jump_over:boolean=false):boolean;
@@ -170,7 +167,7 @@ end;
 
 function tg.isStringSl(const st:tcharset):boolean;
 begin
- if Char in st then
+ if CharInSet(Char,st) then
   result:=isStringSl(Char) else
   result:=false;
 end;
@@ -236,7 +233,7 @@ end;
 
 function tg.isStringTag(const st:tcharset):boolean;
 begin
- if Char in st then
+ if CharInSet(Char,st) then
   result:=isStringTag(Char) else
   result:=false;
 end;
@@ -324,7 +321,7 @@ end;
 
 function tg.overShit:boolean;
 begin
- while {$IFOPT R+}(g_i<=length(g_s)) and {$ENDIF}(g_s[g_i] in likespace)do
+ while {$IFOPT R+}(g_i<=length(g_s)) and {$ENDIF}CharInSet(g_s[g_i],likespace)do
   inc(g_i);
  result:=g_i<=length(g_s)+1;  
  if g_i=maxint then zeige;
@@ -341,21 +338,21 @@ end;
 function tg.getSecName:boolean;
 begin
  g_w:=g_i;
- result:={$IFOPT R+}(g_i<=length(g_s)) and {$ENDIF}(g_s[g_i] in _valfirst);
+ result:={$IFOPT R+}(g_i<=length(g_s)) and {$ENDIF}CharInSet(g_s[g_i],_valfirst);
  if result then
-  while {$IFOPT R+}(g_i<=length(g_s)) and {$ENDIF}(g_s[g_i] in _valsec) do
+  while {$IFOPT R+}(g_i<=length(g_s)) and {$ENDIF}CharInSet(g_s[g_i],_valsec) do
    inc(g_i);
 end;
 
 function tg.isSecName:boolean;
 begin
- result:=not ((g_w>=2) and (g_s[g_w-1] in _valfirst)) and
-         not({$IFOPT R+}(g_i<=length(g_s)) and {$ENDIF}(g_s[g_i] in _valsec));
+ result:=not ((g_w>=2) and CharInSet(g_s[g_w-1],_valfirst)) and
+         not({$IFOPT R+}(g_i<=length(g_s)) and {$ENDIF}CharInSet(g_s[g_i],_valsec));
 end;
 
 function tg.OverJump:boolean;
 begin
- while {$IFOPT R+}(g_i<=length(g_s)) and {$ENDIF}(g_s[g_i] in (likespace+['<'])) do
+ while {$IFOPT R+}(g_i<=length(g_s)) and {$ENDIF}CharInSet(g_s[g_i],(likespace+['<'])) do
   if g_s[g_i]='<' then
    g_i:=htmlrout.overTag(g_s,g_i) else
    inc(g_i);
@@ -498,16 +495,6 @@ begin
   inc(g_i,length(f));
 end;
 
-function tg.OverPosNoCase(const f:String):boolean;
-begin
- g_w:=g_i;
- g_i:=AdvPosNoCase(f,g_s,g_i);
- result:=g_i<>0;
- if not result then
-  g_i:=g_w else
-  inc(g_i,length(f));
-end;
-
 
 function tg.OverPosTil(const f:String; bis:integer):boolean;
 begin
@@ -526,13 +513,6 @@ begin
   s:=CopyStr(g_s,g_w,g_i-g_w-length(f));
 end;
 
-
-function tg.SaveOverPosNoCase(const f:string; var s:string): boolean;
-begin
- result:=OverPosNoCase(f);
- if result then
-  s:=CopyStr(g_s,g_w,g_i-g_w-length(f));
-end;
 
 function tg.SaveOverPosTrim(const f:string; var s:string): boolean;
 begin
@@ -570,15 +550,6 @@ begin
   inc(g_i,length(f));
 end;
 
-function tg.PosNoCase(const f:String):boolean;
-begin
- g_w:=g_i;
- g_i:=AdvPosNoCase(f,g_s,g_i);
- result:=g_i<>0;
- if not result then
-  g_i:=g_w;
-end;
-
 
 {function tg.absPos(const f:String; jump_over:boolean=false):boolean;
 begin
@@ -610,7 +581,7 @@ end;
 function tg.FindSet(const st:tcharset):boolean;
 begin
  g_w:=g_i;
- while (g_i<=length(g_s)) and not (g_s[g_i] in st) do
+ while (g_i<=length(g_s)) and not CharInSet(g_s[g_i],st) do
   inc(g_i);
  result:=g_i<=length(g_s);
  if not result then
@@ -700,10 +671,10 @@ end;
 
 function getName(const s:string; i:integer):integer;
 begin
- if {$IFOPT R+}(i<=length(s)) and {$ENDIF}(s[i] in valfirst) then
+ if {$IFOPT R+}(i<=length(s)) and {$ENDIF}CharInSet(s[i],valfirst) then
  repeat
   inc(i);
- until not ({$IFOPT R+}(i<=length(s)) and {$ENDIF}(s[i] in valsec));
+ until not ({$IFOPT R+}(i<=length(s)) and {$ENDIF}CharInSet(s[i],valsec));
  result:=i;
 end;
 
@@ -722,11 +693,11 @@ begin
 function tg.getName(const ValFirst,ValSec:tcharset):boolean;
 begin
  g_w:=g_i;
- result:={$IFOPT R+}(g_i<=length(g_s)) and {$ENDIF}(g_s[g_i] in valfirst);
+ result:={$IFOPT R+}(g_i<=length(g_s)) and {$ENDIF}CharInSet(g_s[g_i],valfirst);
  if result then
  repeat
    inc(g_i);
- until not({$IFOPT R+}(g_i<=length(g_s)) and {$ENDIF}(g_s[g_i] in valsec));
+ until not({$IFOPT R+}(g_i<=length(g_s)) and {$ENDIF}CharInSet(g_s[g_i],valsec));
 { result:=(g_i<=length(g_s)) and (g_s[g_i] in valfirst);
  if result then
   while (g_i<=length(g_s)) and (g_s[g_i] in valsec) do
@@ -765,7 +736,7 @@ begin
   RightEleName(MyTagName);
   result:=true;
  end else
- if (i=w) and {SubEqual('!--',g_s,w)}(g_s[w] in [DomCommentTagName,'?']) then
+ if (i=w) and {SubEqual('!--',g_s,w)}CharInSet(g_s[w],[DomCommentTagName,'?']) then
  begin
   MyTagName:=DomCommentTagName;
   result:=true;
@@ -820,26 +791,26 @@ end;
 function tg.getPasID:boolean;
 begin
  g_w:=g_i;
- result:={$IFOPT R+}(g_i<=length(g_s)) and {$ENDIF}(g_s[g_i] in valfirstpas);
+ result:={$IFOPT R+}(g_i<=length(g_s)) and {$ENDIF}CharInSet(g_s[g_i],valfirstpas);
  if result then
  repeat
    inc(g_i);
- until not({$IFOPT R+}(g_i<=length(g_s)) and {$ENDIF}(g_s[g_i] in valsecpas));
+ until not({$IFOPT R+}(g_i<=length(g_s)) and {$ENDIF}CharInSet(g_s[g_i],valsecpas));
 end;
 
 function tg.getBckPasID:boolean;
 begin
  backShit;
  g_w:=g_i;
- while (g_w>=2) and (g_s[g_w-1] in valsecpas) do
+ while (g_w>=2) and CharInSet(g_s[g_w-1],valsecpas) do
   dec(g_w);
- result:=(g_i<>g_w) and (g_s[g_w] in valfirstpas);
+ result:=(g_i<>g_w) and CharInSet(g_s[g_w],valfirstpas);
 end;
 
 function tg.getBckZahl:boolean;
 begin
  g_w:=g_i;
- while (g_w>=2) and (g_s[g_w-1] in ['0'..'9']) do
+ while (g_w>=2) and CharInSet(g_s[g_w-1],['0'..'9']) do
   dec(g_w);
  result:=g_i<>g_w;
 end;
@@ -850,14 +821,14 @@ begin
  dec(g_i);
  repeat
    inc(g_i);
- until not({$IFOPT R+}(g_i<=length(g_s)) and {$ENDIF}(g_s[g_i] in ['0'..'9']));
+ until not({$IFOPT R+}(g_i<=length(g_s)) and {$ENDIF}CharInSet(g_s[g_i],['0'..'9']));
  result:=g_i<>g_w;
 end;
 
 function tg.isPas:boolean;
 begin
- result:=not ((g_w>=2) and (g_s[g_w-1] in valfirstpas)) and
-         not({$IFOPT R+}(g_i<=length(g_s)) and {$ENDIF}(g_s[g_i] in valsecpas));
+ result:=not ((g_w>=2) and CharInSet(g_s[g_w-1],valfirstpas)) and
+         not({$IFOPT R+}(g_i<=length(g_s)) and {$ENDIF}CharInSet(g_s[g_i],valsecpas));
 end;
 
 function tg.OverPasPos(const f:String):boolean;

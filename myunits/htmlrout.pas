@@ -3,7 +3,7 @@ unit htmlrout;
 interface
 
 uses
- sysutils,FastStrings,FastStringFuncs,UseFastStrings;
+ sysutils,UseFastStrings,dhStrUtils;
 
 
 const
@@ -136,18 +136,18 @@ begin
    pc:=@s[i+1] else
 }
    pc:=@s[i+1];
-   while not (pc^ in [c_cl,#0]) do
+   while not CharInSet(pc^,[c_cl,#0]) do
    begin
     if pc^='=' then
     begin
       inc(pc);
-      while pc^ in likespace do
+      while CharInSet(pc^,likespace) do
        inc(pc);
-      if pc^ in ['''','"'] then
+      if CharInSet(pc^,['''','"']) then
       begin
        ch:=pc^;
        inc(pc);
-       while not(pc^ in [ch,#0]) do
+       while not CharInSet(pc^,[ch,#0]) do
         inc(pc);
        if pc^<>#0 then
         inc(pc);
@@ -328,7 +328,7 @@ begin
    end else
    begin
    delete(result,i,length('/../'));
-   while (i-1>=1) and not (result[i-1] in ['/','\']) do
+   while (i-1>=1) and not CharInSet(result[i-1],['/','\']) do
    begin
     delete(result,i-1,1);
     dec(i);
@@ -351,7 +351,7 @@ begin
  toURI:=AdjustURLPure(toURI);
  assert(bAdvPos(fromI,':',fromURI));
  inc(fromI);
- while (fromI<=length(fromURI)) and (fromURI[fromI] in ['/','\']) do
+ while (fromI<=length(fromURI)) and CharInSet(fromURI[fromI],['/','\']) do
   inc(fromI);
  if not IsLocal(fromURI) then
  begin
@@ -447,14 +447,14 @@ const buc_cl=valfirst;
 
 function IsTagOpening(const s:String; i:Integer): boolean;
 begin
- result:= {$IFOPT R+}(i<=length(s)-2) and {$ENDIF} (s[i]=c_op) and ((s[i+1]=c_end) and (s[i+2] in buc_cl) or (s[i+1] in buc_op));
+ result:= {$IFOPT R+}(i<=length(s)-2) and {$ENDIF} (s[i]=c_op) and ((s[i+1]=c_end) and CharInSet(s[i+2],buc_cl) or CharInSet(s[i+1],buc_op));
 end;
 
 function FindTagOpening(const s:String; i:Integer): integer;
 begin
  repeat
   i:=AdvPos(c_op,s,i);
-  if (i<>0) and {$IFOPT R+}(i<=length(s)-2) and {$ENDIF}((s[i+1]=c_end) and (s[i+2] in buc_cl) or (s[i+1] in buc_op)) then
+  if (i<>0) and {$IFOPT R+}(i<=length(s)-2) and {$ENDIF}((s[i+1]=c_end) and CharInSet(s[i+2],buc_cl) or CharInSet(s[i+1],buc_op)) then
   begin
    result:=i;
    exit;
@@ -579,35 +579,35 @@ End;
 
 function SkipBckWhiteSpacesWithoutEndlAll(const s:string;i:integer):integer;
 begin
- while (i-1>=1) and (s[i-1] in (likespace-[endl_space,endl_main])) do
+ while (i-1>=1) and CharInSet(s[i-1],(likespace-[endl_space,endl_main])) do
   dec(i);
  result:=i;
 end;
 
 function SkipBckWhiteSpacesWithoutEndlMain(const s:string;i:integer):integer;
 begin
- while (i-1>=1) and (s[i-1] in (likespace-[endl_main])) do
+ while (i-1>=1) and CharInSet(s[i-1],(likespace-[endl_main])) do
   dec(i);
  result:=i;
 end;
 
 function SkipWhiteSpacesWithoutEndlAll(const s:string;i:integer):integer; overload;
 begin
- while {$IFOPT R+}(i<=length(s)) and{$ENDIF} (s[i] in (likespace-[endl_space,endl_main])) do
+ while {$IFOPT R+}(i<=length(s)) and{$ENDIF} CharInSet(s[i],(likespace-[endl_space,endl_main])) do
   inc(i);
  result:=i;
 end;
 
 function SkipWhiteSpacesWithoutEndlMain(const s:string;i:integer):integer; overload;
 begin
- while {$IFOPT R+}(i<=length(s)) and{$ENDIF} (s[i] in (likespace-[endl_main])) do
+ while {$IFOPT R+}(i<=length(s)) and{$ENDIF} CharInSet(s[i],(likespace-[endl_main])) do
   inc(i);
  result:=i;
 end;
 
 function SkipWhiteSpacesOnlyEndlAll(const s:string;i:integer):integer; overload;
 begin
- while {$IFOPT R+}(i<=length(s)) and{$ENDIF} (s[i] in [endl_space,endl_main]) do
+ while {$IFOPT R+}(i<=length(s)) and{$ENDIF} CharInSet(s[i],[endl_space,endl_main]) do
   inc(i);
  result:=i;
 end;
@@ -615,14 +615,14 @@ end;
 
 function SkipBckWhiteSpaces(const s:string;i:integer):integer;
 begin
- while (i-1>=1) and (s[i-1] in likespace) do
+ while (i-1>=1) and CharInSet(s[i-1],likespace) do
   dec(i);
  result:=i;
 end;
 
 function SkipWhiteSpaces(const s:string;i:integer):integer; overload;
 begin
- while {$IFOPT R+}(i<=length(s)) and{$ENDIF} (s[i] in likespace) do
+ while {$IFOPT R+}(i<=length(s)) and{$ENDIF} CharInSet(s[i],likespace) do
   inc(i);
  result:=i;
 end;
@@ -630,7 +630,7 @@ end;
 function SkipWhiteSpacesSaveEndlAll(const s:string;i:integer; var lastline:integer):integer;
 begin
  while {$IFOPT R+}(i<=length(s)) and{$ENDIF} true do
- if s[i] in (likespace-[endl_space,endl_main]) then
+ if CharInSet(s[i],(likespace-[endl_space,endl_main])) then
   inc(i) else
  if s[i]=endl_space then
  begin
@@ -745,12 +745,12 @@ end;
 
 function IsHTML(const s:string):boolean;
 begin
- result:=(UseFastStrings.pos('.htm',lowercase(s))>0) or (UseFastStrings.pos('.sht',lowercase(s))>0);
+ result:=(pos('.htm',lowercase(s))>0) or (pos('.sht',lowercase(s))>0);
 end;
 
 function IsExtHTML(const s:string):boolean;
 begin
- result:=(UseFastStrings.pos('.htm',lowercase(s))>0);
+ result:=(pos('.htm',lowercase(s))>0);
 end;
 
 
@@ -761,7 +761,7 @@ const aValidFilenameChar='-';
 begin
  result:=Trim(URL);
  for i:=length(result) downto 1 do
-  if result[i] in noValidFilenameChars then
+  if CharInSet(result[i],noValidFilenameChars) then
    result[i]:=aValidFilenameChar;
  if result='' then
   result:='(empty)';

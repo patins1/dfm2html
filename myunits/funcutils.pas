@@ -9,7 +9,7 @@ uses
   Controls, Windows, Messages, Graphics, Forms, Dialogs, Menus,
   ShellAPI, Mask, ExtCtrls, StdCtrls,  Variants, clipbrd, ComCtrls,
 {$ENDIF}
-classes, types,FastStrings,FastStringFuncs, IniFiles, UseFastStrings;
+classes, types, IniFiles, UseFastStrings, dhStrUtils;
 
 {$T+}
 
@@ -35,22 +35,8 @@ procedure ByteToStream(const Stream:TStream; const i:Byte);
 function WordFromStream(const Stream:TStream):Word;
 procedure WordToStream(const Stream:TStream; const i:Word);
 
-function StringFromStream(const Stream:TStream):string;
-procedure StringToStream(const Stream:TStream; const s:String);
-procedure PureStringToStream(const Stream:TStream; const s:String);
-function WStringFromStream(const Stream:TStream):string;
-procedure WStringToStream(const Stream:TStream; const s:String);
-procedure String0ToStream(const Stream:TMemoryStream; const s:String);
-function String0FromStream(const Stream:TMemoryStream):string;
-function WideString0FromStream(const Stream:TMemoryStream):WideString;
 
-function GetString(buffer: PChar; len: Integer):string;
-
-procedure WideStringToStream(const Stream:TStream; const s:WideString);
-
-function CanStringFromFileST(const FileName:string; var s:string):boolean;
-function StringFromFile(const FileName:string):string;
-procedure StringToFile(const FileName,s:string);
+function CanStringFromFileST(const FileName:TPathName; var s:TFileContents):boolean;
 function _if(cond:boolean;const a,b:string):string;overload;
 function _if(cond:boolean;a,b:integer):integer;overload;
 function _if(cond:boolean;a,b:int64):int64;overload;
@@ -61,9 +47,9 @@ function BoolToInt(const b:boolean):integer;
 const FullEdging=4;
 //function IsFullEdging(var Msg:TWMWINDOWPOSCHANGING):boolean;
 
-function CanStringFromFile(const FileName:string; var s:string):boolean;
+function CanStringFromFile(const FileName:TPathName; var s:TFileContents):boolean;
 {$IFNDEF CLX}
-function CanStringToFileForceDir(const FileName,s:string):boolean;
+function CanStringToFileForceDir(const FileName:TPathName; var s:TFileContents):boolean;
 procedure CalcRightPos(var Msg:TWMWINDOWPOSCHANGING; Anchors: TAnchors; WindowEdging:integer=0);
 
 
@@ -73,10 +59,8 @@ procedure LoadPlacement(var BoundsRect:TRect; var Maximized:boolean; IniFile:TIn
 procedure DoFormPlacement(Form:TForm; BoundsRect:TRect; Maximized:boolean);
 function GetWindowsWorkArea: TRect;
 
-function FindAssociatedProgram(const f:String):String;
 
 {$ENDIF}
-//function vPos(const Substr: string; const S: string; var i:integer): boolean;
 
 
 //procedure RightPopupMenu(PopupTray1:TPopupMenu; x, y:Integer);
@@ -89,7 +73,6 @@ procedure MyHide;
 function EqTil(s1,s2:pchar; max:integer):integer;
 
 
-function StringXOR(const s:String):string;
 
 
 function LateCreateForm(InstanceClass: TComponentClass; var Reference):TForm;
@@ -146,8 +129,6 @@ type TMyStringList=class(TStringList)
 }
      end;
 
-
-function CanStrToInt(const s:string; var c:integer): boolean;
 
 function MyNewComma(const CommaText:string):TMyStringList;
 function MyNewSortedComma(const CommaText:string):TMyStringList;
@@ -740,105 +721,7 @@ begin
 end;
 
 
-function StringFromStream(const Stream:TStream):string;
-var len:integer;
-begin
- Stream.Read(len,sizeof(integer));
- SetLength(result,len);
- if len<>0 then
-  Stream.ReadBuffer(result[1], len);
-end;
-
-function WStringFromStream(const Stream:TStream):string;
-var len:word;
-begin
- Stream.Read(len,sizeof(len));
- SetLength(result,len);
- if len<>0 then
-  Stream.ReadBuffer(result[1], len);
-end;
-
-function String0FromStream(const Stream:TMemoryStream):string;
-begin
- result:=pchar(Stream.Memory)+Stream.Position;
- Stream.Seek(length(result)+1,soCurrent)
-end;
-
-function WideString0FromStream(const Stream:TMemoryStream):WideString;
-begin
- result:=PWideChar(pchar(Stream.Memory)+Stream.Position);
- Stream.Seek(length(result)*2+2,soCurrent)
-end;
- {
-
-function String0FromStream(const Stream:TMemoryStream):string;
-var pc,pc2:pchar;
-begin
- pc:=pchar(Stream.Memory)+Stream.Position;
- pc2:=pc;
- while pc^<>#0 do
-  inc(pc);
- SetLength(result,pc-pc2);
- if length(result)<>0 then
-  Stream.ReadBuffer(result[1],length(result));
- Stream.Seek(1,soCurrent)
-end;
- }
-
-procedure WideStringToStream(const Stream:TStream; const s:WideString);
-var len:integer;
-begin
- len:=length(s);
- //Stream.WriteBuffer(len,sizeof(integer));  
- if len<>0 then
-  Stream.WriteBuffer(s[1], 2*len+2);
-end;
-
-
-procedure StringToStream(const Stream:TStream; const s:String);
-var len:integer;
-begin
- len:=length(s);
- Stream.WriteBuffer(len,sizeof(integer));
- if len<>0 then
-  Stream.WriteBuffer(s[1], len);
-end;
-
-procedure PureStringToStream(const Stream:TStream; const s:String);
-begin
- if length(s)<>0 then
-  Stream.WriteBuffer(s[1], length(s));
-end;
-
-procedure WStringToStream(const Stream:TStream; const s:String);
-var len:word;
-begin
- len:=length(s);
- Stream.WriteBuffer(len,sizeof(len));
- if len<>0 then
-  Stream.WriteBuffer(s[1], len);
-end;
-
-const char0:char=#0;
-
-procedure String0ToStream(const Stream:TMemoryStream; const s:String);
-begin
- Stream.WriteBuffer(pchar(s)^,length(s)+1);
-{ if length(s)<>0 then
-  Stream.WriteBuffer(s[1], length(s));
- Stream.WriteBuffer(char0,1);
-}
-end;
-
-procedure Bytes0ToStream(const Stream:TMemoryStream; const pc:PChar; len:integer);
-begin
- if len<>0 then
-  Stream.WriteBuffer(pc^, len);
- Stream.WriteBuffer(char0,1);
-end;
-
-
-function CanStringFromFileST(const FileName:string; var s:string):boolean;
+function CanStringFromFileST(const FileName:TPathName; var s:TFileContents):boolean;
 begin
 try
  s:=StringFromFile(FileName);
@@ -848,20 +731,9 @@ except
 end;
 end;
 
-function StringFromFile(const FileName:string):string;
-begin
- with TFileStream.create(FileName,fmOpenRead) do
- begin
-  SetLength(result,Size);
-  if Size<>0 then
-   ReadBuffer(result[1],Size);
-  Free;
- end;
-end;
-
 {$IFNDEF CLX}
 
-function CanStringToFile(const FileName:string; const s:string):boolean;
+function CanStringToFile(const FileName:TPathName; const s:TFileContents):boolean;
 var f:File;
 var
   wOldErrorMode : Word;
@@ -902,7 +774,7 @@ SetErrorMode( wOldErrorMode );
 end;
 End;
 
-function CanStringToFileForceDir(const FileName,s:string):boolean;
+function CanStringToFileForceDir(const FileName:TPathName; var s:TFileContents):boolean;
 begin
  result:=ForceDirectories(ExtractFilePath(FileName)) and CanStringToFile(Filename,s);
 end;                
@@ -910,7 +782,7 @@ end;
 
 {$IFNDEF CLX}
 
-function CanStringFromFile(const FileName:string; var s:string):boolean;
+function CanStringFromFile(const FileName:TPathName; var s:TFileContents):boolean;
 var f:File;
 var
   wOldErrorMode : Word;
@@ -957,7 +829,7 @@ End;
 
 {$ELSE}
 
-function CanStringFromFile(const FileName:string; var s:string):boolean;
+function CanStringFromFile(const FileName:TFileName; var s:TFileContents):boolean;
 begin
  try
   s:=StringFromFile(FileName);
@@ -967,19 +839,6 @@ begin
  end;
 end;
 {$ENDIF}
-
-
-procedure StringToFile(const FileName,s:string);
-begin
-with TFileStream.create(FileName,fmCreate) do
-begin
- if s<>'' then
-  WriteBuffer(s[1],length(s));
- Free;
-end;
-end;
-
-
 
 function _if(cond:boolean;const a,b:string):string;overload;
 begin
@@ -1139,24 +998,6 @@ begin
   SystemParametersInfo(SPI_GETWORKAREA, 0, @Result, 0);
 end;
 
-function FindAssociatedProgram(const f:String):String;
-{var lpFilePart:PChar;
-    sr:TSearchRec;
-}
-begin
- setlength(result,1000);
- if (AdvPosNoCase('.exe',f)=0) and (FindExecutable(@f[1],nil,@result[1])>32) {  (nil,@FileName[1],Extension, length(result),@result[1], dummy)<>0} then
- begin
-  result:=pchar(@result[1]);
-{  if findfirst(result,faAnyFile,sr)=0 then
-   result:=sr.FindData.cFileName;
-}{  setlength(result,1000);
-  GetFullPathName(@f,length(result),@result[1],lpFilePart);
-  result:=pchar(@result[1]);
-} end else
-  result:=f;
-end;
-
 
 
 procedure RightPopupMenu(PopupTray1:TPopupMenu; x, y:Integer);
@@ -1211,40 +1052,10 @@ begin
  Application.BringToFront;
 end;
 
-function StringXOR(const s:String):string;
-var i:integer;
-begin
- result:=s;
- for i:=1 to length(result) do
-  result[i]:=chr(ord(result[i])+128);
-end;
-
-
-
 
 function checked(Sender:tobject):boolean;
 begin
  result:=(sender as tcheckbox).checked;
-end;
-
-function CanStrToInt(const s:string; var c:integer): boolean;
-var
-  E: Integer;
-begin
-{ try
-  result:=true;
-  c:=strtoint(s);
- except
-  result:=false;
- end;
- }
-  Val(S, C, E);
-  result:=E=0;
-end;
-
-function GetString(buffer: PChar; len: Integer):string;
-begin
- SetString(result,buffer,len);
 end;
 
 

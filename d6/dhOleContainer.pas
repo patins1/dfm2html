@@ -11,7 +11,7 @@ uses
 CommCtrl, OleDlg, ComObj,
 
   {$ENDIF}
-   SysUtils, Classes,  dhPanel,GR32,dhLabel;
+   SysUtils, Classes,  dhPanel,GR32,dhLabel,dhStrUtils;
 
 type
 
@@ -29,12 +29,12 @@ type
     procedure Paint;override;
     procedure Invalidate; override;
     procedure SetBounds(ALeft, ATop, AWidth, AHeight: Integer); override;
-    procedure MySaveToFile(const FileName:String);
+    procedure MySaveToFile(const FileName:TPathName);
   end;
 
   TdhOleContainer = class(TdhCustomLabel)
   private
-    //OleImageFile:string;
+    //OleImageFile:TPathName;
     //FTransparentColor: TCSSColor;
     FTransparentWhite:boolean;
     FUsage:TOleUsage;
@@ -627,7 +627,7 @@ begin
  Writer.WriteString(ole.SourceDoc);
 end;
 
-procedure TStructureBox.MySaveToFile(const FileName: string);
+procedure TStructureBox.MySaveToFile(const FileName: TPathName);
 var
   TempStorage: IStorage;
   PersistFile: IPersistFile;

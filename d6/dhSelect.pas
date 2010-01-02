@@ -4,12 +4,12 @@ interface
 
 uses
   Types,
-  {$IFDEF CLX}  
+  {$IFDEF CLX}
   QControls, QForms, Qt, QGraphics, QDialogs, QExtCtrls, QComCtrls,  QStdCtrls, QClipbrd, QMenus,
   {$ELSE}
   Controls, Windows, Messages, Graphics, StdCtrls, dialogs, Forms, clipbrd,
   {$ENDIF}
-  dhLabel,dhEdit, SysUtils, Classes, math, dhPanel,BasicHTMLElements,UseFastStrings;
+  dhLabel,dhEdit, SysUtils, Classes, math, dhPanel,BasicHTMLElements,dhStrUtils;
 
 type
   TSelectType=(stDropDown,stList);
@@ -95,7 +95,7 @@ type
     function IncludeBorderAndPadding:boolean; override;
     procedure GetRowsCols(AllowModifyX,AllowModifyY:boolean; var NewWidth, NewHeight, Rows, Cols: Integer); override;
     procedure DoCSSToWinControl(WhatChanged: TWhatChanged); override;
-    procedure KeyPress(var Key: Char); override;
+    procedure KeyPress(var Key: AChar); override;
     procedure KeyDown(var Key: Word; Shift: TShiftState); override;
     procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
     procedure DefineProperties(Filer: TFiler); override;
@@ -142,34 +142,12 @@ type
 
 procedure Register;
 
-//function GetRealBoxText(const s:string; var val,text:string):boolean;
-
 implementation
 
 procedure Register;
 begin
   RegisterComponents('DFM2HTML', [TdhSelect]);
 end;
-
-
-
-{function GetRealBoxText(const s:string; var val,text:string):boolean;
-var i:integer;
-begin
-      for i:=length(s) downto 1 do
-      if s[i]='|' then
-      begin
-       text:=copy(s,1,i-1);
-       val:=copy(s,i+1,maxint);
-       result:=true;
-       exit;
-      end;
-      text:=s;
-      val:=s;
-      result:=false;
-end;    }
-
-
 
 
 constructor TdhSelect.Create(AOwner: TComponent);
@@ -545,17 +523,6 @@ begin
   result:=-1;
 end;
 
-
-
-{function CountChar(const s:string; c:char; vn,bs:integer):integer;
-begin
- result:=0;
- for vn := vn to bs do
- if s[vn]=c then
-  inc(result);
-end;
- }            
-
 function GetShiftState: TShiftState;
 begin
   Result := [];
@@ -568,12 +535,23 @@ begin
 {$ENDIF}
 end;
 
-function TdhSelect.GetOverLine:integer;
+function CountPos(const subtext: string; Text: string): Integer;
 begin
- result:=-1;  
+  if (Length(subtext) = 0) or (Length(Text) = 0) or (Pos(subtext, Text) = 0) then
+    Result := 0
+  else
+    Result := (Length(Text) - Length(StringReplace(Text, subtext, '', [rfReplaceAll]))) div
+      Length(subtext);
+end;
+
+function TdhSelect.GetOverLine:integer;
+var OverCharPrefix:HypeString;
+begin
+ result:=-1;
  if GetOverChar<>0 then
  begin
-  result:=StringCountRange(FHTMLText,1,GetOverChar,'<selectedlistboxitem>')+StringCountRange(FHTMLText,1,GetOverChar,'<listboxitem>'); //CountChar(FHTMLText,endl_main,1,GetOverChar);
+  OverCharPrefix:=Copy(FHTMLText,1,GetOverChar);
+  result:=CountPos('<selectedlistboxitem>',OverCharPrefix)+CountPos('<listboxitem>',OverCharPrefix); //CountChar(FHTMLText,endl_main,1,GetOverChar);
   if result>Count-1 then
    result:=-1;
  end;
@@ -626,7 +604,7 @@ const VK_NEXT=Key_Next;
 {$ENDIF}
 
 
-procedure TdhSelect.KeyPress(var Key: Char);
+procedure TdhSelect.KeyPress(var Key: AChar);
 begin
  inherited;
 end;

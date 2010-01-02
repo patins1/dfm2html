@@ -7,13 +7,12 @@ interface
 {$ENDIF}
 
 uses
-  {TNTWideStrUtils,}UseFastStrings,
   {$IFDEF CLX}
   QControls, Qt, QGraphics, QForms,
   {$ELSE}
   Controls, Windows, Messages, Graphics, Forms,
   {$ENDIF}
-  SysUtils, Classes, dhPanel, math, {$IFNDEF VER130}types,  {$ENDIF} BinList,GR32_Transforms,gr32,StrUtils;
+  SysUtils, Classes, dhPanel, math, {$IFNDEF VER130}types,  {$ENDIF} BinList,GR32_Transforms,gr32,dhStrUtils;
 
 
 {$IFDEF VER160}
@@ -24,7 +23,7 @@ uses
 type TIntegerDynArray=array of integer;
 {$ENDIF}
 
-function inttoalpha(i:integer):string;
+function inttoalpha(i:integer):HypeString;
 
 type
   TFormButtonType=(fbNone,fbSubmit,fbReset);
@@ -35,7 +34,7 @@ type
   private
     starttag,endtag:integer;
     IsWholeStyle:boolean;
-    TagName:String;
+    TagName:HypeString;
     ParentStyle:TStyleTree;
     StyleElement:ICon;
     vn,bs,toleft,toright,lmin,lmax,ry,LastBlockLine:integer;
@@ -109,7 +108,7 @@ type
 
     function AllowAutoSizeY:boolean; override;
 
-    function TextExtent(const Text: string): TSize;
+    function TextExtent(const Text: AString): TSize;
 
     function GetOverChar:integer;
 
@@ -331,22 +330,21 @@ type
   end;
 
 }
-function getTag2(const s:HypeString; var vn,itag,itagbs:integer; var tag:String; var text:HypeString; var Closing,EmptyEle:boolean):boolean;
+function getTag2(const s:HypeString; var vn,itag,itagbs:integer; var tag:HypeString; var text:HypeString; var Closing,EmptyEle:boolean):boolean;
 function WithoutComments(const s:HypeString; repl:HypeChar):HypeString;
 
 
 
 function ConvertWideStringToUnicode(const s:WideString; NoTrivial:boolean):WideString; overload;
 function ConvertUnicodeToWideString_(const s:WideString):WideString;
-//function ConvertWideStringToUnicode_(const w:WideString):String; overload;
-function LE127(const s:WideString):string;
-function XMLconformant(const s:String):string;
+function LE127(const s:WideString):AnsiString;
+function XMLconformant(const s:AnsiString):AnsiString;
 function HypeSubstText(const Substr,durch, S: HypeString): HypeString;
-function CharRef(i:integer):string;
-function CharRefDecimal(i:integer):string;
+function CharRef(i:integer):AnsiString;
+function CharRefDecimal(i:integer):AnsiString;
 
 
-function HasUnicodeName(i:integer; var CharacterName:String):boolean;
+function HasUnicodeName(i:integer; var CharacterName:AString):boolean;
 function AssertTags2:boolean;
 
 //function CodePageToWideString(A: AnsiString; CodePage: Word=CP_ACP): WideString;
@@ -385,12 +383,12 @@ const AAA=true and not IsCLX;
 type PBoolean=^Boolean;
 
 
-var what_uni:array[char] of integer;
+var what_uni:array[AnsiChar] of integer;
     Win32PlatformIsUnicode:boolean=false;
 
 type
   THtmlEntity = record
-    Name: string;
+    Name: HypeString;
     Code: WideChar;
   end;
 const
@@ -656,8 +654,9 @@ HtmlLat1: array [0..252] of THtmlEntity = (
   (Name: 'zeta'; Code: #$03B6)
   );
 
-  
-const
+
+const endl_main=#10;
+      endl_space=#13;
       markupBreak=endl_main;
       markupEmptyEle=#2;
 
@@ -671,7 +670,7 @@ begin
 end;
 
 
-function HasUnicodeName(i:integer; var CharacterName:String):boolean;
+function HasUnicodeName(i:integer; var CharacterName:AString):boolean;
 var i2:integer;
 begin
     i2:=UnicodeByNumbersList.SortedIndexOf(PointerCompare,Pointer(i));
@@ -712,9 +711,11 @@ begin
  end;
 end;
 
+const PHP_TAG_PREFIX:HypeString='<?';
+
 function ContainsPHPTag(const s:HypeString):boolean;
 begin
- result:=UseFastStrings.Pos('<?',s)<>0;
+ result:=Pos(PHP_TAG_PREFIX,s)<>0;
 end;
 
 {function IsPHPTag(const s:HypeString):boolean;
@@ -741,7 +742,7 @@ begin
 end;
 
 
-function getTag2(const s:HypeString; var vn,itag,itagbs:integer; var tag:String; var text:HypeString; var Closing,EmptyEle:boolean):boolean;
+function getTag2(const s:HypeString; var vn,itag,itagbs:integer; var tag:HypeString; var text:HypeString; var Closing,EmptyEle:boolean):boolean;
 var i,i2:integer;
 begin
  i:=CharPos(s,'<',vn);
@@ -763,7 +764,7 @@ begin
   itagbs:=i2-1 else
   itagbs:=i2;
  itag:=i+1;
- Tag:=LowerCase(AbsCopy(s,itag,itagbs));
+ Tag:=LowerCase(AbsCopy(s,itag,itagbs)) ;
  vn:=i2+1;
  result:=true;
  exit;
@@ -1027,12 +1028,12 @@ begin
  i:=_Unicode.IndexOfObject(TObject(ch));
  if (i<>-1) and (i-1>=0) and (lowercase(_Unicode[i-1])=lowercase(_Unicode[i])) then
  begin
-  IsUpperCase:=_Unicode[i][1] in ['A'..'Z'];
+  IsUpperCase:=CharInSet(_Unicode[i][1],['A'..'Z']);
   SecCase:=WideChar(_Unicode.Objects[i-1]);
  end else
  if (i<>-1) and (i+1<=_Unicode.Count-1) and (lowercase(_Unicode[i+1])=lowercase(_Unicode[i])) then
  begin
-  IsUpperCase:=_Unicode[i][1] in ['A'..'Z'];
+  IsUpperCase:=CharInSet(_Unicode[i][1],['A'..'Z']);
   SecCase:=WideChar(_Unicode.Objects[i+1]);
  end else
   result:=false;
@@ -1040,7 +1041,7 @@ begin
 end;
 
 
-function getUnicodeChar(ts:string; var ch:WideChar):boolean;
+function getUnicodeChar(ts:HypeString; var ch:WideChar):boolean;
 var ic,i:Integer;
 begin
  if _Unicode=nil then
@@ -1078,14 +1079,14 @@ begin
 end;
 
 
-function CharRef(i:integer):string;
+function CharRef(i:integer):AnsiString;
 begin
- result:='&#x'+Format('%x', [i])+';';
+ result:='&#x'+AnsiString(Format('%x', [i]))+';';
 end;
 
-function CharRefDecimal(i:integer):string;
+function CharRefDecimal(i:integer):AnsiString;
 begin
- result:='&#'+Format('%d', [i])+';';
+ result:='&#'+AnsiString(Format('%d', [i]))+';';
 end;
 
 function ConvertWideStringToUnicode(const s:WideString; NoTrivial:boolean):WideString;
@@ -1094,8 +1095,8 @@ begin
  result:='';
  //if _Unicode<>nil then
  for i:=1 to length(s) do
- {if (ord(s[i])<=255) and (what_uni[Char(s[i])]<>0) and (s[i]<>' ') and (not NoTrivial or (s[i]<>'''')) then
-  result:=result+'&'+_Unicode[what_uni[Char(s[i])]]+';' else}
+ {if (ord(s[i])<=255) and (what_uni[AnsiChar(s[i])]<>0) and (s[i]<>' ') and (not NoTrivial or (s[i]<>'''')) then
+  result:=result+'&'+_Unicode[what_uni[AnsiChar(s[i])]]+';' else}
  if s[i]='&' then
   result:=result+'&amp;' else
  if s[i]='"' then
@@ -1129,33 +1130,33 @@ end;  }
 (*function CodePageToWideString(A: AnsiString; CodePage: Word=CP_ACP): WideString;
 begin
   SetLength(Result, Length(A));
-  MultiByteToWideChar(CodePage, 0, PChar(A), Length(A), PWideChar(Result), Length(A));
+  MultiByteToWideChar(CodePage, 0, PAnsiChar(A), Length(A), PWideChar(Result), Length(A));
 end;*)
 
 
-function LE127(const s:WideString):string;
+function LE127(const s:WideString):AnsiString;
 var i:Integer;
 begin
  result:='';
  for i:=1 to length(s) do
  if (ord(s[i])>127) then
   result:=result+CharRef(ord(s[i]{CodePageToWideString(s[i])[1]})) else
-  result:=result+s[i];
+  result:=result+AnsiChar(s[i]);
 end;
 
 
-{function ConvertWideStringToUnicode_(const w:WideString):String;
+{function ConvertWideStringToUnicode_(const w:WideString):AnsiString;
 var i:Integer;
 begin
  for i:=1 to length(w) do
  if _Unicode.IndexOfObject(TObject(w[i]))<>-1 then
   result:=result+'&'+_Unicode[_Unicode.IndexOfObject(TObject(w[i]))]+';' else
- if (Integer(w[i])<=255) and (what_uni[Char(w[i])]=0) then
-  result:=result+Char(w[i]) else
+ if (Integer(w[i])<=255) and (what_uni[AnsiChar(w[i])]=0) then
+  result:=result+AnsiChar(w[i]) else
   result:=result+CharRef(Integer(w[i]));
 end;
  }
-function XMLconformant(const s:String):string;
+function XMLconformant(const s:AnsiString):AnsiString;
 var i,o:Integer;
     ch:WideChar;
 begin
@@ -1439,7 +1440,7 @@ var
     EmptyEle:boolean;
     s,ssuc:HypeString;
     StyleTree2:TStyleTree;
-    tag:String;
+    tag:HypeString;
     content_vn,content_bs:integer;
 
 
@@ -1611,21 +1612,25 @@ end;
 
 procedure TdhCustomLabel.RenameNames;
 var i:integer;
-    NewName:string;
+    NewName:TComponentName;
+    RenamedName:TComponentName;
 begin
  if (RenamedNames<>nil) then
  begin
   // we must use "downto" order since otherwise for renamings 'a'->'b' and 'b'->'c',
   // all 'a' get replaced to 'c' and not to 'b'
   for i:=RenamedNames.Count-1 downto 0 do
-  if AdvPos(RenamedNames[i],FHTMLText)<>0 then
+  begin
+  RenamedName:=RenamedNames[i];
+  if Pos(RenamedName,FHTMLText)<>0 then
   begin
    InvalInline;
   //if RenamedNames[i]<>RenamedNames[
    NewName:=TComponent(RenamedNames.Objects[i]).Name;
-   FHTMLText:=HypeSubstText('<'+RenamedNames[i]+'>','<'+NewName+'>',FHTMLText);
-   FHTMLText:=HypeSubstText('</'+RenamedNames[i]+'>','</'+NewName+'>',FHTMLText);
-   FHTMLText:=HypeSubstText('<'+RenamedNames[i]+'/>','<'+NewName+'/>',FHTMLText);
+   FHTMLText:=HypeSubstText('<'+RenamedName+'>','<'+NewName+'>',FHTMLText);
+   FHTMLText:=HypeSubstText('</'+RenamedName+'>','</'+NewName+'>',FHTMLText);
+   FHTMLText:=HypeSubstText('<'+RenamedName+'/>','<'+NewName+'/>',FHTMLText);
+  end;
   end;
   AssureRenamingAware(false);
  end;
@@ -2981,15 +2986,15 @@ begin
 end;
 
 
-function inttoroman(i:integer):string;
-const b10:  array[0..9] of string=('','I','II','III','IV','V','VI','VII','VIII','IX');
-const b100: array[0..9] of string=('','X','XX','XXX','XL','L','LX','LXX','LXXX','XC');
-const b1000:array[0..9] of string=('','C','CC','CCC','CD','D','DC','DCC','DCCC','CM');
+function inttoroman(i:integer):HypeString;
+const b10:  array[0..9] of HypeString=('','I','II','III','IV','V','VI','VII','VIII','IX');
+const b100: array[0..9] of HypeString=('','X','XX','XXX','XL','L','LX','LXX','LXXX','XC');
+const b1000:array[0..9] of HypeString=('','C','CC','CCC','CD','D','DC','DCC','DCCC','CM');
 begin
  result:=b1000[(i div 100) mod 10]+b100[(i div 10) mod 10]+b10[i mod 10];
 end;
 
-function inttoalpha(i:integer):string;
+function inttoalpha(i:integer):HypeString;
 begin
  result:='';
  inc(i);
@@ -3152,10 +3157,9 @@ end;
 
 procedure TdhCustomLabel.PaintListItem;
 var StyleTree:TStyleTree;
-    ListItemPosition,ListX,ListY:integer;      
+    ListItemPosition,ListX,ListY:integer;
     ListItemRct:TRect;
-    sListItemPosition:string;
-    sListItemPositionWide:string;
+    sListItemPosition:HypeString;
 begin
      StyleTree:=UseStyleTree;
      ListX:=brct.Left-BorderPure.Left;
@@ -3191,10 +3195,9 @@ begin
        sListItemPosition:=LowerCase(sListItemPosition);
       sListItemPosition:=sListItemPosition+'.';
 {$IFDEF CLX}
-      sListItemPositionWide:=sListItemPosition;
-      QPainter_drawText(Canvas.Handle, ListX-Canvas.TextWidth(sListItemPositionWide)-10, ListY, PWideString(@sListItemPositionWide), length(sListItemPositionWide));
+      QPainter_drawText(Canvas.Handle, ListX-Canvas.TextWidth(sListItemPositionWide)-10, ListY, PWideString(@sListItemPosition), length(sListItemPositionWide));
 {$ELSE}
-      ExtTextOut(Canvas.Handle, ListX-Canvas.TextWidth(sListItemPosition)-10, ListY, 0, nil, shell_pchar(sListItemPosition), length(sListItemPosition), nil);
+      ExtTextOutW(Canvas.Handle, ListX-Canvas.TextWidth(sListItemPosition)-10, ListY, 0, nil, PWideChar(sListItemPosition), length(sListItemPosition), nil);
 {$ENDIF}
      end;
 end;
@@ -3437,7 +3440,7 @@ begin
 
     end;
     {teil:=AnsiString(_WStr(PWideChar(@gltext[vn]),bs-vn));
-    ExtTextOutA(Canvas.Handle, OffsX+x+Ppre[vn], UseStyleTree.PaddingRect.Top, 0, nil, PChar(teil), length(teil), PInteger(@Pall[vn]));
+    ExtTextOutA(Canvas.Handle, OffsX+x+Ppre[vn], UseStyleTree.PaddingRect.Top, 0, nil, PAnsiChar(teil), length(teil), PInteger(@Pall[vn]));
     }
     finally
      inc(Pall[vn],Ppre[vn]);
@@ -3977,7 +3980,7 @@ begin
 end;
 
 
-function TdhCustomLabel.TextExtent(const Text: string): TSize;
+function TdhCustomLabel.TextExtent(const Text: AString): TSize;
 var Canvas:TCanvas;
     DC: HDC;
     {Rect:TRect;
@@ -4016,7 +4019,7 @@ end;
 
 
 (*
-function TdhCustomLabel.TextExtent(const Text: string): TSize;
+function TdhCustomLabel.TextExtent(const Text: AString): TSize;
 var Canvas:TCanvas;
 var
   DC: HDC;
@@ -4067,7 +4070,6 @@ end;
 
 procedure BuildUnicode; //{$IFDEF VER160}unsafe;{$ENDIF}
 var i:integer;
-    s:string;
 begin
  _Unicode:=TStringList.Create;
 
@@ -4096,7 +4098,7 @@ begin
 
  for i:=0 to _Unicode.Count-1 do
  if Ord(WideChar(_Unicode.Objects[i]))<=255 then
-  what_uni[char(_Unicode.Objects[i])]:=i;
+  what_uni[AnsiChar(_Unicode.Objects[i])]:=i;
            {
  for i:=128 to 255 do
  if what_uni[chr(i)]=0 then

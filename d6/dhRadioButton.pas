@@ -3,12 +3,11 @@ unit dhRadioButton;
 interface
 
 uses
-  SysUtils, Classes, dhPanel, dhLabel,dhCheckBox;
+  SysUtils, Classes, dhPanel, dhLabel,dhCheckBox, dhStrUtils;
 
 type
   TdhRadioButton = class(TdhCheckBox)
   private
-    function GetPreText: string;
   protected
     { Protected declarations }
     procedure SetChecked(const Value: boolean); override;
@@ -35,11 +34,6 @@ procedure TdhRadioButton.Click;
 begin
   Checked:=true;
 end;
-
-function TdhRadioButton.GetPreText: string;
-begin
-end;
-
 
 procedure TdhRadioButton.GetModifiedText(var pre,s,suc: HypeString);
 begin

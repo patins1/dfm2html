@@ -9,7 +9,7 @@ uses
   Controls, Windows, Messages, Graphics,
   {$ENDIF}
    SysUtils, Classes,
-  dhPanel,GR32,UseFastStrings;
+  dhPanel,GR32, dhStrUtils;
 
 {$R 'dhHiddenField.dcr'}
 

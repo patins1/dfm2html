@@ -93,7 +93,6 @@ type TdhFileButton=class(TdhLink)
 end;
 
 procedure TdhFileButton.Click;
-var Directory:{$IFDEF CLX}widestring{$ELSE}string{$ENDIF};
 begin
  if DelegateClick then exit;
  with TOpenDialog.Create(Nil) do

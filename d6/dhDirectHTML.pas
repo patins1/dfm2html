@@ -9,7 +9,7 @@ uses
   Controls, Windows, Messages, Graphics,
   {$ENDIF}
    SysUtils, Classes,
-  dhPanel,math;
+  dhPanel,math,dhStrUtils;
 
 type
   //TInsertLocation=(ilCurrent,ilHead,ilBody);

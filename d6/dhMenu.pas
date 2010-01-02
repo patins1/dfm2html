@@ -9,7 +9,7 @@ uses
   Controls, Windows, Messages, Graphics, Forms, Dialogs, ExtCtrls,
   {$ENDIF}
   SysUtils, Classes, math, typinfo, {$IFNDEF VER130} types, {$ENDIF}
-  dhPanel, dhLabel, dhPageControl, dhStyleSheet;
+  dhPanel, dhLabel, dhPageControl, dhStyleSheet, dhStrUtils;
 
 type TMenuOption=(moNoAuto,moHorizontalLayout,moInline,moSlide,moClickToOpen,moResumeOpen,moStatic);
      TMenuOptions=set of TMenuOption;
@@ -88,10 +88,10 @@ type
     function GetVerticalLayout:boolean;
   protected
     FSubMenu:TdhMenu;
-    FLink:string;
+    FLink:TPathName;
     FLinkAnchor:TdhCustomPanel;
     FLinkPage:TdhPage;
-    FTarget:string;
+    FTarget:TPathName;
     //LinkedCount:integer;
     FOptions:TAnchorOptions;
     //FIsLine:boolean;
@@ -110,10 +110,10 @@ type
     procedure BringSubmenusToFront;
 //    procedure SetSubMenu(Value:TdhMenu);
     procedure LinkDestinationChanged;
-    procedure SetLink(Value:String);
+    procedure SetLink(Value:TPathName);
     procedure SetLinkAnchor(Value:TdhCustomPanel);
     procedure SetLinkPage(Value:TdhPage);
-    procedure SetTarget(Value:String);
+    procedure SetTarget(Value:TPathName);
     procedure ClearAnchors(LinkAnchorToo:boolean);
     function GetChildParent: TComponent; override;
 //    procedure WMCheckDesignState(var Message: TMessage); message WM_CHECKDESIGNSTATE;
@@ -163,8 +163,8 @@ type
 
   public
 //    FinalStyleElement:ICon;
-    SLinkPage:string;
-    SLinkAnchor:string;
+    SLinkPage:TComponentName;
+    SLinkAnchor:TComponentName;
     function IsActivated:boolean;
     procedure DoClickAction(Initiator:TdhCustomPanel); override;
     property Auto:boolean read GetAuto write SetAuto;
@@ -178,7 +178,7 @@ type
     destructor Destroy; override;
     function AddSubMenu:TdhMenu;
     procedure SetBounds(ALeft, ATop, AWidth, AHeight: Integer); override;
-    //function GetHref:string;
+    //function GetHref:TPathName;
     function LinkBase:TWinControl;
     function AllHTMLCode:HypeString; override;
     procedure PreferStyleChangeMenuSibling(caller:TdhCustomPanel; ClearPrefer:boolean);
@@ -188,10 +188,10 @@ type
     property Options:TAnchorOptions read FOptions write SetOptions nodefault{ default [aoDownIfMenu]};
     property Down:boolean read FDown write SetDown default false;
     //property IsLine:boolean read FIsLine write SetIsLine default false;
-    property Link:string read FLink write SetLink;
+    property Link:TPathName read FLink write SetLink;
     property LinkPage:TdhPage read FLinkPage write SetLinkPage;
     property LinkAnchor:TdhCustomPanel read FLinkAnchor write SetLinkAnchor;
-    property Target:string read FTarget write SetTarget;
+    property Target:TPathName read FTarget write SetTarget;
     property PageRange:integer read FPageRange write FPageRange default 0;
     property FormButtonType:TFormButtonType read FFormButtonType write SetFormButtonType default fbNone;
 
@@ -299,7 +299,7 @@ type
     function BoundTop:Integer; override;
 
     procedure AssignMenuSettings(fromMenu:TdhMenu);
-    //function BetterNotToDelete(DeletionList: TList; var Reason: string): boolean; override;
+    //function BetterNotToDelete(DeletionList: TList; var Reason: AString): boolean; override;
     function ComputedMenu: TdhMenu;
     function AutoRelevant: boolean;
     property Auto:boolean read GetAuto write SetAuto;
@@ -342,8 +342,8 @@ var SlideTimer,LinkTimer:TTimer;
 
 const DefaultPreferDownStyles=true;
   
-var AnchorNameBase:string='Link';
-    MenuNameBase:string='Menu';
+const AnchorNameBase='Link';
+      MenuNameBase='Menu';
 
 var
     TailSubMenu:TdhMenu=nil;
@@ -1332,7 +1332,7 @@ begin
 end;
 }
 
-procedure TdhLink.SetLink(Value:String);
+procedure TdhLink.SetLink(Value:TPathName);
 begin
  if Value<>'' then
  begin
@@ -1425,7 +1425,7 @@ end;
 
 
                    (*
-function TdhLink.GetHref:string;
+function TdhLink.GetHref:TPathName;
 var i:integer;
 begin
  result:=Link;
@@ -1590,7 +1590,7 @@ begin
  end;
 end;
 
-procedure TdhLink.SetTarget(Value:String);
+procedure TdhLink.SetTarget(Value:TPathName);
 begin
  FTarget:=Value;
 end;
@@ -2489,7 +2489,7 @@ end;
 
 
            {
-function TdhMenu.BetterNotToDelete(DeletionList:TList; var Reason:string):boolean;
+function TdhMenu.BetterNotToDelete(DeletionList:TList; var Reason:AString):boolean;
 begin
  inherited;
 end;

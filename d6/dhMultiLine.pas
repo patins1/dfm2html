@@ -33,8 +33,7 @@ interface
 
 uses
   Classes, Windows, Forms, Controls, Dialogs, StdCtrls, ExtCtrls,
-  DesignIntf, DesignEditors
-  ;
+  DesignIntf, DesignEditors, dhPanel, dhStrUtils;
 
 type
   TJvStrEditDlg = class(TForm)
@@ -56,9 +55,9 @@ type
     procedure HelpBtnClick(Sender: TObject);
   private
     // (rom) removed string[15] to increase flexibility
-    SingleLine: string;
-    MultipleLines: string;
-    FFileName: string;
+    SingleLine: AString;
+    MultipleLines: AString;
+    FFileName: TPathName;
   end;
 
 implementation

@@ -9,7 +9,7 @@ uses
   {$ELSE}
   Controls, Windows, Messages, Graphics, StdCtrls,
   {$ENDIF}
-  SysUtils, Classes, dhPanel, dhLabel;
+  SysUtils, Classes, dhPanel, dhLabel, dhStrUtils;
 
 type
   TdhCheckBox = class(TdhLabel)
@@ -17,7 +17,6 @@ type
     FChecked: boolean;
     FAlignment: TLeftRight;
     FValue: HypeString;
-    function GetPreText: string;
     procedure SetAlignment(const Value: TLeftRight);
     { Private declarations }
   protected
@@ -62,10 +61,6 @@ begin
   inherited;
   AutoSizeXY:=asXY;
   FAlignment:=taRightJustify;
-end;
-
-function TdhCheckBox.GetPreText: string;
-begin
 end;
 
 procedure TdhCheckBox.GetModifiedText(var pre,s,suc: HypeString);

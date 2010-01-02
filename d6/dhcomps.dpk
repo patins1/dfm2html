@@ -26,13 +26,13 @@ package dhcomps;
 {$MINENUMSIZE 1}
 {$IMAGEBASE $400000}
 {$DESCRIPTION 'DFM2HTML'}
-{$IMPLICITBUILD ON}
+{$IMPLICITBUILD OFF}
 
 requires
   designide,
-  vcljpg,
   vcl,
-  rtl;
+  rtl,
+  vclimg;
 
 contains
   dhHTMLForm in 'dhHTMLForm.pas',
@@ -53,6 +53,8 @@ contains
   dhPanel in 'dhPanel.pas',
   dhDirectHTML in 'dhDirectHTML.pas',
   BasicHTMLElements in 'BasicHTMLElements.pas' {BasicHTMLElements: TFrame},
-  MyBitmap32 in 'MyBitmap32.pas';
+  MyBitmap32 in 'MyBitmap32.pas',
+  dhFile in 'dhFile.pas',
+  dhStrUtils in 'dhStrUtils.pas';
 
 end.

@@ -12,7 +12,7 @@ uses
   {$ENDIF}
 
   SysUtils, Classes, dhPanel, dhStyleSheet,dhSelect,
-  dhMemo,dhEdit,dhCheckBox,dhRadioButton,dhMenu,dhLabel,BasicHTMLElements,dhHiddenField,dhFileField;
+  dhMemo,dhEdit,dhCheckBox,dhRadioButton,dhMenu,dhLabel,BasicHTMLElements,dhHiddenField,dhFileField,dhStrUtils;
 
 type            {
   IHTMLFormReset=interface
@@ -24,12 +24,12 @@ type            {
   //TFormButtonLayout=(flButton,flText);
   TdhHTMLForm = class(TdhPanel)
   private
-    FTarget: string;
-    procedure SetTarget(const Value: string);
+    FTarget: TPathName;
+    procedure SetTarget(const Value: TPathName);
     { Private declarations }
   protected
     { Protected declarations }
-    FAction:string;
+    FAction:TPathName;
     FMethod:TFormMethod;
     //ar:array of record but:TButton; ev:TNotifyEvent end;
     //procedure OnButtonSubmit(Sender: TObject);
@@ -43,9 +43,9 @@ type            {
     function AllHTMLCode:HypeString; override;
   published
     { Published declarations }
-    property Action:string read FAction write FAction;
+    property Action:TPathName read FAction write FAction;
     property Method:TFormMethod read FMethod write FMethod default fmtGet;
-    property Target:string read FTarget write SetTarget;
+    property Target:TPathName read FTarget write SetTarget;
   end;
 
   TdhFormButton = class(TdhDynLabel)
@@ -93,14 +93,14 @@ begin
  inherited;
 end;
 
-function GoodForm(const s:String):string;
+function GoodForm(const s:WideString):WideString;
 var i:integer;
-const hex:array[0..15] of char=('0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F');
 begin
- result:=s;
- for i:=length(s) downto 1 do
+ result:='';
+ for i:=1 to length(s) do
  if (result[i] in ['"','<','>','%','\','^','[',']','`','+','$',','   ,';','/','?',':','@','=','&','#']) or (ord(result[i])<=31) or (ord(result[i])>=127) then
-  result:=copy(result,1,i-1)+'%'+hex[ord(result[i]) div 16]+hex[ord(result[i]) mod 16]+copy(result,i+1,maxint);
+  result:=result+'%'+inttohex(ord(result[i]),2) else
+  result:=result+s[i];
 end;
 
 procedure ResetFields(c:TWinControl);
@@ -191,23 +191,23 @@ begin
  result:=FAction;
 end;
 
-procedure TdhHTMLForm.SetTarget(const Value: string);
+procedure TdhHTMLForm.SetTarget(const Value: TPathName);
 begin
   FTarget := Value;
 end;
 
 procedure TdhHTMLForm.Submit(link:TdhLink);
-var get:string;
+var get:TPathName;
 
-procedure CollectFields(c:TWinControl; var res:string);
+procedure CollectFields(c:TWinControl; var res:TPathName);
 var i:integer;
 
-procedure AddField(const Val:string);
+procedure AddField(const Val:WideString);
 begin
- res:=res+c.Name+'='+GoodForm(Val)+'&';
+ res:=res+GoodForm(c.Name)+'='+GoodForm(Val)+'&';
 end;
 
-var s,dummy:string;
+var s,dummy:AnsiString;
 begin
 { if (c is TdhCustomBox) and (TdhCustomBox(c).ItemIndex>=0) then
   AddField(TdhCustomBox(c).Value) else}
@@ -218,7 +218,7 @@ begin
  if (c is TdhMemo) then
   AddField(copy(TdhMemo(c).Text,1,length(TdhMemo(c).Text)-2)) else
  if (c is TdhRadioButton) and TdhRadioButton(c).Checked then
-  res:=res+c.Parent.Name+'='+c.Name+'&' else
+  res:=res+GoodForm(c.Parent.Name)+'='+GoodForm(c.Name)+'&' else
  if (c is TdhCheckBox) and TdhCheckBox(c).Checked then
   AddField('true') else
  if (c is TdhSelect) then
@@ -231,7 +231,7 @@ begin
  if (c is TCheckBox) and TCheckBox(c).Checked then
   AddField('true') else
  if (c is TRadioButton) and TRadioButton(c).Checked then
-  res:=res+c.Parent.Name+'='+c.Name+'&' else
+  res:=res+GoodForm(c.Parent.Name)+'='+GoodForm(c.Name)+'&' else
  if (c is TMemo) then
   AddField(copy(TMemo(c).Text,1,length(TMemo(c).Text)-2)) else
  if (c is TListBox) and (TListBox(c).ItemIndex>=0) then
@@ -244,7 +244,7 @@ begin
   CollectFields(TWinControl(c.Controls[i]),res);
 end;
 
-var _action:string;
+var _action:TPathName;
 begin
   if link<>nil then
    _action:=link.Link;

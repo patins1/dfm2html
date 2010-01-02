@@ -9,8 +9,8 @@ uses
   {$ELSE}
   Dialogs, Controls, Windows, Messages, Graphics, Forms,
   {$ENDIF}
-  SysUtils, Classes,{$IFDEF MSWINDOWS}OverbyteIcsUrl,{$ELSE}{IcsUrl,}{$ENDIF}
-  dhPanel,dhLabel,GR32,UseFastStrings,MyBitmap32;
+  SysUtils, Classes,
+  dhPanel,dhLabel,GR32,dhStrUtils,MyBitmap32;
 
 {$R 'dhPageControl.dcr'}
 
@@ -86,7 +86,7 @@ type
     FTitle: HypeString;
     FPageControl:TdhPageControl;
     OldFormat:boolean;
-    FOutputDirectory: string;
+    FOutputDirectory: TPathName;
     FHTMLBody: HypeString;
     FHTMLHead: HypeString;
     FHTMLTop: HypeString;
@@ -94,16 +94,15 @@ type
     FMetaKeywords: HypeString;
     FMetaDescription: HypeString;
     FForwardingDelay: integer;
-    //FForwardingEnabled: string;
-    FForwardingURL: string;
+    FForwardingURL: TPathName;
     FBackgroundSoundForever: boolean;
     FBackgroundSoundLoop: integer;
-    FBackgroundSoundURL: string;
-    FPublishURL: string;
-    FHTTPURL: string;
-    FGeneratedImageFolder: string;
-    FGeneratedJavaScriptFile: string;
-    FGeneratedCSSFile: string;
+    FBackgroundSoundURL: AnsiString;
+    FPublishURL: TPathName;
+    FHTTPURL: TPathName;
+    FGeneratedImageFolder: TPathName;
+    FGeneratedJavaScriptFile: TPathName;
+    FGeneratedCSSFile: TPathName;
     FScrolling:TScrolling;
     FUseIFrame:boolean;
     procedure SetTitle(const Value: HypeString);
@@ -117,13 +116,12 @@ type
     procedure VisibleChanged; override;
     procedure ReadOldFormat(Reader: TReader);
     function IsOutputDirectoryStored: Boolean;
-    function GetDefaultOutputDirectory: string;
-    procedure SetOutputDirectory(const Value: string);
-    function GetOutputDirectory: string;
+    function GetDefaultOutputDirectory: TPathName;
+    procedure SetOutputDirectory(const Value: TPathName);
+    function GetOutputDirectory: TPathName;
     function IsAlignStored: boolean;
     function InLinkedRange(link: TControl): boolean;
-    procedure SetFTPURL(const Value: string);
-    //procedure SetPublishURL(const Value: string);
+    procedure SetFTPURL(const Value: TPathName);
     procedure EnableMouseWheelData;
     procedure UpdateHidden;
 
@@ -159,13 +157,12 @@ type
 
     procedure SetUseIFrame(value:boolean);
     function CanBeTopPC:boolean; override;
-    function GetImageDir:String; override;
+    function GetImageDir:TPathName; override;
 
   public
     { Public declarations }
     function AllHTMLCode:HypeString; override;
-    function Find(FileName:String; CRC:DWORD; AddOrReplace:boolean):boolean;
-    function GetFTPShortcut:string;
+    function Find(FTP,FileName:TPathName; CRC:DWORD; AddOrReplace:boolean):boolean;
     function DynamicNavigation:boolean;
     procedure Activate(ActivatedBy: TControl);
     function IsAlternativePage:boolean;
@@ -196,25 +193,23 @@ type
     property UseIFrame:boolean read FUseIFrame write SetUseIFrame;
     property Align stored IsAlignStored nodefault;
     property Title:HypeString read FTitle write SetTitle;
-    property OutputDirectory:string read GetOutputDirectory write SetOutputDirectory stored IsOutputDirectoryStored;
+    property OutputDirectory:TPathName read GetOutputDirectory write SetOutputDirectory stored IsOutputDirectoryStored;
     property HTMLHead:HypeString read FHTMLHead write FHTMLHead;
     property HTMLBody:HypeString read FHTMLBody write FHTMLBody;
     property HTMLTop:HypeString read FHTMLTop write FHTMLTop;
-    //property ForwardingEnabled:string read FForwardingEnabled write FForwardingEnabled default false;
     property ForwardingDelay:integer read FForwardingDelay write FForwardingDelay default 0;
-    property ForwardingURL:string read FForwardingURL write FForwardingURL;
-    property BackgroundSoundURL:string read FBackgroundSoundURL write FBackgroundSoundURL;
+    property ForwardingURL:TPathName read FForwardingURL write FForwardingURL;
+    property BackgroundSoundURL:AnsiString read FBackgroundSoundURL write FBackgroundSoundURL;
     property BackgroundSoundForever:boolean read FBackgroundSoundForever write FBackgroundSoundForever default true;
     property BackgroundSoundLoop:integer read FBackgroundSoundLoop write FBackgroundSoundLoop default 0;
     property MetaAuthor:HypeString read FMetaAuthor write FMetaAuthor;
     property MetaDescription:HypeString read FMetaDescription write FMetaDescription;
     property MetaKeywords:HypeString read FMetaKeywords write FMetaKeywords;
-    //property PublishURL:string read FPublishURL write SetPublishURL stored false;
-    property FTPURL:string read FPublishURL write SetFTPURL;
-    property HTTPURL:string read FHTTPURL write FHTTPURL;
-    property GeneratedImageFolder:string read FGeneratedImageFolder write FGeneratedImageFolder;  
-    property GeneratedJavaScriptFile:string read FGeneratedJavaScriptFile write FGeneratedJavaScriptFile;
-    property GeneratedCSSFile:string read FGeneratedCSSFile write FGeneratedCSSFile;
+    property FTPURL:TPathName read FPublishURL write SetFTPURL;
+    property HTTPURL:TPathName read FHTTPURL write FHTTPURL;
+    property GeneratedImageFolder:TPathName read FGeneratedImageFolder write FGeneratedImageFolder;
+    property GeneratedJavaScriptFile:TPathName read FGeneratedJavaScriptFile write FGeneratedJavaScriptFile;
+    property GeneratedCSSFile:TPathName read FGeneratedCSSFile write FGeneratedCSSFile;
     property PageIndex: Integer read GetPageIndex write SetPageIndex stored False;
     property Visible stored false;
 
@@ -231,32 +226,32 @@ type
 
   end;
 
-procedure _SetUniqueName(Self:TComponent; const s:string);
-function _GetUniqueName(Self:TComponent; const s:string):string;
+procedure _SetUniqueName(Self:TComponent; const s:TComponentName);
+function _GetUniqueName(Self:TComponent; const s:TComponentName):TComponentName;
 
-var Uploaded:array of record FTP:String; Files:array of record FileName:String; CRC:DWORD; end; end;
+var Uploaded:array of record FTP:TPathName; Files:array of record FileName:TPathName; CRC:DWORD; end; end;
 
 type TGridDisplay=(gdNone,gdDotted,gdChecked,gdLined);
 
 var
      FGridX, FGridY: integer;
      FGridDisplay:TGridDisplay;
-     FViewer:string;
+     FViewer:TPathName;
      FSmartPublishing:boolean;
      FPassiveFTP:boolean;
      FAutoUpdate:boolean;
 
 procedure Register;
 
-function GoodLocalPath(const path:string):string;
-function GoodPathDelimiters(const path:string):string;
-function GoodWebPathDelimiters(const path:string):string;
-function AdjustAlternativeRastering(const TopPC,ID:String; var Rastering:String):boolean;
-function IsAbsolute(s:String):boolean;
+function GoodLocalPath(const path:TPathName):TPathName;
+function GoodPathDelimiters(const path:TPathName):TPathName;
+function GoodWebPathDelimiters(const path:TPathName):TPathName;
+function AdjustAlternativeRastering(const TopPC,ID:TComponentName; var Rastering:TPathName):boolean;
+function IsAbsolute(s:TPathName):boolean;
 
-function FinalGeneratedJavaScriptFile(const GeneratedJavaScriptFile:String):String;
-function FinalGeneratedImageFolder(const GeneratedImageFolder:String):String;
-function FinalGeneratedCSSFile(const GeneratedCSSFile:String):String;
+function FinalGeneratedJavaScriptFile(const GeneratedJavaScriptFile:TPathName):TPathName;
+function FinalGeneratedImageFolder(const GeneratedImageFolder:TPathName):TPathName;
+function FinalGeneratedCSSFile(const GeneratedCSSFile:TPathName):TPathName;
 
 
 implementation
@@ -275,9 +270,9 @@ end;
 
 { TdhPageControl }    
 
-procedure _SetUniqueName(Self:TComponent; const s:string);
+procedure _SetUniqueName(Self:TComponent; const s:TComponentName);
 var i:integer;
-    NewName:string;
+    NewName:TComponentName;
 begin
 (*
  with Self do
@@ -299,9 +294,9 @@ begin
  Self.Name:=_GetUniqueName(Self,s);
 end;
 
-function _GetUniqueName(Self:TComponent; const s:string):string;
+function _GetUniqueName(Self:TComponent; const s:TComponentName):TComponentName;
 var i:integer;
-    NewName:string;
+    NewName:TComponentName;
     sl:TStringList;
 begin
  sl:=TStringList.Create;
@@ -863,24 +858,12 @@ begin
   result:=FPageControl.DynamicNavigation;
 end;
 
-
-function TdhPage.GetFTPShortcut:string;
-var Proto, Username, Password, Host, Port, Path : String;
-begin
-{$IFNDEF CLX}
- ParseURL(FPublishURL,Proto, Username, Password, Host, Port, Path);
-{$ENDIF}
- result:=Lowercase(Host)+Path;
-end;
-
-function TdhPage.Find(FileName:String; CRC:DWORD; AddOrReplace:boolean):boolean;
+function TdhPage.Find(FTP,FileName:TPathName; CRC:DWORD; AddOrReplace:boolean):boolean;
 var
-    FTP:String;
     i,w:integer;
 begin
  result:=false;
  //FileName:=Lowercase(FileName);
- FTP:=GetFTPShortcut;
  for i:=Low(Uploaded) to High(Uploaded) do
  if Uploaded[i].FTP=FTP then
  with Uploaded[i] do
@@ -935,9 +918,9 @@ begin
 end;
 
 
-var AlternativeRasterings:array of record TopPC,ID,Rastering:String; end;
+var AlternativeRasterings:array of record TopPC,ID:TComponentName;Rastering:TPathName; end;
 
-function AdjustAlternativeRastering(const TopPC,ID:String; var Rastering:String):boolean;
+function AdjustAlternativeRastering(const TopPC,ID:TComponentName; var Rastering:TPathName):boolean;
 var i:integer;
 begin
  result:=true;
@@ -949,7 +932,7 @@ begin
  end;
 end;
 
-function IsAbsolute(s:String):boolean;
+function IsAbsolute(s:TPathName):boolean;
 begin
  if (length(s)>=2) and (s[2]=DriveDelim) then
  begin
@@ -1041,7 +1024,7 @@ end;
  }
 procedure TdhPage.WriteInitialProps(Writer: TWriter);
 var PropChoose:TPropChoose;
-    s:string;
+    s:AString;
 begin
  s:='';
  for PropChoose:=low(TPropChoose) to high(TPropChoose) do
@@ -1475,7 +1458,7 @@ begin
  result:=GetOutputDirectory<>GetDefaultOutputDirectory;
 end;
 
-function TdhPage.GetDefaultOutputDirectory:string;
+function TdhPage.GetDefaultOutputDirectory:TPathName;
 var p:TControl;
 begin
 // if Parent is TCustomForm then
@@ -1487,27 +1470,27 @@ begin
   result:='DFM2HTML_'+Name+PathDelim;
 end;
 
-function GoodLocalPath(const path:string):string;
+function GoodLocalPath(const path:TPathName):TPathName;
 begin
  result:=path;
- if (result<>'') and not (result[length(result)] in ['/','\']) then
+ if (result<>'') and not CharInSet(result[length(result)],['/','\']) then
   result:=result+PathDelim;
  result:=GoodPathDelimiters(result);
 end;
 
-function GoodPathDelimiters(const path:string):string;
+function GoodPathDelimiters(const path:TPathName):TPathName;
 begin
  result:=path;
- result:=AnsiSubstText('/',PathDelim,result);
- result:=AnsiSubstText('\',PathDelim,result);
+ result:=StringReplace(result,'/',PathDelim,[rfReplaceAll]);
+ result:=StringReplace(result,'\',PathDelim,[rfReplaceAll]);
 end;
 
-function GoodWebPathDelimiters(const path:string):string;
+function GoodWebPathDelimiters(const path:TPathName):TPathName;
 begin
- result:=AnsiSubstText('\','/',path);
+ result:=StringReplace(path,'\','/',[rfReplaceAll]);
 end;
 
-procedure TdhPage.SetOutputDirectory(const Value: string);
+procedure TdhPage.SetOutputDirectory(const Value: TPathName);
 begin
  if Value=def_outp then
  begin
@@ -1520,7 +1503,7 @@ begin
   FOutputDirectory := def_outp;
 end;
 
-function TdhPage.GetOutputDirectory: string;
+function TdhPage.GetOutputDirectory: TPathName;
 begin
  if FOutputDirectory=def_outp then
   result:=GetDefaultOutputDirectory else
@@ -1684,7 +1667,7 @@ begin
  result:=false;
 end;
 
-procedure TdhPage.SetFTPURL(const Value: string);
+procedure TdhPage.SetFTPURL(const Value: TPathName);
 begin
  if FPublishURL<>Value then
  begin
@@ -1693,11 +1676,6 @@ begin
  end;
 end;
 
-{procedure TdhPage.SetPublishURL(const Value: string);
-begin
-  FPublishURL := Value;
-end;
- }
 
 procedure TdhPage.SetUseIFrame(value:boolean);
 begin
@@ -1748,12 +1726,12 @@ begin
  result:=IsHTMLBody;
 end;
 
-function TdhPage.GetImageDir:String;
+function TdhPage.GetImageDir:TPathName;
 begin
  result:=FinalGeneratedImageFolder(GeneratedImageFolder);
 end;
 
-function FinalGeneratedJavaScriptFile(const GeneratedJavaScriptFile:String):String;
+function FinalGeneratedJavaScriptFile(const GeneratedJavaScriptFile:TPathName):TPathName;
 begin
  if (GeneratedJavaScriptFile='') or IsAbsolute(GoodWebPathDelimiters(GeneratedJavaScriptFile)) then
   result:='dfm2html.js' else
@@ -1765,7 +1743,7 @@ begin
  result:=GoodWebPathDelimiters(result);
 end;
 
-function FinalGeneratedImageFolder(const GeneratedImageFolder:String):String;
+function FinalGeneratedImageFolder(const GeneratedImageFolder:TPathName):TPathName;
 begin
  result:=GeneratedImageFolder;
  if (result='') or IsAbsolute(GoodWebPathDelimiters(GeneratedImageFolder)) then
@@ -1774,7 +1752,7 @@ begin
  result:=GoodWebPathDelimiters(result);
 end;
 
-function FinalGeneratedCSSFile(const GeneratedCSSFile:String):String;
+function FinalGeneratedCSSFile(const GeneratedCSSFile:TPathName):TPathName;
 begin
  if (GeneratedCSSFile='') or IsAbsolute(GoodWebPathDelimiters(GeneratedCSSFile)) then
   result:='' else

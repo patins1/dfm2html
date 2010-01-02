@@ -10,7 +10,7 @@ uses
   Controls, Windows, Messages, forms, Graphics,
 
   {$ENDIF}
-   SysUtils, Classes,  dhPanel,GR32,dhLabel,crc,math;
+   SysUtils, Classes,  dhPanel,GR32,dhLabel,crc,math,dhStrUtils;
 
 
 type
@@ -19,9 +19,9 @@ type
 
   TdhFile = class(TdhPanel)
   private
-    FData:String;
-    FFileName:String;
-    HTMLFileName:String;
+    FData:TFileContents;
+    FFileName:TPathName;
+    HTMLFileName:TPathName;
     FUsage: TFileUsage;
     FLoop: boolean;
     FLinked: boolean;
@@ -35,26 +35,26 @@ type
   protected
     //procedure CreateParams(var Params: TCreateParams); override;
     procedure DefineProperties(Filer: TFiler); override;
-    function GetData(var FileData:String):boolean;
+    function GetData(var FileData:TFileContents):boolean;
     procedure SetASXY(const Value: TASXY); override;
   public
-    function ProposedFileName: String;
+    function ProposedFileName: TPathName;
     function HasFile:Boolean;
     function FileSize:integer;
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
     procedure Invalidate; override;
-    procedure LoadFromFile(const FileName:String; Linked:boolean);
-    //procedure SaveToFile(const FileName:String);
+    procedure LoadFromFile(const FileName:TPathName; Linked:boolean);
+    //procedure SaveToFile(const FileName:TPathName);
     procedure DoTopPainting; override;
     procedure GetAutoRect(AllowModifyX,AllowModifyY:boolean; var NewWidth, NewHeight: Integer); override;
     function EffectsAllowed: boolean; override;
 
-    procedure SetPath(const Path:String);
-    function GetRelativePath:String;
-    function GetAbsolutePath:String;
+    procedure SetPath(const Path:TPathName);
+    function GetRelativePath:TPathName;
+    function GetAbsolutePath:TPathName;
   published
-    property FileName:String read GetRelativePath write SetPath;
+    property FileName:TPathName read GetRelativePath write SetPath;
     property Usage:TFileUsage read FUsage write SetUsage default fuPure;
     property Loop:boolean read FLoop write FLoop stored IsLoopStored;
     property Linked:boolean read FLinked write SetLinked;
@@ -166,7 +166,7 @@ begin
   if not (csLoading in ComponentState) and Assigned(glSaveBin) and not ReallyFile and HasFile then
   begin
    HTMLFileName:=ProposedFileName;
-   ReallyFile:=true;     
+   ReallyFile:=true;
    InvalidFile:=true;
   end;
   Filer.DefineProperty('HTMLFileName', SkipValue, WriteHTMLFileName, ReallyFile);
@@ -202,20 +202,7 @@ begin
    Stream.ReadBuffer(FData[1], DataSize);
 end;
 
-
-function StringFromFile(const FileName:string):string;
-begin
- with TFileStream.create(FileName,fmOpenRead) do
- try
-  SetLength(Result,Size);
-  if Size<>0 then
-   ReadBuffer(Result[1],Size);
- finally
-  Free;
- end;
-end;
-
-procedure TdhFile.LoadFromFile(const FileName:String; Linked:boolean);
+procedure TdhFile.LoadFromFile(const FileName:TPathName; Linked:boolean);
 begin
  if not Linked then
  begin
@@ -229,19 +216,8 @@ begin
  FLinked:=Linked;
 end;
 
-procedure StringToFile(const FileName,s:string);
-begin
- with TFileStream.create(FileName,fmCreate) do
- begin
-  if s<>'' then
-   WriteBuffer(s[1],length(s));
-  Free;
- end;
-end;
-
-
                                {
-procedure TdhFile.SaveToFile(const FileName:String);
+procedure TdhFile.SaveToFile(const FileName:TPathName);
 begin
  StringToFile(FileName,GetData);
 // Writer.WriteString(ole.SourceDoc);
@@ -323,7 +299,7 @@ begin
  Writer.WriteString(HTMLFileName);
 end;
 
-function TdhFile.ProposedFileName:String;
+function TdhFile.ProposedFileName:TPathName;
 begin
  result:=FinalID(Self)+ExtractFileExt(FFileName);
 end;
@@ -331,8 +307,8 @@ end;
 
 function TdhFile.PrepareHTMLFile:boolean;
 var NeedSave:boolean;
-    FileData:String;
-    AbsoluteHTMLFileName:String;
+    FileData:TFileContents;
+    AbsoluteHTMLFileName:TPathName;
 begin
  result:=false;
  if not GetData(FileData) then
@@ -393,7 +369,7 @@ begin
  end;
 end;
 
-function TdhFile.GetData(var FileData:String): boolean;
+function TdhFile.GetData(var FileData:TFileContents): boolean;
 begin
  if Linked then
  begin
@@ -410,7 +386,7 @@ begin
  result:=true;
 end;
 
-procedure TdhFile.SetPath(const Path:String);
+procedure TdhFile.SetPath(const Path:TPathName);
 var RelativePathProvider:IRelativePathProvider;
 begin
   RelativePathProvider:=findIRelativePathProvider(self);
@@ -422,7 +398,7 @@ begin
   FFileName:=Path;
 end;
 
-function TdhFile.GetRelativePath:String;
+function TdhFile.GetRelativePath:TPathName;
 var RelativePathProvider:IRelativePathProvider;
 begin
   RelativePathProvider:=findIRelativePathProvider(self);
@@ -434,7 +410,7 @@ begin
   Result:=FFileName;
 end;
 
-function TdhFile.GetAbsolutePath:String;
+function TdhFile.GetAbsolutePath:TPathName;
 var RelativePathProvider:IRelativePathProvider;
 begin
   RelativePathProvider:=findIRelativePathProvider(self);

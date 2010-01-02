@@ -38,12 +38,19 @@ const GIFPaintPerHand=false;
 type TFastPaint=^DWORD;
 var FastPaint:TFastPaint;
     FastPaintWidth:integer;
-type TGIFRenderer32=class(TGIFRenderer)
+type TPatchedGIFRenderer=class(TGIFRenderer)
+  public
+    procedure Draw(ACanvas: TCanvas; const Rect: TRect); override;
+end;
+type TGIFRenderer32=class(TPatchedGIFRenderer)
   public
     constructor Create(AImage: TGIFImage); override;
     procedure StartAnimation; override;
 end;
-type TGIFSubImage=TGIFFrame;
+type TPatchedGifImage=class(TGifImage)
+  strict protected
+    function CreateRenderer: TCustomGIFRenderer; override;
+end;
 var ForcedGIFRenderer:TGIFRenderer32=nil;
 {$ENDIF}
 
@@ -2259,6 +2266,8 @@ begin
 end;
 
 function TLocationImage.RequestGraphic:TGraphic;
+var NewGraphic: TGraphic;
+    Filename:TPathName;
 begin
  if GetGraphic<>nil then
  begin
@@ -2269,7 +2278,18 @@ begin
   FreeAndNil(FPictureID);
   FPictureID:=TPictureID.Create;
   try
-    FPictureID.LoadFromFile(GetAbsolutePath);
+    Filename:=GetAbsolutePath;
+    if LowerCase(ExtractFileExt(Filename))='.gif' then
+    begin
+     NewGraphic := TPatchedGifImage.Create;
+     try
+       NewGraphic.LoadFromFile(Filename);
+       FPictureID.Assign(NewGraphic);
+     finally
+       NewGraphic.Free;
+     end;
+    end else
+     FPictureID.LoadFromFile(Filename);
     FPictureID.OnChange:=Changed;
   except
     FreeAndNil(FPictureID);
@@ -17321,6 +17341,24 @@ end;
 procedure TGIFRenderer32.StartAnimation;
 begin
   // do nothing
+end;
+
+type PCanvas=^TCanvas;
+
+procedure TPatchedGIFRenderer.Draw(ACanvas: TCanvas; const Rect: TRect);
+begin
+  PCanvas(@TargetCanvas)^:=ACanvas;
+  inherited Draw(ACanvas, Rect);
+  PCanvas(@TargetCanvas)^:=nil;
+end;
+
+function TPatchedGIFImage.CreateRenderer: TCustomGIFRenderer;
+begin
+  Result := TPatchedGIFRenderer.Create(Self);
+  Result.Speed := AnimationSpeed;
+  Result.Transparent := Transparent;
+  Result.BackgroundColor := EffectiveBackgroundColor;
+  Result.Animate := Animate;
 end;
 
 

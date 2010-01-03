@@ -7395,6 +7395,7 @@ begin
  begin
   FIsOver:=Value;
   if RuntimeMode then
+  if not (not FIsOver and (glSelCompo<>Self)) then //required since Delphi2010: when other control is already selected before this control gets the MouseLeave event, do nothing
    glUpdateOver(Self,Value,false) else
   if IsDlg then
   begin

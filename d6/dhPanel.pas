@@ -17392,7 +17392,7 @@ var //_BackIsValid,_TopIsValid:boolean;
     //_TopGraph,_BackGraph,_TransparentTop:TMyBitmap32;
     pn:TdhCustomPanel;
     graph:TGraphic;
-    imageIndex,w,h:integer;
+    OldFrameIndex,NewFrameIndex,w,h:integer;
     _crc:DWORD;
     NeedSave:boolean;
     bt:TBitmap;
@@ -17400,7 +17400,6 @@ var //_BackIsValid,_TopIsValid:boolean;
     fingif,Sub:TGIFImage;
     GCE:TGIFGraphicControlExtension;
     PrevSubImage:TGIFFrame;
-    si:TGIFFrame;
     pnTopGraph,pnTransparentTop:TMyBitmap32;
     EqArea:TRect;
     EqX,EqY:integer;
@@ -17429,8 +17428,7 @@ begin
    try
     ForcedGIFRenderer:=TGIFRenderer32.Create(TGIFImage(graph));
     try
-    for imageIndex:=0 to TGIFImage(graph).Images.Count-1 do
-    begin
+    repeat
      //PreventGraphicOnChange:=true;
      pn.TopIsValid:=false;
      pn.AssertTop(addheight,true);
@@ -17439,8 +17437,10 @@ begin
       TrimRightBottom(pn.TransparentTop,w,h);
       _crc:=GetCRCFromBitmap32(pn.TransparentTop,pn.TopGraph,w,h,_crc);
      end;
+     OldFrameIndex:=TGIFImage(graph).Images.IndexOf(ForcedGIFRenderer.Frame);
      ForcedGIFRenderer.NextFrame;
-    end;
+     NewFrameIndex:=TGIFImage(graph).Images.IndexOf(ForcedGIFRenderer.Frame);
+    until not (NewFrameIndex>OldFrameIndex);
     finally
       FreeAndNil(ForcedGIFRenderer);
     end;
@@ -17456,10 +17456,8 @@ begin
      try
      try
       PrevSubImage:=nil;
-      for imageIndex:=0 to TGIFImage(graph).Images.Count-1 do
-      begin
+      repeat
        //PreventGraphicOnChange:=true;
-       si:=TGIFFrame(TGIFImage(graph).Images[imageIndex]);
        pn.TopIsValid:=false;
        pn.AssertTop(addheight,true);
        if HasSomething(pn.TransparentTop) then
@@ -17470,10 +17468,12 @@ begin
        if GCE<>nil then
         AddGIFSubImageFromBitmap32(pn.TransparentTop,pn.TopGraph,fingif,GCE.Delay,PrevSubImage) else
   }
-        PrevSubImage:=AddGIFSubImageFromBitmap32(pn.TransparentTop,pn.TopGraph,fingif,true,si,PrevSubImage);
+        PrevSubImage:=AddGIFSubImageFromBitmap32(pn.TransparentTop,pn.TopGraph,fingif,true,ForcedGIFRenderer.Frame,PrevSubImage);
        end;
+       OldFrameIndex:=TGIFImage(graph).Images.IndexOf(ForcedGIFRenderer.Frame);
        ForcedGIFRenderer.NextFrame;
-      end;
+       NewFrameIndex:=TGIFImage(graph).Images.IndexOf(ForcedGIFRenderer.Frame);
+      until not (NewFrameIndex>OldFrameIndex);
       CloseGif(fingif);
       //fingif.OptimizeColorMap; //saves many kb at many frames
       fingif.SaveToFile(AbsoluteRasteringFile);

@@ -16627,6 +16627,25 @@ end;
 
 {.$IFNDEF CLX}
 
+function ReduceColorsWithTransparentColorReservation(GIFImage:TGIFImage; Bitmap:TBitmap):TBitmap;   
+var Bitmaps:TList;
+    Palette:hPalette;
+begin
+  Bitmaps:=TList.Create;
+  try
+    Bitmaps.Add(Bitmap);
+    Palette:=CreateOptimizedPaletteFromManyBitmaps(Bitmaps,1 SHL GIFImage.ReductionBits-1, 6, false);
+    try
+      Result:=ReduceColors(Bitmap,rmPalette,GIFImage.DitherMode,GIFImage.ReductionBits,Palette);
+      Bitmap.Free;
+    finally
+      if (Palette <> 0) then
+        DeleteObject(Palette);
+   end;
+  finally
+   Bitmaps.Free;
+  end;
+end;
 
 function AddGIFSubImageFromBitmap32(Transparent:TBitmap32; Opaque:TBitmap32; GIF:TGIFImage; Loop:boolean=false; CopyFrom:TGIFFrame=nil; PrevSubImage:TGIFFrame=nil):TGIFFrame;
 var y,x,i:integer;
@@ -16691,6 +16710,9 @@ begin
     end;
    end;
   end;
+
+  if WasTransparent then  
+   bt:=ReduceColorsWithTransparentColorReservation(gif,bt);
 
 {$IFDEF VER210}
   GIFSubImage:=GIF.Add(bt);

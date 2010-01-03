@@ -207,7 +207,6 @@ begin
  res:=res+GoodForm(c.Name)+'='+GoodForm(Val)+'&';
 end;
 
-var s,dummy:AnsiString;
 begin
 { if (c is TdhCustomBox) and (TdhCustomBox(c).ItemIndex>=0) then
   AddField(TdhCustomBox(c).Value) else}

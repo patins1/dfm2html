@@ -97,7 +97,6 @@ type
     FForwardingURL: TPathName;
     FBackgroundSoundForever: boolean;
     FBackgroundSoundLoop: integer;
-    FBackgroundSoundURL: AnsiString;
     FPublishURL: TPathName;
     FHTTPURL: TPathName;
     FGeneratedImageFolder: TPathName;
@@ -199,7 +198,6 @@ type
     property HTMLTop:HypeString read FHTMLTop write FHTMLTop;
     property ForwardingDelay:integer read FForwardingDelay write FForwardingDelay default 0;
     property ForwardingURL:TPathName read FForwardingURL write FForwardingURL;
-    property BackgroundSoundURL:AnsiString read FBackgroundSoundURL write FBackgroundSoundURL;
     property BackgroundSoundForever:boolean read FBackgroundSoundForever write FBackgroundSoundForever default true;
     property BackgroundSoundLoop:integer read FBackgroundSoundLoop write FBackgroundSoundLoop default 0;
     property MetaAuthor:HypeString read FMetaAuthor write FMetaAuthor;

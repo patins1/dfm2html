@@ -3547,18 +3547,6 @@ end;
 
 
 
-(*
-function Tnt_ExtTextOutW(DC: HDC; X, Y: Integer; Options: Longint;
-  Rect: PRect; Str: PWideChar; Count: Longint; Dx: PInteger): BOOL;
-begin
-  if Win32PlatformIsUnicode then
-    Result := ExtTextOutW(DC, X, Y, Options, Rect, Str, Count, Dx)
-  else
-    Result := ExtTextOutA{TNT-ALLOW ExtTextOutA}(DC, X, Y, Options, Rect,
-      PAnsiChar(AnsiString(_WStr(Str, Count))), Count, Dx);
-end;
-
-*)
 {
 function TdhRule.GetOverBasedOnDown:boolean;
 begin

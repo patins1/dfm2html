@@ -2065,12 +2065,6 @@ function findIRelativePathProvider(C:TControl):IRelativePathProvider;
 implementation
 
 
-{$IFDEF CLX}
-{$IFDEF MSWINDOWS}
-uses QJpegLoader;
-{$ENDIF}
-{$ENDIF}
-
 var PreventAdjustMargin:boolean=false;
 
 {

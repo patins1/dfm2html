@@ -6,9 +6,9 @@ uses
   {$IFDEF CLX}
   QForms, QControls, QGraphics, QStdCtrls, Qt, QButtons, QDialogs, QClipbrd, QExtCtrls, QMenus, QTntStdCtrls,
   {$ELSE}
-  Forms, Controls, Windows, Messages, Graphics, StdCtrls, Buttons, ExtCtrls, Menus, clipbrd, Dialogs, TntForms, TntStdCtrls,
+  Forms, Controls, Windows, Messages, Graphics, StdCtrls, Buttons, ExtCtrls, Menus, clipbrd, Dialogs, UnicodeCtrls,
   {$ENDIF}
-  SysUtils, Classes, types, dhPanel, dhLabel, DKLang, uSearchStr, Gr32, MyForm{$IFDEF LINUX},libc{$ENDIF};
+  SysUtils, Classes, types, dhPanel, dhLabel, uSearchStr, DKLang, Gr32, MyForm{$IFDEF LINUX},libc{$ENDIF}, dhStrUtils;
 
 type
   TColorPicker = class(TMyForm)

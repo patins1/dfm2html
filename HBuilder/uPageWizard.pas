@@ -8,11 +8,11 @@ uses
   QMask, Qt,
 {$ELSE}
   Controls, Windows, Messages, Graphics, Forms, ComCtrls, Dialogs,
-  ShellAPI, Mask, ExtCtrls, StdCtrls,  Variants, clipbrd, gifimage, Spin, FileCtrl, TntStdCtrls, TntForms, TntComCtrls,
+  ShellAPI, Mask, ExtCtrls, StdCtrls,  Variants, clipbrd, Spin, FileCtrl, UnicodeCtrls,
 {$ENDIF}
   SysUtils, Classes, htmlrout, MySpinEdit,
   dhPageControl, dhPanel, dhLabel, FuncUtils,UseFastStrings, MyPageControl, DKLang, MyForm,
-  MyGroupBox;
+  MyGroupBox, dhStrUtils;
 
 type
   TPageWizard = class(TMyForm)
@@ -79,10 +79,10 @@ type
     procedure Button32Click(Sender: TObject);
   private
     { Private declarations }
-    FPublishURL: string;
+    FPublishURL: TPathName;
     page:TdhPage;
-    procedure SetPublishURL(const Value: string);
-    property PublishURL:string read FPublishURL write SetPublishURL;
+    procedure SetPublishURL(const Value: TPathName);
+    property PublishURL:TPathName read FPublishURL write SetPublishURL;
   public
     { Public declarations }
     function Prepare(pages:TList):boolean;
@@ -208,7 +208,7 @@ begin
 end;
 
 procedure TPageWizard.Button2Click(Sender: TObject);
-var URL:String;
+var URL:TPathName;
 begin
  LateCreateForm(TPublishFTP,PublishFTP);
  URL:=PublishURL;
@@ -231,7 +231,7 @@ begin
  end;
 end;
 
-procedure TPageWizard.SetPublishURL(const Value: string);
+procedure TPageWizard.SetPublishURL(const Value: TPathName);
 var r:integer;
 begin
   FPublishURL := Value;
@@ -242,7 +242,6 @@ end;
 
 procedure TPageWizard.Button32Click(Sender: TObject);
 var Directory:{$IFDEF CLX}widestring{$ELSE}string{$ENDIF};
-    sw:string;
 begin
  Directory:=ResolveRelativeURL(ExtractFilePath(Application.ExeName),eOutputDirectory.Text);
 // if SelectDirectory(Directory,[sdAllowCreate],0) then

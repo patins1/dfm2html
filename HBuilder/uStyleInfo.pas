@@ -8,7 +8,7 @@ uses
   QMask, Qt,
 {$ELSE}
   Controls, Windows, Messages, Graphics, Forms, ComCtrls, Dialogs,
-  ShellAPI, Mask, ExtCtrls, StdCtrls,  Variants, clipbrd, gifimage,Spin, TntStdCtrls,TntForms,//FileCtrl,
+  ShellAPI, Mask, ExtCtrls, StdCtrls,  Variants, clipbrd, Spin, UnicodeCtrls,//FileCtrl,
 {$ENDIF}
   SysUtils, Classes, dhPanel, DKLang;
 

@@ -7,9 +7,9 @@ uses
   {$IFDEF CLX}
   QControls, QGraphics, QStdCtrls, QMask, QForms, QButtons, QDialogs, QTntStdCtrls,
   {$ELSE}
-  Dialogs, Controls, Windows, Messages, Graphics, StdCtrls, ShellAPI, Mask, Forms, Buttons, Spin, TntForms, TntStdCtrls,
+  Dialogs, Controls, Windows, Messages, Graphics, StdCtrls, ShellAPI, Mask, Forms, Buttons, Spin, UnicodeCtrls,
   {$ENDIF}
-  SysUtils, Classes, Types, dhPanel, dhPageControl, dhLabel, binlist, DKLang, MyForm;
+  SysUtils, Classes, Types, dhPanel, dhPageControl, dhLabel, binlist, DKLang, MyForm, dhStrUtils;
 
 type
   TChooseUnicode = class(TMyForm)

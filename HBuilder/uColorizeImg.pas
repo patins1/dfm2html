@@ -8,9 +8,9 @@ uses
   QControls, QGraphics, QForms, QStdCtrls, QExtCtrls, QComCtrls,
   QMask, QTntStdCtrls,
 {$ELSE}
-  Controls, Windows, Messages, Graphics, Forms, ComCtrls, ShellAPI, Mask, ExtCtrls, StdCtrls,  Variants, clipbrd, TntForms, TntStdCtrls,
+  Controls, Windows, Messages, Graphics, Forms, ComCtrls, ShellAPI, Mask, ExtCtrls, StdCtrls,  Variants, clipbrd, UnicodeCtrls,
 {$ENDIF}
-  GR32, GR32_Image, math, gifimage, hComboBox, unit3, dhPanel, MyTrackBar, dhLabel, DKLang,
+  GR32, GR32_Image, math, {$IFDEF VER210}GIFImg{$ELSE}GIFImage{$ENDIF}, hComboBox, unit3, dhPanel, MyTrackBar, dhLabel, DKLang,
   MyPanel;
 
 //const WM_DelayDraw = WM_USER + 3;

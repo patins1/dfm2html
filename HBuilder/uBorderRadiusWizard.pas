@@ -9,7 +9,7 @@ uses
   QMask,
 {$ELSE}
   Controls, Windows, Messages, Graphics, Forms, ComCtrls,
-  ShellAPI, Mask, ExtCtrls, StdCtrls,  Variants, clipbrd, gifimage, Spin, TntStdCtrls, TntForms,
+  ShellAPI, Mask, ExtCtrls, StdCtrls,  Variants, clipbrd, Spin, UnicodeCtrls,
 {$ENDIF}
   GR32, GR32_Image,math,
   hComboBox,unit3,dhPanel, MyTrackBar,  MySpinEdit, dhLabel, dhMenu,
@@ -140,7 +140,6 @@ end;
 
 
 procedure TBorderRadiusWizard.UpdateRadiusDisplay;
-//const sBorderCorner:array[TCornerAlign] of string=('All','Top-Left','Bottom-Right','Bottom-Left','Top-Right');
 
 {procedure SetCleared(pn:TdhLink; IsCleared:boolean);
 begin

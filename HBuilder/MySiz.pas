@@ -14,7 +14,7 @@ uses
   QControls, QForms, Qt, QGraphics, QDialogs, QExtCtrls, QComCtrls,  QStdCtrls, QClipbrd, QMenus,
 {$ELSE}
   Windows,Forms, Controls, Messages, Graphics, Dialogs, ExtCtrls, clipbrd,
-  ComCtrls, CommCtrl, StdCtrls, ShellAPI, pngimage, GIFImage, Menus,
+  ComCtrls, CommCtrl, StdCtrls, ShellAPI, pngimage, Menus,
 {$ENDIF}
   math,hComboBox,dhSelect,
   funcutils, Contnrs, UseFastStrings,
@@ -139,7 +139,7 @@ type
     //property Selection:TList read FChildList;
     function GetSelectionIDs: TStringList;
     procedure AddSelectionByIDs(sl: TStringList);
-    procedure AddSelectionByID(const id:String);
+    procedure AddSelectionByID(const id:TComponentName);
     function IsSelected(Control:TControl):boolean;
     function HasSelectedComponents:boolean;
     function HasOneSelectedComponent:boolean;
@@ -280,7 +280,7 @@ begin
   finally
     Clipboard.Close;
   end;
-end;   
+end;
 {$ENDIF}
 
 
@@ -1791,7 +1791,7 @@ begin
  FlushSelection;
 end;
 
-procedure TMySiz.AddSelectionByID(const id:String);
+procedure TMySiz.AddSelectionByID(const id:TComponentName);
 var sl:TStringList;
 begin
  sl:=TStringList.Create;
@@ -1892,7 +1892,7 @@ begin
     S:='';
   end else
    S:='';}
-  if (FindStr='') or (S<>'') and (UseFastStrings.Pos(UpperCaseIf(FindStr,not FindCaseSensitive),UpperCaseIf(S,not FindCaseSensitive))>0) then
+  if (FindStr='') or (S<>'') and (Pos(UpperCaseIf(FindStr,not FindCaseSensitive),UpperCaseIf(S,not FindCaseSensitive))>0) then
   begin
    SetControlTo(c,true,true);
    result:=true;
@@ -2031,7 +2031,6 @@ begin
  end;
 
  MessageDlg(DKFormat(SEARCHFAILED,FindStr),mtInformation,[mbOK],0);
- //showmessage('Search string '''+FindStr+''' not found');
 end;
 
 procedure TMySiz.Select(All:boolean; Below:boolean);

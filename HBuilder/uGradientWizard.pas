@@ -6,10 +6,11 @@ uses
   {$IFDEF CLX}
   QControls, QGraphics, QStdCtrls, QMask, QForms, QButtons, QTntStdCtrls,
   {$ELSE}
-  Controls, Windows, Messages, Graphics, StdCtrls, ShellAPI, Mask, Forms, Buttons, Spin, TntForms, TntStdCtrls, TntButtons, TntExtCtrls,
+  Controls, Windows, Messages, Graphics, StdCtrls, ShellAPI, Mask, Forms, Buttons, Spin, UnicodeCtrls,
   {$ENDIF}
   SysUtils, Classes,
-  dhLabel, dhMenu, dhPanel, dhColorPicker, gr32, DKLang, MySpinEdit, Math;
+  dhLabel, dhMenu, dhPanel, dhColorPicker, gr32, DKLang, MySpinEdit, Math,
+  ExtCtrls;
 
 type
   TGradientWizard = class(TTntForm)

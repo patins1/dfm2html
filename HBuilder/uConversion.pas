@@ -7,7 +7,7 @@ uses
 {$IFDEF CLX}
   QControls, QForms, Qt, QGraphics, QDialogs, QExtCtrls, QComCtrls,  QStdCtrls, QMask, QButtons,
 {$ELSE}
-  Controls, Forms, Windows, Messages, Graphics, Dialogs, ExtCtrls, clipbrd, Buttons, GIFImage, JPeg,
+  Controls, Forms, Windows, Messages, Graphics, Dialogs, ExtCtrls, clipbrd, Buttons, {$IFDEF VER210}GIFImg{$ELSE}GIFImage{$ENDIF}, JPeg,
   ComCtrls, CommCtrl, StdCtrls, ShellAPI, pngimage,  Menus,
   {Mask,} ToolWin, ImgList, AppEvnts,
 {$ENDIF}
@@ -16,7 +16,7 @@ uses
   dhFile,dhHTMLForm, dhPanel, dhPageControl, dhMultilineCaptionEdit, dhStyleSheet, dhOleContainer,dhHiddenField,
   dhDirectHTML, dhMenu, dhLabel, dhCheckBox, dhRadioButton, dhEdit, dhMemo, dhFileField,dhSelect,
   UseFastStrings, {GIFImage, JPeg, }//crc,
-  math,binlist,bintree;
+  math,binlist,bintree,dhStrUtils;
 
 const directIE=false;
 type TBounds=record Left, Top, Width, Height: Longint; end;
@@ -25,7 +25,7 @@ var DFM2HTML_VERSION:string='DFM2HTML v4.0';
 var Registered:boolean=false;
 //var DFM2HTML_REG:string='';
 
-var glStringToFile:procedure (FileName:string; const s:string);
+var glStringToFile:procedure (FileName:TPathName; const s:TFileContents);
 //const ShareWare=not true;
 var DFMs:TStringList;
 var men:string='';
@@ -39,10 +39,10 @@ type TGetFrameDFM=function (const FrameClass:string; var FrameFile:string):boole
 procedure StartConverting(const _BaseDir:string; _Compress:boolean; _GetFrameDFM:TGetFrameDFM);
 procedure EndConverting;
 //procedure DoConvert(const PureFileName,FileName:string);
-function DoConvertContent(var PureFileName:string; const {PureFileName,}_Content:string):string;
+function DoConvertContent(var PureFileName:TPathName; const _Content:TFileContents):TFileContents;
 
 function _ObjectTextToResource(f:TStringStream):TStringStream;
-function ExtractPureFileName(const f:string): string;
+function ExtractPureFileName(const f:TPathName): TPathName;
 
 var OnLoad:boolean=false;
 
@@ -52,24 +52,26 @@ implementation
 
 const gif1by1='4749463839610100010080000000000000000021F90401000000002C00000000010001000002024401003B';
 
-var cssfile:string;
+var cssfile:TPathName;
 var EverNeeded1by1,EverNeededSplit,EverNeededButton,EverNeededJS:Boolean;
 
-function GetBackBinary(const ss:string):string;
+function GetBackBinary(const ss:string):TFileContents;
 var i:integer;
-    s:string;
 begin
- setlength(s,length(ss) div 2);
- for i:=1 to length(s) do
-  s[i]:=chr(strtoint('$'+ss[i*2-1]+ss[i*2]));
- result:=s;
+ setlength(result,length(ss) div 2);
+ for i:=1 to length(result) do
+  result[i]:=AnsiChar(strtoint('$'+ss[i*2-1]+ss[i*2]));
 end;
 
+function ShouldBeAnsi(const s:string):AnsiString;
+begin
+  Result:=AnsiString(s);
+end;
 
 //type TStat=(stMN,stDN,stOV,stOD);
 
 type tnest= class(TList)
-    id:string;
+    id:TComponentName;
     borders:TPoint;
     InnerPos:integer;
     MinWidth:integer;
@@ -118,6 +120,7 @@ type tnest= class(TList)
   private
     function contains(const PropName, Value: string): boolean;
     function HasProp(const PropName: string; var s: string): boolean; overload;
+    function HasProp(const PropName: string; var s: TPathName): boolean; overload;
     function HasProp(const PropName: string; var i: integer): boolean; overload;
     function HasProp(const PropName: string): boolean; overload;
     function IsProp(const PropName, Value: string): boolean;
@@ -152,6 +155,16 @@ begin
 end;
 
 function tnest.HasProp(const PropName:string; var s:string):boolean;
+var i:integer;
+begin
+ i:=Props.IndexOf(PropName);
+ result:=i<>-1;
+ if result then
+  s:=PropVals[i];
+end;
+
+
+function tnest.HasProp(const PropName:string; var s:TPathName):boolean;
 var i:integer;
 begin
  i:=Props.IndexOf(PropName);
@@ -299,7 +312,7 @@ var IndentSpace: string;
 var CRLF: string;
     SuppressWrite:boolean=false;
     PreventApplyTemplates:boolean=False;
-    BaseDir:string;
+    BaseDir:TPathName;
     Compress:boolean;
     GetFrameDFM:TGetFrameDFM;
 const svg=false;    
@@ -337,7 +350,6 @@ begin
 end;
 
 
-var ccc:integer;
 
 function GetAttr(const Substr,s:string; var vn:integer; var inhalt:string):boolean;
 var g:tg;
@@ -368,19 +380,6 @@ begin
  end;
 end;
 }
-
-function StringFromFile(const FileName:string):string;
-begin
- with TFileStream.create(FileName,fmOpenRead) do
- try
-  SetLength(result,Size);
-  if Size<>0 then
-   ReadBuffer(result[1],Size);
- finally
-  Free;
- end;
-end;
-
 {
 function GetHexColor(c:integer):string;
 begin
@@ -415,7 +414,7 @@ begin
     }
 end;
 
-function FormattedHTML(s:WideString):string;
+function FormattedHTML(s:WideString):AnsiString;
 var vn,itag:integer;
     Closing:boolean;
     tag,text:string;
@@ -443,23 +442,30 @@ var
   SaveSeparator: Char;
   Reader: TReader;
   Writer: TWriter;
-  ObjectName, PropName: string; 
+  ObjectName, PropName: string;
   ClassName: string;
+  UTF8Idents: Boolean;
+  MemoryStream: TMemoryStream;
 
   procedure WriteIndent;
   const
-    Blanks: array[0..1] of Char = '  ';
+    Blanks: array[0..1] of AnsiChar = (#32, #32); //'  ';
   var
     I: Integer;
   begin
     for I := 1 to NestingLevel do Writer.Write(Blanks, SizeOf(Blanks));
   end;
 
-  procedure WriteStr(const S: string);
+  procedure WriteStr(const S: RawByteString); overload;
   begin
-    //if Propname='DesignSize' then exit;
    if not SuppressWrite then
     Writer.Write(S[1], Length(S));
+  end;
+
+  procedure WriteStr(const S: UnicodeString); overload; inline;
+  begin
+   if not SuppressWrite then
+    WriteStr(AnsiString(S));
   end;
 
   procedure NewLine;
@@ -497,8 +503,6 @@ var
       WriteStr(' name="'+ObjectName+'"');
     end;
     WriteStr(' classname="'+ClassName+'"');
-//    WriteStr(' si="'+IntToStr(ccc)+'"');
-    inc(ccc);
     if ffChildPos in Flags then
     begin
       WriteStr(' childpos="'+IntToStr(Position)+'"');
@@ -518,8 +522,8 @@ var
     MultiLine: Boolean;
     I: Integer;
     Count: Longint;
-    Buffer: array[0..BytesPerLine - 1] of Char;
-    Text: array[0..BytesPerLine * 2 - 1] of Char;
+    Buffer: array[0..BytesPerLine - 1] of AnsiChar;
+    Text: array[0..BytesPerLine * 2 - 1] of AnsiChar;
 
     s,f:string;
     AHandle,r: Integer;
@@ -527,114 +531,18 @@ var
     Reader.ReadValue;
     Inc(NestingLevel);
     Reader.Read(Count, SizeOf(Count));
-
-    setlength(s,Count);
+    SetLength(s,Count);
     if Count<>0 then
      Reader.Read(s[1], Count);
-
-{    inc(BinCount);
-    if BinCount>1 then
-     Objectname:=ObjectName+'_'+inttostr(BinCount);
- }
-
     WriteStr(' value="');
-    (*
-    if copy(s,2,length('TIcon'))='TIcon' then
-    begin
-     delete(s,1,1+length('TIcon'));
-     f:='.ico';
-    end else
-    if bAdvPosTil(r,'GIF89a',s,1,50) or bAdvPosTil(r,'GIF87a',s,1,50) then
-    begin
-     delete(s,1,r-1);
-     f:='.gif';
-     {s[$b+1]:=chr($00);
-     s[$313+1]:=chr($FF);   }
-    end else
-    if copy(s,2,length('TGIFImage'))='TGIFImage' then
-    begin
-     delete(s,1,1+length('TGIFImage')+4);
-     f:='.gif';
-    end else
-    if copy(s,2,length('TJPEGImage'))='TJPEGImage' then
-    begin
-     delete(s,1,1+length('TJPEGImage')+4);
-     f:='.jpeg';
-    end else
-    if copy(s,2,length('TPNGObject'))='TPNGObject' then
-    begin
-     delete(s,1,1+length('TPNGObject'));
-     f:='.png';
-    end else
-    begin
-     delete(s,1,pos('BM',s)-1);
-     f:='.bmp';
-    end;
-    if WrittenObjs.IndexOf(ObjectName+f)<>-1 then
-    for i:=2 to maxint do
-    if WrittenObjs.IndexOf(ObjectName+'_'+inttostr(i)+f)=-1 then
-    begin
-     f:='_'+inttostr(i)+f;
-     break;
-    end;
-    f:=ObjectName+f;
-    WriteStr(f);
-    WrittenObjs.Add(f);
-    try
-    AHandle:=FileCreate(SaveDir+f,0);
-    if AHandle>=0 then
-    begin
-     FileClose(AHandle);
-     StringToFile(SaveDir+f,s);
-    end;
-    except
-    end;
-{    MultiLine := Count >= BytesPerLine;
-    while Count > 0 do
-    begin
-      if MultiLine then NewLine;
-      if Count >= 32 then I := 32 else I := Count;
-      Reader.Read(Buffer, I);
-      BinToHex(Buffer, Text, I);
-      Writer.Write(Text, I * 2);
-      Dec(Count, I);
-    end;
-}
-
-    *)
-//    WriteStr('"');
-
     Dec(NestingLevel);
     WriteStr('"/>');
   end;
-                       {
-  function MaskQuotes(const s:string):string;
-  begin
-//   result:=StringReplace(result,'\','\\',[rfReplaceAll, rfIgnoreCase]);
-   result:=StringReplace(s,'"','""',[rfReplaceAll, rfIgnoreCase]);
-  end;
 
-  function UnMaskQuotes(const s:string):string;
-  begin
-   result:=s;
-   result:=StringReplace(s,'""','"',[rfReplaceAll, rfIgnoreCase]);
-   result:=StringReplace(result,'\\','\',[rfReplaceAll, rfIgnoreCase]);
-  end;
-                          }
-
-  function Enc(const s:string):string;
+  function Enc(const s:AnsiString):string;
   var i:integer;
   begin
    result:=AnsiSubstText('"',MaskQuotes,s);
-   (*result:=s;
-   for i:=1 to length(s) do
-   if (s[i]='<') or (s[i]='"') then
-//   if (pos('<',s)>0) or (pos('"',s)>0) then
-   begin
-    result:='txt'+inttostr(calc_crc32_String(s));
-    InsTexts.Add(result+'='+s);
-    exit;
-   end;*)
   end;
 
 
@@ -645,8 +553,8 @@ var
     LineLength = 64;
   var
     I, J, K, L: Integer;
-    S: string;
-    W: WideString;
+    S: AnsiString;
+    W: UnicodeString;
     LineBreak: Boolean;
     colval,sn:string;
     val:integer;
@@ -654,7 +562,7 @@ var
     nv:TValueType;
     _SuppressWrite:boolean;
 
-  function GetRight(s:WideString):string;
+  function GetRight(s:WideString):AnsiString;
   begin
           if ((ClassName='TdhLabel') or (ClassName='TdhLink') or (ClassName='TdhCheckBox') or (ClassName='TdhRadioButton') or (ClassName='TdhFormButton')) and (PropName='Text') or
              (ClassName='TdhDirectHTML') and (PropName='InnerHTML') or
@@ -668,8 +576,6 @@ var
 
 
   begin
-   {if Propname='DesignSize' then
-   if Propname='DesignSize' then; }
     case Reader.NextValue of
       vaList:
       if (PropName='HTML.Strings') or (PropName='Items.Strings') or (PropName='Lines.Strings') then
@@ -684,23 +590,11 @@ var
           end;
           s:=copy(s,1,length(s)-length(endl_main));
           Reader.ReadListEnd;
-          //if (PropName='HTML.Strings') then
-          // s:=Enc(s);
-          {begin
-          sn:='txt'+inttostr(calc_crc32_String(s));
-          WriteStr(' value="'+sn+'"');
-          InsTexts.Add(sn+'='+s);
-          end else  }
-          begin
           WriteStr(' value="'+Enc(s)+'"');
-          end;
-
           WriteStr(' type="list"/>');
       end else
         begin
-//          WriteStr(' value="');
           Reader.ReadValue;
-//          WriteStr('(');
           WriteStr(' value="" type="list"/>');
           Inc(NestingLevel);
           _SuppressWrite:=SuppressWrite;
@@ -714,32 +608,13 @@ var
           SuppressWrite:=_SuppressWrite;
           Reader.ReadListEnd;
           Dec(NestingLevel);
-//          WriteStr(')');
-//          WriteStr('" type="list"/>');
           NewLine;
-//          WriteStr('</property>');
         end;
       vaInt8, vaInt16, vaInt32:
-//      if (Copy(PropName,length(PropName)-length('Color'),maxint)='Color') then
       if SubEqualEnd('Color',PropName) then
       begin
         val:=Reader.ReadInteger;
-       { if (val>=256*256*256) and ColorToIdent(val,colval) then
-        begin
-         delete(colval,1,2);
-         if SubEqual('Btn',colval) then
-          colval:=CopyInsert(colval,1,4,'Button');
-        end else   }
         colval:=dhPanel.ColorToString(val);
-        //colval:='#'+GetHexColor(val);
-{        if PropName='Font.Color' then
-        if FontColor=colval then
-        begin
-         WriteStr(' type="hex"/>');
-         exit;
-        end else
-         FontColor:=colval;
-}
         WriteStr(' value="'+colval+'" type="hex"/>');
       end else
         WriteStr(' value="'+IntToStr(Reader.ReadInteger)+'" type="integer"/>');
@@ -754,17 +629,12 @@ var
       vaWString, vaUTF8String:
         begin
           W := Reader.ReadWideString;
-
           WriteStr(' value="'+Enc(GetRight(W))+'" type="wstring"/>');
         end;
       vaString, vaLString:
         begin
-          S := Reader.ReadString;
-          //if ClassName='TdhDirectHTML' then
-          // WriteStr(' value="'+ConvertStringToUnicode(s,true)+'" type="string"/>') else
-          begin
-           WriteStr(' value="'+Enc(GetRight(S))+'" type="string"/>');
-          end;
+          S := AnsiString(Reader.ReadString);
+          WriteStr(' value="'+Enc(GetRight(S))+'" type="string"/>');
         end;
       vaFalse, vaTrue, vaNil, vaNull:
          WriteStr(' value="'+Reader.ReadIdent+'" type="ident"/>');
@@ -778,18 +648,8 @@ var
       end else
       if SubEqualEnd('Color',PropName) and not SubEqual('Style',PropName) then
       begin
-        s:=Reader.ReadIdent;
-
-        val:=StringToColor(s);
+        val:=StringToColor(Reader.ReadIdent);
         colval:=dhPanel.ColorToString(val);
-         // colval:=SubstText('Btn','Button',copy(Reader.ReadIdent,3,maxint));
-        {if PropName='Font.Color' then
-        if FontColor=colval then
-        begin
-         WriteStr(' type="ident"/>');
-         exit;
-        end else
-         FontColor:=colval; }
         WriteStr(' value="'+colval+'" type="ident"/>');
       end else
          WriteStr(' value="'+Reader.ReadIdent+'" type="ident"/>');
@@ -803,7 +663,7 @@ var
           I := 0;
           while True do
           begin
-            S := Reader.ReadStr;
+            S := AnsiString(Reader.ReadStr);
             if S = '' then Break;
             if I > 0 then WriteStr(', ');
             WriteStr(S);
@@ -862,9 +722,7 @@ var
     if PropName='ClientHeight' then
      PropName:='Height';
     if PropName='ClientWidth' then
-     PropName:='Width'{ else
-    if Propname='Tag' then
-     PropName:='Color'}; 
+     PropName:='Width';
 
     WriteStr('<property name="'+PropName+'"');
     ConvertValue;
@@ -874,7 +732,6 @@ var
 
   var sFontColor:string;
   begin
-    //BinCount:=0;
     sFontColor:=FontColor;
 
     ConvertHeader;
@@ -886,13 +743,11 @@ var
     Dec(NestingLevel);
     WriteIndent;
     WriteStr('</'+ObjType+'>' + sLineBreak);
-    //WriteStr('</object>' + sLineBreak);
 
     FontColor:=sFontColor;
   end;
 
 begin
-  ccc:=1;
   NestingLevel := 0;
   Reader := TReader.Create(Input, 4096);
   SaveSeparator := DecimalSeparator;
@@ -976,10 +831,10 @@ begin
   attr:=AbsCopy(s,vn1+length(Substr)+length('="'),vn2);
 end;
 
-function GetXMLFile(const filename,prefix:string): string; forward;
+function GetXMLFile(const filename:TPathName; prefix:TComponentName): TFileContents; forward;
 
-function GetXMLContent(const Content,prefix:string): string;
-var d:TStringStream;
+function GetXMLContent(const Content:TFileContents; prefix:TComponentName): TFileContents;
+var d:TMemoryStream;
     f,f2:TStringStream;
     dd:string;
     g:tg;
@@ -995,11 +850,11 @@ begin
     if TestStreamFormat(f)=sofText then //we need not Text but Resource format
      f:=_ObjectTextToResource(f);
     //convert to dfm to xml
-    d:=TStringStream.Create('');
+    d:=TMemoryStream.Create;
     try
      AllObjs:='';
      ObjectResourceToXML(f,d);
-     dd:=d.DataString;
+     dd:=AsString(d);
     finally
      d.Free;
     end;
@@ -1083,11 +938,10 @@ begin
     SaveExtern:=false;
     dd:=CopyInsert(dd,vn,vn2,endl+'<'+AnsiSubstText('<object name="','<object name="'+OriObjectName,copy(FrameS,2,maxint)));
    end;
-   if prefix<>prefix+' ' then
-   result:=dd;
+   result:=ShouldBeAnsi(dd);
 end;
 
-function GetXMLFile(const filename,prefix:string): string;
+function GetXMLFile(const filename:TPathName; prefix:TComponentName): TFileContents;
 begin
  result:=GetXMLContent(StringFromFile({ResolveRelativeURL(}BaseDir+FileName{)}),prefix);
 end;
@@ -1347,7 +1201,8 @@ var unest,pnest:TNest;
 var vn,itag,r,von,itagbs:integer;
     Closing,EmptyEle:boolean;
     text:HypeString;
-    tag,attributes,s,clean_s,res,addimg:string;
+    tag:HypeString;
+    attributes,s,clean_s,res,addimg:string;
     newtag,attributes_class,AddProps,finalclass:string;
     Gate:integer;
 begin
@@ -1460,13 +1315,13 @@ begin
  result:=Pos('|',s)<>0;
 end;
 
-var TopPC:String;
+var TopPC:TComponentName;
 
 procedure savenested(nest:tnest);
 var ns,pre:string;
     i,last_in:integer;
     pnest,pagenest:tnest;
-    filename,PureFileName:string;
+    filename,PureFileName:TPathName;
     Preload:TMyStringList;
 var AllPCs:TStringList;
 
@@ -1532,7 +1387,7 @@ begin
 end;
 
 var //easy:boolean;
-    Rastering:string;
+    Rastering:TPathName;
     NewPadding:string;
     NewMargin:string;
     NewBorder:string;
@@ -1802,8 +1657,8 @@ var OneWarning,finalclass:string;
 CenterLeft,CenterRight:integer;
 CenterOffsetPx:string;
 cnest:TNest;
-var EqNaming:array[0..2,0..2] of String;
-Rastering:string;
+var EqNaming:array[0..2,0..2] of TPathName;
+Rastering:TPathName;
 EqX,EqY:integer;
 sPositionings,OuterElementProps:string;
 closeSecondDiv:boolean;
@@ -1888,7 +1743,7 @@ begin
  end;
 end;
 
-function ExtractEq(var Rastering:String):String;
+function ExtractEq(var Rastering:TPathName):TPathName;
 var EqI:Integer;
 begin
    EqI:=Pos('|',Rastering);
@@ -2513,12 +2368,20 @@ begin
  result:=false;
 end;
 
+function HasPageProp(const PropName:string; var path:TPathName; pagenest:TNest):boolean; overload;
+var s:string;
+begin
+ Result:=HasPageProp(PropName,s,pagenest);
+ if Result then path:=s;
+end;
+
 function HasPageProp(const PropName:string; var s:string):boolean; overload;
 begin
  result:=HasPageProp(PropName,s,pagenest);
 end;
 
-var page_info,ForwardingDelay,BackgroundSoundForever,BackgroundSoundLoop,NsLoop,preloadOneByOne,dfm2html_js:string;
+var page_info,ForwardingDelay,BackgroundSoundForever,BackgroundSoundLoop,NsLoop,preloadOneByOne:string;
+    dfm2html_js:TPathName;
 
 var s_cssfile:string;
 var s_EverNeeded1by1,s_EverNeededSplit,s_EverNeededButton,s_EverNeededJS:Boolean;
@@ -2526,7 +2389,7 @@ var s_EverNeeded1by1,s_EverNeededSplit,s_EverNeededButton,s_EverNeededJS:Boolean
 
 procedure SetShowWhenSameCSSFile(nest:TNest);
 var i:integer;
-    s_cssfile:String;
+    s_cssfile:TPathName;
 begin
  s_cssfile:=cssfile;
  try
@@ -2786,7 +2649,7 @@ begin
   pre:=pre+page_info+CRLF;
 
  dfm2html_js:='';
- HasPageProp('GeneratedJavaScriptFile',dfm2html_js);
+ HasPageProp('GeneratedJavaScriptFile',dfm2html_js,pagenest);
  dfm2html_js:=FinalGeneratedJavaScriptFile(dfm2html_js);
 
  if bAdvPos(r,'<body',ns) and bAdvPos(r,'>',ns,r) then
@@ -2876,7 +2739,7 @@ begin
  end;
  *)
  if NeedJS then
-   glStringToFile(dfm2html_js,men);
+   glStringToFile(dfm2html_js,ShouldBeAnsi(men));
 
  //http://groups.google.de/groups?q=%22utf-8%22+encoding+html&hl=de&lr=&ie=UTF-8&selm=wmiIc.90209%24sj4.1828%40news-server.bigpond.net.au&rnum=4
  ns:=AnsiSubstText(MaskQuotes,'"',ns);
@@ -2886,7 +2749,7 @@ begin
 // ns:=UTF8Encode(WideString(ns));
  {if pos(endl_space,ns)>0 then
   StringToFile(SaveDir+filename,SubstText(endl_main,endl,ns)) else }
- glStringToFile(filename,AnsiSubstText(endl_main,endl,ns));
+ glStringToFile(filename,ShouldBeAnsi(AnsiSubstText(endl_main,endl,ns)));
  AllPCs.Free;
  end;
 
@@ -2897,7 +2760,7 @@ begin
   if cssfile<>s_cssfile then
   begin
    InitAndStyles(nest,true);
-   glStringToFile(cssfile,pre);
+   glStringToFile(cssfile,ShouldBeAnsi(pre));
    EverNeeded1by1:=s_EverNeeded1by1;
    EverNeededSplit:=s_EverNeededSplit;
    EverNeededButton:=s_EverNeededButton;
@@ -2914,7 +2777,7 @@ begin
 
 end;
 
-function ExtractPureFileName(const f:string): string;
+function ExtractPureFileName(const f:TPathName): TPathName;
 begin
  result:=ExtractFileName(f);
  if (length(result)>=length('.dfm')) and (result[length(result)+1-length('.dfm')]='.') then
@@ -4560,7 +4423,7 @@ begin
 end;
 
 
-procedure ConvertDFM(var PureFileName:string; {var PureFileName:string; }const Content:string);
+procedure ConvertDFM(var PureFileName:TPathName; const Content:TFileContents);
 
 procedure SetGln(nest:TNest);
 var i:integer;
@@ -5067,8 +4930,8 @@ begin
 end;
 }
 
-function DoConvertContent(var PureFileName:string; const _Content:string):string;
-var Content:string;
+function DoConvertContent(var PureFileName:TPathName; const _Content:TFileContents):TFileContents;
+var Content:TFileContents;
 begin
 //   FormName:=PureFileName;
    Content:=GetXMLContent(_Content,'');
@@ -5098,7 +4961,7 @@ end;
 
 
 function tnest.IsRastered(SemiTransparent: boolean): boolean;
-var s:string;
+var s:TPathName;
 const sty:string='Style.';
 begin
  result:=HasProp(sty+'Rastering',s) or HasProp(sty+'BGRastering',s);

@@ -13,51 +13,50 @@ uses
   QMask, QComCtrls, QTntStdCtrls,
 {$ELSE}
   Controls,  Messages, Graphics, Forms, Dialogs,
-  ShellAPI, Mask, ExtCtrls, StdCtrls,  Variants, clipbrd, ComCtrls,  DKLang, TntForms,
+  ShellAPI, Mask, ExtCtrls, StdCtrls,  Variants, clipbrd, ComCtrls,  DKLang, UnicodeCtrls,
 {$ENDIF}
 
   dhHTMLForm,MySiz, dhPanel,dhPageControl, funcutils, UseFastStrings, math, Contnrs, MySpinEdit, MyTrackBar,
   hEdit,hComboBox,hMemo,dhMenu,dhStyleSheet,MySpeedButton,BinTree,uTemplates,
-  dhLabel, dhCheckBox, dhRadioButton,UIConstants, MyForm;
+  dhLabel, dhCheckBox, dhRadioButton,UIConstants, MyForm, dhStrUtils;
 
 
 type
+  TReason=string;
   TModifyStep=class
-    Reason:String;
+    Reason:TReason;
     left_ok,right_ok:integer;
-    repl_block:string;
+    repl_block:TFileContents;
   private
   public
-    procedure SetRepl(const OldDFM: string);
-    function GetOriginal(const NewDFM: string): string;
+    procedure SetRepl(const OldDFM: TFileContents);
+    function GetOriginal(const NewDFM: TFileContents): TFileContents;
   end;
   THistoryStep=class
-    page,selection:string;
+    page,selection:TComponentName;
     scrollpos:TPoint;
   end;
 
   TRelativePathProvider = class (TMyForm,IRelativePathProvider)
     protected
-      function RootPath:String; virtual; abstract;
+      function RootPath:TPathName; virtual; abstract;
     public
-      function GetRelativePath(const Path:String):String;
-      function GetAbsolutePath(const Path:String):String;
+      function GetRelativePath(const Path:TPathName):TPathName;
+      function GetAbsolutePath(const Path:TPathName):TPathName;
   end;
 
 
   TPageContainer = class(TRelativePathProvider,IDesignerHook)
   private
     { Private declarations }
-    FFileName:String;
+    FFileName:TPathName;
     FUndo,FRedo,FBackHistory,FForwardHistory:TObjectList;
-    NewDFM,PreDFM:string;
-//    procedure ReaderSetName(Reader: TReader; Component: TComponent; var Name: string);
-//    procedure ReaderReferenceName(Reader: TReader; var Name: string);
+    NewDFM,PreDFM:TFileContents;
     procedure ComponentRead(Component: TComponent);
     procedure ComponentReadAdjustPos(Component: TComponent);
-    procedure SetFileName(const Value: string);
+    procedure SetFileName(const Value: TPathName);
     function GetIsModified: boolean;
-    procedure ReadDFM(Content: string);
+    procedure ReadDFM(Content: TFileContents);
     procedure ActDFM;
                         
     procedure DoDragOver(Sender, Source: TObject; X, Y: Integer; State: TDragState; var Accept: Boolean);
@@ -83,16 +82,16 @@ type
     procedure DefineProperties(Filer: TFiler); override;
     procedure SkipValue(Reader: TReader);
     procedure WriteTrue(Writer: TWriter);
-    function PhysicalSave(FileName:string; DeleteHistory:boolean):boolean;
+    function PhysicalSave(FileName:TPathName; DeleteHistory:boolean):boolean;
     procedure UpdateActiveMDI(Deactivate:boolean=false);
     procedure SetControlDesigning(c:TComponent; Designing,Transient:boolean);
 {$IFDEF CLX}
     function GetClientRect:TRect; override;
 {$ENDIF}
-    function RootPath:String; override;
+    function RootPath:TPathName; override;
   public
     { Public declarations }
-    LiveReason:string;
+    LiveReason:TReason;
     MySiz: TMySiz;
     procedure ValidateRename(AComponent: TComponent;
       const CurName, NewName: string); override;
@@ -110,25 +109,25 @@ type
     procedure GeneratePAS;
     procedure InvalGrid;
     function IsUntitled: boolean;
-    property FileName:string read FFileName write SetFileName;
-    function GetDFMStr(AsText:boolean; _WithMeta:boolean): string;
-    class function HasOpened(FileName: string; var wh: TPageContainer): boolean;
+    property FileName:TPathName read FFileName write SetFileName;
+    function GetDFMStr(AsText:boolean; _WithMeta:boolean): TFileContents;
+    class function HasOpened(FileName: TPathName; var wh: TPageContainer): boolean;
     procedure PasteComponents(S:TStream);
     procedure CreateBody;
-    procedure Open(const AFileName: string; SetUntitled:boolean; BeVisible:boolean=true);
+    procedure Open(const AFileName: TPathName; SetUntitled:boolean; BeVisible:boolean=true);
     procedure InitializeRedoUndo;
     function Save: boolean;
     function SaveAs: boolean;
     function SaveAsTemplate: boolean;     
-    procedure SaveAsImage(pngfilename:string);
-    procedure SetModified(const Reason: String; LogChange:TLogChange=lcCommit);
+    procedure SaveAsImage(pngfilename:TPathName);
+    procedure SetModified(const Reason: TReason; LogChange:TLogChange=lcCommit);
     property IsModified:boolean read GetIsModified;
     function IsLiveModified:boolean;
     procedure UpdateContent;
     procedure Undo;
-    function UndoAction: string;
+    function UndoAction: TReason;
     procedure Redo;
-    function RedoAction: string;
+    function RedoAction: TReason;
     function CanRedo:boolean;
     function HasSelectedComponents: boolean;
                                  
@@ -169,11 +168,11 @@ type
 var WhereToInsert:integer=-1;
 
 procedure GeneralPasteComponents(AOwner:TComponent; AParent:TWinControl; {OnSetName: TSetNameEvent; OnReferenceName: TReferenceNameEvent; }Proc: TReadComponentsProc);
-procedure GeneralPasteComponentsString(AOwner:TComponent; AParent:TWinControl; Proc: TReadComponentsProc; Content:String);
+procedure GeneralPasteComponentsString(AOwner:TComponent; AParent:TWinControl; Proc: TReadComponentsProc; Content:TFileContents);
 procedure GeneralPasteComponentsStream(AOwner:TComponent; AParent:TWinControl; Proc: TReadComponentsProc; S:TStream);
 
 procedure glLockWindowUpdate(Lock:boolean; var lLock:boolean);
-procedure InternalReadDFM(Content:string; Instance:TComponent);
+procedure InternalReadDFM(Content:TFileContents; Instance:TComponent);
 
 var IsCopying:Boolean=False;
 
@@ -248,7 +247,7 @@ begin
  end;
 end;
 
-procedure TPageContainer.ValidateRename(AComponent: TComponent; const CurName, NewName: string);
+procedure TPageContainer.ValidateRename(AComponent: TComponent; const CurName, NewName: String);
 begin
  if TurnOffNameValidation then exit;
  inherited;
@@ -310,12 +309,6 @@ begin
     result.Seek(0,soFromBeginning);
     f.Free;
 end;
-                                     {
-function _ObjectTextToResource(Content:String):TStringStream;
-begin
-    result:=_ObjectTextToResource(TStringStream.Create(Content));
-end;                                }
-
 
 function PossibleStream(const S: string): Boolean;
 var
@@ -324,7 +317,9 @@ begin
   Result := True;
   for I := 1 to Length(S) - 6 do
   begin
-    if (S[I] in ['O','o']) and (CompareText(Copy(S, I, 6), 'OBJECT') = 0) then Exit;
+    if ((S[I] in ['O','o']) and (CompareText(Copy(S, I, 6), 'OBJECT') = 0)) or
+       ((S[I] in ['I','i']) and (CompareText(Copy(S, I, 6), 'INLINE') = 0)) then
+      Exit;
     if not (S[I] in [' ',#9, #13, #10]) then Break;
   end;
   Result := False;
@@ -350,7 +345,7 @@ var
 
   function AnotherObject(S: TStream): Boolean;
   var
-    Buffer: array[0..255] of Char;
+    Buffer: array[0..255] of AnsiChar;
     Position: Integer;
   begin
     Position := S.Position;
@@ -406,13 +401,13 @@ var
 
   function AnotherObject(S: TStream): Boolean;
   var
-    Buffer: array[0..255] of Char;
+    Buffer: array[0..255] of AnsiChar;
     Position: Integer;
   begin
     Position := S.Position;
     Buffer[S.Read(Buffer, SizeOf(Buffer))-1] := #0;
     S.Position := Position;
-    Result := PossibleStream(Buffer);
+    Result := PossibleStream(string(Buffer));
   end;
 
 begin
@@ -455,12 +450,12 @@ begin
     Result.Free;
     raise;
   end;
-end;            
+end;
 {$ENDIF}
 
 
 
-function GetUniqueName(Component:TComponent): string;
+function GetUniqueName(Component:TComponent): TComponentName;
 begin
  if Component is TdhCustomPanel then
   result:=_GetUniqueName(Component,Copy(Component.ClassName,4,maxint)) else
@@ -584,16 +579,16 @@ end;
 
 
 
-function StringOfStream(S: TStream):string;
+function StringOfStream(S: TStream):TFileContents;
 var
-  T: TStringStream;
+  T: TMemoryStream;
 begin
     S.Position := 0;
-    T := TStringStream.Create(EmptyStr);
+    T := TMemoryStream.Create;
     try
       S.ReadResHeader;
       ObjectBinaryToText(S, T);
-      Result:=T.DataString;
+      Result:=AsString(T);
     finally
       T.Free;
     end;
@@ -602,7 +597,7 @@ end;
 
 function TPageContainer.SaveAs:boolean;
 var wh:TPageContainer;
-    sFileName:string;
+    sFileName:TPathName;
 begin
  result:=false;
  if not Tabs.CommitChanges then exit;
@@ -648,7 +643,7 @@ begin
  w.Handle;
 end;
 
-procedure TPageContainer.SaveAsImage(pngfilename:string);
+procedure TPageContainer.SaveAsImage(pngfilename:TPathName);
 var pn:TdhCustomPanel;
     body:TdhPage;
 begin
@@ -673,7 +668,7 @@ end;
 
 type TFakeMemoryStream=class(TMemoryStream);
 
-function TPageContainer.GetDFMStr(AsText:boolean; _WithMeta:boolean):string;
+function TPageContainer.GetDFMStr(AsText:boolean; _WithMeta:boolean):TFileContents;
 var S : TMemoryStream;
     i:integer;
     comp:TComponent;
@@ -723,21 +718,14 @@ begin
     if AsText then
     begin
      Result:=StringOfStream(S);    
-     i:=UseFastStrings.Pos('TPageContainer',Result);
+     i:=AdvPosAnsi('TPageContainer',Result);
      if i>=1 then
-      Result:=Copy(Result,1,i-1)+'T'+Name+Copy(Result,i+length('TPageContainer'),MaxInt);
+      Result:=Copy(Result,1,i-1)+'T'+AnsiString(Name)+Copy(Result,i+length('TPageContainer'),MaxInt);
      //Result:=SubstText(': TPageContainer',': T'+Name,Result);
      //Result:=SubstText('FormStyle = fsMDIChild',EmptyStr,Result);
     end else
     begin
-     S.Seek(0,soFromBeginning);
-     SetLength(Result,S.Size);
-     if Length(Result)<>0 then
-      S.ReadBuffer(Result[1],S.Size);
-     {SS:=TStringStream.Create(EmptyStr);
-     SS.copAssign(S);
-     Result:=SS.DataString;
-     SS.Free;}
+     Result:=AsString(S);
     end;
   finally
     S.Free;
@@ -769,7 +757,7 @@ begin
  dhMainForm.UpdateCommands(false,false);
 end;
 
-function TPageContainer.PhysicalSave(FileName:string; DeleteHistory:boolean):boolean;
+function TPageContainer.PhysicalSave(FileName:TPathName; DeleteHistory:boolean):boolean;
 begin
  result:=false;
  try
@@ -792,18 +780,18 @@ begin
   SetModified('INITIALIZATION');
 end;
 
-function CorrectOldFormats(Content:String):string;
+function CorrectOldFormats(Content:TFileContents):TFileContents;
 
-procedure subst(const a,b:string);
+procedure subst(const a,b:TFileContents);
 var i:integer;
 begin
  i:=0;
- while bAdvPos(i,a,Content,i+1) do
+ while bAdvPosAnsi(i,a,Content,i+1) do
  if (i-1>=1) and (Content[i-1] in [' ','.',#13,#10,'[',',']) and
     (i+1<=Length(Content)) and (Content[i+length(a)] in [' ','.',#13,#10,']',',']){ and
     not( (i-length('object ')<=Length(Content)) and SubEqual('object ',Content,i-length('object ')))} then
  begin
-  Content:=CopyInsert(Content,i,i+length(a),b);
+  Content:=TFileContents(CopyInsert(Content,i,i+length(a),b));
  end;
 end;
 
@@ -841,7 +829,7 @@ begin
   GeneralPasteComponentsStream(AOwner,AParent,Proc,GetClipboardStream);
 end;
 
-procedure GeneralPasteComponentsString(AOwner:TComponent; AParent:TWinControl; Proc: TReadComponentsProc; Content:String);
+procedure GeneralPasteComponentsString(AOwner:TComponent; AParent:TWinControl; Proc: TReadComponentsProc; Content:TFileContents);
 begin
   GeneralPasteComponentsStream(AOwner,AParent,Proc,_ObjectTextToBinary(TStringStream.Create(CorrectOldFormats(Content))));
 end;
@@ -973,7 +961,6 @@ end;
 
 procedure TMyReader.CreateComponentEvent(Reader: TReader;
     ComponentClass: TComponentClass; var Component: TComponent);
-var FrameFile:string;
 begin
  if ComponentClass<>TFrame then exit;
 // assert(FrameClassName<>EmptyStr);
@@ -996,7 +983,7 @@ procedure TMyReader.FindComponentClass(Reader: TReader; const ClassName: string;
     var ComponentClass: TComponentClass);
 begin
  if ComponentClass<>nil then exit;
- if UseFastStrings.Pos('Frame',ClassName)=0 then exit;
+ if Pos('Frame',ClassName)=0 then exit;
  ComponentClass:=TFrame;
  FrameClassName:=ClassName;
 end;
@@ -1032,7 +1019,7 @@ begin
   end else
   begin
    lLock:=true;
-   LockLock:=true;  
+   LockLock:=true;
 {$IFNDEF CLX}
    LockWindowUpdate(dhMainForm.Handle);
 {$ELSE}
@@ -1054,7 +1041,7 @@ end;
 
 
 
-procedure InternalReadDFM(Content:string; Instance:TComponent);
+procedure InternalReadDFM(Content:TFileContents; Instance:TComponent);
 
 var f:TStringStream;
 begin
@@ -1074,7 +1061,7 @@ end;
 
 
 
-procedure TPageContainer.ReadDFM(Content:string);
+procedure TPageContainer.ReadDFM(Content:TFileContents);
 var
     i:integer;
     sl:TStringList;
@@ -1124,7 +1111,7 @@ end;
 
 
 
-procedure TPageContainer.Open(const AFileName: string; SetUntitled:boolean; BeVisible:boolean=true);
+procedure TPageContainer.Open(const AFileName: TPathName; SetUntitled:boolean; BeVisible:boolean=true);
 var c1,c2:int64;
     WarningsCount:integer;
     lLock:boolean;
@@ -1188,7 +1175,7 @@ begin
 
 end;
 
-class function TPageContainer.HasOpened(FileName:string; var wh:TPageContainer):boolean;
+class function TPageContainer.HasOpened(FileName:TPathName; var wh:TPageContainer):boolean;
 var i:integer;
 begin
  for i:=0 to dhMainForm.MDIChildCount-1 do
@@ -1204,7 +1191,7 @@ begin
 end;
 
 
-procedure TPageContainer.SetFileName(const Value: string);
+procedure TPageContainer.SetFileName(const Value: TPathName);
 begin
  FFileName := Value;
  if IsUntitled then
@@ -1218,7 +1205,7 @@ begin
  try
  NewDFM:=GetDFMStr(false,false);
  //StringToFile('c:\lastact.txt',GetDFMStr(true));
- if bAdvPos(r,MarkContentBegin,NewDFM) then
+ if bAdvPosAnsi(r,MarkContentBegin,NewDFM) then
  begin
   PreDFM:=AbsCopy(NewDFM,1,r);
   Delete(NewDFM,1,r-1);
@@ -1227,8 +1214,8 @@ begin
  end;
 end;
 
-procedure TPageContainer.SetModified(const Reason:String; LogChange:TLogChange);
-var OldDFM:String;
+procedure TPageContainer.SetModified(const Reason:TReason; LogChange:TLogChange);
+var OldDFM:TFileContents;
     NewStep:TModifyStep;
     left_ok,right_ok:integer;
 begin
@@ -1287,7 +1274,7 @@ begin
  dhMainForm.UpdateCommands(false,false);
 end;
 
-procedure TModifyStep.SetRepl(const OldDFM:string);
+procedure TModifyStep.SetRepl(const OldDFM:TFileContents);
 begin
  repl_block:=AbsCopy(OldDFM,1+left_ok,length(OldDFM)+1-right_ok);
 end;
@@ -1298,14 +1285,14 @@ begin
 end;
 
 
-function TModifyStep.GetOriginal(const NewDFM:string):string;
+function TModifyStep.GetOriginal(const NewDFM:TFileContents):TFileContents;
 begin
  result:=Copy(NewDFM,1,left_ok)+repl_block+Copy(NewDFM,length(NewDFM)+1-right_ok,right_ok)
 end;
 
 
 procedure TPageContainer.Undo;
-var OldDFM:String;
+var OldDFM:TFileContents;
     NewStep:TModifyStep;
 begin
  if IsLiveModified then
@@ -1338,7 +1325,7 @@ end;
 
 
 procedure TPageContainer.Redo;
-var OldDFM:String;
+var OldDFM:TFileContents;
     NewStep:TModifyStep;
 begin
  NewStep:=FRedo.Last as TModifyStep;
@@ -1350,7 +1337,7 @@ begin
  UpdateContent;
 end;
 
-function TPageContainer.UndoAction:string;
+function TPageContainer.UndoAction:TReason;
 var NewStep:TModifyStep;
 begin
  if IsLiveModified then
@@ -1362,7 +1349,7 @@ begin
  result:=NewStep.Reason;
 end;
 
-function TPageContainer.RedoAction:string;
+function TPageContainer.RedoAction:TReason;
 var NewStep:TModifyStep;
 begin
  NewStep:=FRedo.Last as TModifyStep;
@@ -1482,12 +1469,13 @@ begin
 end;
 
 procedure TPageContainer.GeneratePAS;
-var s,PureFileName:string;
+var s:TFileContents;
+    PureFileName:TPathName;
 begin
   PureFileName:=ExtractFileName(FileName);
   Delete(PureFileName,Pos('.',PureFileName),maxint);
 
-  s:='Unit '+PureFileName+';'+#13#10+
+  s:=TFileContents('Unit '+PureFileName+';'+#13#10+
      #13#10+
      'interface'+#13#10+
      #13#10+
@@ -1504,7 +1492,7 @@ begin
      #13#10+
      '{$R *.dfm}'+#13#10+
      #13#10+
-     'end.';
+     'end.');
   StringToFile(ExtractFileDir(Filename)+PathDelim+PureFileName+'.pas',s);
  { for i:=0 to ControlCount-1 do
   begin
@@ -1811,7 +1799,7 @@ end;
 
 procedure TPageContainer.SetCustomForm(Value: TCustomForm);
 begin
- 
+
 end;
 
 procedure TPageContainer.SetIsControl(Value: Boolean);
@@ -2172,7 +2160,7 @@ begin
  if {SubEqual('PageContainer',Name) and }not ForPreview and SubEqual('PageContainer',NewName) then
  begin
   i:=Pos('_',NewName);
-  if (i<>-1) and CanStrToInt(Copy(NewName,i+1,maxint),n) then
+  if (i<>-1) and TryStrToInt(Copy(NewName,i+1,maxint),n) then
   begin
    inherited SetName(_GetUniqueName(Self,'PageContainer'));
    exit;
@@ -2198,14 +2186,14 @@ begin
  MySiz.DesignMouseMove; //clear name and pos statusbar fields
 end;
 
-function TPageContainer.RootPath:String;
+function TPageContainer.RootPath:TPathName;
 begin
  if IsUntitled then
   Result:='' else
   Result:=GoodLocalPath(ExtractFileDir(Filename));
 end;
 
-function TRelativePathProvider.GetRelativePath(const Path:String):String;
+function TRelativePathProvider.GetRelativePath(const Path:TPathName):TPathName;
 begin
  if isAbsolute(Path) and isAbsolute(RootPath) and not IsCopying then
  begin
@@ -2218,7 +2206,7 @@ begin
  Result:=Path;
 end;
 
-function TRelativePathProvider.GetAbsolutePath(const Path:String):String;
+function TRelativePathProvider.GetAbsolutePath(const Path:TPathName):TPathName;
 begin
  if not isAbsolute(Path) and isAbsolute(RootPath) then
  begin

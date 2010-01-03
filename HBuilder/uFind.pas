@@ -6,7 +6,7 @@ uses
   {$IFDEF CLX}
   QControls, QGraphics, QStdCtrls, QMask, QForms, QButtons, QTntStdCtrls, QExtCtrls,
   {$ELSE}
-  Controls, Windows, Messages, Graphics, StdCtrls, ShellAPI, Mask, Forms, Buttons, Spin, ExtCtrls, TntStdCtrls, TntForms, TntExtCtrls,
+  Controls, Windows, Messages, Graphics, StdCtrls, ShellAPI, Mask, Forms, Buttons, Spin, ExtCtrls, UnicodeCtrls,
   {$ENDIF}
   SysUtils, Classes, DKLang, dhPanel, dhLabel;
 

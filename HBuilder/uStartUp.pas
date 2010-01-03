@@ -7,7 +7,7 @@ uses
 {$IFDEF CLX}
   QControls, QGraphics, QForms, QStdCtrls, QExtCtrls, QComCtrls,QTntStdCtrls,
 {$ELSE}
-  Controls, Windows, Messages, Graphics, Forms, ComCtrls, ExtCtrls, StdCtrls, TntForms,
+  Controls, Windows, Messages, Graphics, Forms, ComCtrls, ExtCtrls, StdCtrls, UnicodeCtrls,
 {$ENDIF}
   dhPanel, dhLabel, dhMenu, dhStyleSheet, DKLang;
 

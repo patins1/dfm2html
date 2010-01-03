@@ -7,10 +7,10 @@ uses
 {$IFDEF CLX}
   QControls, QGraphics, QForms, QStdCtrls, QExtCtrls, QComCtrls, QDialogs, QMenus, QTntStdCtrls,
 {$ELSE}
-  Controls, Windows, Messages, Graphics, Forms, ComCtrls, ExtCtrls, StdCtrls, Dialogs, Menus, TntForms,
+  Controls, Windows, Messages, Graphics, Forms, ComCtrls, ExtCtrls, StdCtrls, Dialogs, Menus, UnicodeCtrls,
 {$ENDIF}
   Unit3, Unit2, dhLabel, dhMenu, dhPanel, dhPageControl, dhStyleSheet, UseFastStrings,
-  DKLang, MyForm;
+  DKLang, MyForm, dhStrUtils;
 
 type
   TPresets = class(TRelativePathProvider)
@@ -36,7 +36,7 @@ type
   protected
     procedure CompoMouseUp(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);  
-    function RootPath:String; override;
+    function RootPath:TPathName; override;
   public
     { Public declarations }
     procedure InsertCompo(Sender: TObject);
@@ -57,7 +57,7 @@ const PresetsDir='Presets'+PathDelim;
 
 { TPresets }
 
-function GetRootPresetsDir:String;
+function GetRootPresetsDir:TPathName;
 begin
  result:=RootDir(PresetsDir);
 end;
@@ -239,14 +239,15 @@ end;
 procedure TPresets.ChangePresetsPage(Sender:TObject);
 var link:TdhLink;
     page:TdhPage;
-    Content,filename:string;
+    Content:TFileContents;
+    filename:TPathName;
     i1,i2:integer;
 begin
   link:=Sender as TdhLink;
   page:=link.LinkPage;
   filename:=GetRootPresetsDir+link.HTMLAttributes;
   if CanStringFromFile(filename,Content) and
-     bAdvPos(i1,'object',Content,2) and bAdvPosBack(i2,'end',Content,length(Content)) then
+     bAdvPosAnsi(i1,'object',Content,2) and bAdvPosBack(i2,'end',Content,length(Content)) then
   begin
    Content:=AbsCopy(Content,i1,i2);
    GeneralPasteComponentsString(Self,Page,nil{ComponentRead},Content);
@@ -335,7 +336,7 @@ begin
  end;
 end;
 
-function TPresets.RootPath:String;
+function TPresets.RootPath:TPathName;
 begin
  Result:=GetRootPresetsDir;
 end;

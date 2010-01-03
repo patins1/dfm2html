@@ -8,10 +8,10 @@ uses
   QMask, Qt, types, QTntStdCtrls,
 {$ELSE}
   Controls, Windows, Messages, Graphics, Forms, ComCtrls, Dialogs,
-  ShellAPI, Mask, ExtCtrls, StdCtrls,  Variants, clipbrd, gifimage,Spin, Buttons, TntForms, TntStdCtrls, TntButtons,
+  ShellAPI, Mask, ExtCtrls, StdCtrls,  Variants, clipbrd, Spin, Buttons, UnicodeCtrls,
 {$ENDIF}
   UseFastStrings,SysUtils, Classes, {$IFDEF MSWINDOWS}OverbyteIcsFtpCli,OverbyteIcsUrl,{$ELSE}{IcsUrl,}{$ENDIF} dhPageControl,
-  DKLang, UIConstants, MyForm;
+  DKLang, UIConstants, MyForm,dhStrUtils;
 
 type
   TPublishLog = class(TMyForm)
@@ -26,7 +26,7 @@ type
     { Private declarations }
     ToUpload:TStringList;
     FBusy: boolean;
-    RootHostDirName,RasteringSaveDir:String;
+    RootHostDirName,RasteringSaveDir:TPathName;
 {$IFNDEF CLX}
     FtpClient1: TFtpClient;
     procedure FtpClient1RequestDone(Sender: TObject; RqType: TFtpRequest;
@@ -34,10 +34,10 @@ type
 {$ENDIF}
     procedure Log(Const Msg: WideString; Color: TColor=clBlack);
     procedure SetBusy(const Value: boolean);     
-    function ExtractHostDirName(const path:String):String;
+    function ExtractHostDirName(const path:TPathName):TPathName;
   public
     { Public declarations }
-    procedure DoUpload(const URL: string);
+    procedure DoUpload(const URL: TPathName);
     property Busy:boolean read FBusy write SetBusy;
   end;
 
@@ -45,6 +45,7 @@ var
   PublishLog: TPublishLog;
 
 var GeneratedFiles:TStringList;
+function GetFTPShortcut(page:TdhPage):TPathName;
 
 implementation
 
@@ -54,14 +55,14 @@ uses Unit1;
 
 { TPublishLog }
 
-function DefaultS(const s,default:string):string;
+function DefaultS(const s,default:TPathName):TPathName;
 begin
  if s<>EmptyStr then
   result:=s else
   result:=default;
 end;
 
-function ExtractWebFilePath(const FileName: string): string;
+function ExtractWebFilePath(const FileName: TPathName): TPathName;
 var
   I: Integer;
 begin
@@ -69,14 +70,24 @@ begin
   Result := Copy(FileName, 1, I);
 end;
 
-function TPublishLog.ExtractHostDirName(const path:String):String;
+function TPublishLog.ExtractHostDirName(const path:TPathName):TPathName;
 begin
  result:=RootHostDirName+Copy(path,Length(RasteringSaveDir)+1,MaxInt);
  result:=GoodWebPathDelimiters(result);
  result:=ExtractWebFilePath(result);
 end;
 
-procedure TPublishLog.DoUpload(const URL: string);
+
+function GetFTPShortcut(page:TdhPage):TPathName;
+var Proto, Username, Password, Host, Port, Path : String;
+begin
+{$IFNDEF CLX}
+ ParseURL(page.FTPURL,Proto, Username, Password, Host, Port, Path);
+{$ENDIF}
+ result:=Lowercase(Host)+Path;
+end;
+
+procedure TPublishLog.DoUpload(const URL: TPathName);
 var Proto, Username, Password, Host, Port, Path : String;
     i:integer;
 begin
@@ -101,7 +112,7 @@ begin
 
  ToUpload.Clear;
  for i:=0 to GeneratedFiles.Count-1 do
- if not FSmartPublishing or not dhMainForm.Act.MySiz.FindBody.Find(ExtractFileName(GeneratedFiles[i]),DWORD(GeneratedFiles.Objects[i]),false) then
+ if not FSmartPublishing or not dhMainForm.Act.MySiz.FindBody.Find(GetFTPShortcut(dhMainForm.Act.MySiz.FindBody),ExtractFileName(GeneratedFiles[i]),DWORD(GeneratedFiles.Objects[i]),false) then
    ToUpload.AddObject(GeneratedFiles[i],GeneratedFiles.Objects[i]);
 
  if GeneratedFiles.Count>ToUpload.Count then
@@ -167,7 +178,7 @@ end;
 procedure TPublishLog.FtpClient1RequestDone(Sender: TObject;
   RqType: TFtpRequest; Error: Word);
 var i:integer;
-    HostDirName:String;
+    HostDirName:TPathName;
 begin
  if (Error<>0) and (RqType<>ftpMkdAsync) then
  begin
@@ -206,7 +217,7 @@ begin
  ftpPutAsync:
  begin
   if FSmartPublishing and (dhMainForm.Act<>nil) then
-   dhMainForm.Act.MySiz.FindBody.Find(ExtractFileName(ToUpload[0]),DWORD(ToUpload.Objects[0]),true);
+   dhMainForm.Act.MySiz.FindBody.Find(GetFTPShortcut(dhMainForm.Act.MySiz.FindBody),ExtractFileName(ToUpload[0]),DWORD(ToUpload.Objects[0]),true);
   ToUpload.Delete(0);
  end;
  end;

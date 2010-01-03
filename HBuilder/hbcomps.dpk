@@ -13,7 +13,7 @@ package hbcomps;
 {$OPENSTRINGS ON}
 {$OPTIMIZATION ON}
 {$OVERFLOWCHECKS OFF}
-{$RANGECHECKS OFF}
+{$RANGECHECKS ON}
 {$REFERENCEINFO ON}
 {$SAFEDIVIDE OFF}
 {$STACKFRAMES OFF}
@@ -22,21 +22,20 @@ package hbcomps;
 {$WRITEABLECONST OFF}
 {$MINENUMSIZE 1}
 {$IMAGEBASE $400000}
-{$IMPLICITBUILD ON}
+{$IMPLICITBUILD OFF}
 
 requires
   rtl,
   vcl,
   VclSmp,
-  vcljpg,
   dhcomps,
-  dklang10,
-  TntUnicodeVcl_R90,
+  dklang12,
   vclactnband,
   vclx,
   dsnap,
   dbrtl,
-  vcldb;
+  vcldb,
+  ColorPackage;
 
 contains
   MyToolButton in 'MyToolButton.pas',
@@ -56,6 +55,7 @@ contains
   uColorPicker in 'uColorPicker.pas' {ColorPicker},
   MyGroupBox in 'MyGroupBox.pas',
   MyPanel in 'MyPanel.pas',
-  MyForm in 'MyForm.pas';
+  MyForm in 'MyForm.pas',
+  UnicodeCtrls in 'UnicodeCtrls.pas';
 
 end.

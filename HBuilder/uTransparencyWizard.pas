@@ -9,8 +9,7 @@ uses
   QMask,
 {$ELSE}
   Controls, Windows, Messages, Graphics, Forms, Menus,
-  ShellAPI, Mask, ExtCtrls, StdCtrls,  Variants, clipbrd, Buttons,ComCtrls,Spin,TntForms, TntStdCtrls,
-  TntButtons,
+  ShellAPI, Mask, ExtCtrls, StdCtrls,  Variants, clipbrd, Buttons,ComCtrls,Spin,UnicodeCtrls,
 {$ENDIF}
   dhLabel, dhMenu, dhPanel, Classes,
   dhColorPicker,gr32,  MySpinEdit,  MyTrackBar, DKLang;

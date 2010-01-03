@@ -6,7 +6,7 @@ uses
   {$IFDEF CLX}
   QControls, QGraphics, QStdCtrls, Qt, QButtons, QForms, QTntStdCtrls,
   {$ELSE}
-  Controls, Windows, Messages, StdCtrls, Buttons, Forms, TntStdCtrls, TntForms,
+  Controls, Windows, Messages, StdCtrls, Buttons, Forms, UnicodeCtrls,
   {$ENDIF}
   SysUtils, Classes, dhPanel, Types;
 

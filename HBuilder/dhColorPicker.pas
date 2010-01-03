@@ -6,7 +6,7 @@ uses
   {$IFDEF CLX}
   QForms, QControls, QGraphics, QStdCtrls, QMask, Qt, QButtons, QDialogs, QTntStdCtrls,
   {$ELSE}
-  Forms, Controls, Windows, Messages, Graphics, StdCtrls, ShellAPI, Mask, dialogs,Buttons, TntButtons,
+  Forms, Controls, Windows, Messages, Graphics, StdCtrls, ShellAPI, Mask, dialogs,Buttons, UnicodeCtrls,
   {$ENDIF}
   SysUtils, Classes, types, uColorPicker, funcutils,AColorPickerAX_TLB, dhPanel, gr32;
 

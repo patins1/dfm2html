@@ -10,12 +10,12 @@ uses
 
   SysUtils, Classes, TypInfo, {$IFNDEF VER130} types, {schnelles IntersectRect} {$ENDIF}
 {$IFDEF CLX}
-  QControls, QForms, Qt, QGraphics, QDialogs, QExtCtrls, QComCtrls,  QStdCtrls, GIFImage, QTntStdCtrls,
+  QControls, QForms, Qt, QGraphics, QDialogs, QExtCtrls, QComCtrls,  QStdCtrls, QTntStdCtrls,
   QImgList, QMenus, QClipbrd, QStyle,
 {$ELSE}
-  {uMutex,}Controls, Forms, Windows, Messages, Graphics, Dialogs, ExtCtrls, clipbrd, Buttons, GIFImage, JPeg,
+  {uMutex,}Controls, Forms, Windows, Messages, Graphics, Dialogs, ExtCtrls, clipbrd, Buttons, JPeg,
   ComCtrls, CommCtrl, StdCtrls, ShellAPI, RTLConsts,  Menus, FileCtrl,
-  {Mask, }ToolWin, ImgList,   AppEvnts, {IECache,} URLDropTarget, XPMan, TntStdCtrls,TntSysUtils,TntSystem, TntMenus, TntComCtrls,//XPdesign,
+  {Mask, }ToolWin, ImgList,   AppEvnts, {IECache,} URLDropTarget, XPMan, UnicodeCtrls,  //XPdesign,
 {$ENDIF}
   Unit2, dhDirectHTML,
   MySpeedButton, dhPanel, htmlrout, {$IFDEF MSWINDOWS}OverbyteIcsHttpProt,{$ELSE}{IcsUrl,}{$ENDIF}
@@ -25,7 +25,7 @@ uses
   MySiz, Unit3, uConversion,
   dhRadioButton, dhMemo, dhFileField,  MyToolButton,
   dhColorPicker,IniFiles,gr32, uOptions, menuhelper,
-  pngimage, Contnrs,hEdit,hComboBox,hMemo, UIConstants,DKLang, OpenSave,AColorPickerAX_TLB;
+  pngimage, Contnrs,hEdit,hComboBox,hMemo, UIConstants,DKLang, OpenSave,AColorPickerAX_TLB,dhStrUtils;
 
 //const WM_PUSHUP=WM_USER+33;
 
@@ -293,7 +293,7 @@ type
     procedure DEBUG_PosFF1Click(Sender: TObject);
     procedure MenuTutorial1Click(Sender: TObject);
   private
-    LastFile:string;
+    LastFile:TPathName;
     FAct:TPageContainer;
     AlreadyCalled,SilentUpdateCheck:boolean;
     RegString:string;
@@ -334,14 +334,14 @@ type
     procedure Loaded; override;
     //procedure CreateParams(var Params: TCreateParams); override;
     procedure UpdateStateClearing;
-    function GetTopLevelDomain:String;
+    function GetTopLevelDomain:TPathName;
   public
     { Public declarations }
     destructor Destroy; override;
     property Act:TPageContainer read FAct write FAct;
     procedure UpdateNames(find:TControl);
-    procedure ImageFromURL(URL:string; c:TControl);
-    function Open(FileName: string; SetUntitled:boolean; Unvisible:boolean=false):TPageContainer;
+    procedure ImageFromURL(URL:TPathName; c:TControl);
+    function Open(FileName: TPathName; SetUntitled:boolean; Unvisible:boolean=false):TPageContainer;
     procedure UpdateHistory;
 
 {$IFNDEF CLX}
@@ -351,7 +351,7 @@ type
     //function Act:TPageContainer;
     procedure Paint; override;
     procedure ApplyNewSettings(FontToCurrent:boolean; FontToAll:boolean);
-    function GeneratedHTML(View:Boolean):String;
+    function GeneratedHTML(View:Boolean):TPathName;
   end;
 
 var
@@ -363,9 +363,9 @@ var FuncSettings:TFuncSettings;
 type TFakeWinControl=class(TWinControl);
 
 
-function ExtractUrlAimedFilenameToWindowsFilename(const URL: string): string;
-function GetLanguageDFM(const prefix:String):String;
-function RootDir(const s:string): string;
+function ExtractUrlAimedFilenameToWindowsFilename(const URL: TPathName): TPathName;
+function GetLanguageDFM(const prefix:TPathName):TPathName;
+function RootDir(const s:TPathName): TPathName;
 var
   CF_COMPONENTS: Word;
 const sCF_COMPONENTS={'Delphi Components'}'application/delphi.component';
@@ -386,7 +386,7 @@ uses uWarnings, uPublishLog, uPublishFTP, uTemplates, uPresets, uStartUp,
 {$R *.dfm}
 
 
-var RasteringSaveDir:string;
+var RasteringSaveDir:TPathName;
 
 var CrcList:TObjectList;
 
@@ -400,10 +400,9 @@ const
       UpdateCheckInterval=30;
       NeverCheckedForUpdate=0;
 
-var BaseDir:string;
-//    PureFileName:string;
+var BaseDir:TPathName;
 
-function RootDir(const s:string): string;
+function RootDir(const s:TPathName): TPathName;
 begin
  result:=ExtractFilePath(Application.Exename)+s;
 end;
@@ -452,8 +451,8 @@ begin
    Result.DateSeparator:='-';
 end;
 
-function GetLanguageDFM(const prefix:String):String;
-var StartsWith:String;
+function GetLanguageDFM(const prefix:TPathName):TPathName;
+var StartsWith:TPathName;
 begin
  StartsWith:=RootDir(prefix);
  Result:=StartsWith+IntToStr(_LANGID)+'.dfm';
@@ -1144,20 +1143,6 @@ begin
 end;
 
 
-{function StringFromFile(const FileName:string):string;
-begin
- with TFileStream.create(FileName,fmOpenRead) do
- begin
-  SetLength(result,Size);
-  if Size<>0 then
-   ReadBuffer(result[1],Size);
-  Free;
- end;
-end;
- }
-
-
-
 
 procedure TdhMainForm.mOpenClick(Sender: TObject);
 var i:integer;
@@ -1170,12 +1155,11 @@ begin  {
  if OpenDialog1.Execute then
  for i:=0 to OpenDialog1.Files.Count-1 do
  begin
-  //stringtofile('c:\t.txt',OpenDialog1.Files[i]);
   Open(OpenDialog1.Files[i],false);
  end;
 end;
 
-function TdhMainForm.Open(FileName:string; SetUntitled:boolean; Unvisible:boolean=false):TPageContainer;
+function TdhMainForm.Open(FileName:TPathName; SetUntitled:boolean; Unvisible:boolean=false):TPageContainer;
 var lLock:boolean;
 begin
  glLockWindowUpdate(true,lLock);
@@ -1546,7 +1530,7 @@ var c1,c2:tlargeinteger;
  showmessage(' - time of comparison: '+inttostr((c2-c1) div 100));}
 end;
 
-Function GetTMPDir: String;
+Function GetTMPDir: TPathName;
 var
    SysDir: array[0..MAX_PATH] Of Char;
 begin
@@ -1574,20 +1558,14 @@ begin
 end;
 
 
-procedure StringToFile(FileName:string; const s:string);
+procedure CleverStringToFile(FileName:TPathName; const s:TFileContents);
 var NeedSave:boolean;
-    AbsoluteFileName:String;
+    AbsoluteFileName:TPathName;
 begin
  glSaveBin(calc_crc32_String(s),FileName,AbsoluteFileName,false,EmptyStr,NeedSave,true);
  if NeedSave then
  begin
-  with TFileStream.create(AbsoluteFileName,fmCreate) do
-  try
-   if s<>EmptyStr then
-    WriteBuffer(s[1],length(s));
-  finally
-   Free;
-  end;
+  StringToFile(AbsoluteFileName,s);
   glAfterSaveBin;
  end;
 end;
@@ -1597,7 +1575,7 @@ type TSaveBinItem=class
       id_crc:DWORD;
       data_crc:DWORD;
       FileAge:TDateTime;
-      FileName:string;
+      FileName:TPathName;
      end;
 
 var AfterSaveBinI:TSaveBinItem;
@@ -1614,7 +1592,7 @@ begin
   result:=nil;
 end;
 
-function FindFilename(const Filename:string):TSaveBinItem;
+function FindFilename(const Filename:TPathName):TSaveBinItem;
 var i:integer;
 begin
   for i:=0 to CrcList.Count-1 do
@@ -1627,11 +1605,11 @@ begin
 end;
 
 
-function SaveBin(_crc:DWORD; var RasteringFile,AbsoluteRasteringFile:string; CheckBaseRasteringFile:boolean; BaseRasteringFile:string; var NeedSave:boolean; NeedSameFileName:boolean):boolean;
+function SaveBin(_crc:DWORD; var RasteringFile,AbsoluteRasteringFile:TPathName; CheckBaseRasteringFile:boolean; BaseRasteringFile:TPathName; var NeedSave:boolean; NeedSameFileName:boolean):boolean;
 var id_crc:DWORD;
     server_crc:DWORD;
     sb:TSaveBinItem;
-    AbsoluteBaseRasteringFile:string;
+    AbsoluteBaseRasteringFile:TPathName;
     age:TDateTime;
 begin
   NeedSave:=false;
@@ -1642,8 +1620,8 @@ begin
   ForceDirectories(ExtractFilePath(AbsoluteRasteringFile));
 
   if NeedSameFileName then
-   id_crc:=calc_crc32_String(lowercase(AbsoluteRasteringFile),_crc) else
-   id_crc:=calc_crc32_String(lowercase(RasteringSaveDir),_crc);
+   id_crc:=calc_crc32_String(AnsiString(lowercase(AbsoluteRasteringFile)),_crc) else
+   id_crc:=calc_crc32_String(AnsiString(lowercase(RasteringSaveDir)),_crc);
 
   sb:=FindIdCrc(id_crc);
   if sb<>nil then
@@ -1691,8 +1669,9 @@ begin
  GeneratedHTML(True);
 end;
 
-function TdhMainForm.GeneratedHTML(View:Boolean):String;
-var pa,content,PureFileName:string;
+function TdhMainForm.GeneratedHTML(View:Boolean):TPathName;
+var content:TFileContents;
+    pa,PureFileName:TPathName;
     sStatus:string;
 begin
  FreeAndNil(GeneratedFiles);
@@ -1753,21 +1732,7 @@ begin
  Close;
 end;
 
-
-function AsString(graphic:TGraphic):String;
-var
-  Stream: TStringStream;
-begin
-  Stream := TStringStream.Create('');
-  try
-    graphic.SaveToStream(Stream);
-    Result:=Stream.DataString;
-  finally
-    Stream.Free;
-  end;
-end;
-
-function PureFileName(const FileName:String):String;
+function PureFileName(const FileName:TPathName):TPathName;
 begin
  Result:=ExtractFileName(GoodPathDelimiters(FileName));
 end;
@@ -1778,7 +1743,7 @@ var Directory:{$IFDEF CLX}widestring{$ELSE}string{$ENDIF};
     I: Integer;
     pn:TdhCustomPanel;
     State:TState;
-    FileName:String;
+    FileName:TPathName;
     anyFilesToWrite:Boolean;
     anyFilesToShift:Boolean;
 begin
@@ -1873,7 +1838,7 @@ begin
         end else
         if anyFilesToShift and (LowerCase(BackgroundImage.GetAbsolutePath)<>LowerCase(FileName)) then
         begin
-         funcutils.StringToFile(FileName,StringFromFile(BackgroundImage.GetAbsolutePath));
+         StringToFile(FileName,StringFromFile(BackgroundImage.GetAbsolutePath));
          LoadImage(FileName);
         end;
        end;
@@ -2072,7 +2037,7 @@ begin
 end;
 
 {$IFDEF MSWINDOWS}
-function FileCreateAge(const FileName: string; out FileDateTime: TDateTime): Boolean;
+function FileCreateAge(const FileName: TPathName; out FileDateTime: TDateTime): Boolean;
 var
   Handle: THandle;
   FindData: TWin32FindData;
@@ -2100,7 +2065,7 @@ end;
 
 procedure TdhMainForm.mCheckForUpdateClick(Sender: TObject);
 var FileDateTime: TDateTime;
-    Root:String;
+    Root:TPathName;
 begin
 {$IFNDEF CLX}
     SilentUpdateCheck:=Sender=nil;
@@ -2112,7 +2077,7 @@ begin
     end;
     HttpUpdateCli:=THttpCli.Create(nil);
     HttpUpdateCli.OnRequestDone:=HttpUpdateCliRequestDone;
-    HttpUpdateCli.RcvdStream:=TStringStream.Create(EmptyStr);
+    HttpUpdateCli.RcvdStream:=TMemoryStream.Create;
     if not FileAge(RootDir(configFile),FileDateTime) then
     begin
      WriteConfig;
@@ -2197,7 +2162,6 @@ end;
 
 procedure TdhMainForm.DEBUG_Debug1Click(Sender: TObject);
 var i:integer;
-    s:string;
 begin
 { propspc.PageControl1.Update;
  propspc.PageControl1.DisableAlign;
@@ -2207,7 +2171,7 @@ begin
  propspc.PageControl1.EnableAlign;
                               }
 
- funcutils.StringToFile(RootDir('tryx.txt'),'blabla');
+ StringToFile(RootDir('tryx.txt'),'blabla');
 
 // MessageDlg('X', mtWarning,[mbAbort, mbRetry, mbIgnore], 0);
 // (Act.MySiz.FindBody as TdhPage).FCommon.IsScrollArea:=not (Act.MySiz.FindBody as TdhPage).FCommon.IsScrollArea;
@@ -2257,7 +2221,6 @@ end;
 function TdhMainForm.IsShortCut(var Message: TWMKey): Boolean;
 var c:TControl;
 //    h:HWND;
-//    s:string[255];
 begin
  if (Message.CharCode=VK_DELETE) or (Message.CharCode=ord('C')) or (Message.CharCode=ord('X')) or (Message.CharCode=ord('V')) then
  begin
@@ -2294,7 +2257,7 @@ begin
  Open(GetLanguageDFM('Tutorial'+PathDelim+'Tutorial'),false);
 end;
 
-function TdhMainForm.GetTopLevelDomain:String;
+function TdhMainForm.GetTopLevelDomain:TPathName;
 begin                                     
  if _LANGID=LANGID_GERMAN then
   result:='de' else
@@ -2409,7 +2372,7 @@ begin
 end;}
 
 procedure TdhMainForm.mPublishClick(Sender: TObject);
-var URL:string;
+var URL:TPathName;
 begin
  Tabs.CommitChanges;
  LateCreateForm(TPublishLog,PublishLog);
@@ -2483,7 +2446,7 @@ begin
 end;
 
 procedure TdhMainForm.mNewFromTemplateClick(Sender: TObject);
-var Filename:string;
+var Filename:TPathName;
 begin
  LateCreateForm(TTemplatesWizard,TemplatesWizard);
  if TemplatesWizard.Prepare(Filename) then
@@ -2493,7 +2456,7 @@ end;
 
 function TdhMainForm.ProcessDragDrop(Sender: TObject; Drop:boolean):boolean;
 var c:TControl;
-    URL_ext,Bitmap_ext,URL,Bitmap:string;
+    URL_ext,Bitmap_ext,URL,Bitmap:TPathName;
 begin
  result:=false;
 {$IFNDEF CLX}
@@ -2531,7 +2494,7 @@ begin
      IGNORE_SaveDraggedPictureDialog.FileName:= ExtractUrlAimedFilenameToWindowsFilename(Bitmap);
      if IGNORE_SaveDraggedPictureDialog.Execute then
      begin
-      funcutils.StringToFile(IGNORE_SaveDraggedPictureDialog.FileName,funcutils.StringFromFile(Bitmap));
+      StringToFile(IGNORE_SaveDraggedPictureDialog.FileName,StringFromFile(Bitmap));
       Bitmap:=IGNORE_SaveDraggedPictureDialog.FileName;
      end else
       exit;
@@ -2556,7 +2519,7 @@ end;
 
 const AllowedOcted=['0'..'9','a'..'z','A'..'Z'];
 
-function URLDecodeOctets(const URL:string):string;
+function URLDecodeOctets(const URL:TPathName):TPathName;
 var i:integer;
 begin
  result:=URL;
@@ -2570,13 +2533,13 @@ end;
 
 var lookup_url_char:array[char] of integer;
 
-function ExtractUrlAimedFilenameToWindowsFilename(const URL: string): string;
+function ExtractUrlAimedFilenameToWindowsFilename(const URL: TPathName): TPathName;
 var
   I,CopyLess,r,r2: Integer;
 begin
  result:=URL;
  while bAdvPos(r,'"',result) and bAdvPos(r2,'"',result,r+1) do
-  AbsDelete(result,r,r2+1);
+  result:=CopyWithout(result,r,r2+1);
  CopyLess:=0;
  for i:=length(result) downto 1 do
  case lookup_url_char[result[i]] of
@@ -2600,14 +2563,15 @@ begin
 end;
 
 
-var cDragTarget,DragURL:string;
+var cDragTarget:TComponentName;
+    DragURL:TPathName;
 
 procedure TdhMainForm.URLDropTarget1Drop(Sender: TObject);
 begin
  ProcessDragDrop(Sender,true);
 end;
 
-procedure TdhMainForm.ImageFromURL(URL:string; c:TControl);
+procedure TdhMainForm.ImageFromURL(URL:TPathName; c:TControl);
 begin
    DragURL:=URL;
    if (c={Tabs.dhPanel1}nil) then
@@ -2625,7 +2589,7 @@ begin
     end;
     HttpCli1:=THttpCli.Create(nil);
     HttpCli1.OnRequestDone:=HttpCli1RequestDone;
-    HttpCli1.RcvdStream:=TStringStream.Create(EmptyStr);
+    HttpCli1.RcvdStream:=TMemoryStream.Create;
     HttpCli1.URL:=DragURL;
     IGNORE_SaveDraggedPictureDialog.FileName:= ExtractUrlAimedFilenameToWindowsFilename(DragURL);
     if IGNORE_SaveDraggedPictureDialog.Execute then
@@ -2695,7 +2659,7 @@ procedure TdhMainForm.HttpCli1RequestDone(Sender: TObject;
 begin
  if ErrCode=0 then
  begin
-  funcutils.StringToFile(DragURL,(HttpCli1.RcvdStream as TStringStream).DataString);
+  StringToFile(DragURL,AsString(HttpCli1.RcvdStream as TMemoryStream));
   LoadDragURL;
   DeleteFile(PChar(DragURL));
  end;
@@ -2721,7 +2685,7 @@ begin
   Exit;
  end;
  VerList := TStringList.Create;
- VerList.Text:=(HttpUpdateCli.RcvdStream as TStringStream).DataString;
+ VerList.Text:=AsString(HttpUpdateCli.RcvdStream as TMemoryStream);
  NewVersion := VerList.Values['version'];
  if NewVersion = '' then
  begin                   
@@ -2945,7 +2909,6 @@ procedure TdhMainForm.DEBUG_ANSIUNICODE1Click(Sender: TObject);
 var i,c,w:integer;
     l:TdhLabel;
     ws:WideString;
-    s,ex:string;
 begin
   {
  c:=0;
@@ -3124,7 +3087,7 @@ initialization
  glPreAddCompo:=PreAddCompo;
  glPostAddCompo:=PostAddCompo;
  glAfterSaveBin:=AfterSaveBin;
- glStringToFile:=StringToFile;
+ glStringToFile:=CleverStringToFile;
 
 //    WHook := SetWindowsHookEx(WH_CALLWNDPROCRET	 , @CallWndProcHook, 0, GetCurrentThreadId);
 

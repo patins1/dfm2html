@@ -10,10 +10,10 @@ uses
   QMask, Qt, QTntStdCtrls,
 {$ELSE}
   Controls, Windows, Messages, Graphics, Forms, Dialogs,
-  ShellAPI, Mask, ExtCtrls, StdCtrls, TntStdCtrls, TntForms,
+  ShellAPI, Mask, ExtCtrls, StdCtrls, UnicodeCtrls,
 {$ENDIF}
   {$IFDEF MSWINDOWS}OverbyteIcsUrl,{$ELSE}{IcsUrl,}{$ENDIF}unit3, dhPanel,MyMaskEdit,
-  DKLang, dhLabel, MyPanel;
+  DKLang, dhLabel, MyPanel, dhStrUtils;
 
 type
   TPublishFTP = class(TTntForm)
@@ -47,13 +47,13 @@ type
     procedure eUserChange(Sender: TObject);
   private
     { Private declarations }
-    procedure Prepare(URL:String);
+    procedure Prepare(URL:TPathName);
     function URL_OK: boolean;
-    function GetURL2(maskPassword:Boolean=false): string;
-    function UpdateAssembledURL:String;
+    function GetURL2(maskPassword:Boolean=false): TPathName;
+    procedure UpdateAssembledURL;
   public
     { Public declarations }
-    function GetURL(var URL:String):boolean;
+    function GetURL(var URL:TPathName):boolean;
   end;
 
 var
@@ -78,29 +78,30 @@ begin
  end;
 end;
 
-function PreS(pre:string; s:string):string;
+function PreS(pre:TPathName; s:TPathName):TPathName;
 begin
  if s<>'' then
   result:=pre+s else
   result:='';
 end;
 
-function PostS(s:string; post:string):string;
+function PostS(s:TPathName; post:TPathName):TPathName;
 begin
  if s<>'' then
   result:=s+post else
   result:='';
 end;
 
-function ExtractHost(URL:String):string;
-var Proto, Username, Password, Port, Path : String;
+function ExtractHost(URL:TPathName):TPathName;
+var Proto, Username, Password, Host, Port, Path : String;
 begin
 {$IFNDEF CLX}
- ParseURL(URL,Proto, Username, Password, Result, Port, Path);
+ ParseURL(URL,Proto, Username, Password, Host, Port, Path);
 {$ENDIF}
+ Result:=Host;
 end;
 
-function GoodPath(URL:String):string;
+function GoodPath(URL:TPathName):TPathName;
 begin
  result:=Trim(URL);
  while (result<>'') and (result[1]='/') do
@@ -112,8 +113,8 @@ begin
 end;
 
 
-function TPublishFTP.GetURL(var URL:String): boolean;
-var Host:string;
+function TPublishFTP.GetURL(var URL:TPathName): boolean;
+var Host:TPathName;
     i:integer;
 begin
  eHost.Clear;
@@ -139,7 +140,7 @@ end;
 
 
 
-procedure TPublishFTP.Prepare(URL: String);
+procedure TPublishFTP.Prepare(URL: TPathName);
 var Proto, Username, Password, Host, Port, Path : String;
 begin
 {$IFNDEF CLX}
@@ -207,7 +208,7 @@ begin
  end;
 end;
 
-function TPublishFTP.UpdateAssembledURL:String;
+procedure TPublishFTP.UpdateAssembledURL;
 begin
  if eHost.Text='' then
   dhLabel2.Text:='[host name required]' else
@@ -223,7 +224,7 @@ begin
    Result:=Psw;
 end;
 
-function TPublishFTP.GetURL2(maskPassword:Boolean=false):string;
+function TPublishFTP.GetURL2(maskPassword:Boolean=false):TPathName;
 begin
  if eHost.Text='' then
   result:='' else

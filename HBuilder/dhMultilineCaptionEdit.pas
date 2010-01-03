@@ -7,9 +7,9 @@ uses
   {$IFDEF CLX}
   QControls, QGraphics, QForms, QButtons, QStdCtrls, Qt, QDialogs, QTntStdCtrls,
   {$ELSE}
-  Controls, Windows, Messages, Graphics, Forms, StdCtrls, Dialogs, Menus, Buttons, TntStdCtrls, TntButtons,
+  Controls, Windows, Messages, Graphics, Forms, StdCtrls, Dialogs, Menus, Buttons, UnicodeCtrls,
   {$ENDIF}
-  Classes, dhStyleSheet, dhPanel, dhLabel, dhPageControl, dhMenu, UseFastStrings, Math, DKLang, MyForm;
+  Classes, dhStyleSheet, dhPanel, dhLabel, dhPageControl, dhMenu, UseFastStrings, Math, DKLang, MyForm,dhStrUtils;
 
 type
   TdhMultilineCaptionEdit2 = class(TMyForm)
@@ -148,7 +148,7 @@ end;
 
 
 procedure TdhMultilineCaptionEdit2.dtClick(Sender: TObject);
-var s:string;
+var s:TComponentName;
 begin
  s:=(Sender as TdhLabel).Use.GetName;
 // showmessage('<'+s+'>'+Memo1.SelText+'</'+s+'>');
@@ -407,7 +407,7 @@ var itagbs:integer;
     vn:integer;
     s:WideString;
     text:WideString;
-    tag:String;
+    tag:HypeString;
     Closing,EmptyEle:boolean;
     itag,start_itag,close_itag:TPoint;
     ouritag:integer;

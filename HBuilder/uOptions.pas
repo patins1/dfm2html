@@ -8,8 +8,7 @@ uses
   QControls, QGraphics, QForms, QDialogs, QStdCtrls, QExtCtrls, QMask,QComCtrls,QTntStdCtrls, 
 {$ELSE}
   Controls, Windows, Messages, Graphics, Forms, Dialogs, StdCtrls, ComCtrls,
-  ShellAPI, Mask, ExtCtrls,  clipbrd, Spin, TntForms,
-  TntComCtrls, TntStdCtrls, TntExtCtrls,
+  ShellAPI, Mask, ExtCtrls,  clipbrd, Spin, UnicodeCtrls,
 {$ENDIF}
   dhPanel, dhLabel, dhPageControl, MySpinEdit, MyPageControl, dhStyleSheet, DKLang;
 
@@ -94,7 +93,7 @@ var
 
 implementation
 
-uses Unit1, Unit2;
+uses Unit1, Unit2, uPublishLog;
 
 {$R *.dfm}
 
@@ -137,8 +136,8 @@ begin
   bClearFocusedCache.Enabled:=false;
   if (dhMainForm.Act<>nil) and (dhMainForm.Act.MySiz.FindBody<>nil) then
   begin
-   lDirectoryCache.Text:=dhMainForm.Act.MySiz.FindBody.GetFTPShortcut;
-   bClearFocusedCache.Enabled:=dhMainForm.Act.MySiz.FindBody.Find('*',0,false);
+   lDirectoryCache.Text:=GetFTPShortcut(dhMainForm.Act.MySiz.FindBody);
+   bClearFocusedCache.Enabled:=dhMainForm.Act.MySiz.FindBody.Find(GetFTPShortcut(dhMainForm.Act.MySiz.FindBody),'*',0,false);
   end else
    lDirectoryCache.Text:='';
   cAutoUpdate.Checked:=FAutoUpdate;
@@ -267,7 +266,7 @@ end;
 
 procedure TOptions.bClearFocusedCacheClick(Sender: TObject);
 begin
- dhMainForm.Act.MySiz.FindBody.Find('*',0,true);
+ dhMainForm.Act.MySiz.FindBody.Find(GetFTPShortcut(dhMainForm.Act.MySiz.FindBody),'*',0,true);
  cSmartPublishingClick(nil);
 end;
 

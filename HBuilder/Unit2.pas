@@ -8,10 +8,9 @@ uses
   QControls, QForms, Qt, QGraphics, QDialogs, QExtCtrls, QComCtrls,
   QStdCtrls, QImgList, QMenus, QStyle,  QTntStdCtrls,
 {$ELSE}
-  Controls, Forms, Windows, Messages, Graphics, Dialogs, ExtDlgs, ExtCtrls, clipbrd, Buttons, GIFImage, JPeg,
+  Controls, Forms, Windows, Messages, Graphics, Dialogs, ExtDlgs, ExtCtrls, clipbrd, Buttons, JPeg,
   ComCtrls, CommCtrl, StdCtrls, ShellAPI, RTLConsts,  Menus,
-  Mask, ToolWin, ImgList, AppEvnts, Spin, TntStdCtrls, TntGraphics, TntMenus,
-  TntExtCtrls, TntComCtrls, TntButtons,
+  Mask, ToolWin, ImgList, AppEvnts, Spin, UnicodeCtrls,
 {$ENDIF}
    BinList,
    uChooseWide,
@@ -27,7 +26,7 @@ uses
   dhOleContainer,dhFile,dhHiddenField,GR32,
   MyPageControl, MyFontDialog,
   MySpinEdit, MyTrackBar, hCheckBox, dhSelect, UseFastStrings, DKLang,UIConstants,uWException,
-  MyGroupBox, MyPanel, MyForm, Contnrs;
+  MyGroupBox, MyPanel, MyForm, Contnrs, dhStrUtils;
 
 
 var PropsAlign:TAlign=alBottom;
@@ -753,7 +752,7 @@ type
 
     procedure UpdateTabImages;
     procedure InitialLoadFile(f:TdhFile);
-    procedure Changed(const Reason: string; LogChange:TLogChange=lcCommit);
+    procedure Changed(const Reason: TReason; LogChange:TLogChange=lcCommit);
     function ActPn: TdhCustomPanel;
     procedure EditText(vn:integer=0);
     function ActiveEditControl: IhCommitable;
@@ -766,8 +765,8 @@ type
     function ActStyle:TStyle;
     procedure PullStyles(Use:ICon; Clear:boolean);
     procedure Loaded; override;
-    procedure LoadImage(URL: String); overload;
-    procedure LoadImageExt(URL: String; pn:TdhCustomPanel); overload;
+    procedure LoadImage(URL: TPathName); overload;
+    procedure LoadImageExt(URL: TPathName; pn:TdhCustomPanel); overload;
     procedure ActBoundsChanged;
     procedure WriteTransformations(tt: TTransformations);
     procedure UpdateSel;
@@ -791,7 +790,7 @@ function Adj100to255(i:integer):DWORD;
 function GetComp(c:TControl):TComponent;
 function AbsIncr(c:TControl):TPoint;
 
-function WithoutPx(const s:string):string;
+function WithoutPx(const s:TCSSStringValue):TCSSStringValue;
 
 type TSecFilter=function (match,ori:TControl):boolean;
 procedure GetRefs_(cb:ThComboBox; cl:TClass; c,find:TControl; SecFilter:TSecFilter; ClearValue:boolean);
@@ -1011,7 +1010,7 @@ var _Showing:boolean=true;
 
 procedure TTabs.UpdateBackgroundDisplay;
 var res:TPoint;
-    v1,v2:string;
+    v1,v2:TCSSBackgroundPosition;
     BackgroundImage:TLocationImage;
 begin
  if DoNotUpdateDisplay then exit;
@@ -1497,7 +1496,7 @@ begin
   LoadImage(OpenPictureDialog1.FileName);
 end;
 
-procedure TTabs.LoadImage(URL:String);
+procedure TTabs.LoadImage(URL:TPathName);
 begin          
  CommitChanges;
  ActStyle.LoadImage(URL);
@@ -1842,20 +1841,27 @@ begin
  if Bold then
   Bitmap.Canvas.Font.Style:=Bitmap.Canvas.Font.Style+[fsBold];
  tab.Caption:='';
- TextWidth:=WideCanvasTextWidth(Bitmap.Canvas,tab.Hint); //Bitmap.Canvas.TextWidth(tab.Hint);
+{$IFDEF VER210}
+ TextWidth:=Bitmap.Canvas.TextWidth(tab.Hint);
+{$ELSE}
+ TextWidth:=WideCanvasTextWidth(Bitmap.Canvas,tab.Hint);
+{$ENDIF}
  {if Bold and (TextWidth>ImageList.Width) then
  begin
   //Bitmap.Canvas.Font.Size:=Bitmap.Canvas.Font.Size-2;
   //Bitmap.Canvas.Font.Style:=Bitmap.Canvas.Font.Style-[fsBold]+[fsUnderline];
   //TextWidth:=WideCanvasTextWidth(Bitmap.Canvas,tab.Hint); //Bitmap.Canvas.TextWidth(tab.Hint);
  end;  }
- WideCanvasTextOut(Bitmap.Canvas,(ImageList.Width-TextWidth) div 2,0,tab.Hint);//Bitmap.Canvas.TextOut((ImageList.Width-TextWidth) div 2,0,tab.Hint);
+{$IFDEF VER210}
+ Bitmap.Canvas.TextOut((ImageList.Width-TextWidth) div 2,0,tab.Hint);
+{$ELSE}
+ WideCanvasTextOut(Bitmap.Canvas,(ImageList.Width-TextWidth) div 2,0,tab.Hint);
+{$ENDIF}
  ImageList.AddMasked(Bitmap,Bitmap.Canvas.Brush.Color);
 end;
 
 var i:integer;
     OldImageList:TCustomImageList;
-    s:string;
 begin
  Bitmap:=TBitmap.Create;
  try
@@ -1883,7 +1889,6 @@ procedure TTabs.UpdateSel;
 
 function HasCommon(ts:TTntTabSheet; c:Tclass; LookParent:boolean=false; menuitem:TMenuItem=nil; OnlyOne:boolean=false{; NotHide:boolean=false}{; AssertIsImage:boolean=false; IsImage:boolean=false}{; NotFrom:Tclass=nil}):boolean;
 var i:integer;
-    s:string;
     ws:WideString;
 begin
  result:=(Selection.Count<>0);
@@ -1957,7 +1962,6 @@ var i:integer;
     LastAct:TTabSheet;
     np:integer;
     AllowStates:boolean;
-    s:string;
 begin
 
  //PageControl1.DisableAlign;
@@ -2166,7 +2170,7 @@ begin
   inherited;
 end;
 
-procedure TTabs.Changed(const Reason:string; LogChange:TLogChange=lcCommit);
+procedure TTabs.Changed(const Reason:TReason; LogChange:TLogChange=lcCommit);
 begin
  if dhMainForm.Act=nil then exit; //after design form is closed, edit control may be de-focused later
  dhMainForm.Act.SetModified(Reason,LogChange);
@@ -3072,7 +3076,6 @@ end;
 
 procedure TTabs.mSaveImageClick(Sender: TObject);
 var pn:TdhCustomPanel;
-    s:string;
 begin
  IGNORE_SavePictureDialog1.FileName:=EmptyStr;
  if TObject(Selection[0]) is TdhCustomPanel then
@@ -3091,7 +3094,7 @@ begin
  UpdateMoreDisplay;
 end;
 
-function cssinttostr(i:TCSSInteger):string;
+function cssinttostr(i:TCSSInteger):TCSSStringValue;
 begin
  if i=vsrInherit then
   result:=EmptyStr else
@@ -3163,7 +3166,7 @@ begin
 end;
 
            
-function WithoutPx(const s:string):string;
+function WithoutPx(const s:TCSSStringValue):TCSSStringValue;
 begin
  if SubEqualEnd('px',s) then
   result:=CopyLess(s,2) else
@@ -4299,7 +4302,7 @@ begin
 {$ENDIF}
 end;
 
-procedure TTabs.LoadImageExt(URL: String; pn: TdhCustomPanel);
+procedure TTabs.LoadImageExt(URL: TPathName; pn: TdhCustomPanel);
 begin
   //if not CommitChanges then exit; //may be a dragged image from browser, which causes no focus exit
   (pn.Owner as TPageContainer).MySiz.SetControlTo(pn,true,true);
@@ -4730,8 +4733,7 @@ begin
 end;
 
 procedure TTabs.CODE_eLinkValueChange(Sender: TObject; Clear: Boolean);
-var NewLink:String;
-    i:integer;
+var i:integer;
 begin
   for i:=0 to Selection.Count-1 do
    (TObject(Selection[i]) as TdhLink).Link:=CODE_eLink.Text;
@@ -4739,8 +4741,7 @@ begin
 end;
 
 procedure TTabs.CODE_eTargetValueChange(Sender: TObject; Clear: Boolean);
-var NewLink:String;
-    i:integer;
+var i:integer;
 begin
   for i:=0 to Selection.Count-1 do
    (TObject(Selection[i]) as TdhLink).Target:=CODE_eTarget.Text;
@@ -5469,8 +5470,8 @@ begin
 {$ENDIF}
 end;
                      
-function ExtractPureFileName(const FileName:String):String;
-begin                               
+function ExtractPureFileName(const FileName:TPathName):TPathName;
+begin
     Result:=ExtractFileName(FileName);
     Result:=CopyLess(Result,Length(ExtractFileExt(Result)));
 end;

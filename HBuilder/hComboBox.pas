@@ -6,7 +6,7 @@ uses
   {$IFDEF CLX}
   QForms, QControls, QGraphics, QStdCtrls, QMask, Qt, QDialogs, QTntStdCtrls,
   {$ELSE}
-  Forms, Controls, Windows, Messages, Graphics, StdCtrls, ShellAPI, Mask, Dialogs, TntStdCtrls,
+  Forms, Controls, Windows, Messages, Graphics, StdCtrls, ShellAPI, Mask, Dialogs, UnicodeCtrls,
   {$ENDIF}
   SysUtils, Classes,UIConstants,uWException,dhPanel;
 
@@ -226,7 +226,7 @@ begin
   Abort;
   exit;
  end;
- if Key in ['0','1','2','3','4','5','6','7','8','9','-'] then exit;
+ if CharInSet(Key,['0','1','2','3','4','5','6','7','8','9','-']) then exit;
  inherited;
 end;
 

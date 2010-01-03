@@ -3,7 +3,7 @@ unit uObjectExplorer;
 interface
 
 uses
-  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms, TntForms,
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms, UnicodeCtrls,
   Dialogs, ComCtrls, Unit2, dhPageControl, MySiz, dhPanel, DKLang;
 
 type
@@ -70,7 +70,7 @@ procedure TObjectExplorer.UpdateRoot;
 var body:TdhPage;
     rootNode:TTreeNode;
     I:Integer;
-    selectionid:String;
+    selectionid:TComponentName;
 begin
  tree.Items.Clear;
  if dhMainForm.Act=nil then exit;
@@ -81,7 +81,7 @@ begin
 end;
 
 procedure TObjectExplorer.UpdateSelection;
-var SelectionID:String;
+var SelectionID:TComponentName;
     selectionids:TStringList;
     Nodes: TList;
     I:Integer;

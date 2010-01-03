@@ -7,10 +7,10 @@ uses
 {$IFDEF CLX}
   QControls, QGraphics, QForms, QStdCtrls, QExtCtrls, QComCtrls,QTntStdCtrls,
 {$ELSE}
-  Controls, Windows, Messages, Graphics, Forms, ComCtrls, ExtCtrls, StdCtrls, Dialogs,TntForms,Buttons,TntStdCtrls,
+  Controls, Windows, Messages, Graphics, Forms, ComCtrls, ExtCtrls, StdCtrls, Dialogs,Buttons,UnicodeCtrls,
 {$ENDIF}
   GR32, math, pngimage,dhPanel,Contnrs, dhPageControl,dhMenu, dhLabel,
-  dhStyleSheet, DKLang, MyForm;
+  dhStyleSheet, DKLang, MyForm, dhStrUtils;
 
 type
   TTemplatesWizard = class(TMyForm)
@@ -34,11 +34,11 @@ type
       WheelDelta: Integer; MousePos: TPoint; var Handled: Boolean);
   private
     { Private declarations }
-    ActDown:string;
-    function GetDir: string;
+    ActDown:TPathName;
+    function GetDir: TPathName;
   public
     { Public declarations }
-    function Prepare(var Filename:string):boolean;
+    function Prepare(var Filename:TPathName):boolean;
   end;
 
 var
@@ -47,7 +47,7 @@ var
 const MyTemplatesDir='My Templates';
       preview='Preview';
 
-function GetRootTemplatesDir:String;
+function GetRootTemplatesDir:TPathName;
 
 implementation
 
@@ -57,13 +57,13 @@ uses Unit1,Unit3;
 
 var OldIndex:integer=-1;
 
-function GetRootTemplatesDir:String;
+function GetRootTemplatesDir:TPathName;
 begin
  result:=ExtractFilePath(Application.ExeName)+'Templates'+PathDelim;
 end;
 
 
-function TTemplatesWizard.GetDir:string;
+function TTemplatesWizard.GetDir:TPathName;
 begin
  result:=GetRootTemplatesDir+ListBox1.Items[ListBox1.ItemIndex]+PathDelim;
 end;
@@ -71,7 +71,7 @@ end;
 
 procedure TTemplatesWizard.ListBox1Click(Sender: TObject);
 
-function GetGraph(graph:TBitmap32; const purename:string): boolean;
+function GetGraph(graph:TBitmap32; const purename:TPathName): boolean;
 var
     bmp,bmp2:TBitmap32;
     b:TBitmap;
@@ -136,7 +136,7 @@ end;
 
 var SearchRec: TSearchRec;
     graph:TBitmap32;
-    dfmfile,pngfile,purename:string;
+    dfmfile,pngfile,purename:TPathName;
     pc:TPageContainer;
     c1,c2:int64;
     dfmfileAge,pngfileAge:TDateTime;
@@ -203,7 +203,7 @@ begin
 
 end;
 
-function TTemplatesWizard.Prepare(var Filename:string):boolean;
+function TTemplatesWizard.Prepare(var Filename:TPathName):boolean;
 var SearchRec: TSearchRec;
 begin
  ListBox1.Clear;

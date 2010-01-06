@@ -781,7 +781,7 @@ type
 
 var
   Tabs: TTabs;
-                         
+
 
 
 function Adj255to100(i:integer):integer;
@@ -805,6 +805,7 @@ procedure SetPrecise(p:TWinControl);
 procedure UpdateAlign;
 
 function ExtractActiveControl:TControl;
+procedure ForceBounds(c:TControl; ALeft, ATop, AWidth, AHeight: Integer);
 
 implementation
 
@@ -1638,6 +1639,17 @@ begin
 
 end;
 
+procedure ForceBounds(c:TControl; ALeft, ATop, AWidth, AHeight: Integer);
+var pn:TdhCustomPanel;
+begin
+ if c is TdhCustomPanel then
+ begin
+ pn:=TdhCustomPanel(c);
+ if  not (csLoading in pn.ComponentState) and not (csReading in pn.ComponentState) and (pn.Parent<>nil) then
+  pn.WeakToStrong(true, ALeft, ATop, AWidth, AHeight);
+ end;
+ c.SetBounds(ALeft, ATop, AWidth, AHeight);
+end;
 
 procedure TTabs.LivePositionChanged(Sender:TObject);
 var i:integer;
@@ -1662,6 +1674,8 @@ begin
  if not ((TObject(Selection[i]) is TdhPage) and TdhPage(Selection[i]).IsTopScrollable and (SamplePosition.Align<>alClient)) then
  begin
   pn:=TControl(Selection[i]);
+
+  ForceBounds(pn,pn.Left,pn.Top,pn.Width,pn.Height); //update right/bottom before setting akRight/akBottom
   pn.Anchors:=SamplePosition.Anchors;
   {if pn is TdhCustomPanel then
    TdhCustomPanel(pn).Center:=SamplePosition.Center; }
@@ -1676,7 +1690,7 @@ begin
   if Sender=spHeight then
    rct:=GetBoundsFor(pn,0,0,0,_Height-pn.Height) else
    continue;
-  pn.SetBounds(rct.Left,rct.Top,rct.Right-rct.Left,rct.Bottom-rct.Top);
+  ForceBounds(pn,rct.Left,rct.Top,rct.Right-rct.Left,rct.Bottom-rct.Top);
  end;
 
  finally
@@ -2980,7 +2994,7 @@ var i:integer;
 begin
  for i:=0 to Selection.Count-1 do
  with TMySiz.GetAlignedBounds(TObject(Selection[i]) as TControl) do
-  (TObject(Selection[i]) as TControl).SetBounds(Left,Top,Right-Left,Bottom-Top);
+  ForceBounds(TObject(Selection[i]) as TControl,Left,Top,Right-Left,Bottom-Top);
  Changed('Align to Grid');
  ActBoundsChanged;
 end;

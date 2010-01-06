@@ -1285,7 +1285,7 @@ begin
   begin
    c:=TControl(FChildList[i]);
    R:=GetBoundsFor(c,L,T,W,H);
-   c.SetBounds(R.Left,R.Top,R.Right-R.Left,R.Bottom-R.Top);
+   ForceBounds(c,R.Left,R.Top,R.Right-R.Left,R.Bottom-R.Top);
   end;              
   ChildrenEnableAlign;
   Tabs.ActBoundsChanged;
@@ -2130,7 +2130,7 @@ begin
    DecPt(ARect.TopLeft,GetPBound(c).TopLeft);
    if not EqualRect(c.BoundsRect,Rect(ARect.Left,ARect.Top,ARect.Left+ARect.Right,ARect.Top+ARect.Bottom)) then
    begin
-    c.SetBounds(ARect.Left, ARect.Top, ARect.Right, ARect.Bottom);
+    ForceBounds(c,ARect.Left, ARect.Top, ARect.Right, ARect.Bottom);
     changed:=true;
    end;
   end;
@@ -2463,7 +2463,7 @@ begin
   end;
   L:=Max(L,prct.Left);
   T:=Max(T,prct.Left);
-  AControl.SetBounds(L,T,AControl.Width,AControl.Height);
+  ForceBounds(AControl,L,T,AControl.Width,AControl.Height);
  end;
 end;
 

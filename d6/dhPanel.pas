@@ -5116,7 +5116,7 @@ begin
  end else
   inherited;
 
- WeakToStrong(true);
+ WeakToStrong(false);
 
 // UpdateScrollBars(false);
 
@@ -15377,10 +15377,10 @@ begin
  with GetLocalClientBound(Parent) do
   ParentWH:=Point(Right-Left,Bottom-Top);
 
- if IncludeActiveStrong or (HasActiveStrong([akRight]){wichtig da z.b. Left nicht persistent war (-> =0), in StrongToWeak auch nicht geändert wurde (wegen HasActiveStrong dort) und nun Left mit undefiniertem Wert gelesen wird}) then
+ if IncludeActiveStrong or not (HasActiveStrong([akRight]){wichtig da z.b. Left nicht persistent war (-> =0), in StrongToWeak auch nicht geändert wurde (wegen HasActiveStrong dort) und nun Left mit undefiniertem Wert gelesen wird}) then
   CSSRight:=ParentWH.X-(ALeft+AWidth);
 
- if IncludeActiveStrong or HasActiveStrong([akBottom]) then
+ if IncludeActiveStrong or not HasActiveStrong([akBottom]) then
   CSSBottom:=ParentWH.Y-(ATop+AHeight);
 
 end;

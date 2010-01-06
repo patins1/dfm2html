@@ -1166,7 +1166,7 @@ type
     procedure StrongToWeak;
     function HasActiveStrong(TestAnchors:TAnchors):boolean;
     procedure CalcStrongToWeak(var ALeft,ATop,AWidth,AHeight:integer);
-    procedure WeakToStrong(IncludeActiveStrong:boolean);
+    procedure WeakToStrong(IncludeActiveStrong:boolean); overload;
 
     //function ClientArea: TPoint;
     procedure SetVHPos(H,V:integer);
@@ -1554,7 +1554,7 @@ type
     property OnClick;
     property OnMouseUp;
     procedure DoClickAction(Initiator:TdhCustomPanel); virtual;
-    function GetInnerClientArea: TRect; 
+    function GetInnerClientArea: TRect;
 
     function DesignHitTest:boolean;
 
@@ -1589,7 +1589,7 @@ type
     function Referer:TdhCustomPanel; virtual;
 
     function GetClientAdjusting:TRect;
-    procedure DesignPaintingChanged; 
+    procedure DesignPaintingChanged;
     procedure CalcVariableSizes(FirstPass:boolean); virtual;
     function VariableSize:boolean;
     function VariableHeightSize:boolean;
@@ -1605,6 +1605,7 @@ type
     function VirtualParent:TControl; virtual;
     constructor Create(AOwner: TComponent); override;
     procedure ConstrainedResize(var MinWidth, MinHeight, MaxWidth, MaxHeight: Integer); override;
+    procedure WeakToStrong(IncludeActiveStrong:boolean; ALeft, ATop, AWidth, AHeight:Integer); overload;
 {}
 //    procedure Paint; override;
 
@@ -1883,6 +1884,7 @@ function ShrinkRect(const a,b:TRect):TRect;
 function InflRect(const a,b:TRect):TRect;
 function EqualPoint(const P1, P2: TPoint): Boolean;
 
+function GetLocalClientBound(c:TControl):TRect;
 procedure GetRepeatings(var BPos:TPoint; var num_across,num_down:integer; W,H:integer; const brct:TRect; RepeatX,RepeatY:boolean);
 
 function GetNearestFont(const s:TFontName):TFontName;
@@ -15367,7 +15369,7 @@ end;
 
 
 //assumes that that the normal BoundsRect has more current data than CSSRight or CSSBottom
-procedure TdhCustomPanel.WeakToStrong(IncludeActiveStrong:boolean);
+procedure TdhCustomPanel.WeakToStrong(IncludeActiveStrong:boolean; ALeft, ATop, AWidth, AHeight:Integer);
 var ParentWH:TPoint;
 begin
  if LightBoundsChanging or (csReading in ComponentState) or (Parent=nil){ or not ((Align=alNone) and ([akBottom,akRight]*Anchors<>[]))} then exit;
@@ -15375,14 +15377,18 @@ begin
  with GetLocalClientBound(Parent) do
   ParentWH:=Point(Right-Left,Bottom-Top);
 
- //if IncludeActiveStrong or (HasActiveStrong([akRight]){wichtig da z.b. Left nicht persistent war (-> =0), in StrongToWeak auch nicht geändert wurde (wegen HasActiveStrong dort) und nun Left mit undefiniertem Wert gelesen wird}) then
-  CSSRight:=ParentWH.X-(Left+Width);
+ if IncludeActiveStrong or (HasActiveStrong([akRight]){wichtig da z.b. Left nicht persistent war (-> =0), in StrongToWeak auch nicht geändert wurde (wegen HasActiveStrong dort) und nun Left mit undefiniertem Wert gelesen wird}) then
+  CSSRight:=ParentWH.X-(ALeft+AWidth);
 
- //if IncludeActiveStrong or HasActiveStrong([akBottom]) then
-  CSSBottom:=ParentWH.Y-(Top+Height);
+ if IncludeActiveStrong or HasActiveStrong([akBottom]) then
+  CSSBottom:=ParentWH.Y-(ATop+AHeight);
 
 end;
 
+procedure TdhCustomPanel.WeakToStrong(IncludeActiveStrong:boolean);
+begin
+  WeakToStrong(IncludeActiveStrong, Left, Top, Width, Height);
+end;
 
 procedure TdhCustomPanel.ReadRight(Reader: TReader);
 //var Right,ParentWidth:integer;

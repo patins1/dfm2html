@@ -16,19 +16,27 @@ uses
 {$ELSE}
   Messages, Controls, Graphics
 {$ENDIF},
- Gr32;
+ Gr32, Gr32_Transforms;
 
 
 type
+  TMyAffineTransformation = class(TAffineTransformation)
+  public
+    function GetTransformedBoundsF: TFloatRect; overload;
+    function GetTransformedBoundsF(const ASrcRect: TFloatRect): TFloatRect; overload;
+  end;
+
   TMyBitmap32 = class (TBitmap32)
-     protected
-     
+  protected
+    procedure TextBlueToAlpha(const B: TBitmap32; const Color: TColor32); {$IFDEF USEINLINING} inline; {$ENDIF}
+
+    function  GET_FDS256(X, Y: Integer): TColor32; //better variant to GET_TS256
     function  GetPixelFDS(X, Y: Double): TColor32;
 
     procedure TextScaleDownExtended(const B, B2: TBitmap32;
       const Color: TColor32; AlignTo:integer=0); {$IFDEF USEINLINING} inline; {$ENDIF}
 
-     public
+  public
 
 {$IFDEF CLX}
     procedure Changed; override;
@@ -47,7 +55,7 @@ type
 implementation
 
 uses
-  GR32_Blend, GR32_Transforms, GR32_LowLevel, GR32_Filters, Math, TypInfo,
+  GR32_Blend, GR32_LowLevel, GR32_Filters, Math, TypInfo,
   GR32_System,
 {$IFDEF CLX}
   QClipbrd,
@@ -318,7 +326,7 @@ end;
 
 function TMyBitmap32.GetPixelFDS(X, Y: Double): TColor32;
 begin
-  Result := GET_TS256(Round(X * 256), Round(Y * 256));
+  Result := GET_FDS256(Round(X * 256), Round(Y * 256));
   EMMS;
 end;
 
@@ -328,7 +336,7 @@ var
   R: TRect;
 {$ENDIF}
 var
-  Fit: Integer;   
+  Fit: Integer;
   Sz:TSize;
   P: array of integer;
   I:Integer;
@@ -352,8 +360,8 @@ begin
     end;
   end;
 
-  If FClipping then
-    ExtTextoutW(Handle, X, Y, ETO_CLIPPED, @FClipRect, PWideChar(Text), Length(Text), PInteger(P))
+  If Clipping then
+    ExtTextoutW(Handle, X, Y, ETO_CLIPPED, @ClipRect, PWideChar(Text), Length(Text), PInteger(P))
   else
     ExtTextoutW(Handle, X, Y, 0, nil, PWideChar(Text), Length(Text), PInteger(P));
 {$ENDIF}
@@ -370,6 +378,75 @@ begin
 end;
 {$ENDIF}
 
+procedure TMyBitmap32.TextBlueToAlpha(const B: TBitmap32; const Color: TColor32);
+var
+  I: Integer;
+  P: PColor32;
+  C: TColor32;
+begin
+  // convert blue channel to alpha and fill the color
+  P := @B.Bits[0];
+  for I := 0 to B.Width * B.Height - 1 do
+  begin
+    C := P^;
+    if C <> 0 then
+    begin
+      C := P^ shl 24; // transfer blue channel to alpha
+      C := C + Color;
+      P^ := C;
+    end;
+    Inc(P);
+  end;
+end;
+
+function TMyBitmap32.GET_FDS256(X, Y: Integer): TColor32;
+var
+    flrx, flry, celx, cely: Longword;
+    C1, C2, C3, C4: TColor32;
+begin
+  if (X > 0) and (Y > 0) and (X < (Width - 1) shl 8) and (Y < (Height - 1) shl 8) then
+    Result := GET_T256(X,Y)
+  else
+    //Result := FOuterColor;
+    begin//°!°
+      celx := X and $FF xor 255;
+      cely := Y and $FF xor 255;
+      X:=SAR_8(X);
+      Y:=SAR_8(Y);
+
+      // handle edge in fail-safe mode...
+      C1 := PixelS[X, Y];
+      C2 := PixelS[X + 1, Y];
+      C3 := PixelS[X, Y + 1];
+      C4 := PixelS[X + 1, Y + 1];
+
+      Result := CombineReg(CombineReg(C1, C2, celx), CombineReg(C3, C4, celx), cely);
+    end;
+end;
+
+
+function TMyAffineTransformation.GetTransformedBoundsF: TFloatRect;
+begin
+  Result := GetTransformedBoundsF(SrcRect);
+end;
+
+function TMyAffineTransformation.GetTransformedBoundsF(const ASrcRect: TFloatRect): TFloatRect;
+var
+  V1, V2, V3, V4: TVector3f;
+begin
+  V1[0] := ASrcRect.Left;  V1[1] := ASrcRect.Top;    V1[2] := 1;
+  V2[0] := ASrcRect.Right; V2[1] := V1[1];           V2[2] := 1;
+  V3[0] := V1[0];          V3[1] := ASrcRect.Bottom; V3[2] := 1;
+  V4[0] := V2[0];          V4[1] := V3[1];           V4[2] := 1;
+  V1 := VectorTransform(Matrix, V1);
+  V2 := VectorTransform(Matrix, V2);
+  V3 := VectorTransform(Matrix, V3);
+  V4 := VectorTransform(Matrix, V4);
+  Result.Left   := Min(Min(V1[0], V2[0]), Min(V3[0], V4[0]));
+  Result.Right  := Max(Max(V1[0], V2[0]), Max(V3[0], V4[0]));
+  Result.Top    := Min(Min(V1[1], V2[1]), Min(V3[1], V4[1]));
+  Result.Bottom := Max(Max(V1[1], V2[1]), Max(V3[1], V4[1]));
+end;
 
 initialization
   StockBitmap := TBitmap.Create;

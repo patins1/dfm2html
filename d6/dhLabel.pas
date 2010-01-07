@@ -12,7 +12,7 @@ uses
   {$ELSE}
   Controls, Windows, Messages, Graphics, Forms,
   {$ENDIF}
-  SysUtils, Classes, dhPanel, math, {$IFNDEF VER130}types,  {$ENDIF} BinList,GR32_Transforms,gr32,dhStrUtils;
+  SysUtils, Classes, dhPanel, math, {$IFNDEF VER130}types,  {$ENDIF} BinList,GR32_Transforms,gr32,dhStrUtils,MyBitmap32;
 
 
 {$IFDEF VER160}
@@ -1920,7 +1920,7 @@ var
   FPicture: TPicture;
   PicHeight,PicWidth:integer;
   Transformations:TTransformations;
-  T: TAffineTransformation;
+  T: TMyAffineTransformation;
   HorzRotated,VertRotated:boolean;
 begin
     if (csLoading in ComponentState) then exit;

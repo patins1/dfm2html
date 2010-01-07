@@ -882,7 +882,7 @@ type
     procedure CSSToWinControl(WhatChanged:TWhatChanged=[]);
     procedure InvalTop(WithChilds,ExcludeOneself:boolean);
     procedure InvalBack(const R2:TRect);
-    function GetAffine(inv: boolean): TAffineTransformation;
+    function GetAffine(inv: boolean): TMyAffineTransformation;
     //function HasEdgeImage(var FPicture: TPicture): boolean;
     //function HasStretchImage(var FPicture:TPicture):boolean;
     //function IsBGRastered: boolean;
@@ -1235,7 +1235,7 @@ type
     function TextOnly: boolean; virtual;
     function TextExclude: boolean; virtual;
     function CustomSizesForEffects:boolean; virtual;
-    function EasyBounds(var Transformations: TTransformations; var T: TAffineTransformation;
+    function EasyBounds(var Transformations: TTransformations; var T: TMyAffineTransformation;
       var W,H:Integer; var HorzRotated, VertRotated: boolean): boolean;
 
     procedure ProcessMouseMove(StateChanged:boolean); virtual;
@@ -2531,7 +2531,7 @@ end;
 
 type PBoolean=^Boolean;
 
- var glAT:TAffineTransformation;
+ var glAT:TMyAffineTransformation;
      glTrans,glATShiftX,glATShiftY:single;
      glRotate:integer;
 
@@ -10878,9 +10878,9 @@ begin
 end;
 
 
-function TdhCustomPanel.GetAffine(inv:boolean):TAffineTransformation;
+function TdhCustomPanel.GetAffine(inv:boolean):TMyAffineTransformation;
 begin
-  glAT:=TAffineTransformation.Create;
+  glAT:=TMyAffineTransformation.Create;
   glRotate:=0;
   glTrans:=1;
   glATShiftX:=0;
@@ -10911,7 +10911,7 @@ procedure TdhCustomPanel.AdjustLittle(var W,H:integer; infl:boolean; adj:boolean
 var
   SrcR: Integer;
   SrcB: Integer;
-  T: TAffineTransformation;
+  T: TMyAffineTransformation;
   Sx, Sy, Scale, ScaleX,ScaleY: Single;
   Transformations:TTransformations;
 begin
@@ -12589,7 +12589,7 @@ begin
 end;
 
 
-function TdhCustomPanel.EasyBounds(var Transformations:TTransformations;var T: TAffineTransformation; var W,H:Integer; var HorzRotated,VertRotated:boolean): boolean;
+function TdhCustomPanel.EasyBounds(var Transformations:TTransformations;var T: TMyAffineTransformation; var W,H:Integer; var HorzRotated,VertRotated:boolean): boolean;
 var T2: TAffineTransformation;
 begin
   result:=true;
@@ -12775,7 +12775,7 @@ end;
 
 function TdhCustomPanel.TransPainting(nWidth:integer=-1; nHeight:integer=-1):TMyBitmap32;
 var Src:TMyBitmap32;
-var T: TAffineTransformation;
+var T: TMyAffineTransformation;
     Transformations:TTransformations;
     bWidth,bHeight:integer;     
     cr:TRect;

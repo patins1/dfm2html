@@ -76,6 +76,7 @@
 <_><src>C:\Delphi\HBuilder\Language\Portuguese.lng</><dest>custom</><custom>#setuppath#\Language</><ifexist>overnewer</><recurs>0</></>
 <_><src>C:\Delphi\HBuilder\Language\Spanish.lng</><dest>custom</><custom>#setuppath#\Language</><ifexist>overnewer</><recurs>0</></>
 <_><src>C:\Delphi\HBuilder\Language\French.lng</><dest>custom</><custom>#setuppath#\Language</><ifexist>overnewer</><recurs>0</></>
+<_><src>C:\Delphi\HBuilder\Language\Afrikaans.lng</><dest>custom</><custom>#setuppath#\Language</><ifexist>overnewer</><recurs>0</></>
 
    </files>
    <runx listview >

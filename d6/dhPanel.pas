@@ -4042,7 +4042,7 @@ end;
 
 function IsSemi(png:TPngImage):boolean;
 var X,Y:integer;
-    bp:pByteArray;
+    bp:pngimage.pByteArray;
 begin
    if png.TransparencyMode=ptmPartial then
    for Y:=0 to png.Height-1 do
@@ -11003,7 +11003,7 @@ end;
 
 function GetBitmap32FromPNGObject(png:TPngImage):TMyBitmap32;
 var P: PColor32;
-    bp:pByteArray;
+    bp:pngimage.pByteArray;
     x,y:integer;
     TransparentColor:TColor;
     sl:pRGBLine;
@@ -11065,7 +11065,7 @@ end;
 function GetPNGObjectFromBitmap32(Src:TBitmap32{; WithTransparency:boolean}):TGraphic;
 var y,x,intFormCount:integer;
 var P,P2,P3: PColor32;
-    bp:pByteArray;
+    bp:pngimage.pByteArray;
     png:TPngImage;
 begin
   png:=TPngImage.Create;

@@ -42,6 +42,8 @@ uses
   {$ENDIF}
   SysUtils, Classes, GR32, GR32_Blend;
 
+var RealDst:TRect;
+
 type
   ETransformError = class(Exception);
 
@@ -843,8 +845,16 @@ begin
   DstClipH := DstClip.Bottom - DstClip.Top;
 
   // mapping tables
+  if not IsRectEmpty(RealDst) then  //°!°
+  begin
+  MapX := BuildMappingTable(RealDst.Left, RealDst.Right, DstClip.Left, DstClip.Right, SrcRect.Left, SrcRect.Right, StretchFilter);
+  MapY := BuildMappingTable(RealDst.Top, RealDst.Bottom, DstClip.Top, DstClip.Bottom, SrcRect.Top, SrcRect.Bottom, StretchFilter);
+  end else
+  begin
   MapX := BuildMappingTable(DstRect.Left, DstRect.Right, DstClip.Left, DstClip.Right, SrcRect.Left, SrcRect.Right, StretchFilter);
   MapY := BuildMappingTable(DstRect.Top, DstRect.Bottom, DstClip.Top, DstClip.Bottom, SrcRect.Top, SrcRect.Bottom, StretchFilter);
+  end;
+
   ClusterX := nil;
   ClusterY := nil;
   try
@@ -1449,6 +1459,8 @@ begin
   R := MakeRect(Round(Transformation.SrcRect.Left), Round(Transformation.SrcRect.Top),
                 Round(Transformation.SrcRect.Right), Round(Transformation.SrcRect.Bottom));
 
+  if Src.StretchFilter <> sfNearest then
+  IntersectRect(SrcRectI, R, MakeRect(0, 0, Src.Width{ - 1}, Src.Height{ - 1})){°!°} else
   IntersectRect(SrcRectI, R, MakeRect(0, 0, Src.Width - 1, Src.Height - 1));
 
   with Transformation.SrcRect do
@@ -1618,6 +1630,9 @@ begin
   FInverseIntMatrix[0,1] := Round(FInverseMatrix[0,1] * 4096);
   FInverseIntMatrix[1,1] := Round(FInverseMatrix[1,1] * 4096);
   FInverseIntMatrix[2,1] := Round(FInverseMatrix[2,1] * 4096);
+
+  Inc(FInverseIntMatrix[2,0],(FInverseIntMatrix[0,0]+FInverseIntMatrix[1,0]) div 2-128*16);//°!°
+  Inc(FInverseIntMatrix[2,1],(FInverseIntMatrix[0,1]+FInverseIntMatrix[1,1]) div 2-128*16);//°!°
 
   FIntMatrix[0,0] := Round(Matrix[0,0] * 4096);
   FIntMatrix[1,0] := Round(Matrix[1,0] * 4096);

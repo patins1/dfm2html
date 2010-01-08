@@ -232,7 +232,7 @@ end;
 
 function HasMMX: Boolean;
 begin
-  Result := HasInstructionSet(ciMMX);
+  Result := False and HasInstructionSet(ciMMX); //°!°
 end;
 
 function HasSSE: Boolean;
@@ -247,7 +247,7 @@ end;
 
 function Has3DNow: Boolean;
 begin
-  Result := HasInstructionSet(ci3DNow);
+  Result := False and HasInstructionSet(ci3DNow); //°!°
 end;
 
 function Has3DNowExt: Boolean;

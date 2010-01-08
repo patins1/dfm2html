@@ -14110,6 +14110,7 @@ end;
 
 procedure DoTransform;
 var Src2:TMyBitmap32;
+    EqAreaF:TFloatRect;
 begin
 
   assert(bWidth=Src.Width); 
@@ -14143,9 +14144,7 @@ begin
 //  if not NearSameMatrix(T.Matrix,IdentityMatrix) then
     begin
 
-  Src.StretchFilter:=sfLinear;
-  Src.StretchFilter:=sfNearest;
-  Src.StretchFilter:=sfLanczos;
+  Src.StretchFilter:=sfMitchell;
   Src.DrawMode:=dmBlend;
   Src.OnPixelCombine:= PixelCombineNormal;
   Src.DrawMode:=dmCustom;
@@ -14173,11 +14172,11 @@ begin
     begin
      with EqArea do
       T.SrcRect:=FloatRect(Left,Top,Right,Bottom);
-     EqArea:=T.GetTransformedBounds;
-     EqArea.Left:=Between(EqArea.Left,0,Src.Width);
-     EqArea.Right:=Between(EqArea.Right,0,Src.Width);
-     EqArea.Top:=Between(EqArea.Top,0,Src.Height);
-     EqArea.Bottom:=Between(EqArea.Bottom,0,Src.Height);
+     EqAreaF:=T.GetTransformedBoundsF;
+     EqArea.Left:=Between(Round(EqAreaF.Left),0,Src.Width);
+     EqArea.Right:=Between(Round(EqAreaF.Right),0,Src.Width);
+     EqArea.Top:=Between(Round(EqAreaF.Top),0,Src.Height);
+     EqArea.Bottom:=Between(Round(EqAreaF.Bottom),0,Src.Height);
      //IntersectRect(EqArea,EqArea,Src.BoundsRect);
     end else
      EqArea.Left:=InvalidEqArea;

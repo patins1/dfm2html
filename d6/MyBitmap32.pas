@@ -2,6 +2,8 @@ unit MyBitmap32;
 
 interface
 
+{$I GR32.inc}
+
 uses
 {$IFDEF CLX}
   Qt, Types,
@@ -21,6 +23,10 @@ uses
 
 type
   TMyAffineTransformation = class(TAffineTransformation)
+  protected
+{$IFDEF COMPILER2009}
+    procedure PrepareTransform; override;
+{$ENDIF}
   public
     function GetTransformedBoundsF: TFloatRect; overload;
     function GetTransformedBoundsF(const ASrcRect: TFloatRect): TFloatRect; overload;
@@ -434,6 +440,9 @@ function TMyAffineTransformation.GetTransformedBoundsF(const ASrcRect: TFloatRec
 var
   V1, V2, V3, V4: TVector3f;
 begin
+{$IFDEF COMPILER2009}
+  Result := GetTransformedBounds(ASrcRect);
+{$ELSE}
   V1[0] := ASrcRect.Left;  V1[1] := ASrcRect.Top;    V1[2] := 1;
   V2[0] := ASrcRect.Right; V2[1] := V1[1];           V2[2] := 1;
   V3[0] := V1[0];          V3[1] := ASrcRect.Bottom; V3[2] := 1;
@@ -446,7 +455,27 @@ begin
   Result.Right  := Max(Max(V1[0], V2[0]), Max(V3[0], V4[0]));
   Result.Top    := Min(Min(V1[1], V2[1]), Min(V3[1], V4[1]));
   Result.Bottom := Max(Max(V1[1], V2[1]), Max(V3[1], V4[1]));
+{$ENDIF}
 end;
+
+
+{$IFDEF COMPILER2009}
+procedure TMyAffineTransformation.PrepareTransform;
+begin
+  FInverseMatrix := Matrix;
+  GR32_Transforms.Invert(FInverseMatrix);
+
+  FInverseMatrix[2,0] := FInverseMatrix[2,0] + (FInverseMatrix[0,0] + FInverseMatrix[1,0])/2 - 0.5;
+  FInverseMatrix[2,1] := FInverseMatrix[2,1] + (FInverseMatrix[0,1] + FInverseMatrix[1,1])/2 - 0.5;
+
+  // calculate a fixed point (65536) factors
+  FInverseFixedMatrix := FixedMatrix(FInverseMatrix);
+  FFixedMatrix := FixedMatrix(Matrix);
+
+  TransformValid := True;
+end;
+{$ENDIF}
+
 
 initialization
   StockBitmap := TBitmap.Create;

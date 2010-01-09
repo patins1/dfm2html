@@ -2664,8 +2664,6 @@ begin
   preloadOneByOne:='';
   if Need1by1 then
    preloadOneByOne:=CRLF+MakeIndent(2)+'<script type="text/javascript">preload(''onebyone.gif'');</script>';
-  if not ((pagenest.parentTS<>nil) and pagenest.parentTS.IsIFrame) and (AdvPos('<noscript',ns)=0) then
-   Insert(CRLF+MakeIndent(2)+'<noscript>This page requires JavaScript. <a href="http://www.dfm2html.com/js.html">Help</a></noscript>',ns,r);
   Insert(CRLF+MakeIndent(2)+'<script type="text/javascript" src="'+dfm2html_js+'"></script>'+preloadOneByOne,ns,r);
  end;
 

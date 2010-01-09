@@ -68,6 +68,8 @@ type
     dhLabel6: TdhLabel;
     eCSSFile: TTntEdit;
     dhLabel7: TdhLabel;
+    TabSheet5: TTabSheet;
+    eBodyClose: TTntMemo;
     procedure eCSSFileChange(Sender: TObject);
     procedure eImageFolderChange(Sender: TObject);
     procedure eJavaScriptFileChange(Sender: TObject);
@@ -116,6 +118,7 @@ begin
  eKeywords.Text:=page.MetaKeywords;
  eHead.Text:=page.HTMLHead;
  eBody.Text:=page.HTMLBody;
+ eBodyClose.Text:=page.HTMLBodyClose;
  eTop.Text:=page.HTMLTop;
  eForwardingDelay.Value:=page.ForwardingDelay;
  eForwardingURL.Text:=page.ForwardingURL;
@@ -157,6 +160,7 @@ begin
  page.MetaKeywords:=eKeywords.Text;
  page.HTMLHead:=eHead.Text;
  page.HTMLBody:=eBody.Text;
+ page.HTMLBodyClose:=eBodyClose.Text;
  page.HTMLTop:=eTop.Text;
  page.ForwardingDelay:=eForwardingDelay.Value;
  page.ForwardingURL:=eForwardingURL.Text;

@@ -566,7 +566,7 @@ var
   begin
           if ((ClassName='TdhLabel') or (ClassName='TdhLink') or (ClassName='TdhCheckBox') or (ClassName='TdhRadioButton') or (ClassName='TdhFormButton')) and (PropName='Text') or
              (ClassName='TdhDirectHTML') and (PropName='InnerHTML') or
-             (ClassName='TdhPage') and ((PropName='HTMLHead') or (PropName='HTMLBody') or (PropName='HTMLTop')) or
+             (ClassName='TdhPage') and ((PropName='HTMLHead') or (PropName='HTMLBody') or (PropName='HTMLBodyClose') or (PropName='HTMLTop')) or
              (ClassName='TdhSelect') and (PropName='HTMLOptions') or
              ((ClassName='TdhLink') and (PropName='Link') or (ClassName='TdhHTMLForm') and (PropName='Action')) and ContainsPHPTag(s) or
              (PropName='HTMLAttributes') then
@@ -2706,22 +2706,13 @@ begin
   Insert(' onload="preload('+Preload.DelimitedText+')"',ns,r+length('<body'));
  end;
 
- if {not OnLoad and }NeedJS then
+ if bAdvPosBack(r,'</body>',ns,length(ns)) then
  begin
-  if bAdvPosBack(r,'</body>',ns,length(ns)) then
-  begin
-   //r:=r+length('</body>');
-   //r:=length(ns)+1;
-   r:=SkipBckWhiteSpaces(ns,r);
+  r:=SkipBckWhiteSpaces(ns,r);
+  if HasPageProp('HTMLBodyClose',page_info) then
+   Insert(CRLF+page_info,ns,r);
+  if NeedJS then
    ns:=CopyInsert(ns,r,CRLF+MakeIndent(2)+'<script type="text/javascript">dhtml('{+Preload.DelimitedText}+');</script>'{+CRLF+MakeIndent(2)+'<noscript>This page requires JavaScript. <a href="http://www.dfm2html.com/faq.html#js">Help</a></noscript>'});
-  end;
-  (*
-  if bAdvPosBack(r,'</body>',ns,length(ns)) then
-  begin
-   r:=SkipBckWhiteSpaces(ns,r);
-   ns:=CopyInsert(ns,r,CRLF+MakeIndent(2)+'<script type="text/javascript">init('+Preload.DelimitedText+');</script>'{+CRLF+MakeIndent(2)+'<noscript>This page requires JavaScript. <a href="http://www.dfm2html.com/faq.html#js">Help</a></noscript>'});
-  end;*)
-  //if (men='') and CanStringFromFile('menu.js',men) then
  end;
 
  FreeAndNil(PreLoad);

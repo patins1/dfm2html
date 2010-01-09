@@ -88,6 +88,7 @@ type
     OldFormat:boolean;
     FOutputDirectory: TPathName;
     FHTMLBody: HypeString;
+    FHTMLBodyClose: HypeString;
     FHTMLHead: HypeString;
     FHTMLTop: HypeString;
     FMetaAuthor: HypeString;
@@ -195,6 +196,7 @@ type
     property OutputDirectory:TPathName read GetOutputDirectory write SetOutputDirectory stored IsOutputDirectoryStored;
     property HTMLHead:HypeString read FHTMLHead write FHTMLHead;
     property HTMLBody:HypeString read FHTMLBody write FHTMLBody;
+    property HTMLBodyClose:HypeString read FHTMLBodyClose write FHTMLBodyClose;
     property HTMLTop:HypeString read FHTMLTop write FHTMLTop;
     property ForwardingDelay:integer read FForwardingDelay write FForwardingDelay default 0;
     property ForwardingURL:TPathName read FForwardingURL write FForwardingURL;
@@ -1629,7 +1631,7 @@ end;
 
 function TdhPage.AllHTMLCode:HypeString;
 begin
- result:=FHTMLTop+FHTMLHead+FHTMLBody;
+ result:=FHTMLTop+FHTMLHead+FHTMLBody+FHTMLBodyClose;
 end;
 
 (*

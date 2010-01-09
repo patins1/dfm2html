@@ -25,7 +25,7 @@ object PageWizard: TPageWizard
     Top = 8
     Width = 403
     Height = 238
-    ActivePage = TabSheet4
+    ActivePage = TabSheet3
     Anchors = [akLeft, akTop, akBottom]
     TabOrder = 0
     object TabSheet1: TTntTabSheet
@@ -154,10 +154,6 @@ object PageWizard: TPageWizard
     object TabSheet2: TTntTabSheet
       Caption = 'Meta Tags'
       ImageIndex = 1
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Label1: TdhLabel
         Left = 8
         Top = 16
@@ -253,17 +249,24 @@ object PageWizard: TPageWizard
     object TabSheet3: TTntTabSheet
       Caption = 'Insert HTML'
       ImageIndex = 2
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object PageControlHTML: TTntPageControl
         Left = 8
         Top = 8
         Width = 378
         Height = 194
-        ActivePage = TabSheetHTML1
+        ActivePage = TabSheetHTML3
         TabOrder = 0
+        object TabSheetHTML3: TTntTabSheet
+          Caption = 'At the very top'
+          object eTop: TTntMemo
+            Left = 8
+            Top = 8
+            Width = 352
+            Height = 149
+            ScrollBars = ssVertical
+            TabOrder = 0
+          end
+        end
         object TabSheetHTML1: TTntTabSheet
           Caption = 'Before </HEAD>'
           object eHead: TTntMemo
@@ -286,9 +289,10 @@ object PageWizard: TPageWizard
             TabOrder = 0
           end
         end
-        object TabSheetHTML3: TTntTabSheet
-          Caption = 'At the very top'
-          object eTop: TTntMemo
+        object TabSheet5: TTabSheet
+          Caption = 'Before </BODY>'
+          ImageIndex = 3
+          object eBodyClose: TTntMemo
             Left = 8
             Top = 8
             Width = 352
@@ -416,7 +420,7 @@ object PageWizard: TPageWizard
     Left = 320
     Top = 8
     LangData = {
-      0A005061676557697A617264010100000001000000070043617074696F6E0133
+      0A005061676557697A617264010100000001000000070043617074696F6E0135
       0000000C0050616765436F6E74726F6C31000009005461625368656574310101
       00000002000000070043617074696F6E0006004C6162656C3601010000001900
       0000040054657874000600655469746C650000060050616E656C31000006004C
@@ -449,6 +453,8 @@ object PageWizard: TPageWizard
       657874000F00654A61766153637269707446696C650000080064684C6162656C
       3301010000003100000004005465787400080064684C6162656C340000080064
       684C6162656C350000080064684C6162656C3601010000003200000004005465
-      78740008006543535346696C650000080064684C6162656C370000}
+      78740008006543535346696C650000080064684C6162656C3700000900546162
+      536865657435010100000033000000070043617074696F6E000A0065426F6479
+      436C6F73650000}
   end
 end

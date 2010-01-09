@@ -18,7 +18,7 @@ uses
 {$ELSE}
   Messages, Controls, Graphics
 {$ENDIF},
- Gr32, Gr32_Transforms;
+ Gr32, Gr32_Transforms{$IFDEF COMPILER2009}, GR32_Resamplers{$ENDIF};
 
 
 type
@@ -57,6 +57,9 @@ type
 
 
   end;
+
+
+procedure SetRealDst(const ref:TRect); {$IFDEF USEINLINING} inline; {$ENDIF}
 
 implementation
 
@@ -476,6 +479,10 @@ begin
 end;
 {$ENDIF}
 
+procedure SetRealDst(const ref:TRect); {$IFDEF USEINLINING} inline; {$ENDIF}
+begin
+  RealDst:=ref;
+end;
 
 initialization
   StockBitmap := TBitmap.Create;

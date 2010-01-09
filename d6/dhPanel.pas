@@ -11394,9 +11394,9 @@ begin
   try
   Strech32.StretchFilter:=sfLanczos;
   R:=Rect(0,0,Strech32.Width,Strech32.Height);
-  RealDst:=ref;
+  SetRealDst(ref);
   Strech32.DrawTo(Src,brct,R);
-  RealDst:=Rect(0,0,0,0);
+  SetRealDst(Rect(0,0,0,0));
   finally
    Strech32.Free;
   end;

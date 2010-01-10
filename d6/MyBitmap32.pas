@@ -662,8 +662,8 @@ begin
           begin
             for J := LoX to HiX do
             begin
-              Wi := PHorzKernel[J] * Wv div 8;
-              Assert(Wi<32768);
+              Wi := PHorzKernel[J] * Wv div 4;
+              Assert(Wi<=32768);
               AlphaI:=SrcP.A * Wi;
               Inc(VertEntry.A, AlphaI);
               Inc(VertEntry.R, SrcP.R * AlphaI);
@@ -687,8 +687,8 @@ begin
                for J := -Width to Width do
                if (J < LoX) or (J > HiX) or (I < LoY) or (I > HiY) then
                begin
-                 Wi := PHorzKernel[J] * Wv div 8;
-                 Assert(Wi<32768);
+                 Wi := PHorzKernel[J] * Wv div 4;
+                 Assert(Wi<=32768);
                  AlphaI:=TColor32Entry(FOuterColor).A * Wi;
                  Inc(VertEntry.A, AlphaI);
                  Inc(VertEntry.R, TColor32Entry(FOuterColor).R * AlphaI);
@@ -708,7 +708,8 @@ begin
                for J := -Width to Width do
                if (J < LoX) or (J > HiX) or (I < LoY) or (I > HiY) then
                begin
-                 Wi := PHorzKernel[J] * Wv div 8;
+                 Wi := PHorzKernel[J] * Wv div 4;
+                 Assert(Wi<=32768);
                  //just sum up, implicit transparent edge
                  Inc(SumWi, Wi);
                end;
@@ -736,8 +737,8 @@ begin
             for J := -Width to Width do
             begin
               C := Colors[MappingX[J]];
-              Wi := PHorzKernel[J] * Wv div 8;
-              Assert(Wi<32768);
+              Wi := PHorzKernel[J] * Wv div 4;
+              Assert(Wi<=32768);
               AlphaI:=C.A * Wi;
               Inc(VertEntry.A, AlphaI);
               Inc(VertEntry.R, C.R * AlphaI);
@@ -749,6 +750,17 @@ begin
         end;
       end;
   end;
+
+  // Each color i has ARGB values (Ai,Ri,Gi,Bi) and is weighted by value Wi.
+  // Note: E(..) is a sum with color i as iterator; we don't use the sum-symbol since it requires Unicode
+  // Now, the following is valid:
+  // SumWi = E(Wi)
+  // VertEntry.A = E(Ai*Wi)
+  // VertEntry.R = E(Ri*Ai*Wi)
+  // VertEntry.G = E(Gi*Ai*Wi)
+  // VertEntry.B = E(Bi*Ai*Wi)
+  // To have no overflow error, we have to ensure that Ri*Ai*Wi <= 255*255*32768 <= High(Integer) and also E(Ri*Ai*Wi) <= High(Integer),
+  // so, deviding Wi by 4 works for KernelMode=kmDynamic, but for all widths? for the other KernelModes?
 
   if VertEntry.A = 0 then
   begin
@@ -770,6 +782,13 @@ begin
       B := VertEntry.B div VertEntry.A;
       A := VertEntry.A div SumWi;
   end;
+
+  // Now, the result color is either 100% transparent or:
+  // Result.A = E(Ai*Wi) / E(Wi)
+  // Result.R = E(Ri*Ai*Wi) / E(Ai*Wi)
+  // Result.G = E(Gi*Ai*Wi) / E(Ai*Wi)
+  // Result.B = E(Bi*Ai*Wi) / E(Ai*Wi)
+
 end;
 
 

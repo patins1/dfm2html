@@ -11392,7 +11392,7 @@ var Strech32:TMyBitmap32;
 begin
   Strech32:=GetAs32(Graphic);
   try
-  Strech32.StretchFilter:=sfLanczos;
+  Strech32.ApplyGoodStrechFilter;
   Strech32.DrawTo(Src,ref,brct,Strech32.BoundsRect);
   finally
    Strech32.Free;
@@ -11487,9 +11487,7 @@ begin
  begin
 
    Strech32:=GetAs32(FPicture);
-   Strech32.StretchFilter:=sfNearest;//sfLanczos;
    try
-   //Strech32.StretchFilter:=sfLanczos;
 
    x1:=FPicture.Width div 2;
    x2:=FPicture.Width-x1;
@@ -14141,7 +14139,7 @@ begin
 //  if not NearSameMatrix(T.Matrix,IdentityMatrix) then
     begin
 
-  Src.StretchFilter:=sfMitchell;
+  Src.ApplyGoodStrechFilter;
   Src.DrawMode:=dmBlend;
   Src.OnPixelCombine:= PixelCombineNormal;
   Src.DrawMode:=dmCustom;

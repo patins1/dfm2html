@@ -55,7 +55,7 @@ type
     procedure RenderTextExtended(X, Y: Integer; const Text: Widestring; AALevel: Integer; Color: TColor32; const SzOri:TPoint; XPadding:integer); overload;
     procedure RenderTextExtended(X, Y: Integer; const Text: Widestring; AALevel: Integer; Color: TColor32; const SzOri:TPoint; XPadding:integer; LetterSpacing:Integer; WordSpacing:Integer); overload;
     procedure DrawTo(Dst: TBitmap32; const DstRect, DstClip, SrcRect: TRect); overload;
-
+    procedure ApplyGoodStrechFilter;
 
   end;
 
@@ -71,6 +71,12 @@ uses
   Clipbrd,
 {$ENDIF}
   GR32_DrawingEx;
+
+type TMyKernelResampler = class(TKernelResampler)
+  public
+    function GetSampleFloat(X: Single; Y: Single): TColor32; override;
+end;
+type TMyCustomKernel=class(TCustomKernel);
   
 var
   StockBitmap: TBitmap;
@@ -135,7 +141,11 @@ begin
           B2.Font := StockCanvas.Font;
           B2.Font.Color := clWhite;
           B2.TextoutW(0, 0, Text, LetterSpacing, WordSpacing);
+{$IFDEF COMPILER2009}
+          TLinearResampler.Create(B2);
+{$ELSE}
           B2.StretchFilter := sfLinear;
+{$ENDIF}
           B.SetSize(SzOri.x+XPadding, SzOri.y);
           TextScaleDownExtended(B, B2, Color{, tm_big.tmAscent});
         finally
@@ -443,6 +453,17 @@ begin
 {$ENDIF}
 end;
 
+procedure TMyBitmap32.ApplyGoodStrechFilter;
+begin
+{$IFDEF COMPILER2009}
+  TMyKernelResampler.Create(Self);
+  with Resampler as TKernelResampler do
+   Kernel := TMitchellKernel.Create;
+{$ELSE}
+  StretchFilter:=sfLanczos;
+{$ENDIF}
+end;
+
 function TMyAffineTransformation.GetTransformedBoundsF: TFloatRect;
 begin
   Result := GetTransformedBoundsF(SrcRect);
@@ -487,6 +508,270 @@ begin
   TransformValid := True;
 end;
 {$ENDIF}
+
+function TMyKernelResampler.GetSampleFloat(X: Single; Y: Single): TColor32;
+var
+  clX, clY: Integer;
+  fracX, fracY: Integer;
+  fracXS: TFloat absolute fracX;
+  fracYS: TFloat absolute fracY;
+
+  Filter: TFilterMethod;
+  WrapProcVert: TWrapProcEx absolute Filter;
+  WrapProcHorz: TWrapProcEx;
+  Colors: PColor32EntryArray;
+  Width, W, Wv, I, J, P, Incr, Dev, AlphaI, Wi, SumWi: Integer;
+  SrcP: PColor32Entry;
+  C: TColor32Entry absolute SrcP;
+  LoX, HiX, LoY, HiY, MappingY: Integer;
+
+  HorzKernel, VertKernel: TKernelEntry;
+  PHorzKernel, PVertKernel, FloorKernel, CeilKernel: PKernelEntry;
+
+  HorzEntry, VertEntry: TBufferEntry;
+  MappingX: TKernelEntry;
+  Edge: Boolean;
+  FOuterColor: TColor32;
+  FKernel: TMyCustomKernel;
+begin
+  if KernelMode<>kmDynamic then
+  begin
+    Result := Inherited;
+    exit;
+  end;
+  FOuterColor := Bitmap.OuterColor;
+  FKernel := TMyCustomKernel(Kernel);
+
+  Width := Ceil(FKernel.GetWidth);
+
+  clX := Ceil(X);
+  clY := Ceil(Y);
+
+  case PixelAccessMode of
+    pamUnsafe, pamWrap:
+      begin
+        LoX := -Width; HiX := Width;
+        LoY := -Width; HiY := Width;
+      end;
+
+    pamSafe, pamTransparentEdge:
+      begin
+        with ClipRect do
+        begin
+          if not ((clX < Left) or (clX > Right) or (clY < Top) or (clY > Bottom)) then
+          begin
+            Edge := False;
+
+            if clX - Width < Left then
+            begin
+              LoX := Left - clX;
+              Edge := True;
+            end
+            else
+              LoX := -Width;
+
+            if clX + Width >= Right then
+            begin
+              HiX := Right - clX - 1;
+              Edge := True;
+            end
+            else
+              HiX := Width;
+
+            if clY - Width < Top then
+            begin
+              LoY := Top - clY;
+              Edge := True;
+            end
+            else
+              LoY := -Width;
+
+            if clY + Width >= Bottom then
+            begin
+              HiY := Bottom - clY - 1;
+              Edge := True;
+            end
+            else
+              HiY := Width;
+
+          end
+          else
+          begin
+            if PixelAccessMode = pamTransparentEdge then
+              Result := 0
+            else
+              Result := FOuterColor;
+            Exit;
+          end;
+
+        end;
+      end;
+  end;
+
+  case KernelMode of
+    kmDynamic:
+      begin
+        Filter := FKernel.Filter;
+        fracXS := clX - X;
+        fracYS := clY - Y;
+
+        PHorzKernel := @HorzKernel;
+        PVertKernel := @VertKernel;
+
+        Dev := -256;
+        for I := -Width to Width do
+        begin
+          W := Round(Filter(I + fracXS) * 256);
+          HorzKernel[I] := W;
+          Inc(Dev, W);
+        end;
+        Dec(HorzKernel[0], Dev);
+
+        Dev := -256;
+        for I := -Width to Width do
+        begin
+          W := Round(Filter(I + fracYS) * 256);
+          VertKernel[I] := W;
+          Inc(Dev, W);
+        end;
+        Dec(VertKernel[0], Dev);
+
+      end;
+    kmTableNearest:
+      begin
+        raise Exception.Create('not expected');
+      end;
+    kmTableLinear:
+      begin
+        raise Exception.Create('not expected');
+      end;
+
+  end;
+
+  SumWi:=0;
+  VertEntry := EMPTY_ENTRY;
+  case PixelAccessMode of
+    pamUnsafe, pamSafe, pamTransparentEdge:
+      begin
+        SrcP := PColor32Entry(Bitmap.PixelPtr[LoX + clX, LoY + clY]);
+        Incr := Bitmap.Width - (HiX - LoX) - 1;
+        for I := LoY to HiY do
+        begin
+          Wv := PVertKernel[I];
+          if Wv <> 0 then
+          begin
+            for J := LoX to HiX do
+            begin
+              Wi := PHorzKernel[J] * Wv div 8;
+              Assert(Wi<32768);
+              AlphaI:=SrcP.A * Wi;
+              Inc(VertEntry.A, AlphaI);
+              Inc(VertEntry.R, SrcP.R * AlphaI);
+              Inc(VertEntry.G, SrcP.G * AlphaI);
+              Inc(VertEntry.B, SrcP.B * AlphaI);
+              Inc(SumWi, Wi);
+              Inc(SrcP);
+            end;
+          end else Inc(SrcP, HiX - LoX + 1);
+          Inc(SrcP, Incr);
+        end;
+
+        if (PixelAccessMode <> pamUnsafe) and Edge then
+        begin
+          if PixelAccessMode = pamSafe then
+           for I := -Width to Width do
+           begin
+             Wv := PVertKernel[I];
+             if Wv <> 0 then
+             begin
+               for J := -Width to Width do
+               if (J < LoX) or (J > HiX) or (I < LoY) or (I > HiY) then
+               begin
+                 Wi := PHorzKernel[J] * Wv div 8;
+                 Assert(Wi<32768);
+                 AlphaI:=TColor32Entry(FOuterColor).A * Wi;
+                 Inc(VertEntry.A, AlphaI);
+                 Inc(VertEntry.R, TColor32Entry(FOuterColor).R * AlphaI);
+                 Inc(VertEntry.G, TColor32Entry(FOuterColor).G * AlphaI);
+                 Inc(VertEntry.B, TColor32Entry(FOuterColor).B * AlphaI);
+                 Inc(SumWi, Wi);
+               end;
+             end;
+           end
+          else
+           for I := -Width to Width do
+           begin
+             Wv := PVertKernel[I];
+             if Wv <> 0 then
+             begin
+               HorzEntry := EMPTY_ENTRY;
+               for J := -Width to Width do
+               if (J < LoX) or (J > HiX) or (I < LoY) or (I > HiY) then
+               begin
+                 Wi := PHorzKernel[J] * Wv div 8;
+                 //just sum up, implicit transparent edge
+                 Inc(SumWi, Wi);
+               end;
+             end;
+           end;
+        end;
+      end;
+
+    pamWrap:
+      begin
+        WrapProcHorz := GetWrapProcEx(Bitmap.WrapMode, ClipRect.Left, ClipRect.Right - 1);
+        WrapProcVert := GetWrapProcEx(Bitmap.WrapMode, ClipRect.Top, ClipRect.Bottom - 1);
+
+        for I := -Width to Width do
+          MappingX[I] := WrapProcHorz(clX + I, ClipRect.Left, ClipRect.Right - 1);
+
+        for I := -Width to Width do
+        begin
+          Wv := PVertKernel[I];
+          if Wv <> 0 then
+          begin
+            MappingY := WrapProcVert(clY + I, ClipRect.Top, ClipRect.Bottom - 1);
+            Colors := PColor32EntryArray(Bitmap.ScanLine[MappingY]);
+            HorzEntry := EMPTY_ENTRY;
+            for J := -Width to Width do
+            begin
+              C := Colors[MappingX[J]];
+              Wi := PHorzKernel[J] * Wv div 8;
+              Assert(Wi<32768);
+              AlphaI:=C.A * Wi;
+              Inc(VertEntry.A, AlphaI);
+              Inc(VertEntry.R, C.R * AlphaI);
+              Inc(VertEntry.G, C.G * AlphaI);
+              Inc(VertEntry.B, C.B * AlphaI);
+              Inc(SumWi, Wi);
+            end;
+          end;
+        end;
+      end;
+  end;
+
+  if VertEntry.A = 0 then
+  begin
+    Result := 0;
+  end
+  else
+  with TColor32Entry(Result) do
+  if FKernel.RangeCheck then
+  begin
+      R := Clamp(VertEntry.R div VertEntry.A);
+      G := Clamp(VertEntry.G div VertEntry.A);
+      B := Clamp(VertEntry.B div VertEntry.A);
+      A := Clamp(VertEntry.A div SumWi);
+  end
+  else
+  begin
+      R := VertEntry.R div VertEntry.A;
+      G := VertEntry.G div VertEntry.A;
+      B := VertEntry.B div VertEntry.A;
+      A := VertEntry.A div SumWi;
+  end;
+end;
+
 
 initialization
   StockBitmap := TBitmap.Create;

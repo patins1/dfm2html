@@ -2,6 +2,8 @@ unit uTemplates;
 
 interface
 
+{$I GR32.inc}
+
 uses
   SysUtils, Classes, types,
 {$IFDEF CLX}
@@ -10,7 +12,7 @@ uses
   Controls, Windows, Messages, Graphics, Forms, ComCtrls, ExtCtrls, StdCtrls, Dialogs,Buttons,UnicodeCtrls,
 {$ENDIF}
   GR32, math, pngimage,dhPanel,Contnrs, dhPageControl,dhMenu, dhLabel,
-  dhStyleSheet, DKLang, MyForm, dhStrUtils;
+  dhStyleSheet, DKLang, MyForm, dhStrUtils{$IFDEF COMPILER2009}, GR32_Resamplers{$ENDIF};
 
 type
   TTemplatesWizard = class(TMyForm)
@@ -90,7 +92,11 @@ begin
     b.Width:=ScrollBox1.Width-16-(Left+Right);
    with STYLE_Link1.AllEdgesPure do
     b.Height:=min(maxint,Ceil(b.Width/graph.Width*graph.Height));
+{$IFDEF COMPILER2009}
+   TDraftResampler.Create(bmp);
+{$ELSE}
    bmp.StretchFilter:=sfDraft;
+{$ENDIF}
    bmp2:=TBitmap32.Create;
    bmp2.SetSize(b.Width,b.Height);
    bmp.DrawTo(bmp2,bmp2.BoundsRect,bmp.BoundsRect);

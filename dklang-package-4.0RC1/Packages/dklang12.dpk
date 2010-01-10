@@ -24,7 +24,7 @@ package dklang12;
 {$IMAGEBASE $25100000}
 {$DESCRIPTION 'DKLang Localization Package'}
 {$RUNONLY}
-{$IMPLICITBUILD ON}
+{$IMPLICITBUILD OFF}
 
 requires
   vcl,

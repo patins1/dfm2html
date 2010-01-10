@@ -42,8 +42,6 @@ uses
   {$ENDIF}
   SysUtils, Classes, GR32, GR32_Blend;
 
-var RealDst:TRect;
-
 type
   ETransformError = class(Exception);
 
@@ -845,16 +843,8 @@ begin
   DstClipH := DstClip.Bottom - DstClip.Top;
 
   // mapping tables
-  if not IsRectEmpty(RealDst) then  //°!°
-  begin
-  MapX := BuildMappingTable(RealDst.Left, RealDst.Right, DstClip.Left, DstClip.Right, SrcRect.Left, SrcRect.Right, StretchFilter);
-  MapY := BuildMappingTable(RealDst.Top, RealDst.Bottom, DstClip.Top, DstClip.Bottom, SrcRect.Top, SrcRect.Bottom, StretchFilter);
-  end else
-  begin
   MapX := BuildMappingTable(DstRect.Left, DstRect.Right, DstClip.Left, DstClip.Right, SrcRect.Left, SrcRect.Right, StretchFilter);
   MapY := BuildMappingTable(DstRect.Top, DstRect.Bottom, DstClip.Top, DstClip.Bottom, SrcRect.Top, SrcRect.Bottom, StretchFilter);
-  end;
-
   ClusterX := nil;
   ClusterY := nil;
   try

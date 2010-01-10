@@ -11393,10 +11393,7 @@ begin
   Strech32:=GetAs32(Graphic);
   try
   Strech32.StretchFilter:=sfLanczos;
-  R:=Rect(0,0,Strech32.Width,Strech32.Height);
-  SetRealDst(ref);
-  Strech32.DrawTo(Src,brct,R);
-  SetRealDst(Rect(0,0,0,0));
+  Strech32.DrawTo(Src,ref,brct,Strech32.BoundsRect);
   finally
    Strech32.Free;
   end;

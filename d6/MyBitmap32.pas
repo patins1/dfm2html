@@ -54,12 +54,11 @@ type
     procedure TextoutW(X, Y: Integer; const Text: Widestring; LetterSpacing:Integer; WordSpacing:Integer); overload;
     procedure RenderTextExtended(X, Y: Integer; const Text: Widestring; AALevel: Integer; Color: TColor32; const SzOri:TPoint; XPadding:integer); overload;
     procedure RenderTextExtended(X, Y: Integer; const Text: Widestring; AALevel: Integer; Color: TColor32; const SzOri:TPoint; XPadding:integer; LetterSpacing:Integer; WordSpacing:Integer); overload;
+    procedure DrawTo(Dst: TBitmap32; const DstRect, DstClip, SrcRect: TRect); overload;
 
 
   end;
 
-
-procedure SetRealDst(const ref:TRect); {$IFDEF USEINLINING} inline; {$ENDIF}
 
 implementation
 
@@ -433,6 +432,16 @@ begin
     end;
 end;
 
+procedure TMyBitmap32.DrawTo(Dst: TBitmap32; const DstRect, DstClip, SrcRect: TRect);
+begin
+{$IFDEF COMPILER2009}
+  StretchTransfer(Dst, DstRect, DstClip, Self, SrcRect, Resampler, DrawMode, OnPixelCombine);
+{$ELSE}
+  if Empty or Dst.Empty then Exit;
+  StretchTransfer(Dst, DstRect, DstClip, Self, SrcRect, StretchFilter, DrawMode, OnPixelCombine);
+  Dst.Changed;
+{$ENDIF}
+end;
 
 function TMyAffineTransformation.GetTransformedBoundsF: TFloatRect;
 begin
@@ -478,11 +487,6 @@ begin
   TransformValid := True;
 end;
 {$ENDIF}
-
-procedure SetRealDst(const ref:TRect); {$IFDEF USEINLINING} inline; {$ENDIF}
-begin
-  RealDst:=ref;
-end;
 
 initialization
   StockBitmap := TBitmap.Create;

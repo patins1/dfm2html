@@ -17,16 +17,12 @@ type
   TdhHiddenField = class(TdhCustomPanel)
   private
     FValue: HypeString;
-    { Private declarations }
   protected
-    { Protected declarations }
     procedure DoTopPainting; override;
     function EffectsAllowed: boolean; override;
   public
-    { Public declarations }            
     procedure GetAutoRect(AllowModifyX,AllowModifyY:boolean; var NewWidth, NewHeight: Integer); override;
   published
-    { Published declarations }
     property Value:HypeString read FValue write FValue;
   end;
 
@@ -40,8 +36,6 @@ procedure Register;
 begin
   RegisterComponents('DFM2HTML', [TdhHiddenField]);
 end;
-
-{ TdhHiddenField }
 
 procedure TdhHiddenField.DoTopPainting;
 begin

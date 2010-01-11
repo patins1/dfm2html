@@ -12,24 +12,20 @@ uses
   dhPanel,math,dhStrUtils;
 
 type
-  //TInsertLocation=(ilCurrent,ilHead,ilBody);
   TdhDirectHTML = class(TdhPanel)
   private
     { Private declarations }
     FHTML:HypeString;
     FGenerateContainer:boolean;
   protected
-    { Protected declarations }
     procedure DoTopPainting; override;
     function NeedPadding(HasRastering:TRasterType): boolean; override;
     procedure SetASXY(const Value: TASXY); override;
   public
-    { Public declarations }
     constructor Create(AOwner: TComponent); override;
     procedure GetAutoRect(AllowModifyX,AllowModifyY:boolean; var NewWidth, NewHeight: Integer); override;
     function AllHTMLCode:HypeString; override;
   published
-    { Published declarations }
     property InnerHTML: HypeString read FHTML write FHTML;
     property GenerateContainer:boolean read FGenerateContainer write FGenerateContainer default true;
   end;
@@ -82,21 +78,6 @@ begin
  GetSuperiorAutoRect(AllowModifyX,AllowModifyY,NewWidth,NewHeight);
 end;
 
-{constructor TdhPureHTML.Create(AOwner: TComponent);
-begin
-  inherited;
-  //bit:=LoadBitmap(HInstance, 'TDHPUREHTML');
-  //if bit<>0 then
-  begin
-   //TempBitmap.Handle := bit;
-  end;
-  FInsertText:=TStringList.Create;
-  FHTML:=TStringList.Create;
-  //showmessage('HBITMAP:'+inttostr(bit));
-end;    }
-
-
-
 procedure TdhDirectHTML.DoTopPainting;
 begin
 
@@ -108,14 +89,10 @@ begin
     TempBitmap.LoadFromResourceName(HInstance, 'TDHDIRECTHTMLPURE');  
     TempBitmap.Transparent:=true;
     TempBitmap.TransparentColor:=clYellow;
-    //PageControlBitmap.Transparent:=true;
-    //PageControlBitmap.TransparentColor:=clYellow;
    end;
 
   if (TempBitmap<>nil) then
   if not IsRasterized and not HasBackgroundImage then
-  //with self.FCommon.AllEdgesPure do GetCanvas.Draw(Top,Left,TempBitmap);
-  //GetCanvas.Draw(Max(0,(Width-TempBitmap.Width) div 2),Max(0,(Height-TempBitmap.Height) div 2),TempBitmap);
   with Self.AllEdgesPure do
    GetCanvas.Draw(max(-2,-4+Left),max(-2,-4+Top),TempBitmap);
  end;
@@ -127,21 +104,6 @@ begin
   DrawFrame;
  end;
 end;
-
-{procedure TdhDirectHTML.Paint;
-begin
- if (csDesigning in ComponentState) and (TempBitmap=nil) then
- begin
-   TempBitmap := TBitmap.Create;
-   TempBitmap.LoadFromResourceName(HInstance, 'TdhDirectHTML');
- end;
- if (TempBitmap<>nil) then
- begin
-  Canvas.Draw(0, 0, TempBitmap);
- end;
-end;}
-
-
 
 constructor TdhDirectHTML.Create(AOwner: TComponent);
 begin
@@ -157,7 +119,6 @@ begin
 end;
 
 initialization
-// RegisterClasses([TdhPage]);
 
 finalization
 

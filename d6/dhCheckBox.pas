@@ -18,17 +18,14 @@ type
     FAlignment: TLeftRight;
     FValue: HypeString;
     procedure SetAlignment(const Value: TLeftRight);
-    { Private declarations }
   protected
     FInitialValue:boolean;
     procedure Loaded; override;
-    { Protected declarations }
     procedure GetModifiedText(var pre,s,suc:HypeString); override;
     procedure SetChecked(const Value: boolean); virtual;
     function NeedPadding(HasRastering:TRasterType): boolean; override;
     function EffectsAllowed: boolean; override;
   public
-    { Public declarations }
     constructor Create(AOwner: TComponent); override;
     procedure Reset;
     procedure Memorize;
@@ -37,7 +34,6 @@ type
     property Alignment: TLeftRight read FAlignment write SetAlignment default taRightJustify;
     property Checked:boolean read FChecked write SetChecked default false;
     property Value:HypeString read FValue write FValue;
-    { Published declarations }
   end;
 
 procedure Register;
@@ -48,8 +44,6 @@ procedure Register;
 begin
   RegisterComponents('DFM2HTML', [TdhCheckBox]);
 end;
-
-{ TdhCheckBox }
 
 procedure TdhCheckBox.Click;
 begin
@@ -91,9 +85,6 @@ begin
  if FChecked <> Value then
  begin
   FChecked := Value;
-  //if csLoading in ComponentState then exit;
-  //InvalInline;
-  //FCommon.CheckDesignState;
   NotifyCSSChanged([wcText,wcNoOwnCSS]);
  end;
 end;
@@ -110,9 +101,7 @@ end;
 
 procedure TdhCheckBox.SetAlignment(const Value: TLeftRight);
 begin
-  FAlignment := Value;  
-  //if csLoading in ComponentState then exit;
-  //InvalInline;
+  FAlignment := Value;
   NotifyCSSChanged([wcText,wcNoOwnCSS]);
 end;
 

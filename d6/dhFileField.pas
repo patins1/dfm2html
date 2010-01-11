@@ -124,7 +124,6 @@ begin
   //button.Anchors:=[akTop,akBottom,akRight];
   Button.AutoSizeXY:=asX;
   button.Layout:=ltButton;
-  // button.FinalStyleElement:=dhStrEditDlg.filebutton;
   button.Text:='Browse...';
   button.Parent:=Self;
 

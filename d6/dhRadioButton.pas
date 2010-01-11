@@ -9,14 +9,11 @@ type
   TdhRadioButton = class(TdhCheckBox)
   private
   protected
-    { Protected declarations }
     procedure SetChecked(const Value: boolean); override;
     procedure GetModifiedText(var pre,s,suc:HypeString); override;
   public
-    { Public declarations }
     procedure Click; override;
   published
-    { Published declarations }
   end;
 
 procedure Register;
@@ -27,8 +24,6 @@ procedure Register;
 begin
   RegisterComponents('DFM2HTML', [TdhRadioButton]);
 end;
-
-{ TdhRadioButton }
 
 procedure TdhRadioButton.Click;
 begin

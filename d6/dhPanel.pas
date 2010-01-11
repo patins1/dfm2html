@@ -515,7 +515,6 @@ type
     function DoGetVal(PropChoose:TPropChoose; {var Value:TCSSProp; }const Align:TEdgeAlign; var DoExit:boolean):boolean;
     procedure UpdateNames(InlineUse,NewInlineUse:ICon; PropagateChange:boolean);
     function ChildHasAnchor(a:TAnchors):boolean;
-    function FetchSharing(Sharing:TControl):TWhatChanged;
     procedure DoCSSToWinControl(WhatChanged:TWhatChanged=[]);
     function GetCommon:TdhCustomPanel;
     function GetName:TComponentName;
@@ -1190,7 +1189,6 @@ type
     procedure AlignDone; virtual;
     procedure SetZOrder(TopMost: Boolean); override;
     function ChildHasAnchor(a:TAnchors):boolean;
-    function FetchSharing(Sharing:TControl):TWhatChanged; virtual;
     procedure DoCSSToWinControl(WhatChanged:TWhatChanged); virtual;
     function DoGetVal(PropChoose:TPropChoose; {var Value:TCSSProp; }const Align:TEdgeAlign; var DoExit:boolean):boolean; virtual;
     function GetCommon:TdhCustomPanel;
@@ -2542,11 +2540,6 @@ type PCursor=^TCursor;
 procedure TdhCustomPanel.CSSToCursor;
 begin
  Cursor:=CSSCursorMap[GetCursor];
-end;
-
-function TdhCustomPanel.FetchSharing(Sharing:TControl):TWhatChanged;
-begin
- result:=[];
 end;
 
 function TdhCustomPanel.DoGetVal(PropChoose:TPropChoose; {var Value:TCSSProp; }const Align:TEdgeAlign; var DoExit:boolean):boolean;
@@ -4978,28 +4971,6 @@ begin
   result:=true;
 end;
 
-
-
-            {
-function TdhCustomPanel.CanAutoSize(var NewWidth, NewHeight: Integer): Boolean;
-var
-  Rect: TRect;
-begin
-    Rect := PaddingPure;
-    NewHeight:=max(NewHeight,Rect.Top+Rect.Bottom);
-    NewWidth:=max(NewWidth,Rect.Left+Rect.Right);
-
-
- _NewWidth:=NewWidth;
- _NewHeight:=NewHeight;
-  if _AutoResizing then
-   showmessage('_AutoResizing already active!');
- _AutoResizing:=true;
- result:=Inherited CanAutoSize(NewWidth, NewHeight);
- _AutoResizing:=false;
-end;             }
-
-
 function TdhCustomPanel.GetActDown: TActMode;
 var P:TPoint;
 begin
@@ -5966,12 +5937,6 @@ begin
     TdhCustomPanel(Controls[i]).AlignDone;
  
 //   StopOrderedControls(Self);
-
-{   aWidth:=Width;
-   aHeight:=Height;
-   if AutoSize and CanAutoSize(aWidth,aHeight) and ((aWidth<>Width) or (aHeight<>Height)) then
-    SetBounds(Left,Top,AWidth,AHeight);   }
-
 //  if not Showing then AdjustSize; //da AdjustSize in 'inherited' nur wenn 'showing' aufgerufen
 end;
 
@@ -6014,28 +5979,6 @@ begin
   PAlign(@Control.Align)^:=alTop;
 end;
 *)
-
-
-                   {
-procedure TdhCustomPanel.UpdateOver(IsNewOver:boolean; clicked:boolean);
-var _glSelCompo:TdhCustomPanel;
-
-begin
- try
-  _glSelCompo:=glSelCompo;
-  glSelCompo:=nil;
-  if isNewOver then
-   glSelCompo:=self;
-  ///////fill here
-  if (_glSelCompo<>nil) then
-   _glSelCompo.CheckDesignState;
-  CheckDesignState;
- except
- end;
-end;            }
-
-
-
 
 function GetCBound(c:TControl):TRect;
 begin

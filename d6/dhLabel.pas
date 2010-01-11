@@ -81,12 +81,9 @@ type
     UseStyleTree,sUseStyleTree:TStyleTree;
     Ptree:array of TStyleTree;
     gltext:WideString;
-
     P,Pall,Ppre,Psuc:TIntegerDynArray;
     avail,availY,TotalHeight,MaxWidth:integer;
     ClientStyleTree_starttag:array of integer;
-    //ClientChar:integer;
-    procedure ReadOldCaption(Reader: TReader);
     procedure InvalInline;
     procedure CalcCharWidths;
     procedure CalcLineBreaks;
@@ -102,71 +99,35 @@ type
 
   protected
     FHTMLText:HypeString;
-    //IsAdjustBounds,MeasureOverflow:boolean;
-
     function PreventFull(Cause:TTransformations):boolean; override;
-
     function AllowAutoSizeY:boolean; override;
-
     function TextExtent(const Text: AString): TSize;
-
     function GetOverChar:integer;
-
     function MyGetControlExtents(OnlyForScrollbars:boolean): TPoint; override;
-
-    //tocopy
-
     function DoGetVal(PropChoose:TPropChoose; const Align:TEdgeAlign; var DoExit:boolean):boolean; override;
     function GetComputedFontSize:single; override;
     function Referer:TdhCustomPanel; override;
-    //function TotalInlineBox: boolean; override;
-    //function GetSpecialBorderType:TSpecialBorderType; override;
-    //function GetImageType:TImageType; override;
-
     function WrapAlways: boolean; virtual;
     procedure GetModifiedText(var pre,s,suc:HypeString); virtual;
     function DelegateClick:boolean;
     procedure DoStateTransition(OldState:TState); override;
-//    function TransitionInvalidates: boolean; override;
     function EmptyContent:boolean;
     procedure DoTopPainting; override;
 {$IFNDEF CLX}
     procedure WndProc(var Message:TMessage); override;
 {$ENDIF}
-
     procedure Loaded; override;
-//    procedure ReadString(Reader: TReader);
-//    procedure ReadBool(Reader: TReader);
-//    procedure ReadInt(Reader: TReader);
     procedure WriteFalse(Writer: TWriter);
     procedure WriteTrue(Writer: TWriter);
-
     procedure ControlsListChanged(Control: TControl; Inserting: Boolean); override;
-
-    (*
-{$IFDEF CLX}
-    procedure TextChanged; override;
-{$ELSE}
-    procedure CMTextChanged(var Message: TMessage); message CM_TEXTCHANGED;
-{$ENDIF}*)
-
     function GetActCursor:TCursor;
-
 {$IFNDEF CLX}
     procedure WMSetCursor(var Message: TWMSetCursor); message WM_SETCURSOR;
 {$ENDIF}
-    //procedure WMMouseMove(var Message: TWMMouseMove); message WM_MOUSEMOVE;
     procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;
-
-
-    //function CanAutoSize(var NewWidth, NewHeight: Integer): Boolean; override;
-
     procedure WriteState(Writer: TWriter); override;
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
     procedure DefineProperties(Filer: TFiler); override;
-
-
-    //ICon
     procedure DoCSSToWinControl(WhatChanged:TWhatChanged); override;
     procedure UpdateNames(InlineUse,NewInlineUse:ICon; PropagateChange:boolean); override;
     function GetAutoRectPoint(AllowModifyX,AllowModifyY:boolean; NewWidth, NewHeight: Integer):TPoint;
@@ -175,9 +136,6 @@ type
     //procedure PreferStyleChange; override;
     procedure FocusPreferStyle(IsMain,RealChange:boolean); override;
     function GetHTMLState:TState; override;
-
-
-    //procedure SetMyAutoSize(Value: Boolean); // override;
     procedure ReadCaption(Reader: TReader);
     procedure PaintCaption;
     procedure DoDrawText(var ConstraintsRect: TRect; CalcRect:boolean); virtual;
@@ -185,11 +143,8 @@ type
     function AddP(vn, bs: integer): integer;
     procedure BuildLines;
     procedure FreeLines;
-    //function ClientSelControl: TControl;
-
     function FocContainer(ActLine:PLineInfo; ti:integer; var rct,brct:TRect; AvailY:integer):boolean; //{$IFDEF VER160}unsafe;{$ENDIF}
     function FindChildContent(ActLine:PLineInfo; _StyleTree:TStyleTree):TPoint;
-
     function TextTransform:TCSSTextTransform;
     function WhiteSpace:TCSSWhiteSpace;
     function ListStyleType:TCSSListStyleType;
@@ -203,41 +158,24 @@ type
     function CustomSizesForEffects:boolean; override;
     function CenterVertical:boolean; virtual;
     function ForceJustify:boolean; virtual;
-
     function SomethingIsScrolled: boolean; override;
-
     procedure ProcessMouseMove(StateChanged:boolean); override;
     function NeedPadding(HasRastering:TRasterType): boolean; override;
-
-
-{$IFNDEF CLX}
-    procedure CreateHandle; override;
-{$ENDIF}
-
-
   public
     TrackChar:TTrackChar;
-
-    //property Caption:boolean read FCaptionBoolean write FCaptionBoolean;
     procedure TryBrokenReferences(sl:TStringList); override;
     procedure CopyDependencies(CopyList:TList); override;
-
     function RenderedText:WideString;
-
     function FinalShowing:boolean; override;
-
     function CharPos:integer;
     function ClientAnchor:TdhCustomPanel;
     function ClientStyleTree:TStyleTree;
-    //function IsOverflow:boolean;
     procedure Click; override;
     procedure ParseHTML;
     procedure RenameNames;
     procedure AssureRenamingAware(HasChanges:boolean);
-    //procedure Paint;// override;
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
-    //property Canvas;
     end;
 
   TdhLabel=class(TdhCustomLabel)
@@ -247,8 +185,6 @@ type
     constructor Create(AOwner: TComponent); override;
     function AllHTMLCode:HypeString; override;
   published
-
-      //property AutoSize write SetMyAutoSize nodefault;//default true;
     //property Caption:TCaption write SetHTMLText stored false;
     //property Center;
     property NoSiblingsBackground;
@@ -278,7 +214,7 @@ type
     property Enabled;
     property ParentShowHint;
     property ShowHint;
-                            
+
     property Right;
     property Bottom;
 
@@ -305,36 +241,9 @@ type
     property OnResize;
     property OnStartDrag;
   end;
-{
-  TdhRule=class(TdhCustomLabel)
-  protected
-    FSuitableFor:TDesignedFor;
-    FSuitableForLevel:cardinal;
-    FOverBasedOnDown,FSharingEnabled:boolean;
 
-    //ICon
-    function GetOverBasedOnDown:boolean; override;
-    procedure SetOverBasedOnDown(Value:boolean);
-    function GetSharingEnabled: boolean; override;
-  public
-    constructor Create(AOwner: TComponent); override;
-  published
-    property OverBasedOnDown:boolean read GetOverBasedOnDown write SetOverBasedOnDown default false;
-    property DesignedFor:TDesignedFor read FSuitableFor write FSuitableFor default dfAnything;
-    property DesignedForLevel:cardinal read FSuitableForLevel write FSuitableForLevel default 0;
-//    property BaseDownOnOverDown;
-    property SharingEnabled:boolean read GetSharingEnabled write FSharingEnabled default false;
-    property StyleDown:TStyle index hsDown read GetStyle write SetStyle;
-    property StyleOver:TStyle index hsOver read GetStyle write SetStyle;
-    property StyleOverDown:TStyle index hsOverDown read GetStyle write SetStyle;
-  end;
-
-}
 function getTag2(const s:HypeString; var vn,itag,itagbs:integer; var tag:HypeString; var text:HypeString; var Closing,EmptyEle:boolean):boolean;
 function WithoutComments(const s:HypeString; repl:HypeChar):HypeString;
-
-
-
 function ConvertWideStringToUnicode(const s:WideString; NoTrivial:boolean):WideString; overload;
 function ConvertUnicodeToWideString_(const s:WideString):WideString;
 function LE127(const s:WideString):AnsiString;
@@ -342,21 +251,11 @@ function XMLconformant(const s:AnsiString):AnsiString;
 function HypeSubstText(const Substr,durch, S: HypeString): HypeString;
 function CharRef(i:integer):AnsiString;
 function CharRefDecimal(i:integer):AnsiString;
-
-
 function HasUnicodeName(i:integer; var CharacterName:AString):boolean;
 function AssertTags2:boolean;
-
-//function CodePageToWideString(A: AnsiString; CodePage: Word=CP_ACP): WideString;
-
-
 function ContainsPHPTag(const s:HypeString):boolean;
-{function IsPHPTag(const s:HypeString; var i:integer):boolean; overload
-function IsPHPTag(const s:HypeString):boolean; overload;
- }
+
 var RenamedNames:TStringList;
-
-
 
 procedure Register;
 
@@ -369,7 +268,6 @@ var _Unicode,UnicodeByNumbers:TStringList;
     UnicodeByNumbersList:TBinList;
     
 var HTMLTags:TStringList;
-//var InvalidElement:integer;
 
 {$IFDEF CLX}
 const IsCLX=true;
@@ -666,7 +564,6 @@ const endl_main=#10;
 procedure Register;
 begin
   RegisterComponents('DFM2HTML', [TdhLabel]);
-  //RegisterClasses([TdhRule]);
 end;
 
 
@@ -718,13 +615,6 @@ begin
  result:=Pos(PHP_TAG_PREFIX,s)<>0;
 end;
 
-{function IsPHPTag(const s:HypeString):boolean;
-var i:integer;
-begin
- i:=1;
- result:=(s<>'') and (s[1]='<') and isPHPTag(s,i);
-end;
- }
 function IsPHPTag(const s:HypeString; var i:integer):boolean;
 var i2:integer;
 begin
@@ -841,26 +731,6 @@ begin
  ParseHTML; //müssen wir machen, da wir auf Namen-Änderungen reagieren müssen
 end;
 
-
-(*
-
-function TdhCustomLabel.CanAutoSize(var NewWidth, NewHeight: Integer): Boolean;
-var Rect:TRect;
-begin
- if not (csLoading in ComponentState){ and HasParent} then
- begin
-   IsAdjustBounds:=true;
-   Rect:=GetAutoRect(NewWidth,NewHeight);
-   IsAdjustBounds:=false;
-   if FCommon.ASXY in [asY,asXY] then
-    NewHeight:=Rect.Bottom-Rect.Top;
-   if FCommon.ASXY in [asX,asXY] then
-    NewWidth:=Rect.Right-Rect.Left;
- end;
- result:=true;
-end;*)
-
-
 procedure TdhCustomLabel.ControlsListChanged(Control: TControl; Inserting: Boolean);
 begin
   inherited;
@@ -915,8 +785,6 @@ begin
  if (TopStyleTree<>nil) and AssertTags2 then
  begin
   invcon:=nil;
-  {if (InvalidElement<>-1) and HasCommon(TComponent(HTMLTags.Objects[InvalidElement]),Common) then
-   invcon:=Common.Con;  }
   if AssertTags2 then
    invcon:=dhStrEditDlg.unknown_element;
   ItUpdateNames(TopStyleTree);
@@ -1112,28 +980,6 @@ begin
   result:=result+s[i];
 end;
 
-
-//http://groups.google.de/group/borland.public.delphi.internationalization/browse_thread/thread/c516b2850a3e25b7/b071086e4ef68cc7?lnk=st&q=CodePageToWideString+group%3A*delphi*&rnum=2&hl=de#b071086e4ef68cc7
-{function UTF8ToUCS2(const UTF8String: AnsiString): WideString;
-var
-  l: integer;
-begin
-  SetLength(Result, Length(UTF8String) * 2);
-  l := MultiByteToWideChar(CP_ACP, 0, Pointer(UTF8String),
-                           -1, Pointer(Result), Length(Result));
-  if l = 0 then
-    raise Exception.Create('Error converting UTF8 to UCS2');
-  SetLength(Result, Pred(l));
-end;  }
-
-
-(*function CodePageToWideString(A: AnsiString; CodePage: Word=CP_ACP): WideString;
-begin
-  SetLength(Result, Length(A));
-  MultiByteToWideChar(CodePage, 0, PAnsiChar(A), Length(A), PWideChar(Result), Length(A));
-end;*)
-
-
 function LE127(const s:WideString):AnsiString;
 var i:Integer;
 begin
@@ -1144,18 +990,6 @@ begin
   result:=result+AnsiChar(s[i]);
 end;
 
-
-{function ConvertWideStringToUnicode_(const w:WideString):AnsiString;
-var i:Integer;
-begin
- for i:=1 to length(w) do
- if _Unicode.IndexOfObject(TObject(w[i]))<>-1 then
-  result:=result+'&'+_Unicode[_Unicode.IndexOfObject(TObject(w[i]))]+';' else
- if (Integer(w[i])<=255) and (what_uni[AnsiChar(w[i])]=0) then
-  result:=result+AnsiChar(w[i]) else
-  result:=result+CharRef(Integer(w[i]));
-end;
- }
 function XMLconformant(const s:AnsiString):AnsiString;
 var i,o:Integer;
     ch:WideChar;
@@ -1169,9 +1003,6 @@ begin
   result:=result+s[i];
  //< und > checken fehlt
 end;
-
-
-
 
 function ConvertUnicodeToWideStringExt(const s:HypeString; var TrackChar:TTrackChar; offs:integer; mislegit:HypeChar):WideString;
 var i,o,old_i,ri,ti:integer;
@@ -1244,13 +1075,9 @@ begin
  end;
 
  IsInStart:=true;
-// showmessage('hi');
  dhStrEditDlg:=TBasicHTMLElements.Create(nil);
 
  HTMLTags:=TStringList.Create;
-
-
-// showmessage('hia');
 
  if dhStrEditDlg.dhStyleSheet1<>nil then
  for i:=0 to dhStrEditDlg.dhStyleSheet1.ControlCount-1 do
@@ -1260,16 +1087,9 @@ begin
   HTMLTags.AddObject(dhStrEditDlg.dhStyleSheet1.Controls[i].Name,dhStrEditDlg.dhStyleSheet1.Controls[i]);
  end;
 
-// showmessage('hi2');
  HTMLTags.Sorted:=true;
-
-     {
- if not HTMLTags.Find('unknown_element',InvalidElement) then
-  InvalidElement:=-1;  }
-
  IsInStart:=false;
  result:=true;
-
 end;
 
 procedure seccase(var wtext:WideString; ToUpper:boolean);
@@ -1546,10 +1366,8 @@ begin
    end else
    begin
     StyleTree.IsWholeStyle:=false;
-    {if AssertTags2 and not HTMLTags.Find(tag,TagIndex) then
-     TagIndex:=InvalidElement; }
     if AssertTags2 then
-    if {TagIndex<>-1}HTMLTags.Find(tag,TagIndex) then
+    if HTMLTags.Find(tag,TagIndex) then
     begin
      StyleTree.StyleElement:=TComponent(HTMLTags.Objects[TagIndex]) as TdhCustomPanel;
     end else
@@ -1661,20 +1479,13 @@ begin
   InvalInline;
   AssureRenamingAware(true);
  end;
-
- {FCommon.InvalTop;
- AdjustBounds;  }
 end;
-
-
 
 destructor TdhCustomLabel.Destroy;
 begin
  InvalInline;
  Inherited;
 end;
-
-
 
 function TdhCustomLabel.GetHTMLState:TState;
 var IsDown:boolean;
@@ -1688,16 +1499,6 @@ begin
    Result:=hsOverDown else
    Result:=hsDown;
 end;
-
-
-{
-function TdhCustomLabel.GetSpecialBorderType:TSpecialBorderType;
-begin
-  if (UseStyleTree<>nil) and (UseStyleTree.StyleElement<>nil) then
-   result:=UseStyleTree.StyleElement.GetSpecialBorderType else
-   result:=inherited GetSpecialBorderType;
-end;
-}
 
 function ContainsStyleTree(Parent,Child:TStyleTree):boolean;
 begin
@@ -1736,8 +1537,6 @@ begin
  end;
 end;
 
-//var Cascaded_Display:TCSSDisplay;
-
 begin
  result:=false;
  DoExit:=true;
@@ -1757,15 +1556,7 @@ begin
   if RuntimeMode and not ShallBeAnchor then
    InlinePn.LastActStyle:=InlinePn.GetInlineHTMLState((LastActStyle in [hsOver,hsOverDown]) and ContainsStyleTree(OuterLink(ClientStyleTree),StyleTree),(csLButtonDown in ControlState)) else
    InlinePn.LastActStyle:=LastActStyle;
-  {if (ClientStyleTree=StyleTree) and not (InlineCommon.Control is TdhRule) then
-   InlineCommon.LastActStyle:=FCommon.LastActStyle else
-   InlineCommon.LastActStyle:=hsNormal;}
-  if {(InlineCommon.Control<>self) and} (InlinePn.GetVal(PropChoose,Align,false)) then
-  {if (PropChoose=pcDisplay) and (Cascaded.Display<>cdsNone) and not IsFromParent then
-  begin
-   Cascaded_Display:=Cascaded.Display;
-  end else
-  if not ((PropChoose=pcDisplay) and (StyleTree=TopStyleTree)) then      }
+  if InlinePn.GetVal(PropChoose,Align,false) then
   begin
    result:=true;
    exit;
@@ -1785,12 +1576,6 @@ begin
    UseStyleTree:=sUseStyleTree;
   end;
  end;         
- {if (PropChoose=pcDisplay) and (Cascaded_Display<>cdsInherit) then
- begin
-  Cascaded.Display:=Cascaded_Display;
-  result:=true;
-  exit;
- end;}
  DoExit:=false;
 end;
 
@@ -1938,8 +1723,6 @@ begin
     T:=nil;
     if not EasyBounds(Transformations,T,Rect.Right,Rect.Bottom,HorzRotated,VertRotated) then
      Rect.Right:=maxint else
-    //if not MeasureOverflow then
-    //if not IsAdjustBounds or not(Align in [alClient,alTop,alBottom]) and (FCommon.ASXY in [asX,asXY]) then
     if AllowModifyX then
      Rect.Right:=maxint{not maxint, for Win98};
     FreeAndNil(T);
@@ -1986,32 +1769,6 @@ function TdhCustomLabel.EmptyContent:boolean;
 begin
  result:=gltext=markupEmptyEle;
 end;
-
-(*procedure TdhCustomLabel.AdjustBounds;
-begin
-  if not (csLoading in ComponentState) then
-  begin
-  if AutoSize{and (Parent<>nil)}{für WindowHandle}{ and (WindowHandle<>0)} then
-  begin
-    {Rect := GetAutoRect;
-
-    if IsAdjustBounds then showmessage('IsAdjustBounds');
-    IsAdjustBounds:=true;
-    SetBounds(Left, Top, Rect.Right, Rect.Bottom);
-    IsAdjustBounds:=false;}
-//    AdjustSize;
-{   Rect:=GetAutoRect(Width,Height);
-   if AutoSizeVerticalOnly then
-    Rect.Right:=Rect.Left+Width;
-   SetBounds(Left, Top, Rect.Right-Rect.Left, Rect.Bottom-Rect.Top);
- } AdjustSize;
-
-   //SetBounds(Left, Top, Width, Height);
-  end;
-//  UpdateScrollBars(false);
-  end;
-end; *)
-
 
 {$IFNDEF VER160}
 
@@ -2179,7 +1936,7 @@ var bs,vn,ii,toleft,toright,Fit:integer;
     _LetterSpacing,_WordSpacing:Integer;
 {$IFNDEF CLX}
     DC: HDC;
-{$ENDIF}   
+{$ENDIF}
 {$IFDEF CLX}
     FontMetrics:QFontMetricsH;
 {$ENDIF}
@@ -3458,9 +3215,6 @@ begin
 {$IFNDEF CLX}
   QueryPerformanceCounter(c2);
 {$ENDIF}  
-{  if csDesigning in ComponentState then
-   Application.MainForm.Caption:=inttostr((c2-c1) div 1000)+' '+name;//inttostr(maxit);
- }
   end;
 
   //FreeLines;
@@ -3474,41 +3228,11 @@ begin
 
 end;}
 
-{
-function TdhRule.GetSharingEnabled:boolean;
-begin
- result:=FSharingEnabled;
-end;
- }
-                 {
-function TdhCustomLabel.IsOverflow:boolean;
-var NewWidth, NewHeight: Integer;
-    r:TRect;
-begin
- result:=false;
- if RealAutoSizeXY(Self)<>asXY then
- begin
-  MeasureOverflow:=true;
-  r:=GetAutoRect(Width,0);
-  MeasureOverflow:=false;
-  result:=(r.Right-r.Left>Width) or (r.Bottom-r.Top>Height);
- end;
-end;              }
-
-
-procedure TdhCustomLabel.ReadOldCaption(Reader: TReader);
-begin
- SetHTMLText(Reader.ReadString);
-end;
-
 procedure TdhCustomLabel.DefineProperties(Filer: TFiler);
 begin
  inherited;
- Filer.DefineProperty('Caption', ReadOldCaption, nil, false);
  if not WithMeta and (Filer is TWriter) then exit;
  Filer.DefineProperty('HTMLText', SkipValue, nil, false);
-// Filer.DefineProperty('Overflow', SkipValue, WriteTrue, false and IsOverflow);
-// if (Filer is TReader) and NotReadBefore
 end;
 
 
@@ -3517,50 +3241,12 @@ begin
  SetHTMLText(Reader.ReadString);
 end;
 
-
-                                     {
-function TdhCustomLabel.GetImageType:TImageType;
-begin
- if (UseStyleTree<>nil) and (UseStyleTree.StyleElement<>nil) then
-  result:=(UseStyleTree.StyleElement.GetCommon.Control as TdhCustomPanel).GetImageType else
-  result:=Inherited GetImageType;
-end;                                  }
-
-                 {
-function TdhCustomLabel.TotalInlineBox: boolean;
-begin
- if (UseStyleTree<>nil) and (UseStyleTree.StyleElement<>nil) then
-  result:=(UseStyleTree.StyleElement.GetCommon.Control as TdhCustomPanel).TotalInlineBox else
-  result:=Inherited TotalInlineBox;
-end;                   }
-
 function TdhCustomLabel.Referer:TdhCustomPanel;
 begin
  if (UseStyleTree<>nil) and (UseStyleTree.StyleElement<>nil) then
   result:=UseStyleTree.StyleElement.GetCommon else
   result:=Self;
 end;
-
-
-
-
-
-
-
-{
-function TdhRule.GetOverBasedOnDown:boolean;
-begin
- result:=FOverBasedOnDown;
-end;
-
-procedure TdhRule.SetOverBasedOnDown(Value: boolean);
-begin
- Value:=false;
- FOverBasedOnDown:=Value;
- if not (csLoading in ComponentState) then
-  FCommon.NotifyCSSChanged(AllChanged);
-end;
-}
 
 function TdhCustomLabel.TextTransform:TCSSTextTransform;
 begin
@@ -3597,25 +3283,6 @@ begin
  Cascaded.ListStyleType:=clsDisk;
  GetVal(pcListStyleType);
  result:=Cascaded.ListStyleType;
-
-
-{ if FCommon.GetVal(pcListStyleType,Value) then
-  result:=Value.ListStyleType else
- begin
- lists:=0;
- StyleTree:=UseStyleTree;
- while StyleTree<>nil do
- begin
-  if (StyleTree.TagName='ul') or (StyleTree.TagName='ol') or (StyleTree.TagName='dir') or (StyleTree.TagName='menu') then
-   inc(lists);
-  StyleTree:=StyleTree.ParentStyle;
- end;
- case lists of
- 0,1:result:=clsDisk;
- 2: result:=clsCircle;
- else result:=clsCircle;
- end;
- end;}
 end;
 
 function TdhCustomLabel.TextAlign:TCSSTextAlign;
@@ -3635,15 +3302,6 @@ begin
   result:=0;
 end;
 
-{
-constructor TdhRule.Create(AOwner: TComponent);
-begin
- inherited;
- FCommon.StyleArr[hsOver]:=TStyle.Create(FCommon,hsOver);
- FCommon.StyleArr[hsDown]:=TStyle.Create(FCommon,hsDown);
- FCommon.StyleArr[hsOverDown]:=TStyle.Create(FCommon,hsOverDown);
-end;
-}
 procedure TdhCustomLabel.Click;
 begin
  if DelegateClick then exit;
@@ -3659,8 +3317,6 @@ begin
  end else
   result:=false;
 end;
-
-
    
 
 {$IFNDEF CLX}
@@ -3691,8 +3347,6 @@ begin
  result:=true; //text is scrolled!
 end;
 
-
-
 procedure TdhCustomLabel.Loaded;
 begin
  Inherited;
@@ -3716,22 +3370,12 @@ begin
  result:=gltext;
 end;
 
-             
-{$IFNDEF CLX}
-procedure TdhCustomLabel.CreateHandle;
-begin
-// if (Owner<>nil) and (Owner.ClassName='TDChild') and (csDesigning in ComponentState) and (ClassName<>'TMySiz') then exit;
- inherited;
-end;     
-{$ENDIF}
-
 procedure TdhCustomLabel.WriteTrue(Writer: TWriter);
 begin
  Writer.WriteBoolean(true);
 end;
 
 
-//procedure TdhCustomLabel.WMMouseMove(var Message: TWMMouseMove);
 procedure TdhCustomLabel.MouseMove(Shift: TShiftState; X, Y: Integer);
 //{$IFDEF VER160}unsafe;{$ENDIF}
 begin
@@ -3882,19 +3526,6 @@ begin
  result:=GetSelChar;
 end;
 
-
-                 {
-function TdhCustomLabel.ClientSelControl:TControl;
-begin
- result:=nil;
- if (ClientStyleTree<>nil) and IsWholeStyle(ClientStyleTree) then
-  result:=ClientStyleTree.StyleElement.GetCommon.Control;
-end;              }
-
-
-
-
-
 procedure TdhCustomLabel.GetModifiedText(var pre,s,suc: HypeString);
 begin
  if (s='') and IsAbsolutePositioned then
@@ -3971,8 +3602,6 @@ end;
 function TdhCustomLabel.TextExtent(const Text: AString): TSize;
 var Canvas:TCanvas;
     DC: HDC;
-    {Rect:TRect;
-    Metric: TOutlineTextmetric;}
 begin
 {$IFDEF CLX}
     with TBitmap.Create do
@@ -3990,52 +3619,13 @@ begin
   Canvas.Handle:=DC;
   try
     CSSToFont(Canvas.Font);
-    {DrawText(Canvas.Handle, PChar(Text), Length(Text), Rect, DT_CALCRECT);
-    result.cx:=Rect.Right-Rect.Left;
-    result.cy:=Rect.Bottom-Rect.Top;}
     Result:=Canvas.TextExtent(Text);
-    {if GetOutlineTextMetrics(DC, SizeOf(Metric), @Metric) <> 0 then
-    begin
-     inc(Result.cx, Metric.otmItalicAngle);
-    end;  }
   finally
     FreeAndNil(Canvas);
     ReleaseDC(0, DC);
   end;
 {$ENDIF}
 end;
-
-
-(*
-function TdhCustomLabel.TextExtent(const Text: AString): TSize;
-var Canvas:TCanvas;
-var
-  DC: HDC;
-begin
-  result.cx:=0;
-  result.cy:=0;
-    try
-{$IFDEF CLX}
-  Canvas:=TCanvas.Create;
-  Canvas.Handle:=QPainter_create;
-{$ELSE}
-  Canvas:=TCanvas.Create;
-  Canvas.Handle := GetDC(0);
-{$ENDIF}
-    FCommon.CSSToFont(Canvas.Font);
-    Result:=Canvas.TextExtent(Text);
-   finally
-{$IFDEF CLX}
-    FreeAndNil(Canvas);
-{$ELSE}
-    DC:=Canvas.Handle;
-    Canvas.Handle := 0;
-    ReleaseDC(0, DC);
-    FreeAndNil(Canvas);
-{$ENDIF}
-   end;
-end;
-*)
 
 
 function TdhCustomLabel.WrapAlways: boolean;
@@ -4052,9 +3642,6 @@ function PointerCompare(Item1, Item2: Pointer): Integer;
 begin
  result:=Integer(Item1)-Integer(Item2);
 end;
-
-
-
 
 procedure BuildUnicode; //{$IFDEF VER160}unsafe;{$ENDIF}
 var i:integer;
@@ -4087,21 +3674,8 @@ begin
  for i:=0 to _Unicode.Count-1 do
  if Ord(WideChar(_Unicode.Objects[i]))<=255 then
   what_uni[AnsiChar(_Unicode.Objects[i])]:=i;
-           {
- for i:=128 to 255 do
- if what_uni[chr(i)]=0 then
-  what_uni[chr(i)]:=ord(i);
-                      }
+
 end;
-
-
-{function TdhCustomLabel.TransitionInvalidates: boolean;
-begin
- result:=Pos('<',FHTMLText)<>0;
-end;
-}
-
-{ TdhLabel }
 
 constructor TdhLabel.Create(AOwner: TComponent);
 begin
@@ -4130,37 +3704,12 @@ end;
 
 function TdhCustomLabel.MyGetControlExtents(OnlyForScrollbars:boolean): TPoint;
 begin
-  //MeasureOverflow:=true;
-
   if IsScrollArea and FVertScrollbarAlwaysVisible then
    Result.X:=Width-VertScrollBar else
    Result.X:=Width;
   Result.Y:=0;
   GetInnerAutoRect(false,true,result.X,result.Y); //breitestes wort
-
-
-  //MeasureOverflow:=false;
-
- //OffsetRect(Rct,-Left,-Top);
- //OffsetRect(Rct,-HPos,-VPos);
- //DecPt(rct.BottomRight,FCommon.ClientEdgesPure.BottomRight);
-
-
- // result:=ShrinkRect(Rct,FCommon.AllEdgesPure);
- //result:=Rct;
 end;
-
-(*
-{$IFDEF CLX}
-procedure TdhCustomLabel.TextChanged;
-{$ELSE}
-procedure TdhCustomLabel.CMTextChanged(var Message: TMessage);
-{$ENDIF}
-begin
- SetHTMLText(inherited Caption);
-end;
-*)
-
 
 function TStyleTree.GetBottomLeading: integer;
 begin
@@ -4176,34 +3725,19 @@ begin
 end;
 
 initialization
-
  BuildUnicode;
-
-
 {$IFNDEF CLX}
  Win32PlatformIsUnicode := (Win32Platform = VER_PLATFORM_WIN32_NT);
 {$ENDIF}
-
-
- //RegisterClasses([TdhStyleSheet,TdhRule,TdhCustomLabel,TdhPanel]);
-
-                
  AssertTags2;
 
 finalization
-
  if dhStrEditDlg<>nil then
  if not (csDestroying in dhStrEditDlg.ComponentState) then
-  //dhStrEditDlg.Release;
   FreeAndNil(dhStrEditDlg);
-
  FreeAndNil(HTMLTags);
-
  FreeAndNil(_Unicode);
  FreeAndNil(UnicodeByNumbers);
  FreeAndNil(UnicodeByNumbersList);
  FreeAndNil(HelpB);
-
-
-
 end.

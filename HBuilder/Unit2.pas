@@ -1909,9 +1909,6 @@ begin
  for i :=0 to Selection.Count-1  do
  if not (csDestroying in TComponent(Selection[i]).ComponentState) and not (TObject(Selection[i]).InheritsFrom(c) and
  not((ts.PageIndex<PAGE_STYLES) and ((TObject(Selection[i]) is TdhPageControl) or (TObject(Selection[i]) is TdhStyleSheet) or (TObject(Selection[i]) is TdhHiddenField))) and
- //not((ts=AnchorLink) and ((TObject(Selection[i]) as TdhLink).LinkType in [ltSubmitButton,ltResetButton])) and
- //not((ts=AnchorFormButton) and not ((TObject(Selection[i]) as TdhLink).LinkType in [ltSubmitButton,ltResetButton])) and
-// not((ts=AnchorEffects) and not (TObject(Selection[i]) as TdhCustomPanel).EffectsAllowed) and
  not((ts=AnchorText) and (TObject(Selection[i]) is TdhEdit)) or LookParent and GetVirtualParent(TObject(Selection[i]) as TControl).InheritsFrom(c))
  (* or ((TObject(Selection[i]) is TdhPageControl) and not ((ts=AnchorName) or (ts=AnchorPageControl))){ or AssertIsImage and (IsImage<>(TObject(Selection[i]) as TdhCustomPanel).IsImage)}*) then
  begin

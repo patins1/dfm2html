@@ -1009,8 +1009,6 @@ var FPageRange,CurrPage,RealLinkPage,RealLastPage,r:integer;
 begin
  href:='';
  target:='';
- if not nest.HasProp('PageTarget',target) then
-   nest.HasProp('Target',target);
  nest.HasProp('Link',href);
 
  if (nest.LinkPage<>'') and not nest.HasProp('RealLinkPage') {and (nest.PageRange<>0)} and gln.IndexOf(nest.LinkPage,RealLinkPage) then
@@ -1023,9 +1021,6 @@ begin
   begin
    if nest.PageRange<0 then
     Exch(RealLinkPage,RealLastPage);
-   (*if {HasProp('Href',href) and }bAdvPos(r,'#',href) then
-    delete(href,1,r-1) else
-    href:='';*)
    href:=GetNextPage(FLinkPage, nest.PageRange,CurrPage,RealLinkPage,RealLastPage);
    if href<>'' then //javascript
    begin
@@ -1599,26 +1594,6 @@ var classpos,r:integer;
     inhalt,sinhalt,attr:string;
 
 
-
-            {
-procedure GetWarnings;
-var vn,attrpos:integer;
-    LinkForm,ID:string;
-begin
- vn:=length(ns);
- while bAdvPosBack(vn,' LinkForm="',ns,vn) and FindOut(ns,vn,inhalt) and GetAttr('LinkForm',inhalt,attrpos,LinkForm) and GetAttr('id',inhalt,attrpos,ID) do
- if DFMs.IndexOfName('T'+LinkForm)=-1 then
-  Warnings:=Warnings+endl+FormName+'.'+ID+' references not existing form '+LinkForm;
-end;
-        }
-
-
-
-
-
-
-
-
 procedure WriteNs(nest:TNest; CurIndent:integer);
 var i:integer;
     properties,attributes:string;
@@ -1827,16 +1802,10 @@ begin
 
  if not nest.IsPopupMenu then
  begin
- if (bo.Top<>maxint) and ({nest.Anchors<>[]}nest.Align<>alTop) {and not IsProp('Align','alClient')} { (nest.HasProp('ParentMenuItem') and not nest.contains('MenuOptions','moInline'))}{ and not nest.HorizontalCenter} then
+ if (bo.Top<>maxint) and (nest.Align<>alTop) then
   AddStyle('position','absolute') else
-/// if nest.dclass='TdhLink' then
-  begin
-  //if nest.tag<>'a' then
-   AddStyle('position','relative');
-  //AddStyle('overflow','visible');
-  end;
-
-  if {(nest.dclass<>'TdhOleContainer') and }(nest.tag<>'iframe') and (nest.tag<>'textarea') and (nest.tag<>'select') and (not nest.AutoY or not nest.AutoX) and not ((nest.Count<>0) and nest.OriginalAutoX and nest.OriginalAutoY){ and not ((nest.Count=0) and (nest.AutoX or nest.AutoY))} and not ((nest.Count=0) and (nest.AutoX and nest.AutoY)) and not nest.IsScrollable then
+  AddStyle('position','relative');
+  if (nest.tag<>'iframe') and (nest.tag<>'textarea') and (nest.tag<>'select') and (not nest.AutoY or not nest.AutoX) and not ((nest.Count<>0) and nest.OriginalAutoX and nest.OriginalAutoY){ and not ((nest.Count=0) and (nest.AutoX or nest.AutoY))} and not ((nest.Count=0) and (nest.AutoX and nest.AutoY)) and not nest.IsScrollable then
    AddStyle('overflow','hidden');
  end;
 
@@ -1954,10 +1923,6 @@ begin
                           {
  if (nest.MinWidth<>0) then
   AddStyle('min-width',nest.MinWidth);  }
-
- if nest.HasProp('Overflow') then
-  AddStyle('overflow','hidden');
-
 
   if (nest.dclass='TdhMenu') and (nest.IsPopupMenu or nest.IsInlineMenu) and not nest.MenuIsStatic then
   begin
@@ -2469,7 +2434,6 @@ begin
   break;
  end;
  NeedJS:=true;
-// NeedJS:=true;                     
  EverNeededJS:=EverNeededJS or NeedJS;
  if ForCSSFile then NeedJS:=EverNeededJS;
 
@@ -3665,9 +3629,6 @@ begin
      AddAttr('notifurl','true');
     if HasProp('Linked') then
      AddAttr('linked','true');
-
-    if HasProp('LinkedCount') then
-     AddAttr('name',id);
     if HasProp('RealLinkPage',s) then
      AddAttr('linkpage',s);
     if HasProp('RealLastPage',s) then
@@ -3992,18 +3953,6 @@ begin
    DoEle('div');
    if HasProp('InnerHTML',s) then
     PureWrite(s);
-   {DoEle('divdel');
-   if HasProp('HTML.Strings',s) then
-   if not HasProp('InsertLocation',s) or (s='ilCurrent') then
-    snest.insertloc:=pnest.ID else
-   if s='ilHead' then
-    snest.insertloc:='#head' else
-   begin
-    snest.insertloc:='#body';
-//    snest.RenderIn:=snest.parentTS.id;
-   end;
-   if HasProp('HTML.Strings',s) then
-    PureWrite(s);}
   end else
   if (classname='TSpeedButton') or (classname='TRxSpeedButton') then
   begin
@@ -4428,7 +4377,7 @@ begin
  begin
  //nest:=TNest(gln.Objects[i]);
  nest:=_nest[i];
- if (nest.insertloc<>'') and (nest.insertloc<>'#head') then
+ if (nest.insertloc<>'') then
  begin
   pnest:=nest;
   if (nest.insertloc='#body') then

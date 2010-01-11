@@ -1682,7 +1682,7 @@ begin
   Result:=hsNormal;
   if (Self=glSelCompo) then
    Result:=hsOver;
-  IsDown:=(csLButtonDown in ControlState){(Self=FClickedControl)};
+  IsDown:=(csLButtonDown in ControlState);
   if IsDown then
   if (Result=hsOver) then
    Result:=hsOverDown else
@@ -1755,7 +1755,7 @@ begin
   _LastActStyle:=InlinePn.LastActStyle;
   try
   if RuntimeMode and not ShallBeAnchor then
-   InlinePn.LastActStyle:=InlinePn.GetInlineHTMLState((LastActStyle in [hsOver,hsOverDown]) and ContainsStyleTree(OuterLink(ClientStyleTree),StyleTree),{Self=FClickedControl}(csLButtonDown in ControlState)) else
+   InlinePn.LastActStyle:=InlinePn.GetInlineHTMLState((LastActStyle in [hsOver,hsOverDown]) and ContainsStyleTree(OuterLink(ClientStyleTree),StyleTree),(csLButtonDown in ControlState)) else
    InlinePn.LastActStyle:=LastActStyle;
   {if (ClientStyleTree=StyleTree) and not (InlineCommon.Control is TdhRule) then
    InlineCommon.LastActStyle:=FCommon.LastActStyle else
@@ -1774,7 +1774,7 @@ begin
    InlinePn.LastActStyle:=_LastActStyle;
   end;
   IsFromParent:=true;
-  if (PropChoose in [pcFontSize{only the computed value is inherited }]) or  not ({StyleTree.StyleElement.InheritProp(PropChoose)}PropChoose in AutoInherit) and not (PropChoose in [pcWhiteSpace,pcAntiAliasing]) then
+  if (PropChoose in [pcFontSize{only the computed value is inherited }]) or  not (PropChoose in AutoInherit) and not (PropChoose in [pcWhiteSpace,pcAntiAliasing]) then
   begin
    result:=false;
    exit;

@@ -20,7 +20,6 @@ type
     procedure GetModifiedText(var pre,s,suc:HypeString); override;
     function NeedPadding(HasRastering:TRasterType): boolean; override;
     function EffectsAllowed: boolean; override;
-    //function InheritProp(PropChoose:TPropChoose):boolean; override;
     procedure DefineProperties(Filer: TFiler); override;
 //    function CanAutoSize(var NewWidth, NewHeight: Integer): Boolean; override;
     procedure GetAutoRect(AllowModifyX,AllowModifyY:boolean; var NewWidth, NewHeight: Integer); override;
@@ -112,15 +111,6 @@ procedure Register;
 begin
   RegisterComponents('DFM2HTML', [TdhEdit]);
 end;
-
-                      {
-function TdhCustomEdit.InheritProp(PropChoose:TPropChoose):boolean;
-begin
- result:=PropChoose in (AutoInherit - [pcColor]);
-end;
-                       }
-
-
 
 
 procedure NearestMod(m,frame:integer; var n,times:integer);

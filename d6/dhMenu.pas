@@ -157,7 +157,6 @@ type
     
     function BoundNextSibling:TdhCustomPanel; override;
     //ICon
-//    function InheritProp(PropChoose:TPropChoose):boolean; override;
     //function ShallContentWidthHeightStore:boolean; override;
     //function ContentClientRect: TRect; override;
 
@@ -280,7 +279,6 @@ type
     property VerticalLayout:boolean read GetVerticalLayout;
     function GetTotalPos:TPoint;
     function IsVirtual:boolean;
-    //function AdjPosList(i:integer; seIndex:TList):boolean; override;
     function LeaveY:boolean; override;
     procedure Loaded; override;
 
@@ -779,20 +777,6 @@ begin
  NotifyCSSChanged(ActStyleChanged);
  inherited;
 end;
-
-{function TdhDynLabel.GetHTMLState:TState;
-var IsDown:boolean;
-begin
-  Result:=hsNormal;
-  if (Self=glSelCompo) then
-   Result:=hsOver;
-  IsDown:=(Self=FClickedControl);
-  if IsDown then
-  if (Result=hsOver) then
-   Result:=hsOverDown else
-   Result:=hsDown;
-end;
-}
 
 function TdhLink.IsActivated:boolean;
 begin
@@ -1323,14 +1307,6 @@ begin
   inherited;
   if (FSubMenu<>nil){ and not FSubMenu.IsInlineMenu} then Proc(FSubMenu);
 end;
-
-
-
-{function TdhLink.InheritProp(PropChoose:TPropChoose):boolean;
-begin
- result:=PropChoose in (AutoInherit - [pcColor]);
-end;
-}
 
 procedure TdhLink.SetLink(Value:TPathName);
 begin
@@ -2297,24 +2273,6 @@ begin
    result:=Point(Left,Top+Height);
   end;
 end;
-
-          {
-
-function TdhMenu.AdjPosList(i:integer; seIndex:TList):boolean;
-var i2:integer;
-begin
- result:=false;
- if FParentMenuItem<>nil then
- begin
-  i2:=seIndex.IndexOf(FParentMenuItem);
-  result:=(i2<>-1) and (i2+1<>i);
-  if result then
-  if i<i2 then
-   seIndex.Move(i,i2) else
-   seIndex.Move(i,i2+1);
- end;
-end;
-         }
 
 (*
 procedure TdhMenu.SetIsInlineMenu(Value:boolean);

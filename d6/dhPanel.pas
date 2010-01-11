@@ -72,9 +72,6 @@ var WithMeta:boolean=false;
 {$IFDEF CLX}
 type HWND=QWidgetH;
 {$ENDIF}
-                               {
-type TBoundsChanging=procedure (hwnd:HWND);
-var glBoundsChanging:TBoundsChanging;  }
 
 type TFrameEventType=(feMouseUp,feMouseDown,feMouseMove);
 type
@@ -87,8 +84,6 @@ type
 const atTop=-maxint;
       atBottom=maxint;
 
-//var AddHA:TStringList;
-                 
 
 {$IFDEF CLX}
 const VK_ESCAPE=Key_Escape;
@@ -120,7 +115,6 @@ type
   wcNoComputedCSS, //no computed CSS was changed
   wcText, //invalidate TdhLabel.ParseHTML
   wcText2, //invalidate TdhLabel.BuildLines
-  wcTemplate, //deprecated
   wcName, //TComponent.Name changed -> update InlineUsedByList
   wcState //State may have changed
   );
@@ -134,15 +128,8 @@ const
   ActStyleChanged=   [wcFont,wcColor,wcCursor,wcText,wcText2,wcSize,wcChild,wcZIndex,wcState,wcNoOwnCSS];
   ActStyleLoaded=    [wcFont,wcColor,wcCursor,wcText,wcText2,wcSize,wcChild,wcZIndex,wcState,wcNoOwnCSS,wcNoComputedCSS];
   ReqInvals=         [wcFont,wcText,wcText2,wcName,wcState,wcNoOwnCSS];
-  //VisualChanges=[wcFont,wcColor,wcText,wcSize];
 
   MarginDefault=EmptyStr;
-
-(*
-Const
-  WM_ALIGNPARENT = WM_USER + 4;
-*)
-//WM_CHECKDESIGNSTATE
 
 const
   CSSAlphaInverter=$FF000000;
@@ -159,7 +146,6 @@ const
 type
   TCSSCursor=(ccuInherit,ccuAuto,ccuCrosshair, ccuDefault, ccuPointer, ccuMove,
     ccuEResize, ccuNeResize, ccuNwResize, ccuNResize, ccuSeResize, ccuSwResize, ccuSResize, ccuWResize,
-//    ccuEResize, ccuNEResize, ccuNWResize, ccuNResize, ccuSEResize, ccuSWResize, ccuSResize, ccuWResize,
     ccuText, ccuWait, ccuHelp);
 const CSSCursorMap:array[TCSSCursor] of TCursor=
   (crDefault,crDefault,crCross,crArrow,crHandPoint,crSizeAll,
@@ -207,12 +193,9 @@ type
   TCSSMargin=type TCSSStringValue;//variant;
   TCSSRadius=type TCSSStringValue;
   TCSSFontVariant=(cfvInherit,cfvNormal,cfvSmallCaps);
-  //TCSSAntiAliasing=(caaInherit,caaNone,caaKind1,caaKind2);
-
-  TImageType=(bitInherit,bitTile,{bitLayered,}bitStretch,bitImage,bitSplit);
+  TImageType=(bitInherit,bitTile,bitStretch,bitImage,bitSplit);
   TImageFormat=(ifInherit,ifSimple,ifSemiTransparent,ifJPEG);
   TPhysicalImageFormat=(pifSaveAsGIF,pifSaveAsPNG,pifSaveAsJPEG);
-
   TEffectsOnText=(etInclude,etExclude,etOnly);
 
 const sStyle:array[TState] of TPropertyName=('Style','StyleOver','StyleDown','StyleOverDown');
@@ -311,10 +294,7 @@ type
   published
     property Radius default 5;
     property DeciRadius default 50;
-    //property Flood default 0;
   end;
-
-//  TCommon=class;
 
   TCSSBorderRadius=class(TPersistent)
   private
@@ -354,14 +334,7 @@ type
     FScaleX,FScaleY,FSkewX,FSkewY:integer;
     FAntiAliasing:boolean;
     FText:TEffectsOnText;
-    //FTextOnly: boolean;
-    //FTextExclude: boolean;
     Owner:TStyle;
-
-{    function IsScaleXStored: Boolean;
-    function IsScaleYStored: Boolean;
-    function IsSkewXStored: Boolean;
-    function IsSkewYStored: Boolean;}
     procedure SetRotationDegree(const Value: integer);
     procedure SetRotateEnabled(const Value: boolean);
     procedure SetShiftEnabled(const Value: boolean);
@@ -379,8 +352,6 @@ type
     procedure SetShiftY(const Value: integer);
     procedure SetUseBased(const Value: boolean);
     function IsAntiAliasingStored: Boolean;
-    //function IsTextOnlyStored: Boolean;
-    //function IsTextExcludeStored: Boolean;
     function IsTextStored: Boolean;
     procedure SetTextOnly(const Value: boolean);
     function GetTextOnly:boolean;
@@ -404,24 +375,17 @@ type
    property FullIfEasy:boolean read FFullIfEasy write SetFullIfEasy default true;
   published
    property Rotation:integer read FRotationDegree write SetRotationDegree default 0;
-//   property PartX:integer read FPartPoint.X write FPartPoint.X;
-//   property PartY:integer read FPartPoint.Y write FPartPoint.Y ;
    property ShiftX:integer read FShiftX write SetShiftX default 0;
    property ShiftY:integer read FShiftY write SetShiftY default 0;
    property ScaleX:integer read FScaleX write SetScaleX default 100;
    property ScaleY:integer read FScaleY write SetScaleY default 100;
    property SkewX:integer read FSkewX write SetSkewX default 0;
    property SkewY:integer read FSkewY write SetSkewY default 0;
-//   property StretchLinear:boolean read FStretchLinear write SetStretchLinear;
-//   property StretchParted:boolean read FStretchParted write SetStretchParted;
-//   property RotateEnabled:boolean read FRotateEnabled write SetRotateEnabled;
-//   property ShiftEnabled:boolean read FShiftEnabled write SetShiftEnabled;
    property Enabled:boolean read FEnabled write SetEnabled default false;
    property AntiAliasing:boolean read FAntiAliasing write SetAntiAliasing stored IsAntiAliasingStored;
    property TextOnly:boolean read GetTextOnly write SetTextOnly stored false;
    property TextExclude:boolean read GetTextExclude write SetTextExclude stored false;
    property Text:TEffectsOnText read FText write SetText stored IsTextStored;
-
    property Alpha:byte read FAlpha write SetAlpha default 255;
    property InnerShadow:TShadow read FInnerShadow write FInnerShadow;
    property OuterShadow:TShadow read FOuterShadow write FOuterShadow;
@@ -433,8 +397,6 @@ type
   TCSSBorder=class(TPersistent)
   private
     procedure AssignComputed(pn: TdhCustomPanel; Align:TEdgeAlign);
-//    procedure WriteCompact(Writer: TWriter);
-//    procedure WriteBorderColor(Writer: TWriter);
   protected
    Owner:TStyle;
    FColor:TCSSColor;
@@ -444,7 +406,6 @@ type
    procedure SetColor(Value:TCSSColor);
    procedure SetStyle(Value:TCSSBorderStyle);
    procedure SetAll(Width:Integer;Color:TCSSColor;Style:TCSSBorderStyle);
-   procedure DefineProperties(Filer: TFiler); override;
   public
    procedure Assign(Source: TPersistent); override;
    constructor Create(AOwner:TStyle);
@@ -530,9 +491,8 @@ type
     Display:TCSSDisplay;
     Visibility:TCSSVisibility;
     ListStyleType:TCSSListStyleType;
-    AntiAliasing:boolean;//TCSSAntiAliasing;
+    AntiAliasing:boolean;
     Transformations:TTransformations;
-
     Before,After:HypeString;
     BackgroundPosition:TCSSBackgroundPosition;
     VerticalAlign:TCSSVerticalAlign;
@@ -551,7 +511,6 @@ type
   TSpecialBorderType=(sbtNormal,sbtButton,sbtEdit);
 
   ICon=interface
-    //function GetOverBasedOnDown:boolean;
     procedure GetAutoRect(AllowModifyX,AllowModifyY:boolean; var NewWidth, NewHeight: Integer);
     function DoGetVal(PropChoose:TPropChoose; {var Value:TCSSProp; }const Align:TEdgeAlign; var DoExit:boolean):boolean;
     procedure UpdateNames(InlineUse,NewInlineUse:ICon; PropagateChange:boolean);
@@ -560,8 +519,6 @@ type
     procedure DoCSSToWinControl(WhatChanged:TWhatChanged=[]);
     function GetCommon:TdhCustomPanel;
     function GetName:TComponentName;
-    //function InheritProp(PropChoose:TPropChoose):boolean;
-    //function IsVisualAnchor:boolean;
     function ShallBeAnchor:boolean;
     procedure AddOwnInfo(sl:TStrings);
     function GetHTMLState:TState;
@@ -572,9 +529,7 @@ type
     function GetFinal:ICon;
     function GetInlineHTMLState(Over,Down:boolean):TState;
     function IncludeBorderAndPadding:boolean;
-    //procedure PreferStyleChange;
     procedure FocusPreferStyle(IsMain,RealChange:boolean);
-
     function RequiresRastering:boolean;
   end;
 
@@ -590,12 +545,9 @@ type
     function BaseBorder(IgnoreCSS:TRasterType):TRect;
     function BaseBorderColors:TColorName;
     function PrepareBGImage:boolean;
-    //function PrepareBGRastering: boolean;
-    //procedure WriteBGRastering(Writer: TWriter);
     procedure WriteNewPadding(Writer: TWriter);
     procedure Write0px(Writer: TWriter);
     procedure WriteNewMargin(Writer: TWriter);
-
     function BaseRasteringFile:TPathName;
     procedure CopyFrom(s: TStyle; sub:boolean);
     procedure SetFontVariant(const Value: TCSSFontVariant);
@@ -604,16 +556,7 @@ type
     procedure SetDirection(const Value: TCSSDirection);
     procedure SetBefore(const Value: HypeString);
     procedure SetAfter(const Value: HypeString);
-    function IsFontSizeStored: boolean;
-//    function IsMarginStored: boolean;
-    //procedure ReadMargin(Reader: TReader);
-    procedure WriteMargin(Writer: TWriter);
-    function IsMarginBottomStored: boolean;
-    function IsMarginLeftStored: boolean;
-    function IsMarginRightStored: boolean;
-    function IsMarginTopStored: boolean;    
     function IsBorderColorsStored:boolean;
-//    procedure WriteNewMargin(Writer: TWriter);
   protected
     OwnState:TState;
     FBorderColors:TColorName;
@@ -622,9 +565,7 @@ type
     _ContentWidthHeight:TPoint;
     IsWidthStored,IsHeightStored:boolean;
     IsNewPaddingStored,IsNewMarginStored,IsNewBorderStored:boolean;
-
     _BasePadding,_BaseMargin,_BaseBorder:TRect;
-
     FDirection: TCSSDirection;
     FBefore: HypeString;
     FAfter: HypeString;
@@ -659,17 +600,10 @@ type
     FVisibility:TCSSVisibility;
     FListStyleType:TCSSListStyleType;
     FTextIndent:TCSSTextIndent;
-    //FAntiAliasing:TCSSAntiAliasing;
     FTransformations:TTransformations;
     FBorderRadius:TCSSBorderRadius;
-
-    //function IsItStored:boolean;
     function GetStyleVal(PropChoose:TPropChoose; {var Value:TCSSProp; }const Align:TEdgeAlign):boolean;
     function GetNameByStyle:TPropertyName;
-
-
-    //function GetClientMeasure(Index:integer):TCSSInteger;
-    //procedure SetClientMeasure(Index:integer; Value:TCSSInteger);
     procedure InitMisc;
     procedure SetBackgroundImage(Value: TLocationImage);
     procedure SetBackgroundRepeat(Value:TCSSBackgroundRepeat);
@@ -690,11 +624,7 @@ type
     procedure SetDisplay(Value:TCSSDisplay);
     procedure SetVisibility(Value:TCSSVisibility);
     procedure SetListStyleType(Value:TCSSListStyleType);
-
     procedure SetFontSize(Value:TCSSFontSize);
-    //procedure SetAntiAliasing(Value:TCSSAntiAliasing);
-    //function GetFontSize:TCSSFontSize;
-    //function IsFontSizeStored:boolean;
     procedure SetFontFamily(Value:TCSSFontFamily);
     procedure SetColor(Value:TCSSColor);
     procedure SetFontStyle(Value:TCSSFontStyle);
@@ -702,43 +632,18 @@ type
     procedure SetTextDecorations(Value:TCSSTextDecorations);
     procedure pcs(WhatChanged:TWhatChanged);
     procedure pc(PropChoose:TPropChoose);
-
-
-
-//    procedure WriteContentWidthHeight(Writer: TWriter);
-//    procedure WriteClientTopLeft(Writer: TWriter);
-//    procedure WriteClientBottomRight(Writer: TWriter);
-
-//    procedure ReadString(Reader: TReader);
-//    procedure ReadInteger(Reader: TReader);
-//    procedure ReadInteger2(Reader: TReader);
-
-//    procedure WriteStyleText(Writer: TWriter);
     procedure WriteContentWidth(Writer: TWriter);
     procedure WriteContentHeight(Writer: TWriter);
-
-{
-    procedure WriteClientLeft(Writer: TWriter);
-    procedure WriteClientTop(Writer: TWriter);
-    procedure WriteClientBottom(Writer: TWriter);
-    procedure WriteClientRight(Writer: TWriter);   }
     procedure WriteRastering(Writer: TWriter);
     procedure WriteBackgroundImageUrl(Writer: TWriter);
     procedure WriteBorderColors(Writer: TWriter);
-
-//    procedure ReadBool(Reader: TReader);
     procedure WriteTrue(Writer: TWriter);
     procedure DefineProperties(Filer: TFiler); override;
     function UndefFilter(IsRastered:boolean):boolean;
-
     procedure PictureChange(Sender: TObject);
-
-
-
   public
-    Owner:IChangeReceiver;//TCommon;
+    Owner:IChangeReceiver;
     RasteringFile:TPathName;
-    
     function ProposedBackgroundFilename: TPathName;
     function PrepareRastering(addheight:integer; const PostFix:TPathName): boolean;
     function IsMarginCleared(Align:TEdgeAlign):boolean;
@@ -746,19 +651,13 @@ type
     function IsEdgeCleared(Align: TEdgeAlign): boolean;
     procedure AssignComputedEdge(Align: TEdgeAlign; pn: TdhCustomPanel);
     function CopyBlurEffectsByInherited: boolean;
-
     function HasInheritedTransformations(var tt: TTransformations):boolean;
     procedure LoadImage(const filename: TPathName);
     function IsPictureStored:boolean;
     procedure SetPadding(Align:TEdgeAlign; Value:TCSSCardinal=vsrInherit);
-    //function ReadMargin(Align:TEdgeAlign):TCSSMargin;
-//    function ReadPadding(Align:TEdgeAlign):TCSSCardinal;
     procedure SetMargin(Align:TEdgeAlign; Value:TCSSMargin);
     function GetBorder(Align: TEdgeAlign): TCSSBorder;
-    //function GetPadding(Align: TEdgeAlign): TCSSCardinal;
     function IsPaddingCleared(Align: TEdgeAlign): boolean;
-    //function GetMargin(Align: TEdgeAlign): TCSSCardinal;
-    //function IsContentWidthHeightStored:boolean;
     procedure AssignEdge(Align: TEdgeAlign; s: TStyle);
     procedure AssignBackground(s: TStyle);
     procedure Assign(Source: TPersistent); override;
@@ -766,20 +665,11 @@ type
     constructor Create(AOwner:IChangeReceiver; OwnState:TState);
     destructor Destroy; override;
     procedure GetFontDifferences({const Font:TFont}FontStyle:TFontStyles; FontColor:TCSSColor; FontName:TFontName; FontHeight:Integer);
-//    function IsMeasureStored(Index:integer):boolean;
     function GetInfo:AString;
     function IsStyleStored:boolean;
     function GetBorderByName(const name:TPropertyName; var r:TCSSBorder):boolean;
     procedure ClearEdge(Align:TEdgeAlign);
     property Borders[Align:TEdgeAlign]:TCSSBorder read GetBorder;
-
-{    property FontSize:TCSSFontSize read FFontSize write SetFontSize;
-    property Margin: TCSSMargin index ealNone read FMargins[ealNone] write SetMargin;
-    property MarginLeft: TCSSMargin index ealLeft read FMargins[ealLeft] write SetMargin;
-    property MarginTop: TCSSMargin index ealTop read FMargins[ealTop] write SetMargin;
-    property MarginRight: TCSSMargin index ealRight read FMargins[ealRight] write SetMargin;
-    property MarginBottom: TCSSMargin index ealBottom read FMargins[ealBottom] write SetMargin;
-}
   published
     property Border: TCSSBorder read FBorders[ealNone] write FBorders[ealNone];
     property BorderTop: TCSSBorder read FBorders[ealTop] write FBorders[ealTop];
@@ -795,15 +685,12 @@ type
     property PaddingTop: TCSSCardinal index ealTop read FPaddings[ealTop] write SetPadding default vsrInherit;
     property PaddingRight: TCSSCardinal index ealRight read FPaddings[ealRight] write SetPadding default vsrInherit;
     property PaddingBottom: TCSSCardinal index ealBottom read FPaddings[ealBottom] write SetPadding default vsrInherit;
-
-
     property FontSize:TCSSFontSize read FFontSize write SetFontSize;
     property Margin: TCSSMargin index ealNone read FMargins[ealNone] write SetMargin;
     property MarginLeft: TCSSMargin index ealLeft read FMargins[ealLeft] write SetMargin;
     property MarginTop: TCSSMargin index ealTop read FMargins[ealTop] write SetMargin;
     property MarginRight: TCSSMargin index ealRight read FMargins[ealRight] write SetMargin;
     property MarginBottom: TCSSMargin index ealBottom read FMargins[ealBottom] write SetMargin;
-
     property Other: HypeString read FOther write FOther;
     property ContentBefore: HypeString read FBefore write SetBefore;
     property ContentAfter: HypeString read FAfter write SetAfter;
@@ -813,7 +700,6 @@ type
     property Direction:TCSSDirection read FDirection write SetDirection default cdiInherit;
     property TextTransform:TCSSTextTransform read FTextTransform write SetTextTransform default cttInherit;
     property Cursor:TCSSCursor read FCursor write SetCursor default ccuInherit;
-
     property FontFamily:TCSSFontFamily read FFontFamily write SetFontFamily;
     property Color:TCSSColor read FColor write SetColor default colInherit;
     property FontStyle:TCSSFontStyle read FFontStyle write SetFontStyle default cfsInherit;
@@ -824,7 +710,6 @@ type
     property MinWidth:TCSSCardinal read FMinWidth write SetMinWidth default vsrInherit;
     property MinHeight:TCSSCardinal read FMinHeight write SetMinHeight default vsrInherit;
     property TextIndent:TCSSTextIndent read FTextIndent write SetTextIndent;
-
     property VerticalAlign: TCSSVerticalAlign read FVerticalAlign write SetVerticalAlign;
     property LetterSpacing: TCSSLetterSpacing read FLetterSpacing write SetLetterSpacing;
     property WordSpacing: TCSSWordSpacing read FWordSpacing write SetWordSpacing;
@@ -832,16 +717,9 @@ type
     property Display:TCSSDisplay read FDisplay write SetDisplay default cdsInherit;
     property Visibility:TCSSVisibility read FVisibility write SetVisibility default cviInherit;
     property ListStyleType:TCSSListStyleType read FListStyleType write SetListStyleType default clsInherit;
-
-    //Effects
-    //property AntiAliasing:TCSSAntiAliasing read FAntiAliasing write SetAntiAliasing default caaInherit;
-
-
     property Effects:TTransformations read FTransformations write FTransformations;
     property BorderRadius:TCSSBorderRadius read FBorderRadius write FBorderRadius;
-
     //TODO: SpeedupGeneration property Generated:TPathName read RasteringFile write RasteringFile;
-
   end;
 //  (n:'filter';b:bbFilter;v:'"Alpha(opacity=100, finishopacity=0, style=2)","Blur(direction=235, strength=6)",Chroma(color=#DDBB99),"DropShadow(color=#C0C0C0, offx=3, offy=3)",FlipH(),FlipV(),"Glow(color=#000000, strength=12)",Gray(),Invert(),'+'Mask(color=#000066),"Shadow(color=#000000, direction=45)","Wave(freq=5, light=20, phase=50, strength=6)",XRay()';m:[MGvisual]),
 
@@ -858,48 +736,31 @@ type
 {$ELSE}
   TdhCustomPanel = class(TWinControl,ICon)
 {$ENDIF}
-{TCommon start}
   private
-
     FNoSiblingsBackground:boolean;
     FIsScrollArea: boolean;
     FDownOverlayOver: boolean;
     Fetching,FIsDlg:boolean;
-
-    {function IsButton:boolean;
-    function IsEdit:boolean;  }
-
-
     procedure CopyFrom(Use:ICon; sub:boolean);
-    //function GetVertRange: integer;
     procedure AddInfo(sl: TStringList);
     procedure WriteRealAutoSizeXY(Writer: TWriter);
     procedure WriteCenterLeft(Writer: TWriter);
     procedure WriteCenterRight(Writer: TWriter);
     function CenterMargins:TPoint;
-    //procedure SetAutoSizeHorzOnly(Value: Boolean);
-    //procedure SkipValue2(Reader: TReader);
     procedure CSSToWinControl(WhatChanged:TWhatChanged=[]);
     procedure InvalTop(WithChilds,ExcludeOneself:boolean);
     procedure InvalBack(const R2:TRect);
     function GetAffine(inv: boolean): TMyAffineTransformation;
-    //function HasEdgeImage(var FPicture: TPicture): boolean;
-    //function HasStretchImage(var FPicture:TPicture):boolean;
-    //function IsBGRastered: boolean;
     procedure WriteClientBottom(Writer: TWriter);
     procedure WriteClientLeft(Writer: TWriter);
     procedure WriteClientRight(Writer: TWriter);
     procedure WriteClientTop(Writer: TWriter);
-    //procedure WritePadding(Writer: TWriter);
-    //function NeedPadding: boolean;
-
     function GetBold: boolean;
     procedure SetBold(const Value: boolean);
     function GetItalic: boolean;
     procedure SetItalic(const Value: boolean);
     function GetFontColor:TCSSColor;
     procedure SetFontColor(Value:TCSSColor);
-
     function TextDecoration: TCSSTextDecorations;
     function GetUnderline: boolean;
     procedure SetUnderline(const Value: boolean);
@@ -920,12 +781,8 @@ type
     procedure WriteMarginVert(Writer: TWriter);
     procedure SetIsDlg(Value:Boolean);
     function GetSpecialBorderType:TSpecialBorderType;
-    //function BorderClientRect:TRect;
-
-
     procedure LockDefinedCSS(var sStyleArr:TStyleArray);
     procedure UnlockDefinedCSS(var sStyleArr:TStyleArray);
-
     function HasImage(var FPicture: TGraphic): boolean; overload;
 
 
@@ -949,27 +806,19 @@ type
     ActTopGraph:TMyBitmap32;
     InlineUsedByList:TList;
     StyleArr:array[TState] of TStyle;
-    //Control:TControl;
-    //Con:ICon;
     InCSSToWinControl:boolean;
     CollectChanges:TWhatChanged;
     InCollectChanges:boolean;
     InNotifyCSSChanged:boolean;
-
-
     FUse: ICon;
     UsedByList:TList;
     PreferStyle:TStyle;
     LastActStyle:TState;
     FAutoSize:TASXY;
     FIsOver:boolean;
-
     procedure CopyStyles(fromState,toState:TState);
-
     function BoundNextSibling:TdhCustomPanel; virtual;
     function BoundTop:Integer; virtual;
-
-
     property NoSiblingsBackground:boolean read FNoSiblingsBackground write FNoSiblingsBackground default false;
     function AllHTMLCode:HypeString; virtual;
     procedure SkipValue(Reader: TReader);
@@ -977,37 +826,23 @@ type
     procedure ScrollingParametersChanged;
     function ComputedFontSize:integer;
     property IsDlg: boolean read FIsDlg write SetIsDlg;
-
     function RuntimeMode:boolean;
-
     function ScrollEdgesPure: TRect;
-
-
     function IsRastered(RespectStyleSheet:boolean): TRasterType;
-
     function IsInUseList(ob: TObject): boolean;
     property IsScrollArea:boolean read FIsScrollArea write SetIsScrollArea;
     function SetTextDecoration(WantUnderline,WantLineThrough,WantOverline,WantBlink:boolean):boolean;
-
     property Overline:boolean read GetOverline write SetOverline;
     property Underline:boolean read GetUnderline write SetUnderline;
     property LineThrough:boolean read GetLineThrough write SetLineThrough;
     property Blink:boolean read GetBlink write SetBlink;
-
     property Bold:boolean read GetBold write SetBold;
     property Italic:boolean read GetItalic write SetItalic;
     property FontColor:TCSSColor read GetFontColor write SetFontColor;
     property NearestFontFamily:TCSSFontFamily read GetNearestFontFamily write SetFontFamily;
     property WidestFontFamily:TCSSFontFamily read GetWidestFontFamily write SetFontFamily;
     property FontSize:TCSSFontSize read GetFontSize write SetFontSize;
-
     function Direction:TCSSDirection;
-
-//    function GetClientTopLeft:TPoint;
-//    function GetClientBottomRight:TPoint;
-//    property ClientTopLeft:TPoint read GetClientTopLeft;
-//    property ClientBottomRight:TPoint read GetClientBottomRight;
-
     procedure ClearAllStyles(ClearUse:boolean);
     procedure TransferStylesToUse;
     procedure TransferStylesToElement(Use:ICon);
@@ -1015,10 +850,8 @@ type
     procedure GetStylesFromUse;
     procedure GetStylesFromElement(Use:ICon);
     function HasTransformations(var tt: TTransformations): boolean;
-//    function IsImage:boolean;
     procedure DoDefineProperties(Filer: TFiler);
     procedure ReleaseResources;
-//    procedure ReadBool(Reader: TReader);
     procedure CheckDesignState(inv:boolean=true);
     procedure WriteTrue(Writer: TWriter);
     procedure CSSToFont(Font:TFont=nil);
@@ -1041,9 +874,7 @@ type
     procedure NotifyCSSChanged(WhatChanged:TWhatChanged);
     procedure NotifyUsedByList(WhatChanged:TWhatChanged);
     procedure NotifyInlineUsedByList(WhatChanged:TWhatChanged);
-
     procedure SetUse(Value: ICon);
-    //procedure SetUsed(Value:boolean);
     function MarginWidth(const Align:TEdgeAlign):integer;
     function MarginWidthNormalStyle(const Align:TEdgeAlign):integer;
     function BorderWidth(const Align:TEdgeAlign):integer;
@@ -1053,9 +884,7 @@ type
     function PaddingWidth(const Align:TEdgeAlign):integer;
     function BorderStyle(const Align:TEdgeAlign):TCSSBorderStyle;
     function BorderColor(const Align:TEdgeAlign):TCSSColor;
-
     function MarginTotalRect:TRect;
-    //function PaddingClientRect:TRect;
     function PaddingPure:TRect;
     function MarginPure:TRect;
     function BorderPure:TRect;
@@ -1075,15 +904,11 @@ type
     function GetVal(PropChoose:TPropChoose; {var Value:TCSSProp; }const Align:TEdgeAlign=ealNone; CanInherit:boolean=true):boolean;
     function HasVal(PropChoose:TPropChoose; const Align:TEdgeAlign=ealNone):boolean;
     function GetUsed:boolean;
-    //procedure UpdateSharing;
-
     function UsePn:TdhCustomPanel;
-
     procedure TransformUse(P:ICon; DoSUse:boolean);
     destructor Destroy; override;
     function FastDestroy:boolean;
     property Use:ICon read FUse write SetUse;
-
     function ItGetVal(state:TState; PropChoose:TPropChoose; {var Value:TCSSProp; }const Align:TEdgeAlign=ealNone):boolean;
     procedure InvDesigner;
     function ActStyle:TStyle;
@@ -1096,9 +921,7 @@ type
     procedure UpdateMouse(MouseEnter:boolean);
     procedure UpdateMousePressed(Down:boolean; DownIfDown:boolean);
     function IsVirtualParentOf(pn:TControl):boolean;
-//    procedure ReadString(Reader: TReader);
     function GetLev:integer;
-{TCommon end}
 
   private
     FTooltip:HypeString;
@@ -1127,29 +950,20 @@ type
 {$IFDEF CLX}
     NC:TRect;
     DefDelta:boolean;
-//    FViewportHandle: QWidgetH;
 {$ENDIF}
-
-
-    //procedure ChildrenWeakToStrong;
     procedure ChildrenAdjustStrong(DeltaX,DeltaY:Integer);
-    //procedure ChildrenValidateStrong;
     procedure InvalDeepestBack;
     procedure AssertTop(addheight:integer; NeedTransparentImage:boolean=false);
     procedure PaintHidden;
     procedure BeginPainting(bmp:TMyBitmap32);
     procedure EndPainting;
-    procedure PixelCombineNormal(F: TColor32; var B: TColor32;
-      M: TColor32);
-    procedure PixelCombineMultiply(F: TColor32; var B: TColor32;
-      M: TColor32);
-    procedure PixelCombineNegativeMultiply(F: TColor32; var B: TColor32;
-      M: TColor32);
+    procedure PixelCombineNormal(F: TColor32; var B: TColor32; M: TColor32);
+    procedure PixelCombineMultiply(F: TColor32; var B: TColor32; M: TColor32);
+    procedure PixelCombineNegativeMultiply(F: TColor32; var B: TColor32; M: TColor32);
     function TransPainting(nWidth:integer=-1; nHeight:integer=-1): TMyBitmap32;
     procedure SetImageType(const Value: TImageType);
     procedure WriteSUse(Writer: TWriter);
     procedure ReadSUse(Reader: TReader);
-
     procedure SetRight(const Value:integer);
     procedure SetBottom(const Value:integer);
     procedure ReadRight(Reader: TReader);
@@ -1167,8 +981,6 @@ type
     function HasActiveStrong(TestAnchors:TAnchors):boolean;
     procedure CalcStrongToWeak(var ALeft,ATop,AWidth,AHeight:integer);
     procedure WeakToStrong(IncludeActiveStrong:boolean); overload;
-
-    //function ClientArea: TPoint;
     procedure SetVHPos(H,V:integer);
     function GetVertButton1: TRect;
     function GetVertButton2: TRect;
@@ -1189,10 +1001,7 @@ type
     procedure SetEdgesInScrolledArea(const Value: boolean);
     function GetAnchors: TAnchors;
     function IsAnchorsStored: Boolean;
-    //procedure SetAnchors(const Value: TAnchors);
-    //function DoubleDown: boolean;
-    procedure PixelCombineUnderpaint(F: TColor32; var B: TColor32;
-      M: TColor32);
+    procedure PixelCombineUnderpaint(F: TColor32; var B: TColor32; M: TColor32);
     procedure PixelCombineInner(F: TColor32; var B: TColor32; M: TColor32);
     procedure SetCenter(const Value: boolean);
     procedure PreventFlicker;
@@ -1200,44 +1009,27 @@ type
     procedure TransFromBlackWhite_TP(bmp:TMyBitmap32);
     procedure DoAutoSize(var PreferedWidth,PreferedHeight:integer);
   protected
-   // FSharingEnabled:boolean;
-    //FCaptionBoolean:boolean;
     SimplifiedAnchors:TAnchors;
     ActDown:TActMode;
     HPos, VPos: Integer;
-    //OldWH:TPoint;
-    //FIsDesignerSelected:boolean;
-    //UC:integer;
-    //SpecIn:boolean;
-    //fmComponentState:TComponentState;
-    //FBaseOverOnDown{,FBaseDownOnOverDown}:boolean;
-
     procedure SetASXY(const Value: TASXY); virtual;
     procedure GetChildren(Proc: TGetChildProc; Root: TComponent); override;
-
     function PreventFull(Cause:TTransformations):boolean; virtual;
-
     function CanBeTopPC:boolean; virtual;
     function AlwaysVisibleVisibility:boolean; virtual;
-
     procedure InitSelfCBound(var _ContentWidthHeight:TPoint);
     procedure CopyObjectStylesFrom(src:TdhCustomPanel; sub:boolean; test:TdhCustomPanel); virtual;
     procedure ClearObjectStyles; virtual;
     procedure AdjustSize; override;
     procedure RequestAlign; override;
     procedure MyAlignControl(AControl: TControl);
-
     procedure BorderChanged;
     procedure AlignControls(AControl: TControl; var Rect: TRect); override;
-    //Realign
-
     procedure AdjustBackgroundColor(var Col: TCSSColor); virtual;
     function TextOnly: boolean; virtual;
     function TextExclude: boolean; virtual;
     function CustomSizesForEffects:boolean; virtual;
-    function EasyBounds(var Transformations: TTransformations; var T: TMyAffineTransformation;
-      var W,H:Integer; var HorzRotated, VertRotated: boolean): boolean;
-
+    function EasyBounds(var Transformations: TTransformations; var T: TMyAffineTransformation; var W,H:Integer; var HorzRotated, VertRotated: boolean): boolean;
     procedure ProcessMouseMove(StateChanged:boolean); virtual;
     function AdjustZIndex(ChildPos,ParentControlCount:integer):integer; virtual;
     procedure AdjustScrolling(var R: TRect);
@@ -1256,7 +1048,6 @@ type
     procedure SetVPos(Value: Integer);
     procedure SetHPos(Value: integer);
     procedure DoInvalFrame; virtual;
-
     procedure DoDrawFrame(Canvas: TCanvas; _ActDown: TActMode); virtual;
     function GetActDown: TActMode; virtual;
     property EdgesInScrolledArea:boolean read FEdgesInScrolledArea write SetEdgesInScrolledArea;
@@ -1264,12 +1055,9 @@ type
     function NeedPadding(HasRastering:TRasterType): boolean; virtual;
     procedure NotifyUseChanged(OldValue: ICon); virtual;
     procedure AdjustLittle(var W,H:integer; infl: boolean; adj:boolean=true);
-
-
-
     function DoMouseWheel(Shift: TShiftState; WheelDelta: Integer; {$IFDEF CLX}const {$ENDIF}MousePos: TPoint): Boolean; override;
     function GetNotClipped(OnlyOneParent:boolean):TRect;
-    function GetNotClippedOne(DeltaX,DeltaY:integer):TRect;     
+    function GetNotClippedOne(DeltaX,DeltaY:integer):TRect;
     function TotalRect:TRect;
     function DynamicTotalRect:TRect;
 {$IFNDEF CLX}
@@ -1277,7 +1065,6 @@ type
     procedure CreateParams(var Params: TCreateParams); override;
     procedure CMRelease(var Message: TMessage); message CM_RELEASE;
     function DesignWndProc(var Message: TMessage): Boolean; override;
-
     procedure WMNCCalcSize(var Message: TWMNCCalcSize); message WM_NCCALCSIZE;
     procedure WMNCPaint(var Message: TMessage); message WM_NCPAINT;
     procedure WMEraseBkgnd(var Message: TWmEraseBkgnd); message WM_ERASEBKGND;
@@ -1289,18 +1076,9 @@ type
     function WidgetFlags: Integer; override;
     procedure InitWidget; override;
     function EventFilter(Sender: QObjectH; Event: QEventH): Boolean; override;
-
-    //procedure AdjustPainter(Painter: QPainterH); override;
-    //function GetChildHandle: QWidgetH; override;
-    //function ViewportHandle: QWidgetH;
     procedure ScrollBy(DeltaX, DeltaY: Integer); override;
     procedure CreateWidget; override;
-    //function GetPaintDevice: QPaintDeviceH; override;
-    //procedure BoundsChanged; //override;
-    //procedure UpdateScrollMask;
-
 {$ENDIF}
-
     procedure ControlsListChanged(Control: TControl; Inserting: Boolean); {$IFDEF CLX}override;{$ELSE}virtual;{$ENDIF}
 {$IFNDEF CLX}
 {$IFDEF VER160}
@@ -1309,96 +1087,60 @@ type
     procedure CMControlChange(var Message: TCMControlChange); message CM_CONTROLCHANGE;
 {$ENDIF}
 {$ENDIF}
-
 {$IFDEF CLX}
     procedure ShowingChanged; override;
 {$ELSE}
     procedure CMShowingChanged(var Message: TMessage); message CM_SHOWINGCHANGED;
 {$ENDIF}
-
 {$IFDEF CLX}
     function DesignEventQuery(Sender: QObjectH; Event: QEventH): Boolean; override;
 {$ELSE}
     procedure CMDesignHitTest(var Message: TCMDesignHitTest); message CM_DESIGNHITTEST;
 {$ENDIF}
-
 {$IFDEF CLX}
     function HitTest(X, Y: Integer): Boolean; override;
     procedure DrawMask(Canvas: TCanvas); override;
 {$ELSE}
     procedure WMNCHitTest(var Message: TWMNCHitTest); message WM_NCHITTEST;
 {$ENDIF}
-
 {$IFNDEF CLX}
     procedure CMVisibleChanged(var Message: TMessage); message CM_VISIBLECHANGED;
 {$ENDIF}
     procedure VisibleChanged; {$IFDEF CLX}override;{$ELSE}virtual;{$ENDIF}
-
     procedure MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
-(*
-{$IFDEF CLX}
-    procedure MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
-{$ELSE}
-    procedure WMLButtonUp(var Message: TWMLButtonUp); message WM_LBUTTONUP;
-{$ENDIF}
-*)
-
-
     procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
-(*
-{$IFDEF CLX}
-    procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
-{$ELSE}
-    procedure WMLButtonDown(var Message: TWMLButtonDown); message WM_LBUTTONDOWN;
-    procedure WMLButtonDblClk(var Message: TWMLButtonDblClk); message WM_LBUTTONDBLCLK;
-{$ENDIF}
-*)
-
 {$IFDEF CLX}
     procedure MouseEnter(AControl: TControl); override;
 {$ELSE}
     procedure CMMouseEnter(var Message: TMessage); message CM_MOUSEENTER;
 {$ENDIF}
-
-
 {$IFDEF CLX}
     procedure MouseLeave(AControl: TControl); override;
 {$ELSE}
     procedure CMMouseLeave(var Message: TMessage); message CM_MOUSELEAVE;
 {$ENDIF}
-
 {$IFDEF CLX}
     procedure SetParent(const AParent: TWidgetControl); override;
 {$ELSE}
     procedure SetParent(AParent: TWinControl); override;
 {$ENDIF}
-
 {$IFDEF CLX}
     procedure Paint; override;
 {$ELSE}
     procedure PaintWindow(DC: HDC); override;
 {$ENDIF}
-
 {$IFDEF CLX}
     procedure ChangeBounds(ALeft, ATop, AWidth, AHeight: Integer); override;
 {$ELSE}
     procedure SetBounds(ALeft, ATop, AWidth, AHeight: Integer); override;
 {$ENDIF}
-
-
     procedure Release;
-
-
     function AcceptClick(P:TPoint):boolean; virtual;
     function GetSmallestNonTransparentRect:TRect;
     procedure Invalidate; override;
-
     procedure DoTopPainting; virtual;
-    //tocopy
-    //procedure WMMouseMove(var Message: TWMMouseMove); message WM_MOUSEMOVE;
     procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;
     procedure ProcessFrameEvent(FrameEventType: TFrameEventType); virtual;
-
 {$IFDEF CLX}
     procedure FontChanged; override;
 {$ELSE}
@@ -1426,8 +1168,6 @@ type
     procedure CMParentColorChanged(var Message: TMessage); message CM_PARENTCOLORCHANGED;
 {$ENDIF}
 {$ENDIF}
-
-
     procedure SetName(const Value: TComponentName); override;
     procedure Loaded; override; 
     function GetTransparent:boolean;
@@ -1435,150 +1175,79 @@ type
     procedure SetTransparent(Value: boolean);
     procedure ReadAutoSizeVerticalOnly(Reader:TReader);
     procedure ReadAutoSize(Reader:TReader);
-    //function GetUse:TControl;
-    //procedure SetUse(Value: TControl);
     function GetStyle(Index:TState):TStyle;
     procedure SetStyle(Index:TState; Value:TStyle);
-
-
     procedure AdjustClientRect(var Rect: TRect); override;
     procedure DefineProperties(Filer: TFiler); override;
-
-
-    //procedure SetIsDesignerSelected(Value:boolean);
-
-    //Procedure WMAlignParent(Var Msg: TMessage); message WM_ALIGNPARENT;
-
-
-
-    //function GetStyleStored:boolean;
-    //procedure SetStyleStored(Value:boolean);
-
-//    procedure UpdateMenuCoords; virtual;
-
-    //procedure WriteFirstRealUse(Writer: TWriter);
-//    procedure ReadString(Reader: TReader);
-//    procedure ReadBool(Reader: TReader);
     procedure WriteFalse(Writer: TWriter);
-    //procedure WriteTrue(Writer: TWriter);
-
-
 {    procedure CustomAlignPosition(Control: TControl; var NewLeft, NewTop, NewWidth,
       NewHeight: Integer; var AlignRect: TRect; AlignInfo: TAlignInfo); override;
  }
-    //function GetComponentState:TComponentState;
     procedure PaintBorder;
-
     function GetClientRect:TRect; override;
-    //property IsDesignerSelected:boolean read FIsDesignerSelected write SetIsDesignerSelected;
-    //property OverBasedOnDown:boolean read FBaseOverOnDown write FBaseOverOnDown default false;
-//    property BaseDownOnOverDown:boolean read FBaseDownOnOverDown write FBaseOverDownOnDown;
-    //function AdjPosList(i:integer; seIndex:TList):boolean; virtual;
     function LeaveY:boolean; virtual;
     procedure PrepareAlign; virtual;
     procedure AlignDone; virtual;
     procedure SetZOrder(TopMost: Boolean); override;
-    //procedure AlignControls2(AControl: TControl; var Rect: TRect);
-
-    //ICon
-    //function GetOverBasedOnDown:boolean; virtual;
     function ChildHasAnchor(a:TAnchors):boolean;
     function FetchSharing(Sharing:TControl):TWhatChanged; virtual;
     procedure DoCSSToWinControl(WhatChanged:TWhatChanged); virtual;
     function DoGetVal(PropChoose:TPropChoose; {var Value:TCSSProp; }const Align:TEdgeAlign; var DoExit:boolean):boolean; virtual;
     function GetCommon:TdhCustomPanel;
-    //function InheritProp(PropChoose:TPropChoose):boolean; virtual;
-    //function IsVisualAnchor:boolean; virtual;
     procedure AddOwnInfo(sl:TStrings); virtual;
     function GetHTMLState:TState; virtual;
     function GetCanvas:TCanvas;
     function GetName:TComponentName;
     procedure UpdateNames(InlineUse,NewInlineUse:ICon; PropagateChange:boolean); virtual;
-
     procedure GetAutoRect(AllowModifyX,AllowModifyY:boolean; var NewWidth, NewHeight: Integer); virtual;
     function GetSuperiorAutoRect(AllowModifyX,AllowModifyY:boolean; var NewWidth, NewHeight: Integer):boolean;
     function AlignedTo:TAlign;
     function AllowAutoSizeY:boolean; virtual;
-
-
-    function GetMaxWidth:integer;
-    function GetMaxHeight:integer;
-
     function CanAutoX:boolean;
     function CanAutoY:boolean;
-
     procedure ChildrenAutoRect(AllowModifyX,AllowModifyY:boolean; var NewWidth, NewHeight: Integer);
     procedure AddScrollbarPlace(var IsHorzScrollBarVisible,IsVertScrollBarVisible:boolean; AllowModifyX,AllowModifyY:boolean; var Avail,Req:TPoint);
-
     function DownIfDown:boolean; virtual;
     function GetComputedFontSize:single; virtual;
     function GetFinal:ICon; virtual;
     function IncludeBorderAndPadding:boolean; virtual;
     procedure InvalidateFontSize;
     function RequiresRastering:boolean; virtual;
-
     property OnStateTransition:TOnStateTransition read FOnStateTransition write FOnStateTransition;
     function GetPreferDownStyles:boolean; virtual;
 
-
   public
-    { Public declarations }
-
     VariableHeight:boolean;
-    //FCommon:TCommon;
     SUse:TComponentName;
-//    Canvas:boolean;
-//    function Canvas:
-
-    //property Masked;
-
     DragEnabled:boolean;
-
     procedure MyRealign;
-
     function GetWantedSize:TPoint;
-
     function ShallBeAnchor:boolean; virtual;
     function GetInlineHTMLState(Over,Down:boolean):TState; virtual;
-
     function HeightDiff: integer; virtual;
-
     procedure PreferStyleChange;
     procedure FocusPreferStyle(IsMain,RealChange:boolean); virtual;
-
     function State:TState;
-
     property PreciseClick:boolean read FPreciseClick write FPreciseClick;
-
-    //procedure SkipValue(Reader: TReader);
     property OnClick;
     property OnMouseUp;
     procedure DoClickAction(Initiator:TdhCustomPanel); virtual;
     function GetInnerClientArea: TRect;
-
     function DesignHitTest:boolean;
-
     function FinalShowing:boolean; virtual;
     function GetVirtualBGColor: TCSSColor;
     function ScrollArea: TRect;
     function ClientBound:TRect;
     function PhysicalClientBound:TRect;
-
     function PhysicalClientEdgesWithScrollbars:TRect;
     function ScrollAreaWithScrollbars_Edges:TRect;
     function ScrollArea_Edges:TRect;
-
     function GetOpaquePainting(var TopGraph: TMyBitmap32): boolean;
-
     function HorizontalCenter:boolean;
     function VerticalCenter:boolean;
-    //property Center:boolean read FCenter write SetCenter stored false default false;
-
     procedure SetBoundedVHPos(H, V: integer);
     property HTMLAttributes:HypeString read FHTMLAttributes write FHTMLAttributes;
-//    procedure TryBrokenReferences; virtual;
     procedure CopyDependencies(CopyList:TList); virtual;
-
     procedure TryBrokenReferences(sl:TStringList); virtual;
     procedure ScrollInView(AControl: TControl; ForceTop:boolean);
     procedure DoStateTransition(OldState:TState); virtual;
@@ -1587,7 +1256,6 @@ type
     function GetImageFormat: TImageFormat;
     function TotalInlineBox: boolean; virtual;
     function Referer:TdhCustomPanel; virtual;
-
     function GetClientAdjusting:TRect;
     procedure DesignPaintingChanged;
     procedure CalcVariableSizes(FirstPass:boolean); virtual;
@@ -1601,66 +1269,34 @@ type
     function BetterNotToDelete(DeletionList: TList; var Reason: WideString): boolean; virtual;
     function SuitableKind:TDesignedFor; virtual;
     procedure SaveAsImage(const FileName:TPathName; WithBackground:boolean=false);
-
     function VirtualParent:TControl; virtual;
     constructor Create(AOwner: TComponent); override;
     procedure ConstrainedResize(var MinWidth, MinHeight, MaxWidth, MaxHeight: Integer); override;
     procedure WeakToStrong(IncludeActiveStrong:boolean; ALeft, ATop, AWidth, AHeight:Integer); overload;
-{}
-//    procedure Paint; override;
-
     property Style:TStyle index hsNormal read GetStyle write SetStyle;
     property Transparent : boolean read GetTransparent write SetTransparent stored false;
-    //property Use:TControl read GetUse write SetUse;
     property Color stored false;
     property Font stored false;
     property Cursor stored false;
     property AutoSizeXY:TASXY read FAutoSize write SetASXY{ default asNone};
-
     property ImageType:TImageType read FImageType write SetImageType default bitInherit;
     property ImageFormat:TImageFormat read FImageFormat write FImageFormat default ifInherit;
-
     property VertPosition:integer read VPos write SetVPos default 0;
     property HorzPosition:integer read HPos write SetHPos default 0;
-
-    //property PreferDownStyles:boolean read GetDownOverlayOver write SetDownOverlayOver{ default false};
-
     property OnDragOver;
     property OnDragDrop;
-
-
     property Right:Integer read CSSRight write SetRight stored IsRightStored default InvalidCSSPos;
     property Bottom:Integer read CSSBottom write SetBottom stored IsBottomStored default InvalidCSSPos;
-
-    //property Cursor write SetCursor stored false default crDefault;
-    //property ParentColor stored false;
-    //property ParentFont stored false;
-
-              {
-    property UseStyle:TStyle read FUseStyle write FUseStyle stored false;
-    property UseForm:TCustomForm read FUseForm write FUseForm stored false;
-
-    property NCCalc:boolean read FNCCalc write FNCCalc stored false;
-    property ACR:boolean read FACR write FACR stored false;
-
-    }
-    //property Design:TState read FDesignState write SetDesignState stored false;
   published
-    //property Anchors{: TAnchors read GetAnchors} write SetAnchors{ stored IsAnchorsStored default [akLeft, akTop]};
     property Left stored IsLeftStored;
     property Top stored IsTopStored;
     property Width stored IsWidthStored;
     property Height stored IsHeightStored;
     property Tooltip:HypeString read FTooltip write FTooltip;
-    //property Anchors write SetAnchors;
   end;
 
   TdhPanel = class(TdhCustomPanel)
   published
-    { Published declarations }
-    //property Center;
-
-
     property HTMLAttributes;
     property ImageType;
     property ImageFormat;
@@ -1736,15 +1372,10 @@ function FindForm(Value:TComponentName; var f:TForm):boolean;
 
 function GetCRCFromBitmap32(b:TMyBitmap32; w,h:integer; ResumeCrc:DWORD=0):DWORD;
 
-//function ColorToIdent(Color: Longint; var Ident: TColorName): Boolean;
 function IdentToColor(const Ident: TColorName; var Color: Longint): Boolean;
 function ColorToString(Color: TCSSColor): TColorName; overload;
 function ColorToString(Color: Longint): TColorName; overload;
 function CursorToString(Cursor: TCSSCursor): TEnumName;
-//function HasCommon(Control:TPersistent; var Common:TCommon):boolean;
-
-
-//function HasCommon(Control:TPersistent; var Common:TCommon):boolean;
 
 procedure FixDialogBorderStyle(Form:TForm);
 procedure FixDialogBorderStyleToTool(Form:TForm);
@@ -1760,30 +1391,12 @@ var CancelCheckDesignState:boolean;
     glSharing:boolean;
     OuterControl:TControl;
     Cascaded:TCascaded;
-//    FontColorIsFromParent:boolean;
     StoredChecking:boolean=false;
 
-(*type ITopGraph=interface ['{B238529C-08BE-4067-8262-93906552568C}']
-       function TopGraph:TMyBitmap32;
-end;
-*)
 const
-
   cl3DFace = clBtnFace;
   cl3DHighlight=clBtnHighlight;
   cl3DShadow=clBtnShadow;
-{  cl3DFace = clBtnFace;
-  cl3DHighlight=clBtnHighlight;
-  cl3DShadow=clBtnShadow;
-}  (*
-  COLOR_3DFACE = COLOR_BTNFACE;
-  {$EXTERNALSYM COLOR_3DSHADOW}
-  COLOR_3DSHADOW = COLOR_BTNSHADOW;
-  {$EXTERNALSYM COLOR_3DHIGHLIGHT}
-  COLOR_3DHIGHLIGHT = COLOR_BTNHIGHLIGHT;
-  {$EXTERNALSYM COLOR_3DHILIGHT}
-  COLOR_3DHILIGHT = COLOR_BTNHIGHLIGHT;
-*)                        //PaleGreen
 
 var
   TrueColors: array[0..17] of TIdentMapEntry = (
@@ -1860,9 +1473,6 @@ var
     (Value: clNone; Name: 'inherit')});
 
 function FinalID(c:TControl):TComponentName;
-//function RealAutoSizeXY(Self:TControl):TASXY;
-{function AutoSizeX(Self:TControl):boolean;
-function AutoSizeY(Self:TControl):boolean;}
 function CanAutoSizeX(Self:TControl):boolean;
 
 function GetVerticalAlignPixels(const Value:TCSSVerticalAlign; FontAscend,FontHeight,OwnAscend,OwnHeight,OwnLineHeight:integer):integer;
@@ -1903,13 +1513,8 @@ const AutoInherit=[{pcDisplay,}{pcAntiAliasing,}pcDirection,pcTextAlign,{pcWhite
 
 type _TFakeControl=class(TControl)
   public
-    //procedure PublicClick;
     property Color;
     property ParentFont;
-    //property ParentColor;
-    //property DragMode;
-    ///property OnClick;
-    //property Font;
 end;
 
 
@@ -1944,13 +1549,7 @@ function rGetOffsetRect(R:TRect; P:TPoint):TRect;
 procedure rOffsetRect(var Rect: TRect; D:TPoint);
 function AdjustedClientRect(c:TWinControl):TRect;
 function DoIntersectStrong(R1,R2:TRect):boolean;
-//function DoIntersectWeak(R1,R2:TRect):boolean;
 function IsNullRect(const R:TRect):boolean;
-
-
-//    FClickedControl:TControl;
-var IsFromParent:boolean;
-
 function GetBoundsFor(c:TControl; DeltaLeft,DeltaTop,DeltaWidth,DeltaHeight:integer):TRect;
 
 var glIsDesignerSelected:function (Control:TControl):boolean;
@@ -1988,6 +1587,7 @@ function ConsumeMouseWheel(c:TControl; WheelDelta: Integer):boolean;
 
 
 var TopTextDecoration,ParentTextDecoration:TCSSTextDecorations;
+var IsFromParent:boolean;
     SelfHit:boolean;
 
 var
@@ -2062,20 +1662,11 @@ end;
 
 function findIRelativePathProvider(C:TControl):IRelativePathProvider;
 
-//var _GetDefFontCharSet:TFontCharset=DEFAULT_CHARSET;
-
 implementation
 
 
 var PreventAdjustMargin:boolean=false;
 
-{
-var CollectChanges:TWhatChanged;
-    InCollectChanges:boolean=false;
-var InNotifyCSSChanged:boolean;
-//    InCSSToWinControl:boolean;
-
-}
 const MyDragThreshold=5;
 var MyDragStartPos:TPoint;
 
@@ -2107,9 +1698,6 @@ begin
    end;
    result:=ImageBitmap;
 end;
-
-
-
 
 constructor WException.Create(const Value: WideString);
 begin
@@ -2167,8 +1755,6 @@ begin
    result:=Copy(result,Length('./')+1,MaxInt);
 end;
 
-
-
 procedure TProxyReader.DefineBinaryProperty(const Name: AString;
   ReadData, WriteData: TStreamProc; HasData: Boolean);
 begin
@@ -2184,7 +1770,7 @@ begin
  begin
    OriReadData(Stream);
 
-   if LocationImage.FPictureID.Graphic=nil then   
+   if LocationImage.FPictureID.Graphic=nil then
    if Assigned(OriReader.OnError) then
     OriReader.OnError(OriReader,LocationImage.Owner.Owner.Name+': Unknown graphics format', DummyResult);
  end else
@@ -2414,15 +2000,10 @@ begin
  if not success then
   showmessage('Failed to open browser window.'+#10+#10+'Command was:'+#10+Viewer+' '+URL+#10+#10+'Please choose a different browser application in the Options dialog.'+#10+#10+'Error message was:'+#10+SysErrorMessage(GetLastError));
 {$ELSE}
- {if (URL<>EmptyStr) and (URL[length(URL)] in ['\','/']) then
- begin
-  Viewer:=EmptyStr;
- end;   }
  if Viewer=EmptyStr then
   Viewer:='kfmclient exec';
  if libc.system(PChar(Viewer+' '+URL))<>0 then
   showmessage('Failed to execute'+#10+Viewer+' '+URL+#10+'Please choose a different browser application in the Options dialog');
-
 {$ENDIF}
 end;
 
@@ -2470,20 +2051,6 @@ var NoImageNeeded:boolean;
 type PPoint=^TPoint;
 
 var FMouseControl:TControl;
-{    bgs:TList;
-
-type TBG=class
-    style:TStyle;
-    BackgroundPosition:TCSSBackgroundPosition;
-    BackgroundRepeat:TCSSBackgroundRepeat;
-    constructor Create(Style:TStyle);
-end;     }
-
-            {
-procedure _TFakeControl.PublicClick;
-begin
- Click;
-end;    }
 
 type _TFakeWinControl=class(TWinControl)
 public
@@ -3047,23 +2614,9 @@ begin
  with Self do
  begin
  if not HandleAllocated then exit;
-
  if Parent=nil then exit;
  if Self is TdhCustomPanel then
- with TdhCustomPanel(Self) do
- begin                     {
- szi:=ActStyle.ZIndex;
- ActStyle.FZIndex:=-1000;
- InvalBack(InvRect);
- ActStyle.FZIndex:=szi;   }
- InvalDeepestBack;
- {BehindAllOthers:=Self;
- try
-  InvalBack(InvRect);
- finally         
-  BehindAllOthers:=nil;
- end;   }
- end;
+ TdhCustomPanel(Self).InvalDeepestBack;
  sp:=GetZOrder2(Self);
  besti:=0;
  besti:=-1;
@@ -3136,17 +2689,11 @@ end;
 {$IFNDEF CLX}
 procedure TdhCustomPanel.CreateHandle;
 begin
-
- if (Owner<>nil) and (Owner.ClassName='TPageContainer') and (ClassName<>'TMySiz') then
- if (Owner<>nil) and (Owner.ClassName='TPageContainer') and (ClassName<>'TMySiz') then{ exit};
-
  inherited;
 // if not InCSSToWinControl then //can happen in TdhMenu.UpdateMenu due to a shared value
 //  CSSToWinControl(ActStyleChanged);
- //AddHA.Add(Name);
 end;
 {$ENDIF}
-
 
 {$IFDEF CLX}
 procedure TdhCustomPanel.ShowingChanged;
@@ -3165,8 +2712,6 @@ end;
 procedure TdhCustomPanel.CSSToWinControl(WhatChanged:TWhatChanged=[]);
 var i:integer;
 var _State:TState;
-
-//    pn:TdhCustomPanel;
 begin
  if Fetching then exit;
  if InCSSToWinControl then
@@ -3178,30 +2723,9 @@ begin
 
 // if not Control.HasParent or (csDestroying in Control.Parent.ComponentState) then exit;
  if csLoading in ComponentState then exit;
- if csDestroying in ComponentState then exit;//new added 28.01.2004
+ if csDestroying in ComponentState then exit;
  InCSSToWinControl:=true;
  try
-
- (*
- if (wcTemplate in WhatChanged) and (FUse<>nil) and{ and FUse.}ExtendedUse{ and (glSharing<>Control)} then
- if (FUse<>nil) then
- begin
-  assert(not Fetching);
-  Fetching:=true;
-  WhatChanged:=WhatChanged+Con.FetchSharing(FUse.GetCommon.Control);
-  Fetching:=false;
- end else
- begin
-  {for i:=0 to FUse.GetCommon.UsedByList.Count-1 do
-  begin
-  pn:=TCommon(FUse.GetCommon.UsedByList[i]);
-  if (pn<>Self) and Control.InheritsFrom(pn.Control.ClassType) then
-   glSharing:=pn.Control;
-  end;
-  if glSharing<>nil then
-   Con.FetchSharing(glSharing);
-  glSharing:=nil; }
- end;*)
 
  //if (Control is TWinControl) and not TWinControl(Control).HandleAllocated then exit;
  if not FinalShowing then
@@ -3241,11 +2765,10 @@ begin
 
  if wcParent in WhatChanged then
   InvalBack(InvRect) else
-// if VisualChanges*WhatChanged<>[] then
-  InvalTop({not(wcNoOwnCSS in WhatChanged)}true,false);
+  InvalTop(true,false);
 
  for _State:=low(TState) to high(TState) do
- if StyleArr[_State]<>nil then 
+ if StyleArr[_State]<>nil then
   StyleArr[_State].RasteringFile:='';
  finally
   InCSSToWinControl:=false;
@@ -3316,18 +2839,9 @@ begin
 
  OldOnChange:=Font.OnChange;
  Font.OnChange:=nil;
-
- //Font.Assign(TdhCustomPanel(Control.Parent).Font);
-
- //diese beiden sind in TForm und im Browser voreingestellt:
  Font.Name:=NearestFontFamily;
  Font.Height:=-ComputedFontSize;
- //Font.Charset:=_GetDefFontCharSet;
- //Font.Charset:=THAI_CHARSET;//ANSI_CHARSET;//TURKISH_CHARSET;//ANSI_CHARSET;//GetCharset;
-
-
  Font.Color:=CSSColorToColor(FontColor);
-
  _FontStyle:=[];
  if Bold then
   include(_FontStyle,fsBold);
@@ -3348,38 +2862,26 @@ procedure TdhCustomPanel.FontHasChanged;
 begin
  if not InCSSToWinControl then
  begin
-  if InNotifyCSSChanged then
-   showmessage('CMFontChanged'+Name);
-  //InNotifyCSSChanged:=true; //bei SetTextDecoration, ActStyle.TextDecoration:=ActStyle.TextDecoration;
-  //try
-   with Font do
-    ActStyle.GetFontDifferences(Style,ColorToCSSColor(Color),Name,Height);
-  //finally
-   //InNotifyCSSChanged:=false;
-  //end;
+  with Font do
+   ActStyle.GetFontDifferences(Style,ColorToCSSColor(Color),Name,Height);
   NotifyCSSChanged([wcFont]);
  end;
 end;
-
-
 
 procedure TdhCustomPanel.ColorHasChanged;
 begin
  if not InCSSToWinControl then
  begin
-  //if not (Transparent and (TFakeWinControl(Parent).Color=Color)) then
   if BackgroundColor<>ColorToCSSColor(Color) then
    ActStyle.BackgroundColor:=ColorToCSSColor(Color);
   NotifyCSSChanged([wcColor]);
  end;
 end;
 
-
 procedure TdhCustomPanel.CursorHasChanged;
 begin
  if not InCSSToWinControl then
  begin
-  //if not (Transparent and (TFakeWinControl(Parent).Color=Color)) then
   if GetCursor<>GetCursorBack(Cursor) then
    ActStyle.FCursor:=GetCursorBack(Cursor);
   NotifyCSSChanged([wcCursor]);
@@ -3396,8 +2898,7 @@ end;
 procedure TdhCustomPanel.ParentColorHasChanged;
 begin
  if not InNotifyCSSChanged and not InCSSToWinControl then
-  NotifyCSSChanged([wcColor,wcParent,wcNoOwnCSS]){ else
-  Control.Invalidate}; //falls transparent, parentcolor durchscheinen lassen! jetzt nicht mehr
+  NotifyCSSChanged([wcColor,wcParent,wcNoOwnCSS])
 end;
 
 procedure NotifyChilds(P:TWinControl; WhatChanged:TWhatChanged);
@@ -3431,8 +2932,6 @@ begin
     result:=false;
 end;
 
-
-
 procedure TStyle.SkipValue(Reader: TReader);
 begin
  _SkipValue(Reader);
@@ -3444,71 +2943,11 @@ begin
  _SkipValue(Reader);
 end;
 
-                        {
-procedure TStyle.ReadInteger(Reader: TReader);
-begin
- Reader.ReadInteger;
-end;
-
-procedure TStyle.ReadString(Reader: TReader);
-begin
- Reader.ReadString;
-end;
-
-procedure TdhCustomPanel.ReadString(Reader: TReader);
-begin
- Reader.ReadString;
-end;
-
-procedure TStyle.ReadInteger2(Reader: TReader);
-begin               
-  Reader.ReadListBegin;
- Reader.ReadInteger;
- Reader.ReadInteger;
-  Reader.ReadListEnd;
-end;
-                     }
-
 procedure TStyle.WriteContentWidth(Writer: TWriter);
 begin
  Writer.WriteInteger(_ContentWidthHeight.X);
 end;
 
-
-function TStyle.IsFontSizeStored:boolean;
-begin
- result:=FontSize<>EmptyStr;
-end;
-
-procedure TStyle.WriteMargin(Writer: TWriter);
-begin
- Writer.WriteString(Margin);
-end;
-
-{procedure TStyle.ReadMargin(Reader: TReader);
-begin
- Margin:=Reader.ReadVariant;
-end;}
-
-function TStyle.IsMarginLeftStored:boolean;
-begin
- result:=MarginLeft<>EmptyStr;
-end;
-
-function TStyle.IsMarginRightStored:boolean;
-begin
- result:=MarginRight<>EmptyStr;
-end;
-
-function TStyle.IsMarginTopStored:boolean;
-begin
- result:=MarginTop<>EmptyStr;
-end;
-
-function TStyle.IsMarginBottomStored:boolean;
-begin
- result:=MarginBottom<>EmptyStr;
-end;
 
 procedure TStyle.WriteContentHeight(Writer: TWriter);
 begin
@@ -3526,19 +2965,19 @@ end;
 
 
 
-procedure TStyle{TCommon}.WriteNewPadding(Writer: TWriter);
+procedure TStyle.WriteNewPadding(Writer: TWriter);
 begin
- with {Owner.AllEdgesPure}_BasePadding do
+ with _BasePadding do
   Writer.WriteString(GetShorter(IntToStr(Top)+'px',IntToStr(Right)+'px',IntToStr(Bottom)+'px',IntToStr(Left)+'px'));
 end;
 
-procedure TStyle{TCommon}.WriteNewMargin(Writer: TWriter);
+procedure TStyle.WriteNewMargin(Writer: TWriter);
 begin
- with {Owner.AllEdgesPure}_BaseMargin do
+ with _BaseMargin do
   Writer.WriteString(GetShorter(IntToStr(Top)+'px',IntToStr(Right)+'px',IntToStr(Bottom)+'px',IntToStr(Left)+'px'));
 end;
 
-procedure TStyle{TCommon}.Write0px(Writer: TWriter);
+procedure TStyle.Write0px(Writer: TWriter);
 begin
  Writer.WriteString('0px');
 end;
@@ -3585,12 +3024,6 @@ procedure TStyle.WriteTrue(Writer: TWriter);
 begin
  Writer.WriteBoolean(true);
 end;
-                       {
-procedure TdhCustomPanel.ReadBool(Reader: TReader);
-begin
- Reader.ReadBoolean;
-end;
-                       }
 
 procedure TdhCustomPanel.WriteTrue(Writer: TWriter);
 begin
@@ -3625,15 +3058,6 @@ begin
   result:=false;
 end;
 
-
-
-                          {
-
-procedure TdhCustomPanel.ReadString(Reader: TReader);
-begin
- Reader.ReadString;
-end;
-                           }
 function FinalID(c:TControl):TComponentName;
 var O:TComponent;
 begin
@@ -3666,37 +3090,9 @@ begin
 end;
 
 
-(*procedure TdhCustomPanel.WriteFirstRealUse(Writer: TWriter);
-begin
- Writer.WriteString(EmptyStr{FinalID(FirstRealUse)});
-end;
-  *)
 procedure TdhCustomPanel.WriteFalse(Writer: TWriter);
 begin
  Writer.WriteBoolean(false);
-end;
-                           {
-procedure TdhCustomPanel.ReadBool(Reader: TReader);
-begin
- Reader.ReadBoolean;
-end;
-                           }
-
-{function TdhCustomPanel.VirOffset:TPoint;
-begin
- d
-end;
- }
-
-
-type TAligns=set of TAlign;
-
-function AllAligns(Self:TWinControl):TAligns;
-var i:integer;
-begin
- result:=[];
- for i:=0 to Self.ControlCount-1 do
-  include(Result,Self.Controls[i].Align);
 end;
 
 function AllAlignedTop(Self:TWinControl):boolean;
@@ -3715,14 +3111,14 @@ function AutoSizeX(Self:TControl):boolean;
 begin
  result:={Self.AutoSize and not}((self is TdhCustomPanel) and {not} (TdhCustomPanel(self).FAutoSize in [asX,asXY]));
  if result and (csAcceptsControls in Self.ControlStyle) and (Self is TWinControl) then
-  result:=AllAlignedTop(TWinControl(Self)){AllAligns(TWinControl(Self))*[alNone,alBottom,alLeft,alRight,alClient]=[]};
+  result:=AllAlignedTop(TWinControl(Self));
 end;
 
 function AutoSizeY(Self:TControl):boolean;
 begin
  result:={Self.AutoSize and not}((self is TdhCustomPanel) and {not} (TdhCustomPanel(self).FAutoSize in [asY,asXY])) and not (Self.Align in [alLeft,alRight]);
  if result and (csAcceptsControls in Self.ControlStyle) and (Self is TWinControl) then
-  result:=AllAlignedTop(TWinControl(Self)){AllAligns(TWinControl(Self))*[alLeft,alRight]=[]};
+  result:=AllAlignedTop(TWinControl(Self));
  if result and (Self is TdhCustomPanel) then
   result:=TdhCustomPanel(Self).AllowAutoSizeY;
 end;
@@ -3909,18 +3305,11 @@ begin
 
  HasRastering:=IsRastered(false);
 
- {OnlyBg:=false;//to compile without warnings
- if HasRastering<>rsNo then
-  OnlyBg:=(HasRastering<>rsFull) or Self.PreventFull;
- }
  Filer.DefineProperty('TheoreticRastering', nil, WriteTrue, (HasRastering<>rsNo) and (HasRastering=rsFull));
  Filer.DefineProperty('TheoreticRasteringBG', nil, WriteTrue, (HasRastering<>rsNo) and (HasRastering<>rsFull));
-
-
  Filer.DefineProperty('img', nil, WriteTrue, GetImageType=bitImage);
 
  if InStylesheet(Self) then exit;
-
 
  if HorizontalCenter then
  with CenterMargins do
@@ -3929,10 +3318,7 @@ begin
   Filer.DefineProperty('CenterRight', nil, WriteCenterRight, Y<>0);
  end;
  Filer.DefineProperty('RealAutoSizeXY', nil, WriteRealAutoSizeXY, RealAutoSizeXY(Self)<>self.FAutoSize);
-
  Filer.DefineProperty('NeedBlock', nil, WriteTrue, GetVal(pcDisplay) and (Cascaded.Display=cdsInline));
-
-
 
  NeedClientArea:=ChildHasAnchor([akLeft, akTop, akRight, akBottom]) and (HasRastering=rsNo);
  if NeedClientArea then
@@ -3953,9 +3339,6 @@ begin
  end;
 
  Filer.DefineProperty('VariableSize',SkipValue,WriteTrue, VariableSize );
-
- //Filer.DefineProperty('VariableHeight',SkipValue,WriteTrue, pn.VariableHeight );
-
 end;
 
 procedure TdhCustomPanel.ReleaseResources;
@@ -3983,50 +3366,23 @@ begin
 end;
 
 
-{function TCommon.NeedNewPadding:boolean;
-begin
- result:=not (csLoading in Control.ComponentState) and (Control as TdhCustomPanel).NeedNewPadding;
-end;
- }
-
 function TdhCustomPanel.NeedPadding(HasRastering:TRasterType):boolean;
 begin
  result:=(HasRastering<>rsNo) and ChildHasAnchor([akTop]);
 end;
 
-
-
-
-
 function GetBoundsFor(c:TControl; DeltaLeft,DeltaTop,DeltaWidth,DeltaHeight:integer):TRect;
 begin
     if (akRight in c.Anchors) and not (akLeft in c.Anchors) then
     begin
-     {Dec(DeltaWidth,DeltaLeft);}
-     Dec(DeltaLeft,DeltaWidth{+DeltaLeft});
+     Dec(DeltaLeft,DeltaWidth);
     end;
     if (akBottom in c.Anchors) and not (akTop in c.Anchors) then
     begin
-     {Dec(DeltaHeight,DeltaTop);}
-     Dec(DeltaTop,DeltaHeight{+DeltaTop});
+     Dec(DeltaTop,DeltaHeight);
     end;
     result:=Bounds(c.Left+DeltaLeft,c.Top+DeltaTop,c.Width+DeltaWidth,c.Height+DeltaHeight);
 end;
-
-              {
-function TdhCustomPanel.GetBoundsFor(aWidth,aHeight:integer):TRect;
-begin
-    result.Top:=Top;
-    result.Left:=Left;
-    if (akRight in Anchors) and not (akLeft in Anchors) then
-     dec(result.Left,aWidth-Width);
-    if (akBottom in Anchors) and not (akTop in Anchors) then
-     dec(result.Top,aHeight-Height);
-    result:=Bounds(result.Left,result.Top,aWidth,aHeight);
-end;
-                }
-
-
 
 function TdhCustomPanel.ChildHasAnchor(a:TAnchors):boolean;
 var i:integer;
@@ -4168,17 +3524,9 @@ end;
 
 procedure TdhCustomPanel.PreferStyleChange;
 begin
- 
  CSSToWinControl(ActStyleChanged*ReqInvals);
-
-(* InvalidateFontSize;
- //TopIsValid:=false;
- InvalTop({not(wcNoOwnCSS in WhatChanged)}true,false);
-// BackIsValid:=false;
- *)
  if (wcZIndex in ActStyleChanged) and not (wcZIndex in ReqInvals) then
   InvalDeepestBack;
-
 end;
 
 procedure TdhCustomPanel.SetPreferStyle;
@@ -4201,14 +3549,11 @@ end;
 //require HandleAllocated
 procedure TdhCustomPanel.InitSelfCBound(var _ContentWidthHeight:TPoint);
 begin
-
    _ContentWidthHeight:=GetWantedSize;
-
    _SelfCBound:=GetBoundsFor(self,0,0,_ContentWidthHeight.X-Width,_ContentWidthHeight.Y-Height);
    with GetCBound(self).TopLeft do
     OffsetRect(_SelfCBound,X-Left,Y-Top);
 end;
-
 
 
 function TdhCustomPanel.BoundNextSibling:TdhCustomPanel;
@@ -4333,15 +3678,7 @@ begin
   _NeedNewMargin:=(HasRastering<>rsNo) and (Owner.Align=alTop);
   Filer.DefineProperty('UndefFilter', nil, WriteTrue, UndefFilter(HasRastering<>rsNo));
 
-
-
-
-//  HasBGRastering:=not HasRastering and Owner.IsBGRastered;
-
-
-
   Filer.DefineProperty('BorderColors', SkipValue, WriteBorderColors, IsBorderColorsStored);
-
 
   if HasRastering<>rsNo then
   with Owner do
@@ -4352,7 +3689,7 @@ begin
     ShrinkWH(true);
    end;
   end else
-  if {HasBGRastering and Owner.HasImage(FPicture)}Owner.HasImage then
+  if Owner.HasImage then
   with Owner do
   begin
    _ContentWidthHeight:=GetWantedSize;
@@ -4455,14 +3792,10 @@ begin
   end;           
   IsNewBorderStored:=IsNewBorderStored and not EqualRect(_BaseBorder,BaseBorder(HasRastering));
   Filer.DefineProperty('NewBorder', SkipValue, Write0px, IsNewBorderStored);
-
-
   finally
    Owner.SetPreferStyle(nil,false,true);
    glPaintOnlyBg:=false;
   end;
-//  Filer.DefineProperty('IsPre', ReadBool, WriteTrue, ItGetVal(pcWhiteSpace,Value) and (Value.WhiteSpace=cwsPre));
-
 end;
 
 function TdhCustomPanel.UsePn:TdhCustomPanel;
@@ -4570,13 +3903,12 @@ end;
 procedure TdhCustomPanel.NotifyUsedByList(WhatChanged:TWhatChanged);
 var i:integer;
 begin
- //assert(InNotifyCSSChanged);
- NotifyInlineUsedByList(WhatChanged-[wcTemplate]);
+ NotifyInlineUsedByList(WhatChanged);
  for i:=UsedByList.Count-1 downto 0 do
  with TdhCustomPanel(UsedByList[i]) do
  begin
   CSSToWinControl(WhatChanged);
-  NotifyUsedByList(WhatChanged{-[wcTemplate]});
+  NotifyUsedByList(WhatChanged);
  end;
 end;
 
@@ -4621,13 +3953,10 @@ begin
  if InNotifyCSSChanged then exit;
  InNotifyCSSChanged:=true;
  try
-
  CSSToWinControl(WhatChanged);
-
  if not (wcNoOwnCSS in WhatChanged) then
   NotifyUsedByList(WhatChanged);
-
- if ([wcTemplate]<>WhatChanged) and (wcChild in WhatChanged) then
+ if wcChild in WhatChanged then
   NotifyChilds(Self,WhatChanged*InheritableChanges+[wcNoOwnCSS]);
  finally
   InNotifyCSSChanged:=false;
@@ -4637,25 +3966,14 @@ end;
 
 
 procedure TStyle.GetFontDifferences({const Font:TFont}FontStyle:TFontStyles; FontColor:TCSSColor; FontName:TFontName; FontHeight:Integer );
-var OldOnChange:TNotifyEvent;
 begin
-
-{ OldOnChange:=Font.OnChange;
- Font.OnChange:=nil;
- }
  Owner.Bold:=fsBold in FontStyle;
  Owner.Italic:=fsItalic in FontStyle;
  Owner.Underline:=fsUnderline in FontStyle;
  Owner.LineThrough:=fsStrikeOut in FontStyle;
-
  Owner.FontColor:=FontColor;
- //if CSSFont.Name<>Font.Name then
  Owner.NearestFontFamily:=FontName;
- //if CSSFont.Height<>Font.Height then
- //Owner.FontSize:=inttostr(-FontHeight);
  Owner.FontSize:=IntToStr(Abs(FontHeight));
-
-// Font.OnChange:=OldOnChange;
 end;
 
 procedure TdhCustomPanel.InvDesigner;
@@ -4685,7 +4003,6 @@ begin
  result:=_RuntimeMode or not (csDesigning in ComponentState);
 end;
 
-
 procedure TdhCustomPanel.CheckDesignState(inv:boolean);
 var _LastActStyle:TState;
 begin
@@ -4693,39 +4010,19 @@ begin
  _LastActStyle:=LastActStyle;
 
  if RuntimeMode or not glIsDesignerSelected(Self) then
- begin
-  LastActStyle:=GetHTMLState;
- end  else
+  LastActStyle:=GetHTMLState else
   LastActStyle:=DesignStyle;
 
  if _LastActStyle<>LastActStyle then
  begin
   if not (csDestroying in ComponentState) and not (csLoading in  ComponentState) then
-//  if (FStyleOver<>nil) and FStyleOver.IsItStored or FStyleDown.IsItStored or FStyleOverDown.IsItStored{( LastActStyle<>hsNormal) and StyleArr[ LastActStyle].IsItStored or
-//  //   (_LastActStyle<>hsNormal) and StyleArr[_LastActStyle].IsItStored} then
   begin
-    //Invalidate;
-  try
     InvDesigner;
-
- except
- on e:exception do showmessage('ASDF77b '+e.Message);
- end;
-     // LastActStyle:=hsNormal; exit;
-    // if not (csLoading in ComponentState) then
-    begin
-//    Web1.memo1.lines.add('Name:'+name+' style:'+GetEnumName(TypeInfo(TState),integer(_LastActStyle))+' to '+GetEnumName(TypeInfo(TState),integer(LastActStyle)));
     if not inv and not CancelCheckDesignState then
     begin
      showmessage('Transition undetected from '+GetEnumName(TypeInfo(TState),integer(_LastActStyle))+' to '+GetEnumName(TypeInfo(TState),integer(LastActStyle))+' name:'+GetName);
     end;
-    //if ControlCount<>0 then
-    //if not InNotifyCSSChanged and not InCSSToWinControl then
     DoStateTransition(_LastActStyle);
-    { if LastActStyle in [hsOver,hsOverDown] then
-      Update;}
-    end;
-
   end;
  end;
 
@@ -4767,7 +4064,6 @@ end;
 
 function TdhCustomPanel.GetCanvas:TCanvas;
 begin
-// result:=Canvas;
  result:=ActTopGraph.Canvas;
 end;
 
@@ -4795,12 +4091,6 @@ begin
  result:=true;
 end;
 
-{function TdhCustomPanel.GetOverBasedOnDown:boolean;
-begin
- result:=false;
-end;
-}
-
 function ManageEventBubbling(Self:TControl):boolean;
 begin
  result:=not ((Self<>glEventObj) and (Self is TWinControl) and TWinControl(Self).ContainsControl(glEventObj));
@@ -4811,130 +4101,22 @@ end;
 
 procedure TdhCustomPanel.UpdateMousePressed(Down:boolean; DownIfDown:boolean);
 begin
-// if ManageEventBubbling(Control) then
- begin         {
-  if not Down then
-showmessage('1:'+booltostr(Down)+'/'+booltostr(DownIfDown));  }
+// if not ManageEventBubbling(Control) then exit;
  if DownIfDown then
- //if (Down and DownIfDown or not Down and not DownIfDown) and Control.HasParent then
  begin
   if not Visible and (csNoDesignVisible in ControlStyle) then //funzt net
-   exit;                  {
-  p:=Control.BoundsRect.TopLeft;
-  p2:=Mouse.CursorPos;
-  p:=Control.ClientToScreen(SmallPointToPoint(Pos)); }
-  //showmessage(inttostr(TWMLButtonDown(Message).YPos));
+   exit;
   glUpdateOver(Self,{Control=FindDragTarget(Mouse.CursorPos, True)}FIsOver,Down);
-//  glUpdateOver(Control,true,Down);
-  //showmessage('x:'+inttostr(Left-p.X)+' y:'+inttostr(Top-p.Y));
-{  dec(TWMLButtonDown(Message).XPos,Left-p.X);
-  dec(TWMLButtonDown(Message).YPos,Top-p.Y+(Mouse.CursorPos.Y-p2.Y));
-  }
-//  p2:=Control.ScreenToClient(p);
-//  p2:=Point(min(p2.X,Control.Parent.Width-Control.Left),min(p2.Y,Control.Parent.Height-Control.Top));
-
  end else
   glUpdateOver(Self,FIsOver,false);
- end;
 end;
-
-
-
-
-
-(*
-procedure TdhCustomPanel.SetUsed(Value:boolean);
-begin
- if csLoading in ComponentState then exit;
-
- if Value<>GetUsed then
- if Value then
- begin
-   showmessage('This value cannot be set to TRUE manually.'#13#10'It is set to TRUE if another control uses the this controlEmptyStrs style (see StyleOf)');
- end else
- begin
-  TransformUse(FUse);
-  //showmessage('You have to add a TdhStyleSheet to the form so that controls using this controlEmptyStrs style are set to a new style');
- end;
-end;
-  *)
-{procedure TdhCustomPanel.SetCursor(Value: TCursor);
-begin
- if not CursorChanging then
-//  showmessage('Cannot be changed manually. Please change the CSS cursor property') else
-  TWinControl(Self).Cursor:=Value;
-end;
- }
-
-
-
-
 
 function TdhCustomPanel.GetUsed:boolean;
 begin
  Result:=UsedByList.Count<>0;
 end;
 
-
-
 type PComponentState=^TComponentState;
-
-                     (*
-procedure TdhCustomPanel.UpdateSharing;
-begin
- if not glSharing and not (csLoading in Control.ComponentState) then
- if (FUse<>nil) and ExtendedUse then
-  FUse.FetchSharing(Control) else
- begin
-  glSharing:=true;
-  NotifyCSSChanged([wcTemplate]);
-  glSharing:=false;
- end;          {
- if (FUse<>nil) and FUse.GetSharingEnabled and (glSharing=nil) and not (csLoading in Control.ComponentState) then
- begin
-  glSharing:=Control;
-  FUse.GetCommon.NotifyCSSChanged([wcTemplate]);
-  glSharing:=nil;
- end;              }
-end;
-                       *)
-
-
-
-                      {
-procedure TdhCustomPanel.UpdateMenuCoords;
-begin
-end;                  }
-
-
-   {
-function TdhCustomPanel.CanResize(var NewWidth, NewHeight: Integer): Boolean;
-var PicWidth,PicHeight:integer;
-    Picture:TPicture;
-begin
- if HasImage(Picture,PicWidth,PicHeight) then
- begin
-  CanAutoSize(NewWidth, NewHeight);
-  result:=false;
- end else
-  result:=true;
-end;    }
-
-function TdhCustomPanel.GetMaxWidth:integer;
-begin
- result:=Constraints.MaxWidth;
- if result=0 then
-  result:=maxint;
-end;
-
-function TdhCustomPanel.GetMaxHeight:integer;
-begin
- result:=Constraints.MaxHeight;
- if result=0 then
-  result:=maxint;
-end;
-
-
 
 function TdhCustomPanel.CanAutoX :boolean;
 begin
@@ -4965,93 +4147,14 @@ begin
 end;
 
 procedure TdhCustomPanel.DoAutoSize(var PreferedWidth,PreferedHeight:integer);
-var NewWidth,NewHeight:integer;
 begin
-
  GetAutoRect(CanAutoX,CanAutoY,PreferedWidth,PreferedHeight);
- {it not CanAutoX and not CanAutoY then exit;
-
- if CanAutoX then
-  MaxWidth:=GetMaxWidth else
-  MaxWidth:=PreferedWidth;
- if CanAutoY then
-  MaxHeight:=GetMaxHeight else
-  MaxHeight:=PreferedHeight;
-
- NewWidth:=maxint;
- NewHeight:=maxint;
- R:=GetAutoRect(MaxWidth,MaxHeight,NewWidth,NewHeight);
- if not CanAutoX and (NewWidth<>maxint) then
-  PreferedWidth:=NewWidth;
- if not CanAutoY and (NewHeight<>maxint) then
-  PreferedHeight:=NewHeight; }
-
 end;
 
-
-
-procedure TdhCustomPanel.ConstrainedResize(var MinWidth, MinHeight, MaxWidth,
-  MaxHeight: Integer);
-var R:TRect;
-var PicWidth,PicHeight:integer;
-    Width,Height:integer;
+procedure TdhCustomPanel.ConstrainedResize(var MinWidth, MinHeight, MaxWidth, MaxHeight: Integer);
 begin
  //inherited; for speed we uncomment it (since ConstrainedResize calls itself recursively); GetSuperiorAutoRect does this job
-
-                                  {
- siehe GetSuperiorAutoRect
-
- if csDestroying in ComponentState then exit;
- R:=Rect(0,0,0,0);
- AdjustClientRect(R);
- Width:=R.Left-R.Right;
- Height:=R.Top-R.Bottom;
- if not TextOnly then
-  AdjustLittle(Width,Height,false);
- MinWidth:=max(Width,MinWidth);
- MinHeight:=max(Height,MinHeight); }
-
-   {
- if CanAutoX or CanAutoY then
- begin
-  R:=GetAutoRect(MinWidth,MinHeight);
-
- end;   }
-
-
- (*if HasImage(Picture,PicWidth,PicHeight) then
- begin
-  R:=GetAutoRect(MinWidth,MinHeight);
-  MinWidth:=R.Right-R.Left;
-  MinHeight:=R.Bottom-R.Top;
-  MaxWidth:=MinWidth;
-  MaxHeight:=MinHeight;
-  {R:=ClientEdgesPure;
-  inc(PicWidth,R.Left+R.Right);
-  inc(PicHeight,R.Top+R.Bottom);
-  MinWidth:=max(PicWidth,MinWidth);
-  MinHeight:=max(PicHeight,MinHeight);
-  MaxWidth:=MinWidth;
-  MaxHeight:=MinHeight; }
- end;*)
-
- {R:=AllEdgesPure;
- MinWidth:=max(R.Left+R.Right,MinWidth);
- MinHeight:=max(R.Top+R.Bottom,MinHeight); }
 end;
-
-
-                   {
-procedure IssueUpdateBoundsRect(c:TControl);
-begin
-  if not (csLoading in c.ComponentState) then exit;
-  PComponentState(@c.ComponentState)^:=c.ComponentState-[csLoading];
-  TFakeControl(c).UpdateBoundsRect(TFakeControl(c).BoundsRect);
-  PComponentState(@c.ComponentState)^:=c.ComponentState+[csLoading];
-
-end;
-
-                       }
 
 procedure TdhCustomPanel.PreventFlicker;
 begin
@@ -5068,28 +4171,12 @@ procedure TdhCustomPanel.ChangeBounds(ALeft, ATop, AWidth, AHeight: Integer);
 var R,R2,R3:TRect;
     i:integer;
 begin
- {if (csLoading in ComponentState) and not (csReading in ComponentState) then
- begin
-  AWidth:=Width;
-  AHeight:=Height;
- end;   }
-
-{ if (csLoading in ComponentState) and not (csReading in ComponentState) then
- for i:=0 to ControlCount-1 do
-  IssueUpdateBoundsRect(Controls[i]);
- }
- //if (csLoading in ComponentState) and not (csReading in ComponentState) and not ((Parent<>nil) and not(csLoading in Parent.ComponentState)) then exit;//prevents problem with wsMaximized and Anchors
-
 
  if FinalShowing and not (csReading in ComponentState) then
  begin
-
-
-
  DoAutoSize(AWidth,AHeight);  //wird schon von AdjustSize erledigt später //gibt probleme
 
  R:=GetCBound(Self);
-
 
  if not EqualRect(R,Rect(ALeft,ATop,ALeft+AWidth,ATop+AHeight)) then
  begin
@@ -5112,32 +4199,11 @@ begin
   BorderChanged;
  end;
 
-
  end else
   inherited;
 
  WeakToStrong(false);
-
-// UpdateScrollBars(false);
-
-
- //UpdateScrollMask;
- {
- if FViewportHandle<>nil then
- with ScrollArea do
- begin
-   QWidget_setGeometry(FViewportHandle, Left, Top, (Right-Left), (Bottom-Top));
-   s:=stringofchar(chr(1+4+16+64),(right-left)*(bottom-top) div 8);
-   //QB := QBitmap_create(Right-Left, (Bottom-Top), @s[1], true);
-   QB := QBitmap_create(Right-Left, Bottom-Top, false, QPixmapOptimization_DefaultOptim);
-
-   QWidget_setMask(FViewportHandle, QB);
-
- end;  }
 end;
-
-
-
 
 function TdhCustomPanel.FinalShowing:boolean;
 begin
@@ -5146,7 +4212,6 @@ end;
 
 procedure TdhCustomPanel.AdjustSize;
 var R,R2,R3,nb:TRect;
-    //aWidth,aHeight:integer;
     WantedSize:TPoint;
 begin
  if not (csLoading in ComponentState) and FinalShowing then
@@ -5160,28 +4225,22 @@ begin
 {$ENDIF}
   begin
    TdhCustomPanel(Parent).AdjustSize;
-  { R2:=GetCBound(Self);
-   if not EqualRect(R2,R) then
-    exit;  }
   end;
 
-    WantedSize:=GetWantedSize;
-    nb:=GetBoundsFor(Self,0,0,WantedSize.X-Width,WantedSize.Y-Height);
-    if not EqualRect(nb,BoundsRect) then
-    with nb do
-     SetBounds(Left,Top,Right-Left,Bottom-Top);
+  WantedSize:=GetWantedSize;
+  nb:=GetBoundsFor(Self,0,0,WantedSize.X-Width,WantedSize.Y-Height);
+  if not EqualRect(nb,BoundsRect) then
+  with nb do
+   SetBounds(Left,Top,Right-Left,Bottom-Top);
 
-
-
-   R2:=GetCBound(Self);
-   if not EqualRect(R,R2) then
-   begin
-    UnionRect(R3,R,R2);
-    InvalBack(R3);
-   end;
+  R2:=GetCBound(Self);
+  if not EqualRect(R,R2) then
+  begin
+   UnionRect(R3,R,R2);
+   InvalBack(R3);
+  end;
    
  end else
-
   inherited;
 
 end;
@@ -5190,22 +4249,17 @@ end;
 procedure TdhCustomPanel.BorderChanged;
 begin
 {$IFNDEF CLX}
-//    Perform(CM_BORDERCHANGED, 0, 0);
   if IsScrollArea and NCScrollbars then
   if not (csLoading in ComponentState) and HandleAllocated then
   begin
     PreventFlicker;
     SetWindowPos(Handle, 0, 0, 0, Width, Height, SWP_NOACTIVATE or SWP_NOMOVE or
       SWP_NOZORDER or SWP_FRAMECHANGED{ or SWP_DRAWFRAME });
-    //RequestAlign;
   end;
 {$ELSE}
-//  PreventFlicker
   CheckNC;
   CheckChildrenNC;
- //UpdateScrollMask;
 {$ENDIF}
-// AdjustSize;
 end;
 
 procedure rOffsetRect(var Rect: TRect; D:TPoint);
@@ -5240,26 +4294,7 @@ end;
 
 procedure TdhCustomPanel.CheckChildrenNC;
 var i:integer;
-    ScrollAreaDelta,_NC:TRect;
 begin
-  (*if IsScrollArea and NCScrollbars then
-  begin
-   ScrollAreaDelta:=GetOffsetRect(ScrollArea,-DeltaX,-DeltaY);
-   for i:=0 to ControlCount-1 do
-   if Controls[i] is TdhCustomPanel then
-   with TdhCustomPanel(Controls[i]) do
-   begin
-    IntersectRect(_NC,{Rect(0,0,Width,Height)}ClientRect,GetOffsetRect(ScrollAreaDelta,-Left,-Top));
-    if not EqualRect(NC,_NC) then
-    begin
-     NC:=_NC;
-     DefDelta:=true;
-     UpdateMask;
-     DefDelta:=false;
-    end;
-   end;
-  end;*)
-
   if IsScrollArea and NCScrollbars then
   for i:=0 to ControlCount-1 do
   if Controls[i] is TdhCustomPanel then
@@ -5323,16 +4358,14 @@ end;
 procedure TStyle.Clear;
 var Align:TEdgeAlign;
 begin
- InitMisc;
-
- FBackgroundImage.Assign(nil);
+    InitMisc;
 
     for Align:=low(TEdgeAlign) to high(TEdgeAlign) do
     begin
      FBorders[Align].Clear;
      FMargins[Align]:=EmptyStr;
     end;
-
+    FBackgroundImage.Assign(nil);
     FBackgroundPosition:=EmptyStr;
     FBefore:=EmptyStr;
     FAfter:=EmptyStr;
@@ -5358,8 +4391,6 @@ begin
     FVisibility:=Low(TCSSVisibility);
     FListStyleType:=Low(TCSSListStyleType);
     FTextDecoration:=[];
-
-    //FAntiAliasing:=Low(TCSSAntiAliasing);
     FTransformations.Clear;
     FBorderRadius.Clear;
 
@@ -5368,7 +4399,6 @@ end;
 
 procedure TStyle.PictureChange(Sender: TObject);
 begin
-// Owner.InvalTop(true);
  if not PreventGraphicOnChange then
   pc(pcBackgroundImage);
 end;
@@ -5382,13 +4412,10 @@ begin
   FBackgroundImage := TLocationImage.Create;
   FBackgroundImage.OnChange := PictureChange;
   FBackgroundImage.Owner:=Self;
-  //FBackgroundImage.OnProgress:=PictureProgress;
-
   for Align:=low(TEdgeAlign) to high(TEdgeAlign) do
   begin
    FBorders[Align]:=TCSSBorder.Create(Self);
   end;
-
   FTransformations:=TTransformations.Create(Self);
   FBorderRadius:=TCSSBorderRadius.Create(Self);
   InitMisc;
@@ -5407,9 +4434,6 @@ begin
   FBackgroundColor:=colInherit;
   FColor:=colInherit;
 end;
-
-
-
 
 destructor TStyle.Destroy;
 var Align:TEdgeAlign;
@@ -5665,18 +4689,9 @@ end;
 {$IFNDEF CLX}
 procedure TdhCustomPanel.CreateParams(var Params: TCreateParams);
 begin
-     { call the create of the params }
   inherited;
   with Params.WindowClass do
     style := style and not (CS_HREDRAW or CS_VREDRAW);
- { with Params.WindowClass do
-    style := style or CS_CLASSDC or CS_BYTEALIGNCLIENT or CS_BYTEALIGNWINDOW	;     }
-
-//     tcustompanel
-{    with Params do
-      WindowClass.style :=CS_PARENTDC or WindowClass.style and not  (CS_HREDRAW or CS_VREDRAW) and not CS_SAVEBITS	;
- }
-//     Params.ExStyle := Params.ExStyle + WS_EX_Transparent; // geht, aber mit visuellem BringToFront
 end;
 {$ENDIF}
 
@@ -5985,15 +5000,6 @@ begin
 end;             }
 
 
-                                 {
-procedure TdhCustomPanel.WMLButtonUp(var Message: TWMLButtonUp);
-begin
- UpdateMousePressed(false,DownIfDown,Message.Pos);
- inherited;
-end;
-                                      }
-
-
 function TdhCustomPanel.GetActDown: TActMode;
 var P:TPoint;
 begin
@@ -6151,30 +5157,6 @@ begin
  result:=pn=Self;
 end;
 
-                               {
-function TdhCustomPanel.GetFirstRealUse:TdhCustomPanel;
-begin
- if (FUse<>nil) and FUse.StyleStored then
-  result:=FUse else
- if FUse<>nil then
-  result:=FUse.GetFirstRealUse else
-  result:=nil;
-end;
-                      }
-              {
-function TdhCustomPanel.GetStyleStored:boolean;
-begin
- result:=Common;
- result:=st.FStyle.IsStyleStored or FStyleOver.IsStyleStored or FStyleDown.IsStyleStored or FStyleOverDown.IsStyleStored;
-end;              }
-
-{function TdhCustomPanel.AdjPosList(i:integer; seIndex:TList):boolean;
-begin
- result:=false;
-end;
- }
-
-
 type PAlign=^TAlign;
 
 (*
@@ -6264,16 +5246,6 @@ function DoIntersectWeak(R1,R2:TRect):boolean;
 begin
  result:=IntersectRect(R1,R1,R2);
 end;
-                      {
-function TdhCustomPanel.ClientArea:TPoint;
-begin
- result:=Point(ClientWidth,ClientHeight);
- if IsVertScrollBarVisible then
-  dec(result.X,VertScrollbar);
- if IsHorzScrollBarVisible then
-  dec(result.Y,HorzScrollbar);
-end;
-                    }
 
 procedure RecursiveInvalidate(c:TWinControl);
 var i:integer;
@@ -6311,9 +5283,7 @@ begin
  PreventAlignControls:=true;
  ScrollBy(OldPos.X-HPos,OldPos.Y-VPos);
  ChildrenAdjustStrong(HPos-OldPos.X,VPos-OldPos.Y);
- //ChildrenWeakToStrong;
  PreventAlignControls:=false;
- //UpdateScrollBars(false);
 {$IFNDEF CLX}
  (Owner as TControl).Update;
 {$ENDIF}
@@ -6340,13 +5310,8 @@ end;
 function TdhCustomPanel.GetInnerClientArea:TRect;
 begin
   with self.ScrollArea do
-//  with Result do
   result:=Bounds(Left-HPos,Top-VPos,max(HorzScrollInfo.nMax,Right-Left),max(VertScrollInfo.nMax,Bottom-Top));
-
-{  result:=self.ScrollArea;
-  with result do
-  result:=Bounds(Left,Top,max(Right-Left,HorzScrollInfo.nMax),max(Bottom-Top,VertScrollInfo.nMax));
-}end;
+end;
 
 
 
@@ -6919,17 +5884,6 @@ end;
 
 {$ENDIF}
 
-
-    {
-procedure TdhCustomPanel.ChildrenWeakToStrong;
-var
-  I: Integer;
-begin
-  for I := ControlCount - 1 downto 0 do
-    if Controls[I] is TdhCustomPanel then
-      TdhCustomPanel(Controls[I]).WeakToStrong(true);
-end;    }
-
 procedure TdhCustomPanel.ChildrenAdjustStrong(DeltaX,DeltaY:Integer);
 var
   I: Integer;
@@ -6944,22 +5898,6 @@ begin
     inc(CSSBottom,DeltaY);
   end;
 end;
-
-{procedure TdhCustomPanel.ChildrenValidateStrong;
-var
-  I: Integer;
-begin
-  for I := ControlCount - 1 downto 0 do
-  if Controls[I] is TdhCustomPanel then
-  with TdhCustomPanel(Controls[I]) do
-  begin
-   if CSSRight<>InvalidCSSPos then
-    inc(CSSRight,DeltaX);      
-   if CSSBottom<>InvalidCSSPos then
-    inc(CSSBottom,DeltaY);
-  end;
-end;    }
-
 
 //child.Align in [alTop,alLeft] können eine 2te berechnung notwendig machen
 procedure TdhCustomPanel.AlignControls(AControl: TControl; var Rect: TRect);
@@ -6993,10 +5931,6 @@ begin
    OldIsHorzScrollBarVisible:=IsHorzScrollBarVisible;
    //OldScrollEdgesPure:=ScrollEdgesPure;
                           
-   {if csLoading in ComponentState then
-   begin
-    OldWH:=Point(Width,Height);
-   end;  }
    UpdateScrollBars(true);
    {NewScrollEdgesPure:=ScrollEdgesPure;
    if csLoading in ComponentState then
@@ -7011,7 +5945,7 @@ begin
    if Controls[i] is TdhCustomPanel then
     TdhCustomPanel(Controls[i]).PrepareAlign;
    SRect:=Rect;
-   TdhCustomPanel_AlignControls2(Self.Name,Self,AControl,Rect{,Point(OldWH.X-OldScrollEdgesPure.Right+NewScrollEdgesPure.Right,OldWH.Y-OldScrollEdgesPure.Bottom+NewScrollEdgesPure.Bottom)});
+   TdhCustomPanel_AlignControls2(Self.Name,Self,AControl,Rect);
 
 
  OldIsVertScrollBarVisible2:=IsVertScrollBarVisible;
@@ -7023,7 +5957,7 @@ begin
     (IsHorzScrollBarVisible<>OldIsHorzScrollBarVisible2) then
  begin
    Rect:=SRect;
-   TdhCustomPanel_AlignControls2(Self.Name,Self,AControl,Rect{,Point(OldWH.X-OldScrollEdgesPure.Right+NewScrollEdgesPure.Right,OldWH.Y-OldScrollEdgesPure.Bottom+NewScrollEdgesPure.Bottom)});
+   TdhCustomPanel_AlignControls2(Self.Name,Self,AControl,Rect);
    UpdateScrollBars(false);
  end;
 
@@ -7080,19 +6014,6 @@ begin
   PAlign(@Control.Align)^:=alTop;
 end;
 *)
-
-{procedure TdhCustomPanel.WMAlignParent(Var Msg: TMessage);
-begin
-    Parent.DisableAlign;
-    try
-     if OrderedControls(Parent) then
-      Parent.Realign;
-     StopOrderedControls(Parent);
-    finally
-      Parent.EnableAlign;;
-    end;
-end; }
-
 
 
                    {
@@ -7334,17 +6255,6 @@ begin
  InvalTrans(Self,R2);
 end;
 
-{function HasCommon(Control:TPersistent; var Common:TCommon):boolean;
-begin
- if Control is TdhCustomPanel then
- begin
-  Common:=TdhCustomPanel(Control).FCommon;
-  result:=true;
- end else
-  result:=false;
-end;  }
-
-
 procedure TdhCustomPanel.DesignPaintingChanged;           
 var State:TState;
 begin
@@ -7405,17 +6315,6 @@ begin
   end;
  end;
 end;
-                   {
-procedure TdhCustomPanel.SetIsDesignerSelected(Value:boolean);
-begin
- if FIsDesignerSelected<>Value then
- begin
-  FIsDesignerSelected:=Value;
- end;
-end;
-             }
-
-
 
 {procedure TdhAnchor.CMCursorChanged(var Message: TMessage);
 var
@@ -7445,8 +6344,7 @@ begin
   BevelOuter:=bvNone;
 {$ENDIF}
 
-  //FCommon:=TCommon.Create(self,self);
-  UsedByList:=TList.Create;
+ UsedByList:=TList.Create;
   InlineUsedByList:=TList.Create;
   StyleArr[hsNormal]:=TStyle.Create(Self,hsNormal);
   FDownOverlayOver:=true;
@@ -7679,7 +6577,6 @@ begin
   Use:=nil;
  end;
  if FMouseControl=Self then FMouseControl:=nil;
- //if FClickedControl=Control then FClickedControl:=nil;
  if glSelCompo=Self then glSelCompo:=nil;
  if glEventObj=Self then glEventObj:=nil;
  for State:=low(TState) to high(TState) do
@@ -8182,24 +7079,6 @@ begin
    end;
 end;
 
-
-                        {
-function TCommon.GetClientTopLeft:TPoint;
-begin
-  Result:=(Control as TdhCustomPanel).ScrollArea.TopLeft;
-end;
-
-
-function TCommon.GetClientBottomRight:TPoint;
-var rct:TRect;
-begin
-  //rct:=BorderClientRect;
-  rct:=(Control as TdhCustomPanel).ScrollArea;
-  Result.Y:=Control.Height-rct.Bottom;
-  Result.X:=Control.Width-rct.Right;
-end;            }
-
-
 //siehe ScrollArea
 function TdhCustomPanel.GetClientAdjusting:TRect;
 begin                  
@@ -8209,65 +7088,6 @@ begin
  Result.Right:=Width-Result.Right;
  Result.Bottom:=Height-Result.Bottom;}
 end;
-
-
-
-(*
-function TStyle.GetClientMeasure(Index:integer):TCSSInteger;
-var rct,rct2:TRect;
-begin
- Owner.PreferStyle:=Self;
- try
-  Result:=0;
-  if (Index=2) or (Index=3) then
-  begin
-  rct2:=Owner.PaddingClientRect;
-  case Index of
-  2:   Result:=rct2.Bottom-rct2.Top;
-  3:   Result:=rct2.Right-rct2.Left;
-  else Assert(false);
-  end;
-  end else
-  begin
-{  if true or Owner.IsAbsolutePositioned  then
-  begin
-}
-  rct:=Owner.BorderClientRect;
-  case Index of
-  0:   Result:=rct.Left;
-  1:   Result:=rct.Top;
-  4:   Result:=Owner.Height-rct.Bottom;
-  5:   Result:=Owner.Width-rct.Right;
-  else Assert(false);
-  end;
-{  end else
-  if Self=Owner.FStyle then
-  begin
-  case Index of
-  0:   Result:=Owner.Left;
-  1:   Result:=Owner.Top;
-  4:   Result:=Owner.Parent.Height-(Owner.Top+Owner.Height);
-  5:   Result:=Owner.Parent.Width-(Owner.Left+Owner.Width);
-  else Assert(false);
-  end;
-  if not Owner.Visible then
-  case Index of
-  4:   inc(Result,Owner.Height);
-  5:   inc(Result,Owner.Width);
-  end;
-
-  result:=-result;
-  if Owner.Parent is TdhCustomPanel then
-   inc(result,TdhCustomPanel(Owner.Parent).FStyle.GetClientMeasure(Index));
-  end;
-}
- end;
- finally
-  Owner.PreferStyle:=nil;
- end;
-end;
-*)
-
 
 function ColorToIdent(Color: Longint; var Ident: TColorName): Boolean;
 begin
@@ -8766,18 +7586,6 @@ begin
   result:=s;
 end;
 *)
-{
-function TStyle.IsFontSizeStored: boolean;
-begin
- result:=FFontSize<>EmptyStr;
-end;
-}
-{
-function TStyle.GetFontSize:TCSSFontSize;
-begin
- result:=LengthToVar(FFontSize);
-end;
-}
 
 procedure TStyle.SetFontSize(Value:TCSSFontSize);
 begin
@@ -8816,18 +7624,10 @@ begin
  end;
 end;
 
-                   {
-function TStyle.ReadMargin(Align:TEdgeAlign):TCSSMargin;
-begin
- result:=LengthToVar(FMargins[Align]);
-end;                 }
-
-
 function TStyle.IsMarginCleared(Align:TEdgeAlign):boolean;
 begin
  result:=FMargins[Align]=MarginDefault;
 end;
-
 
 procedure TStyle.SetFontFamily(Value:TCSSFontFamily);
 begin
@@ -9158,23 +7958,10 @@ begin
  result:=FBorders[Align];
 end;
 
-{function TStyle.GetPadding(Align: TEdgeAlign): TCSSCardinal;
-begin
- result:=FPaddings[Align];
-end;
- }
 function TStyle.IsPaddingCleared(Align: TEdgeAlign): boolean;
 begin
  result:=FPaddings[Align]=vsrInherit;
 end;
-
-{function TStyle.GetMargin(Align: TEdgeAlign): TCSSCardinal;
-var res:integer;
-begin
- if (FMargins[Align]<>EmptyStr) then
-  result:=GetMarginPixels(FMargins[Align],Owner.ComputedFontSize) else
-  result:=vsrInherit;
-end;}
 
 function TStyle.GetStyleVal(PropChoose:TPropChoose; const Align:TEdgeAlign):boolean;
 var aBorder:TCSSBorder;
@@ -9254,28 +8041,12 @@ begin
   Result:=true;
  end;
  pcBackgroundImage:
- if (*(Owner.FImageType in [bitNormal{,bitLayered}]) and *)IsPictureStored then
+ if IsPictureStored then
  begin
   Picture:=FBackgroundImage;
   Result:=true;
  end;
-(*
- pcBackgroundImages:
- if bgs<>nil then
- begin
-  if (Owner.FImageType in [bitNormal{,bitLayered}]) and IsPictureStored then
-   bgs.Add(TBG.Create(Self));
-  if FBackgroundPosition<>EmptyStr then
-  for i:=bgs.Count-1 downto 0 do
-  if TBG(bgs[i]).BackgroundPosition=EmptyStr then
-   TBG(bgs[i]).BackgroundPosition:=FBackgroundPosition else
-   break;
-  if FBackgroundRepeat<>cbrInherit then
-  for i:=bgs.Count-1 downto 0 do
-  if TBG(bgs[i]).BackgroundRepeat=cbrInherit then
-   TBG(bgs[i]).BackgroundRepeat:=FBackgroundRepeat else
-   break;
- end;*)
+
 (* pcEdgeImage: result:=false; {
  if (Owner.FImageType in [bitSplit]) and IsPictureStored then
  begin
@@ -9503,7 +8274,6 @@ begin
  pcCursor:
  if FCursor<>ccuInherit then
  begin
-//  FontColorIsFromParent:=IsFromParent;
   Cursor:=FCursor;
   Result:=True;
  end;
@@ -9566,12 +8336,6 @@ function TdhCustomPanel.ShallBeAnchor:boolean;
 begin
  result:=false;
 end;
-
-{function TdhCustomPanel.InheritProp(PropChoose:TPropChoose):boolean;
-begin
- result:=PropChoose in AutoInherit;
-end;
-}
 
 function TdhCustomPanel.HasVal(PropChoose:TPropChoose; const Align:TEdgeAlign=ealNone):boolean;
 begin
@@ -9669,7 +8433,7 @@ begin
  end;
 
  P:=Parent;
- if CanInherit and {Con.InheritProp(PropChoose)}(PropChoose in AutoInherit) then
+ if CanInherit and (PropChoose in AutoInherit) then
  while not Result and (P<>nil) and not (csDestroying in P.ComponentState) do
  begin
  IsFromParent:=true;
@@ -9834,13 +8598,6 @@ begin
  result:=not SemiTransparent and {IsNullRect(ClientEdgesPure}{EqualRect(ScrollAreaWithScrollbars,Rect(0,0,Width,Height))}IsNullRect(TransparentEdges) and not IsRasterized and Visibility;
 end;
 
-
-
-{    function TdhCustomPanel.GetComponentState:TComponentState;
-     begin
-     result:=ComponentState;
-    end;
- }
 function TdhCustomPanel.BorderWidth(const Align:TEdgeAlign):integer;
 begin
  if GetVal(pcBorderWidth,Align) then
@@ -10029,9 +8786,7 @@ begin
   bs:=BorderStyle(Border);
   bc:=CSSColorToColor(BorderColor(Border));
   ColorDefined:=HasVal(pcBorderColor,Border);
-  {if not ColorDefined and (IsButton or IsEdit) and (bs in [cbsGroove,cbsRidge,cbsInset,cbsOutSet])  then
-   bc:=clWhite;  }
-  
+
   if Border in [ealLeft,ealRight] then
    AdjDivX:=0 else
    AdjDivX:=0;
@@ -10710,22 +9465,6 @@ function TdhCustomPanel.HasBackgroundImage:boolean;
 begin
  result:=GetVal(pcBackgroundImage);
 end;
-     (*
-function TdhCustomPanel.HasEdgeImage(var FPicture:TPicture):boolean;
-var CSSProp:TCSSProp;
-begin
- result:=GetVal(pcEdgeImage,CSSProp){ and not CSSProp.AsImage};
- if result then
-  FPicture:=CSSProp.Picture;
-end;
-
-function TdhCustomPanel.HasStretchImage(var FPicture:TPicture):boolean;
-var CSSProp:TCSSProp;
-begin
- result:=GetVal(pcStretchImage,CSSProp){ and not CSSProp.AsImage};
- if result then
-  FPicture:=CSSProp.Picture;
-end;   *)
 
 function TdhCustomPanel.HasTransformations(var tt:TTransformations):boolean;
 begin
@@ -10763,21 +9502,6 @@ begin
  end;
  if result=ifInherit then
   result:=ifSimple;
- {if result=ifSemiPNG then
- for state:=low(TState) to high(TState) do
- begin     
-  Con:=Self;
-  while (Con<>nil) do
-  begin
-   if (Con.GetCommon.StyleArr[state]<>nil) and Con.GetCommon.StyleArr[state].Effects.Enabled then
-   begin
-    OnlyBG:=false;
-    result:=ifSimple;
-    exit;
-   end;
-   Con:=Con.GetCommon.Use;
-  end;
- end;  }
 end;
 
 function TdhCustomPanel.TotalInlineBox: boolean;
@@ -10848,20 +9572,6 @@ begin
  if result then
   FPicture:=CSSProp.Picture;
 end;         }
-
-{
-function TdhCustomPanel.IsImage:boolean;
-var CSSProp:TCSSProp;
-begin
- NoImageNeeded:=true;
- try
-  result:=GetVal(pcImage,CSSProp);
- finally
-  NoImageNeeded:=false;
- end;
-end;    }
-
-
 
 function TdhCustomPanel.BackgroundRepeat:TCSSBackgroundRepeat;
 begin
@@ -11362,16 +10072,12 @@ end;
 
 procedure TdhCustomPanel.SpecialBg(const ref_scrolled,ref_fixed:TRect; Src:TMyBitmap32; const brct: TRect; IsFixed:boolean{; OffsetPoint:TPoint});
 var
-  //bmp:TBitmap;
   num_across, num_down,
   y_coord, x_coord,
   y, x : integer;
-  {yoff, xoff:integer;
-  p,p1:tpoint;  }
   FPicture:TGraphic;
   FBackgroundRepeat:TCSSBackgroundRepeat;
   BPos:TPoint;
-  //MyRgn: HRGN ;
   SaveIndex: Integer;
   x1,x2,y1,y2,i:integer;
   Strech32,Strech32Mult:TMyBitmap32;
@@ -11411,20 +10117,14 @@ end;
 var OldPreventGraphicOnChange:boolean;
 
 begin
- //Canvas:=Con.GetCanvas;
-
 
  if IsRectEmpty(brct) then exit;
 
-
- //OffsetRect(ref_brct,OffsetPoint.X,OffsetPoint.Y);
  OldPreventGraphicOnChange:=PreventGraphicOnChange;
  PreventGraphicOnChange:=true;
  try
  if not Transparent then
  begin
-  {Canvas.Brush.Color := BackgroundColor;
-  Canvas.FillRect(rct);}
   if IsOpaqueColor(BackgroundColor) then
   begin
    Src.FillRectS(brct,CSSColorToColor32(BackgroundColor))
@@ -11445,28 +10145,6 @@ begin
  if IsFixed then
   ref:=ref_fixed else
   ref:=ref_scrolled;
- {if IsFixed then
- begin
-  //ref_brct:=brct;
-  ref_brct:=Bounds(brct.Left,brct.Top,ref_brct.Right-ref_brct.Left,ref_brct.Bottom-ref_brct.Top);
-  OffsetRect(ref_brct,OffsetPoint.X,OffsetPoint.Y);
- end; }
-
-
-
-{ bgs:=TList.Create;
-
- GetVal(pcBackgroundImages,CSSProp);
-
- if bgs.Count<>0 then
- begin
-        }
- {SaveIndex := SaveDC(Canvas.Handle);
- IntersectClipRect(Canvas.Handle, brct.Left,brct.Top,brct.Right,brct.Bottom);
-  }
-
- //for i:=bgs.Count-1 downto 0 do
-
 
  if HasImage(FPicture) or (Referer.GetImageType=bitStretch) and HasBackgroundImage(FPicture) then
  begin
@@ -11520,38 +10198,16 @@ begin
 
 
  end else
-
- //if ((Control as TdhCustomPanel).Referer.GetImageType=bitTile) then
  begin
-
- { if (i-1>=0) and (TBG(bgs[i-1]).Style.Owner.FImageType=bitNormal) then
-   continue; }
-
-
-
- { with TBG(bgs[i]) do
-  begin
-   FPicture:=Style.FPicture;
-   FBackgroundRepeat:=BackgroundRepeat;
-   if FBackgroundRepeat=cbrInherit then
-    FBackgroundRepeat:=cbrRepeat;
-   if BackgroundPosition<>EmptyStr then
-    GetBackgroundPixels(BackgroundPosition,ref,FPicture.Width,FPicture.Height,BPos);
-  end;  }
 
  FBackgroundRepeat:=BackgroundRepeat;
  BPos:=ref.TopLeft;
  if GetVal(pcBackgroundPosition) then
   GetBackgroundPixels(Cascaded.BackgroundPosition,ref,FPicture.Width,FPicture.Height,BPos);
 
- {MyRgn := CreateRectRgn(brct.Left,brct.Top,brct.Right,brct.Bottom);
- SelectClipRgn(Canvas.Handle,MyRgn);
-   }
-
  Strech32:=GetAs32(FPicture);
  try
- GetRepeatings(BPos,num_across,num_down,Strech32.Width,Strech32.Height,brct,FBackgroundRepeat in [cbrRepeat,cbrRepeatX],FBackgroundRepeat in [cbrRepeat,cbrRepeatY]);
-
+  GetRepeatings(BPos,num_across,num_down,Strech32.Width,Strech32.Height,brct,FBackgroundRepeat in [cbrRepeat,cbrRepeatX],FBackgroundRepeat in [cbrRepeat,cbrRepeatY]);
   R:=Bounds(BPos.X,BPos.Y,Strech32.Width*num_across,Strech32.Height*num_down);
   R2:=R;
   IntersectRect(R,R,brct);
@@ -11565,39 +10221,9 @@ begin
    FreeAndNil(Strech32Mult);
   end;
   end;
-
- {for x := 0 to num_across-1 do
- for y := 0 to num_down-1 do
- begin
-  x_coord := (x * Strech32.Width) + BPos.X;
-  y_coord := (y * Strech32.Height) + BPos.Y;
-  R:=Bounds(x_coord,y_coord,Strech32.Width,Strech32.Height);
-  R2:=R;
-  IntersectRect(R,R,brct);
-  if not IsRectEmpty(R) then
-  begin
-   R2:=GetOffsetRect(R,-R2.Left,-R2.Top);
-   Strech32.DrawTo(Src,R,R2);
-  end;
- end; }
-
-
  finally
   FreeAndNil(Strech32);
  end;
-    {SelectClipRgn(Canvas.Handle,0);
- DeleteObject(MyRgn); }
-
-
- //end;
-
-{ for i:=bgs.Count-1 downto 0 do
-  TBG(bgs[i]).Free;
-
- FreeAndNil(bgs);  }
-
-// RestoreDC(Canvas.Handle, SaveIndex);
-
  end;
 
  PaintWhiteBackground(ref_scrolled,Src,brct);
@@ -11753,15 +10379,10 @@ end;
 
 
 procedure TdhCustomPanel.PaintBorder;
-//var rct,brct: TRect;
 var tt:TTransformations;
 begin
-  {rct:=MarginClientRect;
-  brct:=BorderClientRect;}
-  if {(csDesigning in ComponentState)}not RuntimeMode and (csDesigning in ComponentState) and {EqualRect(brct,rct)}IsNullRect(BorderPure) and not Opaque then
-  if {not IsEffects(OnlyBG)}not IsRasterized then
-//  if EqualRect(brct,rct) and not HasTransformations(tt) and not IsScrollArea then
-//  if (csDesigning in ComponentState) and Transparent then
+  if not RuntimeMode and (csDesigning in ComponentState) and IsNullRect(BorderPure) and not Opaque then
+  if not IsRasterized then
   with GetCanvas do
   begin
    Brush.Style := bsClear;
@@ -14848,20 +13469,6 @@ end;
 {$IFDEF CLX}
 
 type TFakeWinControl2=class(TWinControl);
-           (*
-procedure TdhCustomPanel.AdjustPainter(Painter: QPainterH);
-var
-  R: TRect;
-begin
-  if (Parent.Width > 0) and (Parent.Height > 0) then
-  begin
-    R := TFakeWinControl2(Parent).ViewportRect;
-    OffsetRect(R,-Left,-Top);
-    //QPainter_translate(Painter, Left, Top);
-    if Name='Panel11' then
-    QPainter_setClipRect(Painter,0,0,100,100 {R.Left, R.Top, R.Right-R.Left, R.Bottom-R.Top});
-  end;
-end;         *)
 
 procedure TdhCustomPanel.Paint;
 var R:TRect;
@@ -14960,9 +13567,6 @@ end;
 function TdhCustomPanel.ScrollAreaWithScrollbars:TRect;
 begin
  result:=ShrinkRect(DynamicTotalRect,ScrollAreaWithScrollbars_Edges);
-{ if IsScrollArea and EdgesInScrolledArea then
-  result:=TotalRect else
-  result:=BorderClientRect;}
 end;
 
 function TdhCustomPanel.ScrollArea:TRect;
@@ -15538,22 +14142,6 @@ begin
 end;                                         }
 
 
-{procedure TdhCustomPanel.SetUse(Value:TControl);
-var Common:TCommon;
-begin
- if Value=nil then
-  FCommon.SetUse(nil) else
- if HasCommon(Value,Common) then
-  FCommon.SetUse(Common.Con);
-end;
-
-function TdhCustomPanel.GetUse:TControl;
-begin
- if FCommon.FUse<>nil then
-  result:=FCommon.FUse.GetCommon.Control else
-  result:=nil;
-end; }
-
 function TdhCustomPanel.GetStyle(Index:TState):TStyle;
 begin
  result:=StyleArr[Index];
@@ -16059,20 +14647,6 @@ begin
  result:=(FSubMenu<>nil) or (aoDownIfMouseDown in FAnchorOptions) or (aoDownIfURL in FAnchorOptions) and (FLinkTab<>nil) and (FLinkTab.PageControl is TdhPageControl) and TdhPageControl(FLinkTab.PageControl).UseIFrame;
 end;            }
 
-
-
-{function TStyle.ReadPadding(Align: TEdgeAlign): TCSSCardinal;
-begin
-
- case Align of
- alLeft:   result:=FPaddingLeft;
- alRight:  result:=FPaddingRight;
- alTop:    result:=FPaddingTop;
- alBottom: result:=FPaddingBottom;
- else      result:=FPadding;
- end;
-end;
-}
 procedure TStyle.AssignBackground(s: TStyle);
 begin
  if s<>nil then
@@ -16119,16 +14693,6 @@ begin
   FBorders[Align].AssignComputed(pn,Align);
   pcs(pcChanges[pcMargin]+pcChanges[pcPadding]+(pcChanges[pcBorderWidth]+pcChanges[pcBorderColor]+pcChanges[pcBorderStyle]));
 end;
-                                           {
-function TdhCustomPanel.GetAutoSizeHorzOnly: boolean;
-begin
- result:=FAutoSizeHorzOnly;
-end;
-
-procedure TdhCustomPanel.SetAutoSizeHorzOnly(const Value: boolean);
-begin
- SetAutoSizeHorzOnly(Value);
-end;                                        }
 
 procedure TdhCustomPanel.Invalidate;
 begin
@@ -16208,13 +14772,6 @@ end;
 {$ENDIF}
 {$ENDIF}
 
-
-{procedure TStyle.SetAntiAliasing(Value: TCSSAntiAliasing);
-begin
- FAntiAliasing:=Value;
- Changed([wcFont]);
-end;}
-
 procedure TdhCustomPanel.SetASXY(const Value: TASXY);
 begin
   FAutoSize := Value;
@@ -16266,7 +14823,6 @@ begin
   if Source is TTransformations then
   begin
     tt:=TTransformations(Source);
-    //self.FPartPoint:=tt.FPartPoint;
     self.FShiftX:=tt.FShiftX;
     self.FShiftY:=tt.FShiftY;
     self.FRotationDegree:=tt.FRotationDegree;
@@ -16351,32 +14907,6 @@ procedure ClearX87Exceptions;
 ASM
   FNCLEX
 end;
-
-
-               {
-function TTransformations.IsScaleXStored: Boolean;
-begin
-try
-  result:=FScaleX<>1;
-except
-  result:=FScaleX<>1;
-end;
-end;
-
-function TTransformations.IsScaleYStored: Boolean;
-begin
-  result:=ScaleY<>1;
-end;
-
-function TTransformations.IsSkewXStored: Boolean;
-begin
-  result:=SkewX<>0;
-end;
-
-function TTransformations.IsSkewYStored: Boolean;
-begin
-  result:=SkewY<>0;
-end;     }
 
 procedure TTransformations.SetAntiAliasing(const Value: boolean);
 begin
@@ -17275,60 +15805,6 @@ begin
   end;
 end;
 
-
-
-(*
-function TStyle.PrepareBGRastering:boolean;
-const sst:array[TState] of TPathName=('_mn','_hr','_dn','_hd');
-var pn:TdhCustomPanel;
-    R:TRect;
-    Src,Src2:TMyBitmap32;
-begin
-
- pn:=TdhCustomPanel(Owner.Control);
-
-  with pn do
-  begin
-   if _ContentWidthHeight.X=NoWH then
-   begin
-    R:=Rect(0,0,Width,Height);
-    MyCheckNewSize(R.Right,R.Bottom);
-    R:=ShrinkRect(ShrinkRect(R,MarginPure),BorderPure);
-   end else
-   begin
-    R:=Rect(0,0,_ContentWidthHeight.X,_ContentWidthHeight.Y);
-    R:=InflRect(R,PaddingPure);
-   end;
-  end;
-   OffsetRect(R,-R.Left,-R.Top);
-   Src:=TMyBitmap32.Create;
-   Src.DrawMode:=dmBlend;
-   Src.Width:=R.Right;
-   Src.Height:=R.Bottom;
-
-  Owner.ActTopGraph:=Src;
-  Src.Clear(clWhite32);
-  Owner.SpecialBg(R,R,Src,R,false{,Point(0,0)});
-  Src2:=TMyBitmap32.Create;
-  Src2.Assign(Src);
-  Src.Clear(clBlack32);
-  Owner.SpecialBg(R,R,Src,R,false{,Point(0,0)});
-  Owner.ActTopGraph:=nil;
-
-  ExtractAlphaBitmap(Src.PixelPtr[0, 0],Src2.PixelPtr[0, 0],Src.Height*Src.Width);
-  Src2.Clear(ColorToColor32(pn.GetVirtualBGColor));
-  Src.DrawTo(Src2);
-
-  BGRasteringFile:=RasteringSaveDir+'bg_'+FinalID(pn)+sst[OwnState];
-  result:=SaveImg(Src2,Src,BGRasteringFile,OwnState<>hsNormal,Owner.StyleArr[NextStyle[Owner.DownOverlayOver,OwnState]].BGRasteringFile);
-
-  FreeAndNil(Src2);
-  FreeAndNil(Src);
-//   Owner.
-end;
-*)
-
-
 function _if(q:boolean; a,b:integer):integer;
 begin
  if q then
@@ -17750,13 +16226,6 @@ begin
 end;
 
 
- {
-constructor TBG.Create(Style: TStyle);
-begin
-  inherited Create;
-  Self.Style:=Style;
-end;  }
-
 
 { TMyBitmap }
                   {
@@ -17936,12 +16405,7 @@ end;
 
 
 function TdhCustomPanel.GetUnderline: boolean;
-begin    {
- if Con.IsVisualAnchor then
- begin
-  TextDecoration; //sets TopTextDecoration
-  result:=(TopTextDecoration=[]) or (ctdUnderline in TextDecoration);
- end else    }
+begin
  result:=ctdUnderline in TextDecoration;
 end;
 
@@ -18057,11 +16521,7 @@ begin
 
  Result:=Point(0,0);
 
-// AdjWH:=Point(OldWH.X-Width,OldWH.Y-Height);
-
-
  IncPt(Result,HPos,VPos);
-
 
  //with ScrollAreaWithScrollbars do IncPt(Result.BottomRight,BottomRight);
  //if IsScrollArea and EdgesInScrolledArea then
@@ -18148,17 +16608,7 @@ begin
    SetVHPos(0,0);
   end;
   NotifyCSSChanged([wcSize,wcText2,wcNoOwnCSS]);
-  //(Control as TdhCustomPanel).UpdateScrollbars(false);
 end;
-
-
-
-                                  {
-function TdhCustomPanel.DoubleDown:boolean;
-begin
- result:=FIsScrollArea and NCScrollbars and (not (csDesigning in ComponentState) or (GetParentForm(Self)<>nil) and (GetParentForm(Self).ClassName='TPageContainer'));
-end;
-                                   }
 
 procedure TdhCustomPanel.SetVPos(Value: Integer);
 begin
@@ -18193,8 +16643,6 @@ begin
  SetVHPos(p,VPos);
 end;
 
-
-//procedure TdhCustomPanel.WMMouseMove(var Message: TWMMouseMove);
 procedure TdhCustomPanel.MouseMove(Shift: TShiftState; X, Y: Integer);
 begin
  inherited;
@@ -18319,24 +16767,6 @@ begin
  ProcessFrameEvent(feMouseDown);
 end;
 
-(*
-{$IFNDEF CLX}
-procedure TdhCustomPanel.WMLButtonDown(var Message: TWMLButtonDown);
-begin
- //UpdateMousePressed(true,DownIfDown,Message.Pos);
- Inherited;
- ProcessFrameEvent(feMouseDown);
-end;
-
-procedure TdhCustomPanel.WMLButtonDblClk(var Message: TWMLButtonDblClk);
-begin
- inherited;
- ProcessFrameEvent(feMouseDown);
-end;
-
-{$ELSE}
-*)
-
 procedure TdhCustomPanel.MouseDown(Button: TMouseButton; Shift: TShiftState; X,
   Y: Integer);
 begin
@@ -18448,25 +16878,6 @@ begin
   Result := Anchors <> AnchorAlign[Align];
 end;
 
-(*
-procedure TdhCustomPanel.SetAnchors(const Value: TAnchors);
-begin
-{ if csLoading in ComponentState then
- begin
-  inherited Anchors:=Value;
-  PComponentState(@ComponentState)^:=ComponentState-[csLoading];
-  UpdateBoundsRect(BoundsRect);
-  PComponentState(@ComponentState)^:=ComponentState+[csLoading];
-  exit;
- end;}
- if Anchors<>Value then
- begin
-  inherited Anchors:=Value;
-  //WeakToStrong;
- end;
-end;
-*)
-
 procedure FixDialogBorderStyle(Form:TForm);
 begin
 {$IFDEF CLX}
@@ -18484,64 +16895,6 @@ begin
  Form.BorderStyle:=bsToolWindow;
 {$ENDIF}
 end;
-
-procedure TCSSBorder.DefineProperties(Filer: TFiler);
-var Align:TEdgeAlign;
-    NeedCompact,NeedColor:boolean;
-begin
-(* Owner.Owner.SetPreferStyle(Owner);
- NeedCompact:=False;
- for Align:=Low(TEdgeAlign) to High(TEdgeAlign) do
- if Owner.Borders[Align]=Self then
-  Break;
- if false then
- if not (csLoading in Owner.Owner.Control.ComponentState) and (Owner.Borders[ealNone]<>Self) and ((FStyle<>Low(TCSSBorderStyle)) or (FColor<>colInherit) or (FWidth<>vsrInherit) or (Owner.Borders[ealNone].FStyle<>Low(TCSSBorderStyle)) or (Owner.Borders[ealNone].FColor<>colInherit) or (Owner.Borders[ealNone].FWidth<>vsrInherit)) then
- begin
-  NeedCompact:=not Owner.Owner.HasVal(pcBorderWidth,Align) or Owner.Owner.HasVal(pcBorderColor,Align) and Owner.Owner.IsDefinedOuter(ValStyle);
- end;
-// NeedCompact:=false;
- Filer.DefineProperty('Compact', Owner.SkipValue, WriteCompact, NeedCompact);
-// Filer.DefineProperty('cWidth', Owner.SkipValue, WriteBorderWidth,(FWidth=vsrInherit) and (Owner.Borders[ealNone]=Self) and (Owner.Owner.FUse=nil));
- NeedColor:=false;
- if (Owner.Borders[ealNone]<>Self) then
- if not Owner.Owner.HasVal(pcBorderColor,Align) then
- if Owner.Owner.IsEdit or Owner.Owner.IsButton then
-  NeedColor:=not (Owner.Owner.BorderStyle(Align) in [cbsGroove,cbsRidge,cbsInset,cbsOutSet]) else
-  NeedColor:=Color32(Owner.Owner.FontColor)<>clBlack32;
- Filer.DefineProperty('cColor', Owner.SkipValue, WriteBorderColor,NeedColor);
- Owner.Owner.SetPreferStyle(nil);
-*)end;                      
-
-{procedure TCSSBorder.WriteCompact(Writer:TWriter);
-var Align:TEdgeAlign;
-    Val:TCSSProp;
-begin
-  for Align:=Low(TEdgeAlign) to High(TEdgeAlign) do
-  if Owner.Borders[Align]=Self then
-   Break;
-  Owner.Owner.SetPreferStyle(Owner);
-  Val.Width:=Owner.Owner.BorderWidth(Align);
-  Val.BorderStyle:=Owner.Owner.BorderStyle(Align);
-  Val.Color:=Owner.Owner.BorderColor(Align);
-  Writer.WriteString(GetCSSPropValue(pcBorderWidth,Val)+' '+GetCSSPropValue(pcBorderStyle,Val)+' '+GetCSSPropValue(pcBorderColor,Val));
-  Owner.Owner.SetPreferStyle(nil);
-end;
-}
-                   {
-procedure TCSSBorder.WriteBorderColor(Writer:TWriter);
-var Align:TEdgeAlign;
-    Val:TCSSProp;
-begin
-  for Align:=Low(TEdgeAlign) to High(TEdgeAlign) do
-  if Owner.Borders[Align]=Self then
-   Break;
-  Val.Color:=Owner.Owner.BorderColor(Align);
-  Writer.WriteString(GetCSSPropValue(pcBorderColor,Val));
-end;                }
-
-
-
-
 
 function TdhCustomPanel.GetPreferDownStyles:boolean;
 begin
@@ -18618,18 +16971,6 @@ begin
   result:=sbtEdit;
 end;
 
-{
-function TdhCustomPanel.IsButton:boolean;
-begin
- result:=(Con.GetFinal<>nil) and ((Con.GetFinal.GetName='button') or (Con.GetFinal.GetName='filebutton'));
-end;
-
-function TdhCustomPanel.IsEdit:boolean;
-begin
- result:=(Con.GetFinal<>nil) and ((Con.GetFinal.GetName='edit') or (Con.GetFinal.GetName='memo') or (Con.GetFinal.GetName='listbox'));
-end;}
-
-
 function TdhCustomPanel.HorizontalCenter:boolean;
 begin
   result:=Anchors*[akLeft,akRight]=[];
@@ -18672,16 +17013,6 @@ begin
  result:=FEnabled or (FText<>etInclude);
 end;
 
-{function TTransformations.IsTextOnlyStored: Boolean;
-begin
- result:=FEnabled or TextOnly;
-end;
-
-function TTransformations.IsTextExcludeStored: Boolean;
-begin
- result:=TextExclude;
-end;
-}
 procedure TTransformations.SetTextOnly(const Value: boolean);
 begin
  if Value then
@@ -18722,23 +17053,6 @@ begin
  result:=false;
 end;
 
-{
-function TdhCustomPanel.ViewportHandle: QWidgetH;
-var QB: QBitmapH;
-begin
-  if not (csDestroying in ComponentState) then
-    HandleNeeded;
-  Result := FViewportHandle;
-end;}
-
-
-(*function TdhCustomPanel.GetChildHandle: QWidgetH;
-begin
- if {IsScrollArea and NCScrollbars} classname='TdhPage' then
-  Result := ViewportHandle else
-  Result:=inherited GetChildHandle;
-end;*)
-
 procedure TdhCustomPanel.SetIsDlg(Value:Boolean);
 begin
  FIsDlg:=Value;
@@ -18776,68 +17090,6 @@ begin
    QWidget_setMask(FViewportHandle, QB);
   end;*)
 end;
-
-
-
-
-                    {
-
-function TdhCustomPanel.GetPaintDevice: QPaintDeviceH;
-begin
-  Result := QWidget_to_QPaintDevice(Handle);
-end;
-                       }
-                       (*
-procedure TdhCustomPanel.BoundsChanged;
-begin
-
- if FViewportHandle<>nil then
- with ScrollArea do
- begin
-   QWidget_setGeometry(FViewportHandle, Left, Top, (Right-Left), (Bottom-Top));
-{   s:=stringofchar(chr(1+4+16+64),(right-left)*(bottom-top) div 8);
-   QB := QBitmap_create(Right-Left, (Bottom-Top) div 2, @s[1], true);
-   //QB := QBitmap_create(Right-Left, Bottom-Top, false, QPixmapOptimization_DefaultOptim);
-   QWidget_setMask(FViewportHandle, QB);
-}
- end;
-end;                     *)
-
-
-(*
-procedure TdhCustomPanel.UpdateScrollMask;
-var
-  QB: QBitmapH;
-  QP: QPainterH;
-  Canvas: TCanvas;
-begin
-  if (FViewportHandle=nil) or not HandleAllocated then Exit;
-  QB := QBitmap_create(Width, Height, True, QPixmapOptimization_DefaultOptim);
-  try
-    QP := QPainter_create(QB, Handle);
-    try
-      Canvas := TCanvas.Create;
-      try
-        Canvas.Start(False);
-        Canvas.Handle := QP;
-        //DrawMask(Canvas);
-        Canvas.Brush.Color:=clMask;
-        Canvas.FillRect(Bounds(0,0,Width,Height));
-        Canvas.Brush.Color:=clDontMask;
-        Canvas.FillRect(ScrollArea);
-        Canvas.Stop;
-      finally
-        Canvas.Free;
-      end;
-      QWidget_setMask(Handle, QB);
-    finally
-      QPainter_destroy(QP);
-    end;
-  finally
-    QBitmap_destroy(QB);
-  end;
-end;
-  *)
 
 {$ENDIF}
 
@@ -18903,16 +17155,11 @@ initialization
  glBinList:=TBinList.Create;
 
  hh(0);
-             {
- AddHA:=TStringList.Create;
- i:=342;
- i:=i div 255; }
 
 // inttohex((GetBlendMemEx(i+{ $FF0000FF}$80008A84,$FFFFFFFF,{255 shl 16 div 255 + 1}255)),8);
 
 finalization
  FreeAndNil(glBinList);
- //AddHA.Free;
  if ObjIdleProc<>nil then
  begin
  Application.OnIdle:=OldOnIdle;                            

@@ -24,32 +24,18 @@ type
     function GetOpenButton: TRect;
     function GetActDown: TActMode; override;
     procedure SetExpanded(Value: boolean);
-    { Private declarations }
   protected
-    { Protected declarations }
-
     procedure AdjustBackgroundColor(var Col: TCSSColor); override;
     procedure AlignControls(AControl: TControl; var Rect: TRect); override;
-
-
     procedure GetAutoRect(AllowModifyX,AllowModifyY:boolean; var NewWidth, NewHeight: Integer); override;
-
     function EffectsAllowed: boolean; override;
     procedure Loaded; override;
     function AdjustZIndex(ChildPos,ParentControlCount:integer):integer; override;
     procedure DoDrawFrame(Canvas: TCanvas; _ActDown: TActMode); override;
     procedure DoInvalFrame; override;
     procedure DefineProperties(Filer: TFiler); override;
-    procedure Invalidate; override;
     procedure ConstrainedResize(var MinWidth, MinHeight, MaxWidth, MaxHeight: Integer); override;
-    procedure Notification(AComponent: TComponent; Operation: TOperation); override;
-
-
     procedure ControlsListChanged(Control: TControl; Inserting: Boolean); override;
-    
-    //procedure WMNCLButtonDown(var Message: TWMNCLButtonDown); message WM_NCLBUTTONDOWN;
-    //procedure WMNCLButtonDblClk(var Message: TWMNCMButtonDblClk); message WM_NCLBUTTONDBLCLK;
-    //procedure WMNCHitTest(var Message: TWMNCHitTest); message WM_NCHITTEST;
     procedure ReadExpandedWidth(Reader:TReader);
     procedure ReadExpandedHeight(Reader:TReader);
     procedure ReadExpanded(Reader:TReader);
@@ -58,47 +44,25 @@ type
     procedure WriteExpanded(Writer:TWriter);
     procedure ProcessFrameEvent(FrameEventType: TFrameEventType); override;
   public
-    { Public declarations }
     constructor Create(AOwner: TComponent); override;
     function AddStyle(anAnchor:boolean):TdhLabel;
-
-
   published
-    { Published declarations }
     property Expanded:boolean read FExpanded write SetExpanded nodefault;
     property VertPosition;
     property HorzPosition;
-
-    {property Align;
-    property Anchors; }
     property Visible default false;
-
     property ParentColor stored False;
     property ParentFont stored False;
-
-    //property Style;
-
-    {property Color;
-    property ParentColor;
-    property Font;
-    property ParentFont;  }     
     property OnMouseMove;
   end;
 
 function InStyleSheet(p:TControl; var StyleSheet:TdhStyleSheet):boolean;
-function UsefulUse(c,comp:TPersistent; ForInline:boolean; var pn:TdhCustomPanel):boolean; overload;   
+function UsefulUse(c,comp:TPersistent; ForInline:boolean; var pn:TdhCustomPanel):boolean; overload;
 function UsefulUse(c:TPersistent; Comps:TList; ForInline:boolean; var pn:TdhCustomPanel):boolean; overload;
-  
-
-//function _AddStyle(Self:TWinControl):TdhRule;
 
 procedure Register;
 
-
-
-
 var UndoRedoLoad:boolean=false;
-
 
 implementation
 
@@ -107,8 +71,8 @@ uses dhHTMLForm,dhMenu,dhPageControl;
 var TempBitmap:TBitmap;
 
 const
-      TopNC=27;//19;
-      _bottom=25;//17;
+      TopNC=27;
+      _bottom=25;
       Contracted=28;
       ic=4;
 
@@ -136,7 +100,6 @@ begin
  if not (comp is TControl) or not (c is TControl) or not (c is TdhCustomPanel) or (comp=c) then
   exit;
  pn:=c as TdhCustomPanel;
-// showmessage(TControl(c).name+' yes');
  if (GetTopForm(TControl(comp))<>GetTopForm(TControl(c))){ or
     ForInline and not (c is TdhRule) and (comp.ClassName<>c.ClassName)} then exit;
  if not (GetParentPage(TControl(c)).ContainsControl(TControl(comp))) then
@@ -163,39 +126,13 @@ begin
  result:=maxint-1000-2*ParentControlCount+ChildPos;
 end;
 
-
-procedure TdhStyleSheet.Notification(AComponent: TComponent; Operation: TOperation);
-begin
-{ if Operation=opInsert then
- if AComponent<>nil then
- if AComponent is TControl then
- if TControl(AComponent).Parent=Self then
- if not(AComponent is TdhCustomPanel) and not(AComponent is TdhStyleSheet) then
- begin
-  showmessage('You cannot add an object of class '+AComponent.ClassName);
-  AComponent.Free;
- end;  }
- inherited;
-end;
-       {
-procedure AdjustAfterCreation(c:TControl);
-begin
- PComponentState(@c.ComponentState)^:=c.ComponentState + c.Parent.ComponentState*[csDesigning];
-end;       }
-
-
-
 procedure Register;
 begin
   RegisterComponents('DFM2HTML', [TdhStyleSheet]);
 end;
 
-
 function TdhStyleSheet.AddStyle(anAnchor:boolean):TdhLabel;
 begin
- //showmessage(inttostr(PInteger(@componentstate)^));
-// result.Height:=20;
-
  result:=nil;
  if csAncestor in Self.ComponentState then
  begin
@@ -215,35 +152,20 @@ begin
  result.Parent:=Self;
  if Assigned(glPostAddCompo) then
   glPostAddCompo(result);
-
- //AdjustAfterCreation(result);
-// result.Align:=alBottom;
-
-// InvDesigner;
 end;
 
 constructor TdhStyleSheet.Create(AOwner: TComponent);
 begin
  Inherited;
- //ControlStyle := ControlStyle - [csOpaque] + [csReplicatable]{ - [csAcceptsControls]};
  FExpanded:=true;
  SetBounds(0,0,100,100);
  Visible:=False;
  FVertScrollbarAlwaysVisible:=true;
- //EdgesInScrolledArea:=true;
  NCScrollbars:=true;
  IsScrollArea:=true;
  Style.Margin:='1';
  Style.MarginTop:=inttostr(TopNC);
- //Style.BackgroundColor:=clWhite;
-
-// ParentFont:=true;
- {if not (csDesigning in ComponentState) then
-  Visible:=false;  }
- //ParentColor:=false;
- //ParentFont:=false;
-// CutFromParent:=true;
-end;          
+end;
 
 
 procedure TdhStyleSheet.AdjustBackgroundColor(var Col:TCSSColor);
@@ -252,21 +174,6 @@ begin
    Col:=TdhCustomPanel(Parent).GetVirtualBGColor;
 end;
 
-
-
-                 {
-function MinusRect(a,b:TRect):TRect;
-begin
- result:=a;
- dec(result.Left,b.Left);
- dec(result.Top,b.Top);
- dec(result.Bottom,b.Bottom);
- dec(result.Right,b.Right);
-end;
-               }
-
-
-
 procedure TdhStyleSheet.ControlsListChanged(Control: TControl; Inserting: Boolean);
 begin
   inherited;
@@ -274,7 +181,6 @@ begin
     if Inserting then
      Control.Align:=alTop;
 end;
-
 
 function TdhStyleSheet.GetCloseButton:TRect;
 begin
@@ -325,12 +231,10 @@ end;
 var RW:TRect;
 
 begin
-
-      //RW:=Canvas.ClipRect;
     RW:=ActTopGraph.BoundsRect;
     Canvas.Pen.Style:=psSolid;
     myrect(Canvas,RW,$EEEEEE,clGray,clNone); 
-      Canvas.Brush.Style:=bsSolid;
+    Canvas.Brush.Style:=bsSolid;
     if FExpanded then
     begin
       Inherited;
@@ -341,7 +245,6 @@ begin
       Canvas.Brush.Color:=clBlack;
       Canvas.Pen.Color:=clBlack;
       with GetCloseButton do
-       //Canvas.Polygon([Point(Left+12,Top+1),Point(Left+12,Top+8),Point(Left+8,Top+5)]);
        Canvas.Polygon([Point(Left+12,Top+4+ic),Point(Left+12,Top+10+ic),Point(Left+9,Top+7+ic)]);
 
       myrect(Canvas,GetAddButton,clWhite,clGray,clNone,_ActDown=amAddDown);
@@ -364,21 +267,16 @@ begin
 
     end else
     begin
-
       Canvas.Brush.Color:=clBtnFace;
       Canvas.FillRect(Rect(1,1,RW.Right-1,RW.Bottom-1));
-
- if {(csDesigning in ComponentState) and }(TempBitmap=nil) then
- begin
-   TempBitmap := TBitmap.Create;
-   TempBitmap.LoadFromResourceName(HInstance, 'TDHSTYLESHEET2');
-   {TempBitmap.Transparent:=true;
-   TempBitmap.TransparentColor:=clWhite;}
- end;
+      if TempBitmap=nil then
+      begin
+        TempBitmap := TBitmap.Create;
+        TempBitmap.LoadFromResourceName(HInstance, 'TDHSTYLESHEET2');
+      end;
       if _ActDown=amOpenDown then
        Canvas.Draw(5,6,TempBitmap) else
        Canvas.Draw(4,5,TempBitmap);
-
     end;
 end;
 
@@ -415,36 +313,6 @@ begin
   result:=amOpenDown;
 end;
 
-
-                        {
-procedure TdhStyleSheet.WMNCLButtonDown(var Message: TWMNCLButtonDown);
-begin
- Inherited;
- CheckDown;
-end;                 }
-
-
-(*
-procedure TdhStyleSheet.WMNCHitTest(var Message: TWMNCHitTest);
-begin
- Inherited;
- if Message.Result=HTNOWHERE then
- if GetActDown<>amNoDown then
-  Message.Result:=HTBORDER else
-  Message.Result:=HTCLIENT
-                         {
- if not (csDesigning in ComponentState) then
-  inherited else
-  begin
-   PComponentState(@ComponentState)^:=ComponentState-[csDesigning];
-   inherited;
-   PComponentState(@ComponentState)^:=ComponentState+[csDesigning];
-  end;
-  FrameForm.Caption:=inttostr(Message.Result);}
-end;
-*)
-
-
 procedure TdhStyleSheet.SetExpanded(Value:boolean);
 begin
  if FExpanded<>Value then
@@ -458,20 +326,11 @@ begin
   begin
    sBounds:=Point(Width,Height);
    Style.MarginTop:=inttostr(Contracted-1);
-   {SetBounds(Left,Top,Contracted,Contracted);
-   Application.ProcessMessages;
-   SetBounds(Left,Top,Contracted,Contracted);}
    AdjustSize;
   end;
  end;
 end;
 
-{procedure TdhStyleSheet.WMNCLButtonDblClk(var Message: TWMNCMButtonDblClk);
-begin
- Inherited;
- CheckDown;
-end;
-}
 procedure TdhStyleSheet.ConstrainedResize(var MinWidth, MinHeight,
   MaxWidth, MaxHeight: Integer);
 begin
@@ -481,12 +340,6 @@ begin
    MaxWidth:=Contracted;
    MaxHeight:=Contracted;
   end;
-end;
-
-procedure TdhStyleSheet.Invalidate;
-begin                                   
-// RedrawWindow(Handle,nil,0,RDW_FRAME or RDW_INVALIDATE);
- inherited;
 end;
 
 procedure TdhStyleSheet.DefineProperties(Filer: TFiler);
@@ -527,9 +380,6 @@ begin
  Writer.WriteInteger(sBounds.X);
 end;
 
-
-
-
 procedure TdhStyleSheet.ProcessFrameEvent(FrameEventType: TFrameEventType);
 var ActDown:TActMode;
 begin
@@ -540,14 +390,8 @@ begin
    case ActDown of
    amAddDown,amAddLinkDown:
    begin
-    //LockWindowUpdate(Handle);
-    try
     AddStyle(ActDown=amAddLinkDown);
-    //UpdateScrollbars;
     SetBoundedVPos(maxint);
-    finally
-     //LockWindowUpdate(0);
-    end;
    end;
    amCloseDown: Expanded:=False;
    amOpenDown: Expanded:=True;
@@ -586,7 +430,7 @@ begin
 end;
 
 initialization
-// RegisterClasses([TdhRule]);
+
 finalization
  FreeAndNil(TempBitmap);
 

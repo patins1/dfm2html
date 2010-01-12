@@ -556,7 +556,6 @@ type
     procedure mCopyImageClick(Sender: TObject);
     procedure mSaveImageToFileClick(Sender: TObject);
     procedure vsClick(Sender: TObject);
-    procedure rbFORMDIVClick(Sender: TObject);
     procedure cbCursorDropDown(Sender: TObject);
     procedure cSlideClick(Sender: TObject);
     procedure cOpenByOverClick(Sender: TObject);
@@ -1160,7 +1159,7 @@ begin
  spHeight.StoredValue:=pn.Height;
 
  cAutoX.Checked:=(pn is TdhCustomPanel) and (TdhCustomPanel(pn).AutoSizeXY in [asX,asXY]){ and not (pn is TRadioButton)}{ and not (pn is TdhCheckBox)};
- cAutoY.Checked:=(pn is TdhCustomPanel) and (TdhCustomPanel(pn).AutoSizeXY in [asY,asXY]){ or (pn is TEdit) and TEdit(pn).AutoSize}{ or (pn is TdhComboBox)};
+ cAutoY.Checked:=(pn is TdhCustomPanel) and (TdhCustomPanel(pn).AutoSizeXY in [asY,asXY]){ or (pn is TEdit) and TEdit(pn).AutoSize};
 
  cAutoX.Enabled:=(pn is TdhFile) or (pn is TdhDirectHTML) or (pn is TdhOleContainer) or (pn is TdhCustomLabel) or (pn is TdhMenu);
  cAutoY.Enabled:=(pn is TdhFile) or (pn is TdhDirectHTML) or (pn is TdhOleContainer) or (pn is TdhCustomLabel) or (pn is TdhMenu){ or (pn is TdhEdit) and not (pn is TdhMemo)};
@@ -1482,10 +1481,6 @@ begin
           (FontWeight=cfwInherit) and (TextDecoration=[]) and (Color=colInherit) and
           (BackgroundColor=colInherit);
  end else
- {if TObject(Selection[i]) is TdhListBox then
-  result:=TdhListBox(TObject(Selection[i])).IsCleared else}
- {if TObject(Selection[i]) is TdhComboBox then
-  result:=TdhComboBox(TObject(Selection[i])).IsCleared else}
  if TObject(Selection[i]) is TControl then
   result:=TFakeControl(Selection[i]).ParentFont and TFakeControl(Selection[i]).ParentColor;
 end;
@@ -1708,12 +1703,6 @@ function GetComp(c:TControl):TComponent;
 begin
  result:=nil;
 
- if c is TdhFormButton then
- begin
-  if TdhFormButton(c).FormButtonType=fbSubmit then
-   result:=dhMainForm.mSubmitbutton else
-   result:=dhMainForm.mResetbutton;
- end else
  if c is TdhHTMLForm then
   result:=dhMainForm.mForm else
  if c is TdhRadioButton then
@@ -1729,11 +1718,7 @@ begin
   result:=dhMainForm.mCombobox else
  if (c is TdhSelect) and (TdhSelect(c).SelectType=stList) then
   result:=dhMainForm.mListbox else
- {if c is TdhComboBox then
-  result:=dhMainForm.Combobox1 else
- if c is TdhListBox then
-  result:=dhMainForm.Listbox1 else }
-  
+
  if c is TdhFileField then
   result:=dhMainForm.mFilefield else
  if c is TdhHiddenField then
@@ -2097,12 +2082,6 @@ begin
  begin
   UpdateCheckboxDisplay; //da AnchorCheckBox.Caption wechselt
  end;
- {if HasCommon(AnchorComboBox,TdhComboBox) then
- begin
- end;}
- {if HasCommon(AnchorListBox,TdhListBox) then
- begin
- end;}
  if HasCommon(AnchorSelect,TdhSelect) then
  begin
  end;
@@ -2470,42 +2449,6 @@ begin                                      {
   dhMainForm.Act.MySiz.DoInval(false);
   Changed('memo');                          }
 end;
-
-{procedure TPropsPC.UpdateComboBoxDisplay(OnlyItems:boolean);
-var combobox:TdhComboBox;
-begin
-  combobox:=TObject(Selection[0]) as TdhComboBox;
-  if not OnlyItems then
-   eComboBox.StoredText:=combobox.Items.Text;
-  dhComboBox2.Items.Text:='*CLEAR VALUE*'+#13#10+combobox.Items.Text;
-  dhComboBox2.StoredItemIndex:=GoodIndex(combobox.ItemIndex+1);
-  eComboBoxTarget.StoredText:=combobox.Target;
-end;
-
-procedure TPropsPC.UpdateListBoxDisplay(OnlyItems:boolean);
-var listbox:TdhListBox;
-begin
-  listbox:=TObject(Selection[0]) as TdhListBox;
-  if not OnlyItems then
-   eListBox.StoredText:=listbox.Items.Text;
-  dhComboBox3.Items.Text:='*CLEAR VALUE*'+#13#10+listbox.Items.Text;
-  dhComboBox3.StoredItemIndex:=GoodIndex(listbox.ItemIndex+1);
-  cMultiSelect.Checked:=listbox.MultiSelect;
-end;
-}
-
-{procedure TPropsPC.cMultiSelectClick(Sender: TObject);
-var i,sHeight:integer;
-begin
-  for i:=0 to Selection.Count-1 do
-  with (TObject(Selection[i]) as TdhListBox) do
-  begin
-   sHeight:=Height;
-   MultiSelect:=cMultiSelect.Checked;
-   Height:=sHeight;
-  end;
-  Changed('List Box');
-end;  }
 
 procedure TTabs.cAutoXClick(Sender: TObject);
 var i:integer;
@@ -4472,26 +4415,6 @@ begin
   //do nothing, prevent TScrollingWinControl.AdjustClientRect
 end;
 
-procedure TTabs.rbFORMDIVClick(Sender: TObject);
-var i:integer;
-//    c:TComponent;
-//    lt:TLinkType;
-begin
- //lt:=TLinkType(cbLinkType.ItemIndex);
-{ if Adjusting then exit;
- for i:=0 to Selection.Count-1 do
- with TObject(Selection[i]) as TdhFormButton do
- if rbFORMAUTO.Checked then
-  Layout:=ltAuto else
- if rbFORMDIV.Checked then
-  Layout:=ltText else
- if rbFORMLINK.Checked then
-  Layout:=ltLink else
- if rbFORMBUTTON.Checked then
-  Layout:=ltButton;
- Changed('Form Button Layout'); }
-end;
-
 procedure TTabs.cbCursorDropDown(Sender: TObject);
 begin
 {$IFNDEF CLX}
@@ -4635,14 +4558,6 @@ begin
   (TObject(Selection[i]) as TdhPage).OutputDirectory:=eOutputDirectory.Text;
 end;
 
-{procedure TPropsPC.eComboBoxTargetValueChange(Sender: TObject;
-  Clear: Boolean);
-var i:integer;
-begin
-  for i:=0 to Selection.Count-1 do
-   (TObject(Selection[i]) as TdhComboBox).Target:=eComboBoxTarget.Text;
-end;  }
-
 procedure TTabs.eActionValueChange(Sender: TObject; Clear: Boolean);
 var i:integer;
 begin
@@ -4664,34 +4579,6 @@ begin
   for i:=0 to Selection.Count-1 do
   (TObject(Selection[i]) as TdhMemo).SetMemoText(eMemo.Text);
 end;
-
-{procedure TPropsPC.eComboBoxValueChange(Sender: TObject; Clear: Boolean);
-var i,sItemIndex:integer;
-begin
-  for i:=0 to Selection.Count-1 do
-  with (TObject(Selection[i]) as TdhComboBox) do
-  begin
-   sItemIndex:=ItemIndex;
-   Items.Text:=eComboBox.Text;
-   ItemIndex:=sItemIndex;
-  end;
-  dhMainForm.Act.MySiz.DoInval(false);
-  UpdateComboBoxDisplay(true);
-end; }
-
-{procedure TPropsPC.eListBoxValueChange(Sender: TObject; Clear: Boolean);
-var i,sItemIndex:integer;
-begin
-  for i:=0 to Selection.Count-1 do
-  with (TObject(Selection[i]) as TdhListBox) do
-  begin
-   sItemIndex:=ItemIndex;
-   Items.Text:=eListBox.Text;
-   ItemIndex:=sItemIndex;
-  end;
-  dhMainForm.Act.MySiz.DoInval(false);
-  UpdateListBoxDisplay(true);
-end; }
 
 procedure TTabs.CODE_eFormTargetValueChange(Sender: TObject; Clear: Boolean);
 var i:integer;
@@ -4846,24 +4733,6 @@ begin
  end;
  UpdateStylesDisplay;
 end;
-
-{procedure TPropsPC.dhComboBox2ValueChange(Sender: TObject; Clear: Boolean);
-var i:integer;
-begin
-  dhComboBox2.ItemIndex:=GoodIndex(dhComboBox2.ItemIndex);
-  for i:=0 to Selection.Count-1 do
-   (TObject(Selection[i]) as TdhComboBox).ItemIndex:=GoodIndexBack(dhComboBox2.ItemIndex)-1;
-  dhMainForm.Act.MySiz.DoInval(false);
-end; }
-
-{procedure TPropsPC.dhComboBox3ValueChange(Sender: TObject; Clear: Boolean);
-var i:integer;
-begin
-  dhComboBox3.ItemIndex:=GoodIndex(dhComboBox3.ItemIndex);
-  for i:=0 to Selection.Count-1 do
-   (TObject(Selection[i]) as TdhListBox).ItemIndex:=GoodIndexBack(dhComboBox3.ItemIndex)-1;
-  dhMainForm.Act.MySiz.DoInval(false);
-end; }
 
 procedure TTabs.spReactionTimeValueChange(Sender: TObject;
   Clear: Boolean);

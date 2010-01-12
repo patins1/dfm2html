@@ -55,11 +55,9 @@ type
 
   TdhSelect = class(TdhCustomEdit)
   private
-    { Private declarations }
     FItems: TSelectOptions;
     FType:TSelectType;
     FMultiple: Boolean;
-    //sel:TdhSelect;
     FDataList:TdhPopupDataList;
     FOnGetDisplayText: TOnGetDisplayText;
     procedure SetItems(const Value: TSelectOptions);
@@ -71,8 +69,7 @@ type
     function EffectiveMultiSelect: boolean;
     procedure SetMultiple(const Value: boolean);
     procedure UpdateSelections;
-    procedure ListMouseUp(Sender: TObject; Button: TMouseButton;
-      Shift: TShiftState; X, Y: Integer);
+    procedure ListMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
     procedure CloseUp(Accept: Boolean); virtual;
     procedure DropDown;
     function GetOverLine: integer;
@@ -81,17 +78,11 @@ type
 {$ENDIF}
     function GetCount: integer;
     procedure WriteHTMLOptions(Writer: TWriter);
-
   protected
-    { Protected declarations }
     procedure ProcessFrameEvent(FrameEventType: TFrameEventType); override;
     procedure Loaded; override;
     function GetFinal: ICon; override;
     procedure GetModifiedText(var pre,s,suc:HypeString); override;
-    //function CanAutoSize(var NewWidth, NewHeight: Integer): Boolean; override;
-    //procedure GetAutoRect(AllowModifyX,AllowModifyY:boolean; var NewWidth, NewHeight: Integer); virtual;
-
-    //procedure ShrinkToContent(var IE5,IE6:TRect; HasRastering,OnlyBg:boolean); override;
     function IncludeBorderAndPadding:boolean; override;
     procedure GetRowsCols(AllowModifyX,AllowModifyY:boolean; var NewWidth, NewHeight, Rows, Cols: Integer); override;
     procedure DoCSSToWinControl(WhatChanged: TWhatChanged); override;
@@ -99,9 +90,7 @@ type
     procedure KeyDown(var Key: Word; Shift: TShiftState); override;
     procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
     procedure DefineProperties(Filer: TFiler); override;
-
   public
-    { Public declarations }
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
     procedure Reset;
@@ -111,7 +100,6 @@ type
     function SelectedIndex: integer;
     property Count:integer read GetCount;
   published
-    { Published declarations }
     property Items: TSelectOptions read FItems write SetItems;
     property SelectType:TSelectType read FType write SetSelectType;
     property Multiple:boolean read FMultiple write SetMultiple default False;
@@ -149,18 +137,15 @@ begin
   RegisterComponents('DFM2HTML', [TdhSelect]);
 end;
 
-
 constructor TdhSelect.Create(AOwner: TComponent);
 begin
  inherited;
  FItems := TSelectOptions.Create(Self);
- //TSelectOptions(FItems).OnChange:=ItemsChanged;
  ControlStyle:=ControlStyle-[csClickEvents];
  AutoSizeXY:=asY;
  AdjustToType;
  Width:=121;
 end;
-
 
 procedure TdhSelect.AdjustToType;
 begin
@@ -168,7 +153,6 @@ begin
  begin
   IsScrollArea:=true;
   FOneButton:=false;
-  //FVertScrollbarNeverVisible:=false;
   FHorzScrollbarNeverVisible:=true;
   FVertScrollbarAlwaysVisible:=true;
  end else
@@ -181,8 +165,6 @@ begin
  UpdateSelections;
  ScrollingParametersChanged;
 end;
-
-
 
 function TdhSelect.GetFinal: ICon;
 begin
@@ -223,7 +205,6 @@ begin
   end;
   if s='' then
    s:='&nbsp;&nbsp;';
-  //Clipboard.astext:=s;
   SetHTMLText(s);
   UpdateScrollPosition;
 end;
@@ -248,46 +229,15 @@ begin
    Items[i].Selected:=Items[i].FInitialValue;
 end;
 
-
 procedure TdhSelect.SetItems(const Value: TSelectOptions);
 begin
  FItems.Assign(Value);
 end;
 
-
-
 procedure TdhSelect.GetModifiedText(var pre, s, suc: HypeString);
 begin
  //do nothing
 end;
-
-(*
-function TdhSelect.CanAutoSize(var NewWidth, NewHeight: Integer): Boolean;
-var Rect:TRect;
-var dummyRows,dummyCols:integer;
-begin
- if not (csLoading in ComponentState){ and HasParent} then
- begin
-   IsAdjustBounds:=true;
-   Rect:=GetAutoRect(NewWidth,NewHeight);
-   IsAdjustBounds:=false;
-   if FCommon.ASXY in [asX,asXY] then
-    NewWidth:=Rect.Right-Rect.Left+VertScrollbar;
-   GetRowsCols(NewWidth, NewHeight, dummyRows,dummyCols);
- end;
- result:=true;
-end;
-*)
-
-
-
-{procedure TdhSelect.ShrinkToContent(var IE5,IE6:TRect; HasRastering,OnlyBg:boolean);
-begin
-  IE5:=FCommon.MarginPure;
-  IE6:=IE5;
- //do nothing
-end;
-}
 
 function TdhSelect.IncludeBorderAndPadding:boolean;
 begin
@@ -310,8 +260,6 @@ begin
   for i:=0 to Count-1 do
    Items[i].FInitialValue:=Items[i].Selected;
 end;
-
-{ TSelectOption }
 
 procedure TSelectOption.Assign(Source: TPersistent);
 begin
@@ -372,21 +320,18 @@ var
   P: TPoint;
   I, Y: Integer;
 begin
-
   FDataList.Width:=Width;
   FDataList.Items.Assign(Items);
   
-    P := Parent.ClientToScreen(Point(Left, Top));
-    Y := P.Y + Height;
-    if Y + FDataList.Height > Screen.Height then Y := P.Y - FDataList.Height;
+  P := Parent.ClientToScreen(Point(Left, Top));
+  Y := P.Y + Height;
+  if Y + FDataList.Height > Screen.Height then Y := P.Y - FDataList.Height;
 
-    {SetWindowPos(FDataList.Handle, HWND_TOP, P.X, Y, 0, 0,
-      SWP_NOSIZE or SWP_NOACTIVATE or SWP_SHOWWINDOW);}
+  {SetWindowPos(FDataList.Handle, HWND_TOP, P.X, Y, 0, 0, SWP_NOSIZE or SWP_NOACTIVATE or SWP_SHOWWINDOW);}
   FDataList.Top:=Y;
   FDataList.Left:=P.X;
   FDataList.Visible := true;
   //FDataList.SetFocus;
-
 end;
 
 
@@ -424,8 +369,6 @@ begin
  end;
  inherited;
 end;
-
-{ TSelectOptions }
 
 function TSelectOptions.Add: TSelectOption;
 begin  
@@ -609,10 +552,6 @@ begin
  inherited;
 end;
 
-
-
-{ TdhPopupDataList }
-
 {$IFNDEF CLX}
 
 constructor TdhPopupDataList.Create(AOwner: TComponent);
@@ -621,7 +560,6 @@ begin
   ControlStyle := ControlStyle + [csNoDesignVisible, csReplicatable];
   SelectType:=stList;
   FVertScrollbarAlwaysVisible:=false;
-  //FPopup := True;
 end;
 
 {$ELSE}
@@ -632,7 +570,6 @@ begin
   ControlStyle := ControlStyle + [csNoDesignVisible, csCaptureMouse, csReplicatable]; 
   SelectType:=stList;
   FVertScrollbarAlwaysVisible:=false;
-  //FPopup := True;
 end;
 
 {$ENDIF}
@@ -660,8 +597,8 @@ procedure TdhPopupDataList.WMMouseActivate(var Message: TMessage);
 begin
  Message.Result := MA_NOACTIVATE;
 end;
-{$ELSE}
 
+{$ELSE}
 
 procedure TdhPopupDataList.InitWidget;
 begin
@@ -682,7 +619,6 @@ end;
 procedure TdhPopupDataList.DoExit;
 begin
  MouseUp(mbLeft,[],0,0);
-
 end;
 
 function TdhPopupDataList.GetFinal: ICon;
@@ -694,14 +630,9 @@ end;
 
 procedure TdhPopupDataList.MouseMove(Shift: TShiftState; X, Y: Integer);
 begin    
-  //if FTracking then
-  begin
    if GetOverLine<>-1 then
     Items[GetOverLine].BeTheOnlySelection;
-    //FMousePos := Y;
-    //TimerScroll;
-  end;
-  inherited;
+   inherited;
 end;
 
 procedure TdhSelect.ListMouseUp(Sender: TObject; Button: TMouseButton;
@@ -716,7 +647,6 @@ begin
  if Accept then
   Items[FDataList.SelectedIndex].Selected:=true;
  FDataList.Visible:=false;
- //FreeAndNil(FDataList);
 end;
 
 {$IFNDEF CLX}
@@ -755,8 +685,6 @@ begin
   Items[GetOverLine].BeTheOnlySelection;
  end;
  Inherited;
- {Windows.SetFocus(Handle);
- GetParentForm(Self).ActiveControl:=self; }
 end;
 
 function TdhSelect.GetCount: integer;

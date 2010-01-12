@@ -18,7 +18,7 @@ uses
 {$IFDEF VER160}
 {$UNSAFECODE ON}
 {$ENDIF}
-               
+
 {$IFDEF VER130}
 type TIntegerDynArray=array of integer;
 {$ENDIF}
@@ -125,8 +125,6 @@ type
     procedure WMSetCursor(var Message: TWMSetCursor); message WM_SETCURSOR;
 {$ENDIF}
     procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;
-    procedure WriteState(Writer: TWriter); override;
-    procedure Notification(AComponent: TComponent; Operation: TOperation); override;
     procedure DefineProperties(Filer: TFiler); override;
     procedure DoCSSToWinControl(WhatChanged:TWhatChanged); override;
     procedure UpdateNames(InlineUse,NewInlineUse:ICon; PropagateChange:boolean); override;
@@ -746,24 +744,6 @@ begin
      Control.BoundsRect:=Bounds(Control.Left+Left,Control.Top+Top,Control.Width,Control.Height);
     end;
 end;
-
-
-procedure TdhCustomLabel.Notification(AComponent: TComponent;
-  Operation: TOperation);
-begin
-{ if not (csLoading in ComponentState) and (Operation=opInsert) and (AComponent.Name<>'') and (Pos('<'+AComponent.Name,FHTMLText)<>0) then
-  AssureRenamingAware;
-  Problem is that AComponent.Name is always '', it is not yet loaded
-  }
- Inherited;
-end;
-
-procedure TdhCustomLabel.WriteState(Writer: TWriter);
-begin
- Inherited;
-end;
-
-
 
 procedure TdhCustomLabel.TryBrokenReferences(sl:TStringList);
 var invcon:ICon;

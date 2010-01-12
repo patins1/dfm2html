@@ -243,8 +243,8 @@ type
   protected
     procedure Changed;
   public
-    procedure Clear; virtual;
-    function IsCleared:boolean; virtual;
+    procedure Clear; virtual; abstract;
+    function IsCleared:boolean; virtual; abstract;
     function MaxJitter:integer;
     property Degree:integer read FDegree write SetDegree;
     property Distance:integer read FDistance write SetDistance default 5;
@@ -965,10 +965,6 @@ type
     procedure ReadSUse(Reader: TReader);
     procedure SetRight(const Value:integer);
     procedure SetBottom(const Value:integer);
-    procedure ReadRight(Reader: TReader);
-    procedure WriteRight(Writer: TWriter);
-    procedure ReadBottom(Reader: TReader);
-    procedure WriteBottom(Writer: TWriter);
     function IsRightStored:boolean;
     function IsLeftStored:boolean;
     function IsBottomStored:boolean;
@@ -1002,7 +998,6 @@ type
     function IsAnchorsStored: Boolean;
     procedure PixelCombineUnderpaint(F: TColor32; var B: TColor32; M: TColor32);
     procedure PixelCombineInner(F: TColor32; var B: TColor32; M: TColor32);
-    procedure SetCenter(const Value: boolean);
     procedure PreventFlicker;
     procedure TransFromBlackWhite_BG(bmp: TMyBitmap32);
     procedure TransFromBlackWhite_TP(bmp:TMyBitmap32);
@@ -1074,9 +1069,7 @@ type
     procedure CheckChildrenNC(DeltaX:integer=0; DeltaY: Integer=0);
     function WidgetFlags: Integer; override;
     procedure InitWidget; override;
-    function EventFilter(Sender: QObjectH; Event: QEventH): Boolean; override;
     procedure ScrollBy(DeltaX, DeltaY: Integer); override;
-    procedure CreateWidget; override;
 {$ENDIF}
     procedure ControlsListChanged(Control: TControl; Inserting: Boolean); {$IFDEF CLX}override;{$ELSE}virtual;{$ENDIF}
 {$IFNDEF CLX}
@@ -1564,7 +1557,7 @@ function GetGifImageFromBitmap32(Transparent:TBitmap32; Opaque:TBitmap32):TGifIm
 function GetPNGObjectPTFromGif(gif:TGIFImage):TPngImage;
 function GetPNGObjectPTFromGifAndBitmap32(Transparent:TMyBitmap32; gif:TGIFImage):TPngImage;
 {$ENDIF}
-function GetPNGObjectFromBitmap32(Src:TBitmap32{; WithTransparency:boolean}):TGraphic;
+function GetPNGObjectFromBitmap32(Src:TBitmap32):TGraphic;
 function GetBitmap32FromPNGObject(png:TPngImage):TMyBitmap32;
 
 
@@ -9237,13 +9230,10 @@ begin
  d:=rr;
  with GetCBound(src).TopLeft do OffsetRect(s,-x,-y);
  with SelfCBound.TopLeft do OffsetRect(d,-x,-y);
- if not srcTopGraph.Empty{wenn src=_parent und _parent.Height=0, bei menu slide z.b.} then
+ if not srcTopGraph.Empty then
  begin
-  dst.BackGraph.Canvas.CopyRect(d,srcTopGraph.Canvas,s); //<-bei CLX: update verspätet
-  //GetPNGObjectFromBitmap32(srcTopGraph).savetofile('c:\b1.png');
-  //GetPNGObjectFromBitmap32(dst.BackGraph).savetofile('c:\b2.png');
+  dst.BackGraph.Canvas.CopyRect(d,srcTopGraph.Canvas,s);
  end;
-//  dst.BackGraph.Draw(d,s,srcTopGraph); //<-is not clipped WO GENAU?
 end;
 
 var i:integer;
@@ -9715,7 +9705,7 @@ begin
 end;
 
 
-function GetPNGObjectFromBitmap32(Src:TBitmap32{; WithTransparency:boolean}):TGraphic;
+function GetPNGObjectFromBitmap32(Src:TBitmap32):TGraphic;
 var y,x,intFormCount:integer;
 var P,P2,P3: PColor32;
     bp:pngimage.pByteArray;
@@ -9726,9 +9716,7 @@ begin
   png.CompressionLevel:=9;
   png.AssignHandle(Src.BitmapHandle,false,0);
 
-
 {$IFDEF CLX}
-   //eigentlich nur von CLX benötigt
    P:=Src.PixelPtr[0,0];
    for Y:=0 to png.Height-1 do
    begin
@@ -9740,22 +9728,19 @@ begin
    end;
 {$ENDIF}
 
-//  png.Assign(Src);
-  if {WithTransparency}Src.DrawMode<>dmOpaque then
+  if Src.DrawMode<>dmOpaque then
   begin
-  png.CreateAlpha;
-  //GetParentForm(Owner.Control).
-  for Y:=0 to result.Height-1 do
-  begin
-   bp:=png.AlphaScanline[Y];
-   P:=Src.PixelPtr[0,Y];
-   for X:=0 to result.Width-1 do
+   png.CreateAlpha;
+   for Y:=0 to result.Height-1 do
    begin
-    bp^[X]:=P^ shr 24;
-    inc(P);
-    //inc(bp);
+    bp:=png.AlphaScanline[Y];
+    P:=Src.PixelPtr[0,Y];
+    for X:=0 to result.Width-1 do
+    begin
+     bp^[X]:=P^ shr 24;
+     inc(P);
+    end;
    end;
-  end;
   end;
 end;
 
@@ -11106,18 +11091,6 @@ begin
 
 end;
 
-procedure ClearBit(P:PColor32; Size:integer);
-var i:integer;
-begin
-  for i := 0 to Size - 1 do
-  begin
-   if i div 11 mod 2=1 then
-   P^:=0;
-   Inc(P);
-  end;
-end;
-
-
 function NearNull(a:double):boolean;
 begin
  result:=abs(a)<0.001;
@@ -11127,20 +11100,6 @@ function NearOne(a:double):boolean;
 begin
  result:=abs(a-1)<0.001;
 end;
-
-function NearSameMatrix(const a,b:TFloatMatrix):boolean;
-var i,j:integer;
-begin
- for i:=0 to 2 do
- for j:=0 to 2 do
- if not NearNull(a[i,j]-b[i,j]) then
- begin
-  result:=false;
-  exit;
- end;
- result:=true;
-end;
-
 
 function IsRegular(Det:Single):boolean;
 begin
@@ -12499,17 +12458,9 @@ begin
 
 end;
 
-
-
 procedure PaintBlur(_Src,SrcFinal:TMyBitmap32; pc:TPixelCombineMode; inv:boolean);
 begin
  _Src.DrawMode:=dmCustom;
- (*
- case pc of
- pcNormal: _Src.OnPixelCombine:= self.PixelCombineNormal;
- pcMult: _Src.OnPixelCombine:= self.PixelCombineMultiply;
- pcNegMult: _Src.OnPixelCombine:= self.PixelCombineNegativeMultiply;//}_Src.OnPixelCombine:= self.PixelCombineNormal;
- end;                 *)
  if not inv then
   _Src.OnPixelCombine:= PixelCombineUnderpaint else
   _Src.OnPixelCombine:= PixelCombineInner;
@@ -12519,7 +12470,6 @@ end;
 var HorzRotated,VertRotated,IsEasy:boolean;
 var c1,c2:int64;
     i:integer;
-//    car:cardinal;
 
 procedure NotTooBig(var L,R,L2,R2:integer; avail:integer; LDouble,RDouble:boolean);
 var sL,sR:integer;
@@ -12544,10 +12494,8 @@ begin
    L:=avail div 2;
    R:=avail-L;
   end;
-  //if sL=L2 then
   if not LDouble then
    Inc(L2,L-sL);
-  //if sR=R2 then
   if not RDouble then
    Inc(R2,R-sR);
  end;
@@ -12663,10 +12611,6 @@ begin
   end;
 end;
 
-
-
-
-
 procedure DoTransform;
 var Src2:TMyBitmap32;
     EqAreaF:TFloatRect;
@@ -12679,8 +12623,6 @@ begin
   Dec(bWidth,cr.Left+cr.Right);
   Dec(bHeight,cr.Top+cr.Bottom);
 
-  //T.SrcRect:=FloatRect(0,0,Src.Width,Src.Height);
-  //T.SrcRect:=FloatRect(0,0,bWidth,bHeight);
   T.SrcRect:=FloatRect(cr.Left,cr.Top,bWidth+cr.Left,bHeight+cr.Top);
   with T.GetTransformedBoundsf do
   if not IsEasy and HorzRotated then
@@ -12711,7 +12653,6 @@ begin
   Src2.SetSize(nWidth,nHeight);
   Src2.Clear(0);
 
-  //ClearBit(Src.PixelPtr[0, 0],Src.Height*Src.Width);
     if IsRegular(Determinant(t.Matrix)) then
     begin
      Transform(Src2, Src, T);
@@ -12736,7 +12677,6 @@ begin
      EqArea.Right:=Between(Round(EqAreaF.Right),0,Src.Width);
      EqArea.Top:=Between(Round(EqAreaF.Top),0,Src.Height);
      EqArea.Bottom:=Between(Round(EqAreaF.Bottom),0,Src.Height);
-     //IntersectRect(EqArea,EqArea,Src.BoundsRect);
     end else
      EqArea.Left:=InvalidEqArea;
 
@@ -12775,7 +12715,6 @@ begin
    EqArea.Top:=Max(InnerRect.Top,Max(OuterRect.Top+brTopLeft.Y,OuterRect.Top+brTopRight.Y));
    EqArea.Bottom:=Min(InnerRect.Bottom,Min(OuterRect.Bottom-brBottomLeft.Y,OuterRect.Bottom-brBottomRight.Y));
 
-   //SrcFinal.FillRect(InnerRect.Left,InnerRect.Top,InnerRect.Right,InnerRect.Bottom,0);
    maxit:=0;
 {$IFNDEF CLX}
    QueryPerformanceCounter(c1);
@@ -12787,18 +12726,10 @@ begin
 {$IFNDEF CLX}
    QueryPerformanceCounter(c2);
 {$ENDIF}
-{   if csDesigning in ComponentState then
-    Application.MainForm.Caption:=inttostr((c2-c1) div 1000);//inttostr(maxit);
- }
-
 
    FreeAndNil(SrcFinal);
   end;
 end;
-
-
-
-
 
 begin
 
@@ -12848,8 +12779,6 @@ begin
    EqArea:=ShrinkRect(ShrinkRect(Src.BoundsRect,MarginPure),BorderPure);
    DoRoundCorners;
   end;
-
-  //if PtInRect(Src.BoundsRect,EqArea.TopLeft) then Src.FrameRectS(EqArea,clRed32);
 
   Result:=Src;
   T.Free;
@@ -12987,12 +12916,6 @@ begin
                                                           Round((GreenComponent(ScrollbarShadowColor))*MulLight2),
                                                           Round((BlueComponent(ScrollbarShadowColor))*MulLight2)) and $FFFFFF;
 
-// It:=Intensity(ScrollbarBaseColor);
-// RGBtoHSL(ScrollbarBaseColor, H, S, L);
-// ScrollbarHighlightColor:=GoodRGB(RedComponent(ScrollbarBaseColor));
-// ScrollbarHighlightColor:=HSLtoRGB(H,S/2,min(L+0.2+(1-L)*0.63,1));
-// ScrollbarShadowColor:=HSLtoRGB(H,S,max(L*0.63+0.1,0));
-
  if IsVertScrollBarVisible then
  if FOneButton then
  begin          
@@ -13097,10 +13020,6 @@ begin
  end;
 end;
 
-
-
-
-
 function TdhCustomPanel.ScrollEdgesPure:TRect;
 begin
  result:=Rect(0,0,0,0);
@@ -13166,7 +13085,6 @@ end;
 
 procedure TdhCustomPanel.PaintHidden;
 begin
-   //if not ((Parent is TdhCustomPanel) and not TdhCustomPanel(Parent).Visibility) then
    if not TopGraph.Empty then
    begin
     BeginPainting(TopGraph);
@@ -13187,21 +13105,6 @@ begin
 end;
 
 
-{function FullOpaque(b:TMyBitmap32):boolean;
-var x,y:integer;
-begin
- for x:=0 to b.Width-1 do
- for y:=0 to b.Height-1 do
- if b.Pixel[x,y] shr 24<>$ff then
- if b.Pixel[x,y] shr 24<>$ff then
- begin
-  result:=false;
-  exit;
- end;
- result:=true;
-end;
- }
-
 function TdhCustomPanel.AlwaysVisibleVisibility:boolean;
 begin
  result:=false;
@@ -13219,8 +13122,6 @@ var SelfCBound:TRect;
     nWidth,nHeight:integer;
     PaintOnlyBg:boolean;
 begin
-
-
 
  if PreferStyle<>nil then
   SelfCBound:=_SelfCBound else
@@ -13244,28 +13145,21 @@ begin
    PaintOnlyBg:=glPaintOnlyBg;
    glPaintOnlyBg:=false;
    try
-    //BackGraph.Clear(clYellow32);
     ParentPaintTo(Self,Parent,true,SelfCBound,SelfCBound,addheight,GetZOrder2(Self));
    finally
     glPaintOnlyBg:=PaintOnlyBg;
    end;
-   BackIsValid:=true;    
-   //BackGraph.ResetAlpha;
+   BackIsValid:=true;
 
   if TopIsValid then
   if TransparentTop=nil then
    TopIsValid:=false else
   begin
    if BackIsValid and (BackGraph<>TopGraph) then
-    BackGraph.DrawTo(TopGraph);//TopGraph.Canvas.Draw(0,0,BackGraph);
-
-   //TransparentTop.OnPixelCombine:= PixelCombineNormal;
-   //TransparentTop.DrawMode:=dmCustom;
-   // TopGraph.ResetAlpha;
+    BackGraph.DrawTo(TopGraph);
    TransparentTop.DrawTo(TopGraph);
   end;
   end;
-
  end;
 
 
@@ -13278,7 +13172,6 @@ begin
 
   TopGraph.SetSize(nWidth,nHeight);
   if BackIsValid and (BackGraph<>TopGraph) and not TopIsValid then
-   //TopGraph.Canvas.Draw(0,0,BackGraph);
    BackGraph.DrawTo(TopGraph);
   FreeAndNil(TransparentTop);
 
@@ -13295,16 +13188,9 @@ begin
   if NeedTransparentImage or IsRasterized then
   begin
    TransparentTop:=TransPainting(nWidth,nHeight);
-   {if not Visibility then
-   begin
-    //TransparentTop.Clear($00000000);
-    TransparentTop.MasterAlpha:=64;
-    MixAlpha(TransparentTop);
-   end;}             
    if not TopIsValid then
    begin
     TransparentTop.DrawTo(TopGraph);
-    //{TopGraph.ResetAlpha;} Sowohl Blend.DrawTo(Opaque) als auch TCanvas.Polygon kann alpha<$FF verursachen bei TopGraph
    end;
   end else
   if not TopGraph.Empty then
@@ -13312,7 +13198,6 @@ begin
    BeginPainting(TopGraph);
    try
     DoTopPainting;
-    //TopGraph.ResetAlpha;
    finally
     EndPainting;
    end;
@@ -13326,20 +13211,11 @@ begin
    assert(ActTopGraph=nil);
    assert(not bmp.Empty);
    ActTopGraph:=bmp;
-{$IFDEF CLX}
-   //if not ActTopGraph.PixmapChanged then
-{   if ValidBG then
-    ActTopGraph.PixmapActive:=false;}
-//   ActTopGraph.Canvas.Start;
-{$ENDIF}
 end;
 
 procedure TdhCustomPanel.EndPainting;
 begin
    assert(ActTopGraph<>nil);
-{$IFDEF CLX}
-//   ActTopGraph.Canvas.Stop;
-{$ENDIF}
    ActTopGraph:=nil;
 end;
 
@@ -13355,9 +13231,6 @@ end;
 procedure CopyRect2(FHandle:HDC; const Dest: TRect; Canvas: TCanvas;
   const Source: TRect; CopyMode:TCopyMode=cmSrcCopy);
 begin
-  {StretchBlt(FHandle, Dest.Left, Dest.Top, Dest.Right - Dest.Left,
-    Dest.Bottom - Dest.Top, Canvas.Handle, Source.Left, Source.Top,
-    Source.Right - Source.Left, Source.Bottom - Source.Top, CopyMode);   }
    BitBlt(FHandle, Dest.Left, Dest.Top, Dest.Right - Dest.Left,
     Dest.Bottom - Dest.Top, Canvas.Handle, Source.Left, Source.Top,
     CopyMode);
@@ -13394,18 +13267,6 @@ begin
     if (Parent is TdhCustomPanel) then
     if TdhCustomPanel(Parent).IsScrollArea and TdhCustomPanel(Parent).NCScrollbars then
      IntersectRect(Result,Result,GetOffsetRect(TdhCustomPanel(Parent).ScrollArea,-Left-DeltaX,-Top-DeltaY));
-{    P:=Parent;
-    if OnlyOneParent then
-    begin
-     if P<>nil then
-      IntersectRect(Result,Result,GetClientBound(P));
-    end else
-    while P<>nil do
-    begin
-     IntersectRect(Result,Result,GetClientBound(P));
-     P:=P.Parent;
-    end;
-    with GetCBound(Self) do OffsetRect(Result,-Left,-Top);}
 end;
 
 
@@ -13417,21 +13278,9 @@ procedure TdhCustomPanel.Paint;
 var R:TRect;
 begin
  if Parent=nil then exit;
-
  AssertTop(0);
  if HasSomething(TopGraph) then
- begin         
-
-    {
-    //clip TdhPage-scrollbars
-    R:=GetNotClipped;
-    IntersectRect(R,R,Canvas.ClipRect);
-    //R := TFakeWinControl2(Parent).ViewportRect;
-    //OffsetRect(R,-Left,-Top);
-    if IsRectEmpty(R) then exit;
-    QPainter_setClipRect(Canvas.Handle,@R);
-    }
-
+ begin
     TopGraph.DrawTo(Canvas.Handle,0,0);
  end;
 end;
@@ -13440,22 +13289,11 @@ end;
 
 procedure TdhCustomPanel.PaintWindow(DC: HDC);
 begin
-
-
  AssertTop(0);
-
- //Canvas.Draw(0,0,TopGraph);
  if HasSomething(TopGraph) then
  begin
-
   with ClientBound do CopyRect2(DC,Rect(0,0,Right-Left,Bottom-Top),TopGraph.Canvas,Rect(Left,Top,Right,Bottom));
-{  if IsScrollArea and NCScrollbars then
-   with ScrollArea do CopyRect2(DC,Rect(0,0,Right-Left,Bottom-Top),TopGraph.Canvas,Rect(Left,Top,Right,Bottom)) else
-   CopyRect2(DC,ClientRect,TopGraph.Canvas,ClientRect);0
-{ if Assigned(NotifyDebug) then
-  NotifyDebug(Name+':'+inttostr(ClientRect.Bottom));}
  end;
-
 end;
 
 {$ENDIF}
@@ -13515,32 +13353,7 @@ end;
 function TdhCustomPanel.ScrollArea:TRect;
 begin                     
  result:=ShrinkRect(DynamicTotalRect,ScrollArea_Edges);
- {result:=ScrollAreaWithScrollbars;
- result:=ShrinkRect(result,ScrollEdgesPure);}
-
 end;
-
-
-
-
-
-
-
-
-
-{
-procedure TdhCustomPanel.CMMouseDown(var Message: TMessage);
-begin
- UpdateMousePressed(true,DownIfDown);
- inherited;
-end;
-
-procedure TdhCustomPanel.CMMouseUp(var Message: TMessage);
-begin
- UpdateMousePressed(false,DownIfDown)
- inherited;
-end;
- }
 
 {$IFDEF CLX}
 procedure TdhCustomPanel.MouseEnter(AControl: TControl);
@@ -13618,8 +13431,6 @@ begin
  ParentColorHasChanged;
 end;
 
-
-
 {$ENDIF}
 
 procedure TdhCustomPanel.SetName(const Value: TComponentName);
@@ -13670,52 +13481,15 @@ end;
 
 function TdhCustomPanel.WidgetFlags: Integer;
 begin
-  { By default, Qt doesn't pass mouse messages to the transparent areas of
-the widget. Uncomment the 2nd
-    line below to get mouse messages }
-  Result := inherited WidgetFlags
-   {or Integer($00400000) }or Integer(WidgetFlags_WRepaintNoErase);
+  Result := inherited WidgetFlags or Integer(WidgetFlags_WRepaintNoErase);
 end;
-
-function TdhCustomPanel.EventFilter(Sender: QObjectH; Event: QEventH): Boolean;
-var c:TControl;
-begin
-
-(*  case QEvent_type(Event) of
-    QEventType_MouseButtonPress,
-    QEventType_MouseButtonRelease,
-    QEventType_MouseButtonDblClick,
-    QEventType_MouseMove:
-    begin
-      c := MyFindControl(self);
-      if not MouseCapture then
-      if {(c<>self) and (c is TdhCustomPanel)}classname='TMySiz' then
-      begin
-       TdhCustomPanel(c).MainEventFilter(Sender,Event);
-       result:=False;
-       exit;
-      end;
-    end;
-  end;*)
-  result:=inherited EventFilter(Sender,Event);
-end;
-
 
 procedure TdhCustomPanel.InitWidget;
 const
-  FocusPolicy: array[Boolean] of QWidgetFocusPolicy =
-    (QWidgetFocusPolicy_ClickFocus, QWidgetFocusPolicy_NoFocus);
+  FocusPolicy: array[Boolean] of QWidgetFocusPolicy = (QWidgetFocusPolicy_ClickFocus, QWidgetFocusPolicy_NoFocus);
 begin
  inherited;
  QWidget_setBackgroundMode(Handle, QWidgetBackgroundMode_NoBackground);
-{ if classname='TMySiz' then
- begin
-
-  QWidget_setMouseTracking(Handle, false);
-  QWidget_setAcceptDrops(FHandle, false);
-  QWidget_setFocusPolicy(Handle, FocusPolicy[true]);
- end;
- }        
  QWidget_setFocusPolicy(Handle, QWidgetFocusPolicy_WheelFocus);
  Masked:=True;
 end;
@@ -13746,23 +13520,6 @@ begin
   if IsRectEmpty(_NC) then exit;
   Canvas.Brush.Color := clDontMask;
   Canvas.FillRect(_NC);
-
-
- {if not Opaque then
- begin
-  Canvas.Brush.Color := clMask;
-  if not (TopIsValid and (TransparentTop<>nil)) then
-   exit;//AssertTop(0,true);
-  if TopIsValid and (TransparentTop<>nil) then
-  for X:=0 to TransparentTop.Width-1 do
-  for Y:=0 to TransparentTop.Height-1 do
-  if AlphaComponent(TransparentTop.PixelS[X,Y]) = 0 then
-  begin
-   Canvas.Pixels[X,Y]:=clMask;
-  end;
- end else
-  exit;    }
-
   Canvas.Brush.Color := clDontMask;
   for I := 0 to ControlCount - 1 do
   begin
@@ -13810,8 +13567,6 @@ begin
   end;
 end;
 
-
-
 procedure TdhCustomPanel.WriteSUse(Writer: TWriter);
 begin
  Writer.WriteString(SUse);
@@ -13825,7 +13580,6 @@ end;
 procedure DoCalcStrongToWeak(var ALeft,ATop,AWidth,AHeight:integer; const ClientBound:TRect; Anchors:TAnchors; const CSSRight,CSSBottom:integer);
 var ParentWH:TPoint;
 begin
-
  with ClientBound do
   ParentWH:=Point(Right-Left,Bottom-Top);
 
@@ -13838,7 +13592,6 @@ begin
  if [akLeft,akRight]*Anchors=[akLeft,akRight] then
   AWidth:=ParentWH.X-(CSSRight+ALeft) else
   ALeft:=ParentWH.X-(CSSRight+AWidth);
-
 end;
 
 
@@ -13846,68 +13599,41 @@ procedure TdhCustomPanel.CalcStrongToWeak(var ALeft,ATop,AWidth,AHeight:integer)
 var ParentWH:TPoint;
     i:integer;
 begin
-
-
  AHeight:=Height;
  ATop:=Top;
  AWidth:=Width;
  ALeft:=Left;
-
  if CSSBottom=InvalidCSSPos then
  begin
   i:=CSSRight;
   WeakToStrong(true);
   CSSRight:=i;
- end{ else
- if not HasActiveStrong([akBottom]) then
-  CSSBottom:=InvalidCSSPos};
+ end;
  if CSSRight=InvalidCSSPos then
  begin
   i:=CSSBottom;
   WeakToStrong(true);
   CSSBottom:=i;
- end{ else
- if not HasActiveStrong([akRight]) then
-  CSSRight:=InvalidCSSPos};
+ end;
  DoCalcStrongToWeak(ALeft,ATop,AWidth,AHeight,GetLocalClientBound(Parent),Anchors,CSSRight,CSSBottom);
-
- {
- with GetLocalClientBound(Parent) do
-  ParentWH:=Point(Right-Left,Bottom-Top);
-
- if akBottom in Anchors then
- if [akTop,akBottom]*Anchors=[akTop,akBottom] then
-  AHeight:=ParentWH.Y-(CSSBottom+Top) else
-  ATop:=ParentWH.Y-(CSSBottom+Height);
-
- if akRight in Anchors then
- if [akLeft,akRight]*Anchors=[akLeft,akRight] then
-  AWidth:=ParentWH.X-(CSSRight+Left) else
-  ALeft:=ParentWH.X-(CSSRight+Width);      }
 end;
 
 
 
-procedure TdhCustomPanel.StrongToWeak; //entspricht UpdateAnchorRules
+procedure TdhCustomPanel.StrongToWeak; //equates UpdateAnchorRules
 var ALeft,ATop,AWidth,AHeight:integer;
 begin
- if LightBoundsChanging{ or not HasActiveStrong([akBottom,akRight])} then exit;
-
+ if LightBoundsChanging then exit;
  CalcStrongToWeak(ALeft,ATop,AWidth,AHeight);
-
- //assert(not LightBoundsChanging);
  LightBoundsChanging:=true;
  SetBounds(ALeft,ATop,AWidth,AHeight);
  LightBoundsChanging:=false;
-
 end;
 
 function TdhCustomPanel.HasActiveStrong(TestAnchors:TAnchors):boolean;
 begin
   result:=((Align=alNone) and (TestAnchors*Anchors<>[]));
 end;
-
-
 
 //assumes that that the normal BoundsRect has more current data than CSSRight or CSSBottom
 procedure TdhCustomPanel.WeakToStrong(IncludeActiveStrong:boolean; ALeft, ATop, AWidth, AHeight:Integer);
@@ -13931,32 +13657,10 @@ begin
   WeakToStrong(IncludeActiveStrong, Left, Top, Width, Height);
 end;
 
-procedure TdhCustomPanel.ReadRight(Reader: TReader);
-//var Right,ParentWidth:integer;
-begin
- CSSRight:=Reader.ReadInteger;
- StrongToWeak;
- {
- with GetClientBound(Parent) do
-  ParentWidth:=(Right-Left);
- if [akLeft,akRight]*Anchors=[akLeft,akRight] then
-  Width:=ParentWidth-(Right+Left) else
-  Left:=ParentWidth-(Right+Width); }
-end;
-
 procedure TdhCustomPanel.SetRight(const Value:integer);
 begin         
  CSSRight:=Value;
  StrongToWeak;
-end;
-
-procedure TdhCustomPanel.WriteRight(Writer: TWriter);
-var ParentWidth:integer;
-begin
- {with GetClientBound(Parent) do
-  ParentWidth:=(Right-Left);
- Writer.WriteInteger(ParentWidth-(Left+Width)); }
- Writer.WriteInteger(CSSRight);
 end;
 
 procedure TdhCustomPanel.GetChildren(Proc: TGetChildProc; Root: TComponent);
@@ -13973,25 +13677,12 @@ end;
 
 function TdhCustomPanel.IsRightStored:boolean;
 begin
- result:={not (Align in [alTop,alBottom,alClient]) and }(akRight in RealAnchors);
+ result:=akRight in RealAnchors;
 end;
 
 function TdhCustomPanel.IsLeftStored:boolean;
 begin
- result:=(akLeft in RealAnchors);
-end;
-
-procedure TdhCustomPanel.ReadBottom(Reader: TReader);
-var Bottom,ParentHeight:integer;
-begin
- {Bottom:=Reader.ReadInteger;
- with GetClientBound(Parent) do
-  ParentHeight:=(Bottom-Top);
- if [akTop,akBottom]*Anchors=[akTop,akBottom] then
-  Height:=ParentHeight-(Bottom+Top) else
-  Top:=ParentHeight-(Bottom+Height);}
- CSSBottom:=Reader.ReadInteger;
- StrongToWeak;
+ result:=akLeft in RealAnchors;
 end;
 
 procedure TdhCustomPanel.SetBottom(const Value:integer);
@@ -14000,34 +13691,14 @@ begin
  StrongToWeak;
 end;
 
-
-{function GetCSSBottomRight(Self:TControl):TPoint;
-begin
- with GetClientBound(Self.Parent) do
- begin
-  Result.X:=(Right-Left)-(Self.Left+Self.Width);
-  Result.Y:=(Bottom-Top)-(Self.Top+Self.Height);
- end;
-end;  }
-
-
-procedure TdhCustomPanel.WriteBottom(Writer: TWriter);
-var ParentHeight:integer;
-begin
- {with GetClientBound(Parent) do
-  ParentHeight:=(Bottom-Top);
- Writer.WriteInteger(ParentHeight-(Top+Height)); }
- Writer.WriteInteger(CSSBottom);
-end;
-
 function TdhCustomPanel.IsBottomStored:boolean;
 begin
- result:={not (Align in [alLeft,alRight,alClient]) and }(akBottom in RealAnchors);
+ result:=akBottom in RealAnchors;
 end;
 
 function TdhCustomPanel.IsTopStored:boolean;
 begin
- result:=(akTop in RealAnchors);
+ result:=akTop in RealAnchors;
 end;
 
 
@@ -14060,9 +13731,6 @@ begin
  result:=_RealAnchors(Anchors,GetImageType=bitImage);
 end;
 
-
-
-
 procedure TdhCustomPanel.DefineProperties(Filer: TFiler);
 begin
  //inherited;           to not write ExlicitLeft etc. any longer
@@ -14077,13 +13745,6 @@ begin
  Filer.DefineProperty('ExplicitHeight', SkipValue, nil, false);
  DoDefineProperties(Filer);
 end;
-
-                                            {
-procedure TdhCustomPanel.SetAutoSizeVertOnly(Value:Boolean);
-begin
- SetAutoSizeVertOnly(Value);
-end;                                         }
-
 
 function TdhCustomPanel.GetStyle(Index:TState):TStyle;
 begin
@@ -14100,40 +13761,16 @@ var OldValue:ICon;
 begin
   SUse:=EmptyStr;
   if FUse=Value then exit;
-  {if (Value<>nil) and not (csDestroying in Control.ComponentState) and (GetTopForm(Value.GetCommon.Control)<>GetTopForm(Control)) then
-  begin
-   showmessage(NameWithForm(Control)+': The Use component must be on the same form');
-   exit;
-  end;  !! }
   if (Value<>nil) and (Self=Value.GetCommon) then
   begin
-   //raise Exception.Create('"'+Value.GetName+'" is not a valid value due to causing a circular reference');
    ShowMessage('"'+Value.GetName+'" is not a valid value due to causing a circular reference');
    exit;
   end;
-   //showmessage('Cannot use oneself');
-
-  {sonst kann Body element kein Use setzen
-  if (Value<>nil) and (Control is TWinControl) and TWinControl(Control).ContainsControl(Value.GetCommon.Control) then
-  begin
-   showmessage('Cannot inherit from child control');
-   exit;
-  end;    }
   if InUseList(Value,Self) then
   begin
-   //raise Exception.Create('"'+Value.GetName+'" is not a valid value due to causing a circular reference');
    ShowMessage('"'+Value.GetName+'" is not a valid value due to causing a circular reference');
    exit;
   end;
-
-  {P:=Value;
-  while P<>nil do
-  if P=Con then
-  begin
-   showmessage('Circular reference');
-   exit;
-  end else
-   P:=P.GetCommon.FUse;}
   if FUse<>nil then
    FUse.GetCommon.UsedByList.Remove(Self);
   if Value<>nil then
@@ -14146,25 +13783,13 @@ end;
 
 procedure TdhCustomPanel.NotifyUseChanged(OldValue:ICon);
 begin
-
 end;
 
 
-
-
-
-
-
 {$IFNDEF CLX}
-
 function TdhCustomPanel.DesignWndProc(var Message: TMessage): Boolean;
 begin
-// result:=RuntimeMode or (ActDown<>amNone) or CanUseMouseClick and  and;
  result:=false;
- if Message.Msg=WM_MOUSEWHEEL then
-  showmessage('WM_MOUSEWHEEL');
- if Message.Msg=CM_MOUSEWHEEL then
-  showmessage('CM_MOUSEWHEEL');
 end;
 {$ENDIF}
 
@@ -14176,32 +13801,14 @@ end;
 {$IFDEF CLX}
 function TdhCustomPanel.DesignEventQuery(Sender: QObjectH; Event: QEventH): Boolean;
 begin
- result:=//Event is QMouseEventH and
-  //(QEvent_type(Event) in [QEventType_MouseButtonPress,QEventType_MouseButtonRelease,QEventType_MouseButtonDblClick,QEventType_MouseMove])  and
-  DesignHitTest;
+ result:=DesignHitTest;
 end;
 {$ELSE}
 procedure TdhCustomPanel.CMDesignHitTest(var Message: TCMDesignHitTest);
-{var HitIndex: Integer;
-    HitTestInfo: TTCHitTestInfo;
-}begin
-//  HitTestInfo.pt := SmallPointToPoint(Message.Pos);
-//  HitIndex := SendMessage(Handle, TCM_HITTEST, 0, Longint(@HitTestInfo));
-  {if (HitIndex >= 0) and (HitIndex <> TabIndex) then} //Message.Result := 0;
-  //inherited;
-
-{  if (Message.Msg = WM_RBUTTONDOWN) or
-     (Message.Msg = WM_RBUTTONUP) or
-     (Message.Msg = WM_RBUTTONDBLCLK) then
-  begin
-   Message.Result:=0;
-   exit;
-  end;    }       
+begin
   Message.Result:=0;
-//  if not(ssRight in KeysToShiftState(Message.Keys)) then
-  if RuntimeMode or (ActDown<>amNone) or CanUseMouseClick{ and (Message.Msg >= WM_MOUSEFIRST) and (Message.Msg <= WM_MOUSELAST)}{and ((Message.Msg = WM_LBUTTONUP) or (Message.Msg = WM_LBUTTONDOWN) or (Message.Msg = WM_LBUTTONDBLCLK) or (Message.Msg = WM_MOUSEMOVE))} then
+  if RuntimeMode or (ActDown<>amNone) or CanUseMouseClick then
    Message.Result:=1;
-      //Message.Result:=1;
 end;
 {$ENDIF}
 
@@ -14239,51 +13846,29 @@ begin
 end;
 
 
-
-
-
 {$IFNDEF CLX}
 
 procedure TdhCustomPanel.WMNCHitTest(var Message: TWMNCHitTest);
 var P:TPoint;
 begin
-
-
  P:=Point(Message.XPos,Message.YPos);
  DecPt(P,GetCBound(Self).TopLeft);
- //P:=ScreenToClient(Point(Message.XPos,Message.YPos));
-
  if not ((P.X >= 0) and (P.Y >= 0) and (P.X < Width) and (P.Y < Height)) then
- begin //wird nie verzweigt bisher
+ begin // this case never happend by now!
   Message.Result := Windows.HTNOWHERE;
   exit;
  end;
  if (csDesigning in ComponentState) and (Parent <> nil) and not RuntimeMode then
  begin
-  //DefaultHandler(Message);
-  //Message.Result:=HTBORDER;
-  //Message.Result:=HTVSCROLL;
   Message.Result := HTCLIENT;
-  //inherited;
   exit;
  end;
  if not AcceptClick(P) then
  begin
-    Message.Result := Windows.{HTNOWHERE}HTTRANSPARENT;
+    Message.Result := Windows.HTTRANSPARENT;
     exit;
  end;
- //inherited;
- (*if {not PtInRect(P,ScrollArea) and }CanUseMouseClick then
- begin
-  Message.Result:=HTVSCROLL;
-  Message.Result:=HTBORDER;
-  //exit;
-//  SetCapture(d
- end;*)
-  Message.Result:=HTCLIENT;
-
-// DefaultHandler(Message);
-
+ Message.Result:=HTCLIENT;
 end;
 
 {$ELSE}
@@ -14296,16 +13881,6 @@ end;
 
 {$ENDIF}
 
-
-
-{Type TCWPStruct = Packed record
-    lParam: LPARAM;
-    wParam: WPARAM;
-    message: integer;
-    wnd: HWND;
-  End;
-         }
-
 function iControlAtPos(c:TWinControl; const pt: TPoint):TControl;
 var i,ri:integer;
     cc:TControl;
@@ -14313,7 +13888,6 @@ var i,ri:integer;
 begin
  result:=nil;
  ri:=0;
- //bei CLX ist ActiveMDIChild=MDIChildren[0] nicht gegeben
  if (c is TForm) and (TForm(c).MDIChildCount<>0{needed by CLX}) then
  begin
  cc:=TForm(c).ActiveMDIChild;
@@ -14328,7 +13902,6 @@ begin
  cc:=TForm(c).MDIChildren[i];
  rct:=GetCBound(cc);
  if PtInRect(rct,pt) and FinalVisible(cc) and (cc.ClassName<>'TMySiz') and not ((csDesigning in c.ComponentState) and (c.Owner<>cc.Owner) and not (csAncestor in cc.ComponentState)) then
-// if not((result<>nil) and (GetZOrder(result,ri)>GetZOrder(cc,i))) then
  begin
    result:=cc;
    ri:=i-TForm(c).MDIChildCount;
@@ -14337,7 +13910,6 @@ begin
  end;
  end;
 
- //if result=nil then
  for i:=0 to c.ControlCount-1 do
  begin
  cc:=c.Controls[i];
@@ -14347,7 +13919,6 @@ begin
  begin
    result:=cc;
    ri:=i;
-     //break;
  end;
  end;
 
@@ -14386,11 +13957,9 @@ function MyFindControl(c:TControl): TControl;
 begin
  result:=c;
  if result is TWinControl then
- if {(result.ClassName='TMySiz')) and }(result.Owner is TWinControl){ and not (result is TCustomForm)} then
+ if result.Owner is TWinControl then
   result:=iControlAtPos(GetVeryTop(result),Mouse.CursorPos) else
   result:=iControlAtPos(TWinControl(result),Mouse.CursorPos);
-
- //if (result<>nil) and (result.Owner is TWinControl) and (not NeedDesigning or not (csDesigning in result.ComponentState)){(result.ClassName='TMySiz')} then
 end;
 
 function MyFindControl(Handle: HWnd): TControl;
@@ -14414,16 +13983,7 @@ begin
     result:=false;
     exit;
    end;
-   {if (cc<>nil) and (cc.Owner is TScrollingWinControl) then
-    cc:=TScrollingWinControl(cc);  }
-    {if cc<>nil then
-     showmessage(cc.ClassName);
-                                   }
-  {GetCursorPos(P);
-  c := FindDragTarget(P, True);
-  if (cc<>nil) and (cc.ContainsControl(c)) then }
 
-  //  showmessage(inttostr(result));
   while c<>nil do
   begin
     if (c<>nil){ and (c.Parent=nil) }and (c is TScrollingWinControl) then
@@ -14432,13 +13992,12 @@ begin
      fin:=min(max(0,TScrollingWinControl(c).VertScrollBar.Position+sm),TScrollingWinControl(c).VertScrollBar.Range);
      if TScrollingWinControl(c).VertScrollBar.Position<>fin then
      begin
-      if {(c is TCustomForm) or (c is TCustomFrame)}c is TScrollingWinControl then
+      if c is TScrollingWinControl then
       begin
        (c as TScrollingWinControl).VertScrollBar.Position:=fin;
-       c.Repaint;  //nur TdhPanel-scroll machen}
+       c.Repaint;
       end;
       result:=true;
-      //c.Update;
       exit;
      end;
     end;
@@ -14453,7 +14012,6 @@ begin
       exit;
      end;
     end;
-    ////break;
     c:=c.Parent;
    end;
   end;
@@ -14513,10 +14071,6 @@ begin
   result:=c.Parent;
 end;
 
-
-
-
-
 {$ENDIF}
 
 
@@ -14524,8 +14078,6 @@ procedure TdhCustomPanel.DoClickAction(Initiator:TdhCustomPanel);
 begin
  //do nothing
 end;
-
-
 
 
 var OldOnIdle:TIdleEvent;
@@ -14570,31 +14122,19 @@ begin
     if ((FMouseControl <> nil) and (CaptureControl = nil)) or
       ((CaptureControl <> nil) and (FMouseControl = CaptureControl)) then
       if (FMouseControl is TdhCustomPanel) then TdhCustomPanel(FMouseControl).SetIsOver(false);
-      //FMouseControl.Perform(CM_MOUSELEAVE, 0, 0);
     if not (Result is TdhCustomPanel) then Result:=nil;
-//    if (Result<>nil) and (Result.Name='SubMenu2') then
-     //Result := FindDragTarget(P, True);
 
     FMouseControl := Result;
     if ((FMouseControl <> nil) and (CaptureControl = nil)) or
       ((CaptureControl <> nil) and (FMouseControl = CaptureControl)) then
       if (FMouseControl is TdhCustomPanel) then TdhCustomPanel(FMouseControl).SetIsOver(true);
-      //FMouseControl.Perform(CM_MOUSEENTER, 0, 0);
   end;
 end;
-            {
-
-function TdhCustomPanel.DownIfOver:boolean;
-begin
-
- result:=(FSubMenu<>nil) or (aoDownIfMouseDown in FAnchorOptions) or (aoDownIfURL in FAnchorOptions) and (FLinkTab<>nil) and (FLinkTab.PageControl is TdhPageControl) and TdhPageControl(FLinkTab.PageControl).UseIFrame;
-end;            }
 
 procedure TStyle.AssignBackground(s: TStyle);
 begin
  if s<>nil then
  begin
-    //FBackgroundColor:=s.FBackgroundColor;
     FBackgroundAttachment:=s.FBackgroundAttachment;
     FBackgroundRepeat:=s.FBackgroundRepeat;
     FBackgroundPosition:=s.FBackgroundPosition;
@@ -14654,9 +14194,7 @@ begin
   if AParent<>nil then
   begin
    NotifyCSSChanged(InheritableChanges + [wcNoOwnCSS]);
-   //WeakToStrong;
   end;
-  //Masked:=true;
  end;
 end;
 
@@ -14689,7 +14227,6 @@ end;
 procedure TdhCustomPanel.VisibleChanged;
 begin
  Inherited;
- //if not Visible then exit;
  if HandleAllocated then
   InvalBack(GetCBound(Self));
 end;
@@ -14720,9 +14257,6 @@ begin
   FAutoSize := Value;
   AdjustSize;
 end;
-
-
-
 
 procedure TCSSBorderRadius.Assign(Source: TPersistent);
 var tt:TCSSBorderRadius;
@@ -14844,13 +14378,6 @@ begin
    Owner.pc(pcBorderRadius);
 end;
 
-
-procedure ClearX87Exceptions;
-{ clears pending FPU exceptions.}
-ASM
-  FNCLEX
-end;
-
 procedure TTransformations.SetAntiAliasing(const Value: boolean);
 begin
   FAntiAliasing := Value;
@@ -14943,17 +14470,6 @@ begin
  result:=FInnerShadow.IsCleared and FOuterShadow.IsCleared and FInnerGlow.IsCleared and FOuterGlow.IsCleared and FBlur.IsCleared;
 end;
 
-
-{
-function TTransformations.IsCleared:boolean;
-begin
-  result:=not FEnabled and
-          (FRotationDegree=0) and (FAlpha=255) and (FShiftX=0) and (FShiftY=0) and (FScaleX=100) and (FScaleY=100) and (FSkewX=0) and (FSkewY=0) and
-          not FAntiAliasing and not FTextOnly and not FUseBased and FFullIfEasy and
-          FInnerShadow.IsCleared and FOuterShadow.IsCleared and FInnerGlow.IsCleared and FOuterGlow.IsCleared and FBlur.IsCleared;
-end;
-}
-
 procedure TTransformations.Clear;
 begin
    FScaleX:=100;
@@ -14967,7 +14483,6 @@ begin
    FInnerGlow.Clear;
    FOuterGlow.Clear;
    FBlur.Clear;
-
    FShiftY:=0;
    FShiftX:=0;
    FEnabled:=false;
@@ -14975,11 +14490,8 @@ begin
    FRotationDegree:=0;
    FSkewX:=0;
    FSkewY:=0;
-
    Changed;
 end;
-
-{ TBlur }
 
 procedure TShadow.Clear;
 begin
@@ -15047,9 +14559,6 @@ begin
  result:=not FEnabled and (FDeciRadius=50);
 end;
 
-
-{ TGlow }
-
 procedure TGlow.Clear;
 begin
   FEnabled:=false;
@@ -15093,8 +14602,6 @@ begin
    end;
 end;
 
-{.$IFNDEF CLX}
-
 function ReduceColorsWithTransparentColorReservation(GIFImage:TGIFImage; Bitmap:TBitmap):TBitmap;   
 var Bitmaps:TList;
     Palette:hPalette;
@@ -15137,28 +14644,10 @@ begin
    DelayMS:=0;
 
   bt:=TBitmap.Create;
-  //bt.PixelFormat:=pf24bit;
   bt.PixelFormat:=pf32bit;
-
-
-  {bt.Transparent:=true;
-  bt.TransparentColor:=0;
-  Problem: bt.TransparentColor verschmilzt mit ähnlicher Farbe im Bild
-   }
-
-
-  {png:=TPngImage.Create;
-  png.CompressionLevel:=9;
-  png.AssignHandle(Opaque.BitmapHandle,false,0);
-  bt.Assign(png);
-  png.Free;   }
-
   bt.Width:=Opaque.Width;
   bt.Height:=Opaque.Height;
-  //Opaque.DrawTo(bt.Canvas.Handle,0,0);
   bt.Canvas.CopyRect(Opaque.BoundsRect,Opaque.Canvas,Opaque.BoundsRect);
-//  bt.Assign(Opaque);
-
 
   WasTransparent:=false;
   if Transparent<>nil then
@@ -15191,10 +14680,10 @@ begin
 
   result:=GIFSubImage;
 
-  if Loop and (GIFSubImage=GIF.Images[0]) then //siehe FTGifAnimate
+  if Loop and (GIFSubImage=GIF.Images[0]) then
   begin
     LoopExt := TGIFAppExtNSLoop.Create(GIFSubImage);
-    LoopExt.Loops := 0; // Number of loops (0 = forever)
+    LoopExt.Loops := 0;
     for i := 0 to CopyFrom.Extensions.Count-1 do
     if (CopyFrom.Extensions[i] is TGIFAppExtNSLoop) then
      LoopExt.Loops:=TGIFAppExtNSLoop(CopyFrom.Extensions[i]).Loops;
@@ -15204,26 +14693,20 @@ begin
   Ext:=nil;
   if WasTransparent then
   begin
-    //GIF.Transparent:=true;
-
     GIFSubImage.ColorMap.Optimize;
     // Can't make transparent if no color or colormap full
     if not((GIFSubImage.ColorMap.Count = 0) or (GIFSubImage.ColorMap.Count = 256)) then
     begin
-
       // Add the transparent color to the color map
-      TransparentIndex := GIFSubImage.ColorMap.Add{Unique}(TColor({ $112211}$0));
+      TransparentIndex := GIFSubImage.ColorMap.Add(TColor($0));
 
       Ext:=TGIFGraphicControlExtension.Create(GIFSubImage);
       Ext.Transparent := True;
-      //TransparentIndex:=result.Images[0].Pixels[TransparentX,TransparentY];
       Ext.TransparentColorIndex := TransparentIndex;
-      Ext.Delay := DelayMS{ div 10};  // 30; // Animation delay (30 = 300 mS)
+      Ext.Delay := DelayMS;
       GIFSubImage.Extensions.Add(Ext);
 
-//      GIFSubImage.ColorMap.Optimize;
       Assert(TransparentIndex=GIFSubImage.GraphicControlExtension.TransparentColorIndex);
-
 
        P:=Transparent.PixelPtr[0,0];
        for y:=0 to Transparent.Height-1 do
@@ -15236,25 +14719,18 @@ begin
          inc(P);
         end;
        end;
-       //GIFSubImage.ColorMap.Optimize;
-
     end;
   end;
 
   if (Ext=nil) and (DelayMS<>0) then
   begin
       Ext:=TGIFGraphicControlExtension.Create(GIFSubImage);
-      Ext.Delay := DelayMS{ div 10};  // 30; // Animation delay (30 = 300 mS)
-      //GIFSubImage.Extensions.Insert(0,Ext);
+      Ext.Delay := DelayMS;
       GIFSubImage.Extensions.Add(Ext);
   end;
 
-  {if GIFSubImage.GraphicControlExtension<>nil then
-   GIFSubImage.GraphicControlExtension.Disposal:=dmBackground;
-   exit; }
   if (PrevSubImage<>nil) and (PrevSubImage.Height=GIFSubImage.Height)  and (PrevSubImage.Width=GIFSubImage.Width) and GIFSubImage.Transparent and (PrevSubImage.GraphicControlExtension<>nil) then
   begin
-       //GIFSubImage.GraphicControlExtension.Disposal:=dmNoDisposal;
        TransparentIndex:=GIFSubImage.GraphicControlExtension.TransparentColorIndex;
        if PrevSubImage.GraphicControlExtension<>nil then
         TransparentIndex2:=PrevSubImage.GraphicControlExtension.TransparentColorIndex else
@@ -15268,17 +14744,10 @@ begin
          if (ba[x]=TransparentIndex) and (ba2[x]<>TransparentIndex2) then
          begin
           PrevSubImage.GraphicControlExtension.Disposal:=dmBackground;
-          //GIFSubImage.GraphicControlExtension.Disposal:=dmBackground;
           exit;
          end;
         end;
        end;
-{  if (PrevSubImage.GraphicControlExtension<>nil) and (imageIndex=27) then
-   GIFSubImage.GraphicControlExtension.Disposal:=dmNoDisposal;
-   transparent.SaveToFile('c:\bm.bmp');
-   opaque.SaveToFile('c:\bm2.bmp');
-   if (imageIndex)=0 then
-   exit;}
   end;
 
 end;
@@ -15294,7 +14763,6 @@ end;
 procedure CloseGif(GIF:TGifImage);
 begin
  GIF.Optimize([{ooCrop, Opera cannot deal with cropping: treats as if cropped edges not exist}ooMerge,ooCleanup,ooColorMap],GIF.ColorReduction,GIF.DitherMode,GIF.ReductionBits);
-  //result.OptimizeColorMap;
 end;
 
 function GetGifImageFromBitmap32(Transparent:TBitmap32; Opaque:TBitmap32):TGifImage;
@@ -15303,137 +14771,6 @@ begin
   AddGIFSubImageFromBitmap32(Transparent,Opaque,result);
   CloseGif(result);
 end;
-
-(*
-function GetIconFromBitmap32(Transparent:TMyBitmap32; Opaque:TMyBitmap32):TIcon;
-var b:TBitmap;
-begin
-  result:=TIcon.Create;
-  b:=TBitmap.Create;
-  b.Assign(Opaque);
-  b.Width:=16;
-  b.Height:=16;
-  result.
-  result.Assign(b);
-  //result.Assign(Opaque);
-  b.Free;
-  result.Transparent:=true;
-{  AddGIFSubImageFromBitmap32(Transparent,Opaque,result);
-  CloseGif(result);}
-end;
-*)
-
-
-
-(*
-function GetGifImageFromBitmap32(Transparent:TMyBitmap32; Opaque:TMyBitmap32):TGifImage;
-var y,x:integer;
-var P,P2,P3: PColor32;
-    bp:pByteArray;
-    bt:TBitmap;
-    PP : pDWORDArray;
-    GCE : TGIFGraphicControlExtension;
-    TransparentIndex	: integer;
-    WasTransparent:boolean;
-    GIFSubImage:TGIFFrame;
-    ba:PByteArray;
-begin
-  bt:=TBitmap.Create;
-  bt.PixelFormat:=pf24bit;
-
-        {
-  WasTransparent:=false;
-  if Transparent<>nil then
-  begin
-   P:=Transparent.PixelPtr[0,0];
-   for y:=0 to Transparent.Height-1 do
-   begin
-    //pp:=bt.ScanLine[y];
-    for x:=0 to Transparent.Width-1 do
-    begin
-     if P^ shr 24=$00 then
-     begin
-      WasTransparent:=true;
-      pp[x]:=$00000000;
-     end;
-     inc(P);
-    end;
-   end;
-  end;    }
-
-  bt.Assign(Opaque);
-
-  WasTransparent:=false;
-  if Transparent<>nil then
-  begin
-   P:=Transparent.PixelPtr[0,0];
-   for y:=0 to Transparent.Height-1 do
-   begin
-    pp:=bt.ScanLine[y];
-    for x:=0 to Transparent.Width-1 do
-    begin
-     if P^ shr 24=$00 then
-     begin
-      WasTransparent:=true;
-      pp[x]:=$0;
-     end;
-     inc(P);
-    end;
-   end;
-  end;
-
-
-  result:=TGifImage.Create;
-  result.ColorReduction:=rmPalette;
-  result.ColorReduction:=rmQuantize;
-//  result.ColorReduction:=rmNetscape;
-  result.Assign(bt);
-  bt.Free;
-
-  if (WasTransparent) then
-  begin
-    result.Transparent:=true;
-    GIFSubImage:=Result.Images[0];
-
-    GIFSubImage.ColorMap.Optimize;
-    // Can't make transparent if no color or colormap full
-    if not((GIFSubImage.ColorMap.Count = 0) or (GIFSubImage.ColorMap.Count = 256)) then
-    begin
-
-      // Add the transparent color to the color map
-      TransparentIndex := GIFSubImage.ColorMap.Add{Unique}(TColor({ $112211}$0));
-
-
-      GCE := TGIFGraphicControlExtension.Create(GIFSubImage);
-      GCE.Transparent := True;
-      //TransparentIndex:=result.Images[0].Pixels[TransparentX,TransparentY];
-      GCE.TransparentColorIndex := TransparentIndex;
-      GIFSubImage.Extensions.Add(GCE);
-
-//      GIFSubImage.ColorMap.Optimize;
-      TransparentIndex:=GIFSubImage.GraphicControlExtension.TransparentColorIndex;
-
-
-       P:=Transparent.PixelPtr[0,0];
-       for y:=0 to Transparent.Height-1 do
-       begin
-        ba:=GIFSubImage.ScanLine[y];
-        for x:=0 to Transparent.Width-1 do
-        begin
-         if P^ shr 24=$00 then
-          ba[x]:=TransparentIndex;
-         inc(P);
-        end;
-       end;
-      GIFSubImage.ColorMap.Optimize;
-      TransparentIndex:=GIFSubImage.GraphicControlExtension.TransparentColorIndex;
-
-    end;
-
-  end;
-end;
-
-*)
 
 type TFakeChunkPLTE=class(TChunkPLTE);
 
@@ -15452,49 +14789,28 @@ end;
 function GetPNGObjectPTFromGifAndBitmap32(Transparent:TMyBitmap32; gif:TGIFImage):TPngImage;
 var bt:TBitmap;
 var P: PColor32;
-    bp:pByteArray;
     x,y:integer;
 begin
  result:=TPngImage.Create;
  result.CompressionLevel:=9;
  bt:=TBitmap.Create;
  bt.Assign(Transparent);
-{ bt.Transparent:=gif.Transparent;
- bt.TransparentMode:=tmFixed;
-}
- //result.Assign(bt);
  bt.Width:=gif.Width;
  bt.Height:=gif.Height;
- {bt.Canvas.Brush.Color:=clRed;
- bt.canvas.Pen.Style:=psClear;
- bt.Canvas.FillRect(Rect(0,0,gif.Width,gif.Height));   }
  bt.Assign(gif);
-// bt.Palette:=gif.Images[0].ColorMap.ExportPalette;
-{ bt.Transparent:=gif.Transparent;
- bt.TransparentMode:=tmFixed;
- bt.TransparentColor:=gif.Images[0].GraphicControlExtension.TransparentColor;
-}
- if {gif.Transparent}gif.Images[0].Transparent then
+ if gif.Images[0].Transparent then
  begin
-  gif.Images[0].GraphicControlExtension.TransparentColor;
-//  result.transparentcolor:=gif.Images[0].GraphicControlExtension.TransparentColor;
-
-
-
-  result.AssignHandle(bt.Handle,true,{ TColor($112211)}{bt.TransparentColor} gif.Images[0].GraphicControlExtension.TransparentColor);
+  result.AssignHandle(bt.Handle,true, gif.Images[0].GraphicControlExtension.TransparentColor);
   SetPaletteColorCount(result,gif.GlobalColorMap.Count);
-  //result.TransparentColor:=gif.Images[0].GraphicControlExtension.TransparentColor;
   result.TransparentColor:=gif.Images[0].GraphicControlExtension.TransparentColor;
   begin
    P:=Transparent.PixelPtr[0,0];
    for Y:=0 to result.Height-1 do
    begin
-    bp:=result.Scanline[Y];
     for X:=0 to result.Width-1 do
     begin
      if Transparent.Pixel[x,y] shr 24=0 then
       result.Pixels[x,y]:=result.transparentcolor;
-      //bp^[X]:=gif.Images[0].GraphicControlExtension.TransparentColorIndex;//gif.Images[0].GraphicControlExtension.TransparentColorIndex;
      inc(P);
     end;
    end;
@@ -15504,9 +14820,6 @@ begin
   result.AssignHandle(bt.Handle,false,0);
   SetPaletteColorCount(result,gif.GlobalColorMap.Count-1);
  end;
- //result.Palette:=gif.Palette;
- {if gif.Transparent then
-  result.CreateAlpha;  }
  bt.Free;
 end;
 
@@ -15545,7 +14858,6 @@ begin
   bt:=TBitmap.Create;
   bt.Assign(Src);
   result:=TJPegImage.Create;
-  //result.CompressionQuality:=20;
   result.Assign(bt);
   bt.Free;
 end;
@@ -15558,13 +14870,6 @@ begin
  result.Assign(Transparent);
 end;
 
-  {TMyBitmap=class(TBitmap)
-  protected
-    BitmapWithMask:TBitmap;
-    function GetMaskHandle: HBITMAP; override;
-
-  end; }
-
 function GetGifTransparent(Opaque:TMyBitmap32; Transparent:TMyBitmap32):TMyBitmap32;
 var J:integer;
 var P,P2: PColor32;
@@ -15575,7 +14880,6 @@ begin
  P2:=result.PixelPtr[0,0];
  for j:=0 to Transparent.Width*Transparent.Height-1 do
  begin
-//  if integer(p) div 10 mod 2=1 then
   if P^ shr 24=$00 then
    P2^:=0;
   inc(P);
@@ -15601,40 +14905,14 @@ begin
  Writer.WriteString(FBorderColors);
 end;
 
-{procedure TStyle.WriteNewMargin(Writer: TWriter);
-begin
- with Owner.ClientEdgesPure do
-  Writer.WriteString(inttostr(Top)+'px '+inttostr(Right)+'px '+inttostr(Bottom)+'px '+inttostr(Left)+'px');
-end;
-}
-
-
-procedure NormalizeTransparency(Transparent:TMyBitmap32);
-var J:integer;
-var P: PColor32;
-begin
- P:=Transparent.PixelPtr[0,0];
- for j:=0 to Transparent.Width*Transparent.Height-1 do
- begin
-//  if integer(p) div 10 mod 2=1 then
-  if (P^ shr 24=$00) and (P^<>0) then
-   assert(P^=0);
-{  if P^=$323735 then
-   P^:=0 else
-   P^:=P^ or $FF000000;}
-  inc(P);
- end;
-end;
-
 function GetCRCFromBitmap32(b:TMyBitmap32; w,h:integer; ResumeCrc:DWORD=0):DWORD; overload;
 var y:integer;
 begin
    result:=w;
    result:=calc_crc32(sizeof(result),@result,ResumeCrc);
    if w<>0 then
-   for y:=0 to {b.Height}h-1 do
+   for y:=0 to h-1 do
     result:=calc_crc32(w*sizeof(TColor32),PByte(b.PixelPtr[0,y]),result);
-//   result:=calc_crc32(b.Width*b.Height*sizeof(TColor32),PByte(b.PixelPtr[0,0]),result);
 end;
 
 function GetCRCFromBitmap32(Transparent,Opaque:TMyBitmap32; w,h:integer; ResumeCrc:DWORD=0):DWORD; overload;
@@ -15697,14 +14975,6 @@ var gif_pre:TMyBitmap32;
 const ext:array[TPhysicalImageFormat] of AnsiString=('.gif','.png','.jpg');
 begin
 
-
-
-
-         {
-   RasteringFile:=RasteringFile+'.gif';
-   gif_pre:=GetGifTransparent(Opaque,Transparent);
-   _crc:=GetCRCFromBitmap32(gif_pre);
-   FreeAndNil(gif_pre); }
    RasteringFile:=RasteringFile+ext[PhysicalImageFormat];
    _crc:=calc_crc32_String(ext[PhysicalImageFormat]);
    if AllowCutWhiteSpace then
@@ -15729,18 +14999,13 @@ begin
 
    result:=glSaveBin(_crc,RasteringFile,AbsoluteRasteringFile,CheckBaseRasteringFile,BaseRasteringFile,NeedSave,false);
 
-
-
   if NeedSave then
   try
-{.$IFNDEF CLX}
   if PhysicalImageFormat=pifSaveAsGIF then
    graph:=GetGifImageFromBitmap32(Transparent,Opaque) else
   if PhysicalImageFormat=pifSaveAsJPEG then
    graph:=GetJPEGImageFromBitmap32(Opaque) else
-{.$ENDIF}
-   graph:=GetPNGObjectFromBitmap32(Transparent{,true});
-{.$ENDIF}
+   graph:=GetPNGObjectFromBitmap32(Transparent);
    graph.SaveToFile(AbsoluteRasteringFile);
    graph.Free;
    glAfterSaveBin;
@@ -15802,9 +15067,7 @@ var EqSizing:array[0..2,0..2] of TRect;
 const EqNaming:array[0..2,0..2] of TPathName=(('_topleft','_topmiddle','_topright'),('_middleleft','_middle','_middleright'),('_bottomleft','_bottommiddle','_bottomright'));
 
 function TStyle.PrepareRastering(addheight:integer; const PostFix:TPathName):boolean;
-var //_BackIsValid,_TopIsValid:boolean;
-    //_TopGraph,_BackGraph,_TransparentTop:TMyBitmap32;
-    pn:TdhCustomPanel;
+var pn:TdhCustomPanel;
     graph:TGraphic;
     OldFrameIndex,NewFrameIndex,w,h:integer;
     _crc:DWORD;
@@ -15824,8 +15087,6 @@ begin
 
   pn:=Owner;
 
-  //Src:=(Owner.Control as TdhCustomPanel).TransPainting(tt);
-  //MixColor(Src,ColorToColor32((Owner.Control as TdhCustomPanel).GetVirtualBGColor));
   {TODO: SpeedupGeneration if RasteringFile<>'' then
   begin
     result:=true;
@@ -15837,13 +15098,10 @@ begin
    _crc:=calc_crc32_String('.gif');
    Assert(not PreventGraphicOnChange);
    PreventGraphicOnChange:=true;
-   //TGIFImage(graph).Painters.LockList;
-   //TGIFImage(graph).PaintStop;
    try
     ForcedGIFRenderer:=TGIFRenderer32.Create(TGIFImage(graph));
     try
     repeat
-     //PreventGraphicOnChange:=true;
      pn.TopIsValid:=false;
      pn.AssertTop(addheight,true);
      if HasSomething(pn.TransparentTop) then
@@ -15871,17 +15129,10 @@ begin
      try
       PrevSubImage:=nil;
       repeat
-       //PreventGraphicOnChange:=true;
        pn.TopIsValid:=false;
        pn.AssertTop(addheight,true);
        if HasSomething(pn.TransparentTop) then
        begin
-       {if fingif.Images.Count-1>=0 then
-        PrevSubImage:=fingif.Images[fingif.Images.Count-1];}
- {      GCE:=si.GraphicControlExtension;
-       if GCE<>nil then
-        AddGIFSubImageFromBitmap32(pn.TransparentTop,pn.TopGraph,fingif,GCE.Delay,PrevSubImage) else
-  }
         PrevSubImage:=AddGIFSubImageFromBitmap32(pn.TransparentTop,pn.TopGraph,fingif,true,ForcedGIFRenderer.Frame,PrevSubImage);
        end;
        OldFrameIndex:=TGIFImage(graph).Images.IndexOf(ForcedGIFRenderer.Frame);
@@ -15901,18 +15152,10 @@ begin
     end;
    finally
     PreventGraphicOnChange:=false;
-   //TGIFImage(graph).Painters.UnlockList;
    end;
-   //TGIFImage(graph).PaintStart;
-
-   {fingif.SaveToFile('c:\asa.gif');
-   fingif.Free;}
-   //result:=false;
   end else
   begin
    pn.AssertTop(addheight,true);
-
-   //pn.BackGraph.SaveToFile('c:\b.bmp');
    if HasSomething(pn.TransparentTop) then
    begin
     if (csAcceptsControls in pn.ControlStyle) and (pn.EqArea.Left<>InvalidEqArea){ and (pn.GetImageFormat<>ifSemiTransparent)} then
@@ -15963,7 +15206,7 @@ begin
          pnTopGraph.SetSize(EqSize.Right-EqSize.Left,EqSize.Bottom-EqSize.Top);
          pnTransparentTop.SetSize(pnTopGraph.Width,pnTopGraph.Height);
          pn.TopGraph.DrawTo(pnTopGraph,pnTopGraph.BoundsRect,EqSize);
-         pn.{TopGraph}TransparentTop.DrawTo(pnTransparentTop,pnTransparentTop.BoundsRect,EqSize);
+         pn.TransparentTop.DrawTo(pnTransparentTop,pnTransparentTop.BoundsRect,EqSize);
          RasteringFile:=FinalImageID(pn)+PostFix+EqNaming[EqY,EqX];
          result:=SaveImg(pnTopGraph,pnTransparentTop,RasteringFile,OwnState<>hsNormal,BaseRasteringFile,getPhysicalImageFormat(pn,pnTransparentTop),false);
         end;
@@ -15985,55 +15228,6 @@ begin
    end else
     result:=false;
   end;
-     {
-  png:=GetPNGObjectFromBitmap32(TdhCustomPanel(Owner.Control).TopGraph,false);
-  png.SaveToFile(RasteringSaveDir+RasteringFile);
-  png.Free;  }
-
-
-//  TdhCustomPanel(Owner.Control).TopGraph.SaveToFile('c:\test.bmp');
-
-  (*
-  with pn do
-  begin
-   //gif_pre:=GetGifTransparent(TopGraph,TransparentTop);
-   NormalizeTransparency(TransparentTop);
-   _crc:=calc_crc32(TransparentTop.Width*TransparentTop.Height*sizeof(TColor32),PByte(TransparentTop.PixelPtr[0,0]));
-   i:=TopGraph.Width;
-   _crc:=calc_crc32(sizeof(i),@i,_crc);
-   //FreeAndNil(gif_pre);
-  end;
-
-  i:=CrcList.IndexOfObject(Pointer(_crc));
-  if i<>-1 then
-  if not FileExists(CrcList[i]) or not SameText(RasteringSaveDir,ExtractFileDir(CrcList[i])+PathDelim)  then
-  begin
-   CrcList.Delete(i);
-  end else
-  begin
-   RasteringFile:=CrcList[i];
-   if (OwnState<>hsNormal) and (Owner.StyleArr[NextStyle[OwnState]].RasteringFile=RasteringFile) then
-   begin
-    result:=false;
-    exit;
-   end else
-   begin
-    result:=true;
-    exit;
-   end;
-  end;
-
-  gif:=GetGifImageFromBitmap32(pn.TransparentTop,pn.TopGraph);
-
-  RasteringFile:=RasteringSaveDir+{GetTypeData(PTypeInfo(GetParentForm(Owner.Control).ClassType.ClassInfo)).UnitName + '\' + }FinalID(pn)+sst[OwnState]{+'.png'}+'.gif';
-  CrcList.AddObject(RasteringFile,Pointer(_crc));
-  ForceDirectories(ExtractFilePath(RasteringSaveDir));
-  gif.SaveToFile(RasteringFile);
-
-
-  result:=true;
-
-  *)
 end;
 
 
@@ -16087,21 +15281,6 @@ procedure TBlurEffect.Changed;
 begin
  Owner.Changed;
 end;
-
-procedure TBlurEffect.Clear;
-begin
-{    FAlpha:=191;
-    FRadius:=5;
-    FFlood:=0;
-    FEnabled:=false;
-    }
-end;
-
-function TBlurEffect.IsCleared:boolean;
-begin
- result:=true;//(FAlpha=191) and (FRadius=5) and (FFlood=0) and not FEnabled;
-end;
-
 
 procedure TBlurEffect.SetAlpha(const Value: byte);
 begin
@@ -16168,35 +15347,16 @@ begin
  end;
 end;
 
-
-
-{ TMyBitmap }
-                  {
-function TMyBitmap.GetMaskHandle: HBITMAP;
-begin
- if BitmapWithMask<>nil then
-  result:=BitmapWithMask.MaskHandle else
-  result:=Inherited GetMaskHandle;
-end;
-                 }
-
 procedure TdhCustomPanel.InvalidateFontSize;
 begin
  FComputedFontSize:=InvalidFontSize;
 end;
 
-
 procedure TdhCustomPanel.SetZOrder(TopMost: Boolean);
 begin
-{  if TopMost then
-   InvalBack(InvRect);     }
   inherited;
   NotifyCSSChanged([wcZIndex,wcNoOwnCSS]);
-{  if not TopMost then
-   InvalBack(InvRect);   }
 end;
-
-
 
 procedure SaveBmp32(Transparent,Opaque:TMyBitmap32; const FileName: TPathName);
 var ext:TPathName;
@@ -16206,22 +15366,16 @@ begin
  try
  ext:=lowercase(ExtractFileExt(Filename));
  if ext='.png' then
-  g:=GetPNGObjectFromBitmap32(Transparent{,true}) else
+  g:=GetPNGObjectFromBitmap32(Transparent) else
  if ext='.gif' then
   g:=GetGifImageFromBitmap32(Transparent,Opaque) else
- {if ext='.ico' then
-  g:=GetIconFromBitmap32(Transparent,Opaque) else  }
 {$IFNDEF CLX}
-// if ext='.png' then
-//  g:=GetPNGObjectPTFromBitmap32(TransparentTop,TopGraph) else
  if (ext='.jpg') or (ext='.jpeg') then
   g:=GetJPEGImageFromBitmap32(Opaque) else
 {$ENDIF}
  begin
   g:=TBitmap.Create;
-  //TBitmap(g).PixelFormat:=pf8bit;
   g.Assign(Opaque);
-  //TBitmap(g).PixelFormat:=pf8bit;
  end;
  ForceDirectories(ExtractFilePath(FileName));
  g.SaveToFile(FileName);
@@ -16322,7 +15476,6 @@ begin
  result:=(WantUnderline=Underline) and (WantOverline=Overline) and (WantLineThrough=LineThrough) and (WantBlink=Blink);
 
  if result then exit;
-
 
  if ActStyle.FTextDecoration<>[] then exit; //wanted styles cannot be deleted
 
@@ -16453,12 +15606,10 @@ begin
  pc(pcFontVariant);
 end;
 
-//GetCSSBottomRight
 function TdhCustomPanel.MyGetControlExtents(OnlyForScrollbars:boolean): TPoint;
 var
   I,_Right,_Bottom: Integer;
-  IncrPt{,AdjWH}:TPoint;
-  //OriClientBound:TRect;
+  IncrPt:TPoint;
   c:TControl;
 begin
 
@@ -16466,8 +15617,6 @@ begin
 
  IncPt(Result,HPos,VPos);
 
- //with ScrollAreaWithScrollbars do IncPt(Result.BottomRight,BottomRight);
- //if IsScrollArea and EdgesInScrolledArea then
  IncPt(Result,PhysicalClientEdgesWithScrollbars.TopLeft);
  with ScrollAreaWithScrollbars_Edges do
   IncPt(Result,Right,Bottom);
@@ -16481,17 +15630,15 @@ begin
   if OnlyForScrollbars then
   begin
 
-      //was gerade bei [alLeft,alRight,alTop,alBottom] nicht berücksichtigt wird ist min-width/min-height
       if not (c.Align in [alBottom,alRight,alClient]) then
       begin
 
         if c.Align<>alTop then
         if (akRight in c.Anchors) and (TdhCustomPanel(c).CSSRight<>InvalidCSSPos) then
         begin
-         if {GetCSSBottomRight(c).X-HPos+AdjWH.X}(c is TdhCustomPanel) and (TdhCustomPanel(c).CSSRight-HPos<0) then
+         if (c is TdhCustomPanel) and (TdhCustomPanel(c).CSSRight-HPos<0) then
           Result.X:=MaxInt;
         end else
-        //if not ((akRight in Anchors) and {(_Right<=MeasureArea.X)}GetCSSBottomRight(ClientBound)) then
         begin
          _Right:=c.Left + c.Width + IncrPt.X;
          if _Right > Result.X then Result.X := _Right;
@@ -16500,10 +15647,9 @@ begin
         if c.Align<>alLeft then
         if (akBottom in c.Anchors) and (TdhCustomPanel(c).CSSBottom<>InvalidCSSPos) then
         begin
-         if {GetCSSBottomRight(c).Y-VPos+AdjWH.Y}(c is TdhCustomPanel) and (TdhCustomPanel(c).CSSBottom-VPos<0) then
+         if (c is TdhCustomPanel) and (TdhCustomPanel(c).CSSBottom-VPos<0) then
           Result.Y:=MaxInt;
         end else
-        //if not (OnlyForScrollbars and (akBottom in Anchors) and (_Bottom<=MeasureArea.Y)) then
         begin
          _Bottom:=c.Top + c.Height + IncrPt.Y;
          if _Bottom > Result.Y then Result.Y := _Bottom;
@@ -16518,18 +15664,6 @@ begin
    if _Bottom > Result.Y then Result.Y := _Bottom;
   end;
   end;
-
-{ Result.Left:=Min(Result.Left,Result.Right);
- Result.Top:=Min(Result.Top,Result.Bottom);
- if (Result.Left=Result.Right) and (Result.Top<Result.Bottom) then
-  Inc(Result.Right); //so that it can return True at DoIntersectStrong
- if (Result.Left<Result.Right) and (Result.Top=Result.Bottom) then
-  Inc(Result.Bottom); //so that it can return True at DoIntersectStrong
- }  
-
-
-// IncPt(Result,AllEdgesPure.BottomRight);
-// with ScrollAreaWithScrollbars do OffsetRect(Result,-Left,-Top);
 end;
 
 
@@ -16567,22 +15701,16 @@ procedure TdhCustomPanel.SetBoundedVHPos(H,V:integer);
 var OldPos,P:TPoint;
     R:TRect;
 begin
-  {V:=min(V,VertScrollInfo.nMax-VertScrollInfo.nPage);
-  H:=min(H,HorzScrollInfo.nMax-HorzScrollInfo.nPage);}
   SetVHPos(H,V);
 end;
 
 procedure TdhCustomPanel.SetBoundedVPos(p: Integer);
 begin
- {if VertScrollInfo.nMax<>0 then
-  P:=min(P,VertScrollInfo.nMax-VertScrollInfo.nPage);}
  SetVHPos(HPos,p);
 end;
 
 procedure TdhCustomPanel.SetBoundedHPos(p: Integer);
 begin
- {if VertScrollInfo.nMax<>0 then
-  P:=min(P,HorzScrollInfo.nMax-HorzScrollInfo.nPage);}
  SetVHPos(p,VPos);
 end;
 
@@ -16617,14 +15745,12 @@ begin
     ActDown:=GetActDown;
     if ActDown<>amNone then
     begin
-
      self.MouseCapture:=true;
      FDragOffset:=Mouse.CursorPos;
      DragVPos:=VPos;
      DragHPos:=HPos;
      MouseTimer:=TTimer.Create(Self{Application.MainForm});
      MouseTimer.OnTimer:=OnMouseTimer;
-//     MouseTimer.Handle;
      MouseTimer.Interval:=200;
     end;
    end;
@@ -16651,14 +15777,12 @@ begin
    begin
     with GetVertChecked do GetSlack(VertScrollInfo,Bottom-Top,Mouse.CursorPos.Y-FDragOffset.Y,h,position,true);
     SetBoundedVPos(DragVPos + position);
-    //SetBoundedVPos(Round(DragVPos + (Mouse.CursorPos.Y-FDragOffset.Y)*VertScrollInfo.nMax/(Bottom-Top-h_slick)));
    end;
    HorzBar:
-   if HorzBarVisible then 
+   if HorzBarVisible then
    begin
     with GetHorzChecked do GetSlack(HorzScrollInfo,Right-Left,Mouse.CursorPos.X-FDragOffset.X,h,position,true);
     SetBoundedHPos(DragHPos + position);
-    //SetBoundedHPos(Round(DragHPos + (Mouse.CursorPos.X-FDragOffset.X)*(HorzScrollInfo.nMax-HorzScrollInfo.nPage)/(Right-Left-h_slick-h)));
    end;
    end;
  end;
@@ -16674,21 +15798,6 @@ begin
   ScrollPaintChanged
 end;
 
-
-
-(*
-{$IFNDEF CLX}
-
-
-procedure TdhCustomPanel.WMLButtonUp(var Message: TWMLButtonUp);
-begin
- inherited;
- ProcessFrameEvent(feMouseUp);
-end;
-
-{$ELSE}
-*)
-
 procedure TdhCustomPanel.MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 begin               
   inherited;
@@ -16698,11 +15807,6 @@ begin
    ProcessFrameEvent(feMouseUp);
   end;
 end;
-
-{.$ENDIF}
-
-
-
 
 procedure TdhCustomPanel.OnMouseTimer(Sender:TObject);
 begin
@@ -16723,10 +15827,6 @@ begin
   MyDragStartPos:=Mouse.CursorPos;
 end;
 
-{.$ENDIF}
-
-
-
 
 function TdhCustomPanel.CanUseMouseClick:boolean;
 begin
@@ -16744,21 +15844,14 @@ begin
    R:=ScrollArea;
    RectAddSub(Message.CalcSize_Params.rgrc[0],R,TotalRect);
   end;
-{  with Message.CalcSize_Params^ do
-   InflateRect(rgrc[0],-30,-30);
-}end;
+end;
 {$ENDIF}
 
 {$IFDEF CLX}
 function TdhCustomPanel.ViewportRect: TRect;
-var R:TRect;
 begin
-    //Result:=inherited ViewportRect;
   if IsScrollArea and NCScrollbars then
-  begin
-   result:=ScrollArea;
-   //RectAddSub(Result,R,TotalRect);
-  end else
+   result:=ScrollArea else
    result:=Bounds(0,0,Width,Height);
 end;
 {$ENDIF}
@@ -16776,8 +15869,6 @@ function TdhCustomPanel.TotalRect:TRect;
 begin
  result:=Rect(0,0,Width,Height);
 end;
-
-
 
 {$IFNDEF CLX}
 procedure TdhCustomPanel.WMNCPaint(var Message: TMessage);
@@ -16841,29 +15932,8 @@ end;
 
 function TdhCustomPanel.GetPreferDownStyles:boolean;
 begin
- result:=false; //irgendwass zurückliefern (da geht "false" wohl am schnellsten)
+ result:=false; // prevent compiler warning
 end;
-
-
-               {
-procedure TdhCustomPanel.SetDownOverlayOver(const Value: boolean);
-
-procedure ItSet(const pn:TCommon);
-var i:integer;
-begin
- pn.FDownOverlayOver := Value;
- for i:=pn.UsedByList.Count-1 downto 0 do
-  ItSet(TCommon(pn.UsedByList[i]));
-end;
-
-
-begin
- if Use=nil then
- begin
-  ItSet(Self);
-  NotifyCSSChanged(AllChanged);
- end;
-end;       }
 
 procedure TStyle.SetDirection(const Value: TCSSDirection);
 begin
@@ -16880,7 +15950,6 @@ end;
 
 procedure TdhCustomPanel.ProcessMouseMove(StateChanged:boolean);
 begin
-
 end;
 
 procedure TStyle.SetBefore(const Value: HypeString);
@@ -16922,24 +15991,6 @@ end;
 function TdhCustomPanel.VerticalCenter:boolean;
 begin
   result:=Anchors*[akTop,akBottom]=[];
-end;
-
-procedure TdhCustomPanel.SetCenter(const Value: boolean);
-begin
-  if FCenter<>Value then
-  begin
-   FCenter := Value;
-   Align:=alNone;
-   if FCenter then
-   begin
-    Anchors:=[akTop];
-   end else
-   begin        
-    Anchors:=[akLeft,akTop];
-   end;
-   RequestAlign;
-   FCenter:=false;//dont support this property any longer
-  end;
 end;
 
 {$IFNDEF CLX}
@@ -17006,32 +16057,12 @@ end;
 procedure TdhCustomPanel.ScrollBy(DeltaX, DeltaY: Integer);
 var
   IsVisible: Boolean;
-  R:TRect;
 begin
   CheckChildrenNC(DeltaX, DeltaY);
-  R:=ScrollArea;
-  //Inherited;
   IsVisible := Visible and HandleAllocated;
   if IsVisible then
-    QWidget_scroll(Handle, DeltaX, DeltaY{, @R});
+    QWidget_scroll(Handle, DeltaX, DeltaY);
   ScrollControls(DeltaX, DeltaY, IsVisible);
-  //Realign; //not needed
-  //UpdateScrollBars(false);  //done by Realign
-end;
-
-procedure TdhCustomPanel.CreateWidget;
-var QB: QBitmapH;
-begin
-  Inherited;
-  (*
-  if {IsScrollArea and NCScrollbars} classname='TdhPage' then
-  if FViewportHandle=nil then
-  begin
-   FViewportHandle:=QWidget_create(Self.Handle, nil, Integer(WidgetFlags_WRepaintNoErase));
-   QClxObjectMap_add(FViewportHandle, Integer(Self));
-   QB := QBitmap_create(0, 0, True, QPixmapOptimization_DefaultOptim);
-   QWidget_setMask(FViewportHandle, QB);
-  end;*)
 end;
 
 {$ENDIF}
@@ -17049,11 +16080,9 @@ initialization
  if PropChoose in AutoInherit then
   pcChanges[PropChoose]:=pcChanges[PropChoose]+[wcChild];
 
-
 {$IFDEF CLX}
  Exclude(GIFImageDefaultDrawOptions,goAnimate); //gif-animations has problems at CLX
 {$ENDIF}
-
 
 {$IFDEF NEED_LINEAR_ANTIALIASING}
  SetGamma(1);
@@ -17067,26 +16096,17 @@ initialization
  glIsDesignerSelected:=CustomIsDesignerSelected;
  InvRect:=Rect(-1,-1,-1,-1);
  try
-// if csDesigning in Application.ComponentState then
- begin
  OldOnIdle:=Application.OnIdle;
  ObjIdleProc:=TObjIdleProc.Create;
  Application.OnIdle:=ObjIdleProc.DoMouseIdle;
-
-
-
 {$IFDEF DEB}
-  // Start Exception tracking
   JclStartExceptionTracking;
 {$IFDEF ShowAllExceptions}
-  // Assign notification procedure for hooked RaiseException API call. This
-  // allows being notified of any exception
   JclAddExceptNotifier(AnyExceptionNotify);
 {$ENDIF}
  Application.OnException:=ObjIdleProc.ApplicationEvents1Exception;
 {$ENDIF}
 
- end;
  except
  showmessage('exp in ini');
  end;
@@ -17109,48 +16129,8 @@ finalization
  ObjIdleProc.Free;
  end;
  FreeAndNil(ImageBitmap);
-   {
- while TPicture(GraphicsRepository.MinItem)<>nil do
- begin
-  TPicture(GraphicsRepository.MinItem).savetofile('c:\t.bmp');
-  GraphicsRepository.DeleteMin(GraphicsIDCompare);
- end;   }           
 
-//http://www.matlus.com/scripts/website.dll
-//http://devedge.netscape.com/library/xref/2003/css-support/css2/selectors.html
-//http://www.csszengarden.com
-//http://www.designdetector.com/tips/3DBorderDemo2.html
-//http://tantek.com/CSS/Examples/boxmodelhack.html
-//pure css menu: http://www.meyerweb.com/eric/css/edge/menus/demo.html
-//http://www.devexpress.com/comments.asp
-//http://msdn.microsoft.com/library/default.asp?url=/workshop/author/dhtml/overview/recalc.asp
-//http://msdn.microsoft.com/workshop/author/dhtml/overview/ccomment_ovw.asp
-(*
-function Px(px) {
- if (!px) alert("programming error"); else
- return Number(px.substr(0,px.length-2));
-}
-
-
-var everything=document.all;
-if (!everything) everything=document.getElementsByTagName("*");
-if (true || document.all && !window.opera)  {
-//alert("all");
-for(var i=0; i<everything.length; i++) {
- var e=everything[i];
- if (e.style.right && e.style.left && e.parentNode.style.width) {
-  alert(e.parentNode.style.borderLeftWidth);
-  e.style.width=e.parentNode.offsetWidth-Px(e.style.left)-Px(e.style.right)+"px";
- }
- if (e.style.bottom && e.style.top && e.parentNode.style.height)  {
-  e.style.height=Px(e.parentNode.style.height)-Px(e.style.top)-Px(e.style.bottom)+"px";
- }
-
-}
-}
-
-*)
 {$IFDEF CLX }
- Screen.Fonts.Free;  //wird von MemProof angezeigt, dass nicht freigegeben wurde
+ Screen.Fonts.Free;  // MemProof shows that it is not freed
 {$ENDIF}
 end.

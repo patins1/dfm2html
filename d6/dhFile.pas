@@ -33,7 +33,6 @@ type
     function IsLoopStored: Boolean;
     procedure SetLinked(const Value: boolean);
   protected
-    //procedure CreateParams(var Params: TCreateParams); override;
     procedure DefineProperties(Filer: TFiler); override;
     function GetData(var FileData:TFileContents):boolean;
     procedure SetASXY(const Value: TASXY); override;
@@ -45,11 +44,9 @@ type
     destructor Destroy; override;
     procedure Invalidate; override;
     procedure LoadFromFile(const FileName:TPathName; Linked:boolean);
-    //procedure SaveToFile(const FileName:TPathName);
     procedure DoTopPainting; override;
     procedure GetAutoRect(AllowModifyX,AllowModifyY:boolean; var NewWidth, NewHeight: Integer); override;
     function EffectsAllowed: boolean; override;
-
     procedure SetPath(const Path:TPathName);
     function GetRelativePath:TPathName;
     function GetAbsolutePath:TPathName;
@@ -136,17 +133,13 @@ begin
   RegisterComponents('DFM2HTML', [TdhFile]);
 end;
 
-
-
 constructor TdhFile.Create(AOwner: TComponent);
 begin
   inherited;
-  //FTransparentColor:=colInherit;
   ControlStyle:=ControlStyle-[csAcceptsControls];
   AutoSizeXY:=asXY;
   Width:=226;
 end;
-
 
 procedure TdhFile.SetASXY(const Value: TASXY);
 begin
@@ -216,42 +209,26 @@ begin
  FLinked:=Linked;
 end;
 
-                               {
-procedure TdhFile.SaveToFile(const FileName:TPathName);
-begin
- StringToFile(FileName,GetData);
-// Writer.WriteString(ole.SourceDoc);
-end;                            }
-
 procedure TdhFile.DoTopPainting;
 var rct:TRect;
 begin
  if (csDesigning in ComponentState) then
  begin
-   if (PageControlBitmap=nil) then
-   begin
-    PageControlBitmap := TBitmap.Create;
-    PageControlBitmap.LoadFromResourceName(HInstance, 'TDHFILEPURE');
-    PageControlBitmap.Transparent:=true;
-    PageControlBitmap.TransparentColor:=clYellow;
-   end;
-
+  if (PageControlBitmap=nil) then
+  begin
+   PageControlBitmap := TBitmap.Create;
+   PageControlBitmap.LoadFromResourceName(HInstance, 'TDHFILEPURE');
+   PageControlBitmap.Transparent:=true;
+   PageControlBitmap.TransparentColor:=clYellow;
+  end;
   if (PageControlBitmap<>nil) then
   if not IsRasterized and not HasBackgroundImage then
-  //with self.FCommon.AllEdgesPure do GetCanvas.Draw(Top,Left,TempBitmap);
-  //GetCanvas.Draw(Max(0,(Width-TempBitmap.Width) div 2),Max(0,(Height-TempBitmap.Height) div 2),TempBitmap);
   with Self.AllEdgesPure do
    GetCanvas.Draw(max(0,-3+Left),max(0,-3+Top),PageControlBitmap);
  end;
-
- begin
-  if FAutoSize<>asXY then PaintBorder else PaintOuterBorder;
-  PaintOuterBg;
-  DrawFrame;
- end;
- // inherited;
-// PaintOuterBg;
-// FCommon.SpecialPaintBorder(FCommon.MarginClientRect,FCommon.BorderClientRect);
+ if FAutoSize<>asXY then PaintBorder else PaintOuterBorder;
+ PaintOuterBg;
+ DrawFrame;
 end;
 
 
@@ -262,29 +239,24 @@ end;
 
 
 
-procedure TdhFile.GetAutoRect(AllowModifyX, AllowModifyY: boolean;
-  var NewWidth, NewHeight: Integer);
-// NewWidth:=27;
-// NewHeight:=22;
+procedure TdhFile.GetAutoRect(AllowModifyX, AllowModifyY: boolean; var NewWidth, NewHeight: Integer);
 var PicWidth,PicHeight,W,H:integer;
 begin
  PicWidth:=21;
  PicHeight:=16;
-  with AllEdgesPure do
-  begin
-   W:=PicWidth+Left+Right;
-   H:=PicHeight+Top+Bottom;
-  end;
-  W:=max(W,27);
-  H:=max(H,22);
-  if not TextOnly then
-   AdjustLittle(W,H,false);
-
+ with AllEdgesPure do
+ begin
+  W:=PicWidth+Left+Right;
+  H:=PicHeight+Top+Bottom;
+ end;
+ W:=max(W,27);
+ H:=max(H,22);
+ if not TextOnly then
+  AdjustLittle(W,H,false);
  if AllowModifyX then
   NewWidth:=W;
  if AllowModifyY then
   NewHeight:=H;
-
  GetSuperiorAutoRect(AllowModifyX,AllowModifyY,NewWidth,NewHeight);
 end;
 
@@ -323,8 +295,6 @@ begin
   result:=false;
  end;
 end;
-
-
 
 procedure TdhFile.SetUsage(const Value: TFileUsage);
 begin

@@ -1026,16 +1026,12 @@ begin
   end;
   3:
   begin
-   {c:=TdhListBox.Create(Owner);
-   c.Name:=_GetUniqueName(c,'ListBox');  }
    c:=TdhSelect.Create(Owner);
    c.Name:=_GetUniqueName(c,'Select');
    TdhSelect(c).SelectType:=stList;
   end;
   0:
   begin
-   {c:=TdhComboBox.Create(Owner);
-   c.Name:=_GetUniqueName(c,'ComboBox'); }
    c:=TdhSelect.Create(Owner);
    c.Name:=_GetUniqueName(c,'Select');
    TdhSelect(c).SelectType:=stDropDown;
@@ -1053,16 +1049,13 @@ begin
   end;
   23:
   begin
-   //c:=TdhFormButton.Create(Owner);
-   c:=TdhLink.Create(Owner);        
+   c:=TdhLink.Create(Owner);
    TdhLink(c).FormButtonType:=fbSubmit;
    TdhLink(c).Layout:=ltButton;
    c.Name:=_GetUniqueName(c,'Submit');
   end;
   22:
   begin
-   {c:=TdhFormButton.Create(Owner);
-   TdhFormButton(c).FormButtonType:=fbReset;}
    c:=TdhLink.Create(Owner);
    TdhLink(c).FormButtonType:=fbReset;
    TdhLink(c).Layout:=ltButton;

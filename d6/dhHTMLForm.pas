@@ -14,54 +14,27 @@ uses
   SysUtils, Classes, dhPanel, dhStyleSheet,dhSelect,
   dhMemo,dhEdit,dhCheckBox,dhRadioButton,dhMenu,dhLabel,BasicHTMLElements,dhHiddenField,dhFileField,dhStrUtils;
 
-type            {
-  IHTMLFormReset=interface
-    procedure Reset;
-  end;
-                 }
+type
 
   TFormMethod=(fmtGet,fmtPost);
-  //TFormButtonLayout=(flButton,flText);
   TdhHTMLForm = class(TdhPanel)
   private
     FTarget: TPathName;
     procedure SetTarget(const Value: TPathName);
-    { Private declarations }
   protected
-    { Protected declarations }
     FAction:TPathName;
     FMethod:TFormMethod;
-    //ar:array of record but:TButton; ev:TNotifyEvent end;
-    //procedure OnButtonSubmit(Sender: TObject);
     procedure DefineProperties(Filer: TFiler); override;
   public
-    { Public declarations }
     constructor Create(AOwner: TComponent); override;
     procedure Loaded; override;
     procedure Submit(link:TdhLink);
     procedure Reset;
     function AllHTMLCode:HypeString; override;
   published
-    { Published declarations }
     property Action:TPathName read FAction write FAction;
     property Method:TFormMethod read FMethod write FMethod default fmtGet;
     property Target:TPathName read FTarget write SetTarget;
-  end;
-
-  TdhFormButton = class(TdhDynLabel)
-  private
-    { Private declarations }
-    FFormButtonType:TFormButtonType;
-  protected
-    { Protected declarations }
-    function GetDefaultLayout:TLinkType; override;
-  public
-    { Public declarations }
-    procedure DoClickAction(Initiator:TdhCustomPanel); override;
-    constructor Create(AOwner: TComponent); override;
-  published
-    { Published declarations }
-    property FormButtonType:TFormButtonType read FFormButtonType write FFormButtonType default fbSubmit;
   end;
 
 procedure Register;
@@ -71,21 +44,14 @@ procedure MemorizeFields(c:TWinControl);
 
 implementation
 
-
 procedure Register;
 begin
  RegisterComponents('DFM2HTML', [TdhHTMLForm]);
- RegisterComponents('DFM2HTML', [TdhFormButton]);
 end;
 
 constructor TdhHTMLForm.Create(AOwner: TComponent);
 begin
  inherited;
-end;
-
-function TdhFormButton.GetDefaultLayout: TLinkType;
-begin
- result:=ltButton;
 end;
 
 procedure TdhHTMLForm.Loaded;
@@ -114,19 +80,13 @@ begin
   TdhCheckBox(c).Reset else
  if c is TdhRadioButton then
   TdhRadioButton(c).Reset else
-{ if c is TdhListBox then
-  TdhListBox(c).Reset else
- if c is TdhComboBox then
-  TdhComboBox(c).Reset else}
  if c is TdhFileField then
   TdhFileField(c).Reset else
  if c is TdhSelect then
-  TdhSelect(c).Reset else
- ;
+  TdhSelect(c).Reset;
  for i:=0 to c.ControlCount-1 do
  if (c.Controls[i] is TWinControl) and not (c.Controls[i] is TdhStyleSheet) then
   ResetFields(TWinControl(c.Controls[i]));
-
 end;
 
 procedure MemorizeFields(c:TWinControl);
@@ -140,19 +100,13 @@ begin
   TdhCheckBox(c).Memorize else
  if c is TdhRadioButton then
   TdhRadioButton(c).Memorize else
-{ if c is TdhListBox then
-  TdhListBox(c).Memorize else
- if c is TdhComboBox then
-  TdhComboBox(c).Memorize else}
  if c is TdhFileField then
   TdhFileField(c).Memorize else
  if c is TdhSelect then
-  TdhSelect(c).Memorize else
- ;
+  TdhSelect(c).Memorize;
  for i:=0 to c.ControlCount-1 do
  if (c.Controls[i] is TWinControl) and not (c.Controls[i] is TdhStyleSheet) then
   MemorizeFields(TWinControl(c.Controls[i]));
-
 end;
 
 
@@ -208,8 +162,6 @@ begin
 end;
 
 begin
-{ if (c is TdhCustomBox) and (TdhCustomBox(c).ItemIndex>=0) then
-  AddField(TdhCustomBox(c).Value) else}
  if (c is TdhEdit) then
   AddField(TdhEdit(c).Text) else
  if (c is TdhHiddenField) then
@@ -222,7 +174,6 @@ begin
   AddField('true') else
  if (c is TdhSelect) then
   AddField(TdhSelect(c).Value) else
-  
  if (c is TEdit) then
   AddField(TEdit(c).Text) else
  if (c is TMaskEdit) then
@@ -236,8 +187,7 @@ begin
  if (c is TListBox) and (TListBox(c).ItemIndex>=0) then
   AddField(TListBox(c).Items[TListBox(c).ItemIndex]) else
  if (c is TComboBox) then
-  AddField(TComboBox(c).Text) else
- ;
+  AddField(TComboBox(c).Text);
  for i:=0 to c.ControlCount-1 do
  if (c.Controls[i] is TWinControl) and not (c.Controls[i] is TdhStyleSheet) then
   CollectFields(TWinControl(c.Controls[i]),res);
@@ -254,41 +204,5 @@ begin
   get:=_action+'?'+copy(get,1,length(get)-1);
   Browse(get,'',false);
 end;
-
-
-
-//http://www.blooberry.com/indexdot/html/topics/urlencoding.htm?state=none&origval=asdf%F6fdsa%3Cfdsafd%E4&enc=on
-{ TdhFormButton }
-
-{procedure TdhFormButton.Click;
-begin
- if DelegateClick then exit;
- inherited Click;
- DoClickAction(Self);
-end;
- }
-procedure TdhFormButton.DoClickAction(Initiator:TdhCustomPanel);
-var p:TControl;
-begin
-  p:=Initiator;
-  while (p<>nil) do
-  begin
-   if p is TdhHTMLForm then
-   begin
-    if FFormButtonType=fbSubmit then
-     TdhHTMLForm(p).Submit(nil) else
-     TdhHTMLForm(p).Reset;
-    break;
-   end;
-   p:=p.Parent;
-  end;
-end;
-
-constructor TdhFormButton.Create(AOwner: TComponent);
-begin
- inherited;
- FormButtonType:=fbSubmit;
-end;
-
 
 end.

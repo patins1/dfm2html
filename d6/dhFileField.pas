@@ -15,12 +15,8 @@ type
   TdhFileField = class(TdhCustomEdit)
   private
     button:TdhLink;
-    { Private declarations }
   protected
-    { Protected declarations }
     procedure AlignControls(AControl: TControl; var Rect: TRect); override;
-    //function ContentClientRect: TRect; override;
-    //procedure ShrinkToContent(var IE5,IE6:TRect; HasRastering,OnlyBg:boolean); override;
     function IncludeBorderAndPadding:boolean; override;
     procedure AdjustMarginWidth(var i: integer; const Align: TEdgeAlign); override;
 {$IFNDEF CLX}
@@ -28,10 +24,8 @@ type
 {$ENDIF}
     function GetFinal:ICon; override;
   public
-    { Public declarations }
-    constructor Create(AOwner: TComponent); override;    
+    constructor Create(AOwner: TComponent); override;
   published
-    { Published declarations }
   end;
  
 procedure Register;
@@ -57,27 +51,8 @@ procedure TdhFileField.AlignControls(AControl: TControl; var Rect: TRect);
 begin
   inherited;
   with MarginTotalRect do
-   button.SetBounds(Right+4{Width-button.Width-4},Top,button.Width,Bottom-Top);
+   button.SetBounds(Right+4,Top,button.Width,Bottom-Top);
 end;
-                         {
-function TdhFileField.ContentClientRect: TRect;
-begin
- result:=FCommon.MarginClientRect;
- AdjustMarginWidth(result.Right,ealRight);
-end;
-                         }
-
-(*procedure TdhFileField.ShrinkToContent(var IE5,IE6:TRect; HasRastering,OnlyBg:boolean);
-begin
- {R:=ShrinkRect(R,FCommon.MarginPure);
- AdjustMarginWidth(R.Right,ealRight); }
-  IE5:=FCommon.MarginPure;
-  IE5.Right:=-IE5.Right;
-  AdjustMarginWidth(IE5.Right,ealRight);
-  IE5.Right:=-IE5.Right;
-
-  IE6:=IE5;
-end;*)
 
 function TdhFileField.IncludeBorderAndPadding:boolean;
 begin
@@ -118,21 +93,16 @@ begin
   ControlStyle:=ControlStyle-[csSetCaption];
   AutoSizeXY:=asXY;
   Width:=226;
-  Button:=TdhFileButton.Create(Self);
-  //_SetUniqueName(button,'button');
-  //button.Left:=Width;
-  //button.Anchors:=[akTop,akBottom,akRight];
-  Button.AutoSizeXY:=asX;
+  button:=TdhFileButton.Create(Self);
+  button.AutoSizeXY:=asX;
   button.Layout:=ltButton;
   button.Text:='Browse...';
   button.Parent:=Self;
-
   IsScrollArea:=true;
   FVertScrollbarNeverVisible:=true;
   FHorzScrollbarNeverVisible:=true;
-
 end;
-             
+
 {$IFNDEF CLX}
 procedure TdhFileField.CreateParams(var Params: TCreateParams);
 begin

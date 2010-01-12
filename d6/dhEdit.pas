@@ -11,30 +11,21 @@ type
     FReadOnly: boolean;
     procedure WriteCols(Writer: TWriter);
     procedure WriteRows(Writer: TWriter);
-    { Private declarations }
   protected
-    { Protected declarations }
     FInitialValue:HypeString;
-    //FMultilineEnabled:boolean;
     procedure Loaded; override;
     procedure GetModifiedText(var pre,s,suc:HypeString); override;
     function NeedPadding(HasRastering:TRasterType): boolean; override;
     function EffectsAllowed: boolean; override;
     procedure DefineProperties(Filer: TFiler); override;
-//    function CanAutoSize(var NewWidth, NewHeight: Integer): Boolean; override;
     procedure GetAutoRect(AllowModifyX,AllowModifyY:boolean; var NewWidth, NewHeight: Integer); override;
     procedure GetRowsCols(AllowModifyX,AllowModifyY:boolean; var NewWidth, NewHeight, Rows, Cols: Integer); virtual;
   public
-    { Public declarations }
-    //property MultilineEnabled:boolean read FMultilineEnabled;
     property ReadOnly:boolean read FReadOnly write FReadOnly default False;
     procedure Reset;
     procedure Memorize;
     constructor Create(AOwner: TComponent); override;
   published
-    { Published declarations }
-
-    //property Center;
     property HTMLAttributes;
     property ImageType;
     property ImageFormat;
@@ -141,26 +132,6 @@ begin
  GetRowsCols(AllowModifyX,AllowModifyY,NewWidth, NewHeight, dummyRows,dummyCols);
 end;
 
-              (*
-function TdhCustomEdit.CanAutoSize(var NewWidth, NewHeight: Integer): Boolean;
-var dummyRows,dummyCols:integer;
-begin
- if not (csLoading in ComponentState){ and HasParent} then
- begin
-   GetRowsCols(NewWidth, NewHeight, dummyRows,dummyCols);
- end;
- result:=true;
-end;            *)
-
-
-{procedure TdhCustomBox.GetAutoRect(AllowModifyX, AllowModifyY: boolean;
-  var NewWidth, NewHeight: Integer);
-begin
- inherited;
- GetRowsCols(NewWidth, NewHeight, dummyRows,dummyCols);
-end;
- }
-
 constructor TdhEdit.Create(AOwner: TComponent);
 begin
   inherited;
@@ -176,8 +147,6 @@ begin
   result:=nil;
   if AssertTags2 then
    result:=dhStrEditDlg.edit;
- {if FCommon.PreferStyle<>nil then
-  result:=nil else }
 end;
 
 function TdhCustomEdit.EffectsAllowed: boolean;
@@ -253,8 +222,6 @@ begin
 end;
 
 
-
-
 procedure TdhEdit.SetPassword(const Value: boolean);
 begin
  if FPassword<>Value then
@@ -270,8 +237,6 @@ begin
   s:=StringOfChar('*',length(s));
  inherited;
 end;
-
-
 
 constructor TdhCustomEdit.Create(AOwner: TComponent);
 begin

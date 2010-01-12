@@ -300,8 +300,6 @@ begin
   exit;
  end;
  repeat
-// while i<>nil do
- begin
   _Index:=i;
   CompareRes:=Compare(Item1,i.Item);
   if (CompareRes=0) then
@@ -329,7 +327,6 @@ begin
    end;
   end;
   i:=i.Child[BoolSide[CompareRes>=0]];
- end;
  until i=nil;
  Index:=_Index;
  Where:=BoolSide[CompareRes>=0];

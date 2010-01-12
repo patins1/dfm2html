@@ -797,7 +797,6 @@ end;
 
 begin
                       
- subst('TdhFormButton','TdhLink FormButtonType = fbSubmit Layout = ltButton');
  subst('Color = -1','Color = Black');
 
  {subst('TFrame','TdhPage');

@@ -636,7 +636,6 @@ begin
 
 
   RegisterPropertyEditor(TypeInfo(AnsiString), TdhLink, 'Target', TTargetProperty);
-  //RegisterPropertyEditor(TypeInfo(AnsiString), TdhComboBox, 'Target', TTargetProperty);
   RegisterPropertyEditor(TypeInfo(TControl), TdhCustomPanel, 'Use', TUseProperty);
   //RegisterPropertyEditor(TypeInfo(TCustomForm), TdhCustomPanel, 'LinkForm', TFormProperty);
 

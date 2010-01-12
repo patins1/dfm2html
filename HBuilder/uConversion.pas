@@ -564,7 +564,7 @@ var
 
   function GetRight(s:WideString):AnsiString;
   begin
-          if ((ClassName='TdhLabel') or (ClassName='TdhLink') or (ClassName='TdhCheckBox') or (ClassName='TdhRadioButton') or (ClassName='TdhFormButton')) and (PropName='Text') or
+          if ((ClassName='TdhLabel') or (ClassName='TdhLink') or (ClassName='TdhCheckBox') or (ClassName='TdhRadioButton')) and (PropName='Text') or
              (ClassName='TdhDirectHTML') and (PropName='InnerHTML') or
              (ClassName='TdhPage') and ((PropName='HTMLHead') or (PropName='HTMLBody') or (PropName='HTMLBodyClose') or (PropName='HTMLTop')) or
              (ClassName='TdhSelect') and (PropName='HTMLOptions') or
@@ -3601,13 +3601,13 @@ begin
   begin
    DoEle('div');
   end else
-  if (ClassName='TdhLink') or (ClassName='TdhFormButton') then
+  if ClassName='TdhLink' then
   begin
    HasRastering:=HasProp('Style.Rastering'){ or HasProp('Style.BGRastering')};
 
    if IsProp('FormButtonType','fbReset') then
     FormButtonType:=fbReset else
-   if IsProp('FormButtonType','fbSubmit') or (ClassName='TdhFormButton') then
+   if IsProp('FormButtonType','fbSubmit') then
     FormButtonType:=fbSubmit else
     FormButtonType:=fbNone;
 
@@ -3692,13 +3692,12 @@ begin
   begin
    DoEle('div');
   end else
-  if (ClassName='TdhSelect'){ or (ClassName='TdhComboBox') or (classname='TdhListBox')} or (classname='TComboBox') or (classname='TListBox') or (classname='TMyColorComboBox') then
+  if (ClassName='TdhSelect') or (classname='TComboBox') or (classname='TListBox') or (classname='TMyColorComboBox') then
   begin
    AddAttr('name',id);
    CallTemplate_set_TabOrder;
-   if (classname='TListBox'){ or (classname='TdhListBox')} or (classname='TdhSelect') and IsProp('SelectType','stList') then
+   if (classname='TListBox') or (classname='TdhSelect') and IsProp('SelectType','stList') then
    begin
-    //_AutoY:=(classname='TdhListBox') and not IsProp('IntegralHeight','False');
     //if _AutoY and HasProp('Height',aHeight) and HasProp('ItemHeight',aItemHeight) then
     // AddAttr('size',inttostr(aHeight div aItemHeight)) else
     if HasProp('Rows',s) then   
@@ -3730,9 +3729,6 @@ begin
       if i=ItemIndex then
        AddAttr('selected','selected');
       s:=sl[i];
-      //if ((classname='TdhComboBox') or (classname='TdhListBox')) and GetRealBoxText(s,boxval,s) then
-      // AddAttr('value',boxval);
-
       DoEle('option',false,false);
       PureWrite(s);
       EndEle('select');
@@ -4565,7 +4561,7 @@ begin
   for i:=0 to gln.Count-1 do
   begin
    nest:=TNest(gln.Objects[i]);
-   //nest.img:=(GetInheritedVal('ImageType',nest)='bitImage') and not ((nest.dclass='TdhPage') or (nest.dclass='TdhMemo') or (nest.dclass='TdhEdit'){ or (nest.dclass='TdhListBox')});
+   //nest.img:=(GetInheritedVal('ImageType',nest)='bitImage') and not ((nest.dclass='TdhPage') or (nest.dclass='TdhMemo') or (nest.dclass='TdhEdit'));
    if (nest.dclass='TdhLink') then
    begin
     nest.DownOverlayOver:=(GetAuto('','',nest)<>nil) and GetAuto('','',nest).IsProp('PreferDownStyles','True');
@@ -4889,7 +4885,7 @@ end;
 
 function tnest.IsDyn: boolean;
 begin
- result:=(dclass='TdhLink') or (dclass='TdhFormButton');
+ result:=dclass='TdhLink';
 end;
 
 
@@ -4936,7 +4932,7 @@ end;
 initialization
 
  RegisterClasses([//TMyPageControl,TTabControl,TTabSheet,//TBevel,TNotebook,TMaskEdit,
-                  TdhFile,TdhSelect,TdhOleContainer,TdhFormButton,TdhHTMLForm,TdhStyleSheet,TdhLabel,TdhPanel,TdhLink,TdhMenu,TdhPageControl,TdhDirectHTML,
+                  TdhFile,TdhSelect,TdhOleContainer,TdhHTMLForm,TdhStyleSheet,TdhLabel,TdhPanel,TdhLink,TdhMenu,TdhPageControl,TdhDirectHTML,
                   TdhRadioButton,TdhCheckBox,TdhPage,TdhEdit,TdhMemo,TdhFileField,TdhHiddenField,
                   TPageControl,TImage,TEdit,TComboBox,TMemo,TSpeedButton,TPanel,TFrame,
                   TCheckBox,TButton,TRadioButton,TLabel,TGroupBox{$IFNDEF CLX},TGifImage,TJPEGImage{$ENDIF}{,TPNGImage}]);

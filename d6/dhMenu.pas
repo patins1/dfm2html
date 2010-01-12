@@ -228,7 +228,6 @@ type
     function LeaveY:boolean; override;
     procedure PrepareAlign; override;
     procedure AlignDone; override;
-    procedure Notification(AComponent: TComponent; Operation: TOperation); override;
     procedure NotifyUseChanged(OldValue: ICon); override;
     function AdjustZIndex(ChildPos,ParentControlCount:integer):integer; override;
     function MenuPos:TPoint;
@@ -1121,58 +1120,26 @@ begin
  FOptions:=[loDownIfMenu,loDownIfURL,loDownIfMouseDown];
 end;
 
-procedure TdhMenu.Notification(AComponent: TComponent;
-  Operation: TOperation);
+procedure TdhLink.Notification(AComponent: TComponent; Operation: TOperation);
 begin
-//  raise Exception.Create('asdf');
-{ if Operation = opInsert then  begin
- showmessage(Name+':'+LastLinkForm+'='+copy(AComponent.ClassName,2,maxint));
- if (LastLinkForm<>'') and (LinkForm=nil) then
- if (LastLinkForm=copy(AComponent.ClassName,2,maxint)) and (AComponent is TCustomForm) then
- begin
-  LinkForm:=TCustomForm(AComponent);
- end;
- end;
- }
-end;
-
-procedure TdhLink.Notification(AComponent: TComponent;
-  Operation: TOperation);
-begin
-{ if Operation = opInsert then  begin
- showmessage(Name+':'+LastLinkForm+'='+copy(AComponent.ClassName,2,maxint));
- if (LastLinkForm<>'') and (LinkForm=nil) then
- if (LastLinkForm=copy(AComponent.ClassName,2,maxint)) and (AComponent is TCustomForm) then
- begin
-  LinkForm:=TCustomForm(AComponent);
- end;
- end;
- }                  
-
  if Operation = opRemove then
  begin
- if not FastDestroy then
- if LinkAnchor=AComponent then
- begin                 
-  CancelInvDesigner:=true;
-  LinkAnchor:=nil;
-  SLinkAnchor:=AComponent.Name;
-  CancelInvDesigner:=false;
- end else
- if LinkPage=AComponent then
- begin
-  CancelInvDesigner:=true;
-  LinkPage:=nil;
-  SLinkPage:=AComponent.Name;
-  CancelInvDesigner:=false;
+  if not FastDestroy then
+  if LinkAnchor=AComponent then
+  begin
+   CancelInvDesigner:=true;
+   LinkAnchor:=nil;
+   SLinkAnchor:=AComponent.Name;
+   CancelInvDesigner:=false;
+  end else
+  if LinkPage=AComponent then
+  begin
+   CancelInvDesigner:=true;
+   LinkPage:=nil;
+   SLinkPage:=AComponent.Name;
+   CancelInvDesigner:=false;
+  end;
  end;
- end{ else
- if (SLinkPage<>'') and (SLinkPage=AComponent.Name) and (AComponent is TdhPage) then
- begin
-  CancelInvDesigner:=true;
-  LinkPage:=TdhPage(AComponent);
-  CancelInvDesigner:=false;
- end; }
 end;
 
 procedure TdhLink.TimerNotify(Sender: TObject);

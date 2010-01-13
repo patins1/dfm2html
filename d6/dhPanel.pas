@@ -31,7 +31,7 @@ uses
   ComCtrls, CommCtrl, StdCtrls, clipbrd,
 {$ENDIF}
   math{$IFNDEF VER130}{, variants}{$ENDIF}{$IFDEF DEB},funcutils,jclDebug{$ENDIF},
-  GR32,GR32_Transforms,gauss,GR32_Blend,GR32_LowLevel,crc,BinList,BinTree,MyBitmap32,dhStrUtils;
+  GR32,GR32_Transforms,gauss,GR32_Blend,GR32_LowLevel,crc,BinList,MyBitmap32,dhStrUtils;
 
 {$IFDEF VER210}
 const GIFPaintPerHand=false;
@@ -1377,7 +1377,6 @@ var _RuntimeMode:boolean=false;
     DesignStyle:TState=hsNormal;
     glPaintOnlyBg:boolean;
 var CancelCheckDesignState:boolean;
-    glShowingChanged:boolean=false;
     glSelCompo,glEventObj:TControl;
     glSharing:boolean;
     OuterControl:TControl;

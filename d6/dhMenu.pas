@@ -22,7 +22,6 @@ var glOnAfterNavigate:procedure(Sender:TdhPage);
 const NoExtraVerticalMenuStyle=true;
 const RelMenuPosIsNoExtraMenuStyle=true;
 const DisableMenuPos=false;
-const ShareMenuPos=true;
 
 var INVALIDMENUNESTING_STR:WideString= 'Menu % cannot be opened by the link % because the link is a child of the menu.';
 
@@ -98,7 +97,6 @@ type
     procedure UpdateSubMenuCoords;
     function SubmenuOpen:boolean;
     procedure Loaded; override;
-    procedure BringSubmenusToFront;
     procedure LinkDestinationChanged;
     procedure SetLink(Value:TPathName);
     procedure SetLinkAnchor(Value:TdhCustomPanel);
@@ -123,15 +121,12 @@ type
     function HasParentMenu(var P:TdhMenu):boolean;
     function ResumeOpen:boolean;
     function IsClickToOpen:boolean;
-    procedure AddOwnInfo(sl:TStrings); override;
     procedure SetDown(Value:boolean);
-    function GetInlinePos:TPoint;
     function DownIfDown:boolean; override;
     function GetNextPage(CurrPage:TdhPage):TdhPage;
     procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
     procedure FocusPreferStyle(IsMain,RealChange:boolean); override;
     function BoundNextSibling:TdhCustomPanel; override;
-
   public
     SLinkPage:TComponentName;
     SLinkAnchor:TComponentName;
@@ -151,7 +146,6 @@ type
     function AllHTMLCode:HypeString; override;
     procedure PreferStyleChangeMenuSibling(caller:TdhCustomPanel; ClearPrefer:boolean);
     property SubMenu:TdhMenu read FSubMenu;
-
   published
     property Options:TAnchorOptions read FOptions write SetOptions nodefault{ default [aoDownIfMenu]};
     property Down:boolean read FDown write SetDown default false;
@@ -198,7 +192,6 @@ type
     function GetIsInlineMenu:boolean;
     procedure UpdateInlineMenu;
     procedure UpdateVerticalLayout;
-    procedure BringSubmenusToFront;
     procedure SetParentMenuItem(Value:TdhLink);
     procedure WriteState(Writer: TWriter); override;
     procedure WriteRealMenuLeft(Writer: TWriter);
@@ -232,7 +225,6 @@ type
     function AdjustZIndex(ChildPos,ParentControlCount:integer):integer; override;
     function MenuPos:TPoint;
     procedure CalcVariableSizes(FirstPass:boolean); override;
-
   public
     function BoundTop:Integer; override;
     procedure AssignMenuSettings(fromMenu:TdhMenu);
@@ -249,7 +241,6 @@ type
     property MenuTop:integer read FMenuTop write SetMenuTop stored not DisableMenuPos default 0;
     property IsInlineMenu:boolean read GetIsInlineMenu stored false;
     procedure OpenMenu;
-
   published
     property Visible stored false;
     property MenuOptions:TMenuOptions read FMenuOptions write SetMenuOptions;
@@ -260,7 +251,6 @@ type
 
 function GetParentPage(P:TControl; SameLevel:boolean=false; AllowPage:boolean=true):TWinControl;
 function FindPage(c:TControl; var res:TWinControl; RealActivePage:boolean):boolean;
-
 procedure ScrollInView(p,cc:TControl; ForceTop:boolean);
 
 
@@ -283,8 +273,6 @@ var
     ToOpen:TdhMenu=nil;
     IsSliding:boolean=false;
 
-    //const OutOfDesignSelectable=10000;
-
 function FindPage(c:TControl; var res:TWinControl; RealActivePage:boolean):boolean;
 var i:integer;
     r:TdhPage;
@@ -302,7 +290,6 @@ begin
   end;
  end;
  if c is TWinControl then
- //if not((c is TdhPage) and TdhPage(c).IsBody) then
  with TWinControl(c) do
  for i:=0 to ControlCount-1 do
  if not((Controls[i] is TdhPage) and (TdhPage(Controls[i]).PageControl<>nil)) then
@@ -346,7 +333,7 @@ end;
 procedure TdhMenu.RestoreSlide;
 begin
   Height:=OriWidthHeight.Y;
-  Width:=OriWidthHeight.X;   
+  Width:=OriWidthHeight.X;
   AutoSizeXY:=OriAutoSizeXY;
   SlideTimer.Enabled:=False;
   SetIsSliding(false,self);
@@ -362,13 +349,6 @@ begin
  begin
   exit;
  end;
-             {
- if (glSelCompo<>nil) and not (csDesigning in glSelCompo.ComponentState) and (TailSubMenu<>nil) and (csDesigning in TailSubMenu.ComponentState) then
- begin
-  exit;
- end;
-           }
- //if not IsSliding then
  LinkTimer.Enabled:=false;
  p:=TailSubMenu;
  while (p<>nil) and (p.FParentMenuItem<>nil) do
@@ -385,12 +365,10 @@ begin
     end;
     break;
   end;
-  if (ToOpen=nil) and TailSubMenu.IsVirtualParentOf(glSelCompo)
-    and not((CloseItem<>nil) and CloseItem.IsVirtualParentOf(TailSubMenu)) then
+  if (ToOpen=nil) and TailSubMenu.IsVirtualParentOf(glSelCompo) and not((CloseItem<>nil) and CloseItem.IsVirtualParentOf(TailSubMenu)) then
   begin
     break;
   end;
-
   if (p.Height<>0) and not ((ToOpen<>nil) and (not ToOpen.IsInlineMenu or ToOpen.Visible or not GetParentPage(TailSubMenu).Visible)) then
   if (csDestroying in TailSubMenu.ComponentState) then
   begin
@@ -409,24 +387,14 @@ begin
    exit;
   end;
   end;
-
-
-//  FParentMenuItem.CheckDesignState(true);
-  glShowingChanged:=true;
   CancelCheckDesignState:=true;
-
-  //Align:=alNone;
   p.Visible:=false;
   if p<>TailSubMenu then break;
-  if IsSliding{ p.DoSlide and p.IsInlineMenu and (p.Height<>0)} then
+  if IsSliding then
   begin
-  //Timer.Enabled:=false;
-   p.RestoreSlide();//SetIsSliding(false,p);
+   p.RestoreSlide();
   end;
   TailSubMenu:=nil;
-{  if not p.IsInlineMenu then
-   p.Left:=p.Left+OutOfDesignSelectable;
-}
   p.FParentMenuItem.CheckDesignState;
   pn:=p.FParentMenuItem;
   while (pn<>nil) and not((pn is TdhMenu) and (TdhMenu(pn).FParentMenuItem<>nil)) do
@@ -437,7 +405,7 @@ begin
    p:=TdhMenu(pn) else
    break;
  end;
-        
+
  if not IsSliding and (ToOpen<>nil) then
   ToOpen.OpenMenu;
 end;
@@ -493,7 +461,6 @@ begin
  result:=true;
 end;
 
-
 procedure TdhLink.WriteRealLastPage(Writer: TWriter);
 begin
  Writer.WriteString(FinalID(RealLastPage));
@@ -547,7 +514,6 @@ begin
  inherited;
  if (csLoading in ComponentState) or not WithMeta and (Filer is TWriter) then exit;
  Filer.DefineProperty('ComputedLayout', nil, WriteComputedLayout, ComputedLayout<>GetDefaultLayout);
-
 end;
 
 procedure TdhLink.DefineProperties(Filer: TFiler);
@@ -604,19 +570,21 @@ begin
 end;
 
 function TdhLink.GetHTMLState:TState;
-var IsDown  :boolean;
+var IsDown:boolean;
 begin
   Result:=hsNormal;
-  if (Self=glSelCompo) then
-   Result:=hsOver;
-  IsDown:=FDown or (Result=hsOver) and (loDownIfOver in ComputedOptions) or
-     IsActivated or{(FLinkPage.PageControl is TdhPageControl) and (TdhPageControl(FLinkPage.PageControl).GetTop=FLinkPage)}{and FLinkPage.Showing}{(FLinkPage.PageControl<>nil) and (FLinkPage.PageControl.ActivePage=FLinkPage)} //(glDownForUrlCompo=Self) or
-     (FSubMenu=nil) and (csLButtonDown in ControlState){(Self=FClickedControl)} and ((loDownIfMouseDown in ComputedOptions) or IsButton)  or
+  IsDown:=FDown or
+     IsActivated or
+     (loDownIfOver in ComputedOptions) and (Self=glSelCompo) or
+     (FSubMenu=nil) and (csLButtonDown in ControlState) and ((loDownIfMouseDown in ComputedOptions) or IsButton)  or
      (FSubMenu<>nil) and FSubMenu.Visible and (loDownIfMenu in ComputedOptions);
-
+  if (Self=glSelCompo) and not (IsDown and (loNoOverIfDown in ComputedOptions)) then
+  begin
+   if IsDown then
+    Result:=hsOverDown else
+    Result:=hsOver;
+  end else
   if IsDown then
-  if (Result=hsOver) and not (loNoOverIfDown in ComputedOptions) then
-   Result:=hsOverDown else
    Result:=hsDown;
 end;
 
@@ -627,9 +595,13 @@ begin
   if Over then
    result:=hsOver;
   IsDown:=(Over and Down);
+  if Over then
+  begin
+   if IsDown then
+    Result:=hsOverDown else
+    Result:=hsOver;
+  end else
   if IsDown then
-  if (Result=hsOver) then
-   Result:=hsOverDown else
    Result:=hsDown;
 end;
 
@@ -637,13 +609,15 @@ function TdhLink.GetInlineHTMLState(Over,Down:boolean):TState;
 var IsDown:boolean;
 begin
   result:=hsNormal;
-  if Over then
-   result:=hsOver;
   IsDown:=FDown or
      (FSubMenu=nil) and (Over and Down) and ((loDownIfMouseDown in ComputedOptions) or IsButton);
+  if Over and not (IsDown and (loNoOverIfDown in ComputedOptions)) then
+  begin
+   if IsDown then
+    Result:=hsOverDown else
+    Result:=hsOver;
+  end else
   if IsDown then
-  if (Result=hsOver) and not (loNoOverIfDown in ComputedOptions) then
-   Result:=hsOverDown else
    Result:=hsDown;
 end;
 
@@ -790,8 +764,6 @@ var apage:TWinControl;
 begin
  if (Page<>nil) and (Page.PageControl is TdhPageControl) then
  begin
-  {Page.Activate(nil);
-  apage:=GetParentPage(Page);}
   apage:=Page;
   while (apage is TdhPage) and (TdhPage(apage).PageControl<>nil) do
   begin
@@ -863,13 +835,9 @@ end;
 procedure TdhMenu.OpenMenu;
 var i:integer;
 begin
-  ToOpen:=nil;
-  if Visible then exit;        
-  //assert(not FSubMenu.Visible);
-//  if not FSubMenu.Visible{ or (Height=0)} then
-  begin
+   ToOpen:=nil;
+   if Visible then exit;
    TailSubMenu:=Self;
-//   BringSubmenusToFront;
    CancelCheckDesignState:=true;
    Visible:=true;
    AdjustSize;
@@ -891,7 +859,6 @@ begin
    end;
    FParentMenuItem.CheckDesignState;
    CancelCheckDesignState:=false;
-  end;
 end;
 
 function TdhMenu.LeaveY:boolean;
@@ -925,8 +892,7 @@ begin
 end;
 
 begin
- assert(Self<>nil,'Self<>nil');
- try
+  assert(Self<>nil);
   _glSelCompo:=glSelCompo;
   glSelCompo:=nil;
   if IsOver then
@@ -946,41 +912,33 @@ begin
    begin
     ToOpen:=TdhLink(Self).FSubMenu;
     glCheckClose;
-   end{ else
-    glCheckClose(true)};
+   end;
   end else
   begin
-  if IsOver and (Self is TdhLink) then
-    ToOpen:=TdhLink(Self).FSubMenu;
-  if clicked then
-  begin
-   glCheckClose;
-  end else
-  if IsOver and (glSelCompo is TdhLink) and (TdhLink(glSelCompo).FSubMenu<>nil) {and not IsSliding }and TdhLink(glSelCompo).DownIfDown then
-  if TdhLink(Self).ResumeOpen and TdhLink(Self).HasParentMenu(pn) and pn.HasOpenedMenu then
-  begin        
-   glCheckClose;
-  end else
-  begin
-   LinkTimer.Enabled:=false; //falls schon auf TimerNotify
-   SetTimer(TdhLink(glSelCompo).TimerNotify,TdhLink(glSelCompo).FSubMenu.ComputedMenu.FReactionTime,LinkTimer);
+   if IsOver and (Self is TdhLink) then
+     ToOpen:=TdhLink(Self).FSubMenu;
+   if clicked then
+   begin
+    glCheckClose;
+   end else
+   if IsOver and (glSelCompo is TdhLink) and (TdhLink(glSelCompo).FSubMenu<>nil) {and not IsSliding }and TdhLink(glSelCompo).DownIfDown then
+   if TdhLink(Self).ResumeOpen and TdhLink(Self).HasParentMenu(pn) and pn.HasOpenedMenu then
+   begin
+    glCheckClose;
+   end else
+   begin
+    LinkTimer.Enabled:=false;
+    SetTimer(TdhLink(glSelCompo).TimerNotify,TdhLink(glSelCompo).FSubMenu.ComputedMenu.FReactionTime,LinkTimer);
+   end;
   end;
-  end;
-
-
   CheckSiblings;
-
-
   if (_glSelCompo is TdhCustomPanel) then
    TdhCustomPanel(_glSelCompo).CheckDesignState;
   if (Self is TdhCustomPanel) then
    TdhCustomPanel(Self).CheckDesignState;
- except
- on e:exception do showmessage('ASDF17 '+e.Message);
- end;
 
   if not (glSelCompo is TdhCustomPanel) then
-   glSelCompo:=nil;//da wir nicht über desses Destroy unterrichtet werden!
+   glSelCompo:=nil;//since only TdhCustomPanel.Destroy would reset it
 end;
 
 procedure TdhLink.GetChildren(Proc: TGetChildProc; Root: TComponent);
@@ -1144,16 +1102,9 @@ end;
 
 procedure TdhLink.TimerNotify(Sender: TObject);
 begin
-// Timer.Enabled:=false;
- //assert(not IsSliding);
  glCheckClose;
 end;
 
-procedure TdhLink.BringSubmenusToFront;
-begin
- if FSubMenu<>nil then
-  FSubMenu.BringSubmenusToFront;
-end;
 
 destructor TdhLink.Destroy;
 begin
@@ -1198,16 +1149,6 @@ begin
   Result:=Parent else
   Result := GetParentPage(Self);
 end;                
-
-procedure TdhLink.AddOwnInfo(sl:TStrings);
-begin
-{  sl.Add('Anchor info:');
-  sl.Add('Referenced by LinkAnchor:'+inttostr(LinkedCount)+' times');
-  if FSubMenu<>nil then
-   sl.Add('Submenu:'+FSubMenu.Name) else
-   sl.Add('Submenu:(no submenu)');
-  sl.Add('');}
-end;
 
 function AddPoint(const a:TPoint; const b:TPoint):TPoint;
 begin
@@ -1257,30 +1198,14 @@ begin
   p:=p.Parent;
  end;
 
-
-  p:=VirtualParent as TWinControl;
-  if (p is TdhCustomPanel) then
-  begin
-   pn:=TdhCustomPanel(p);
-   if pn.IsRastered(false)=rsNo then
-    Result:=DecPoint(Result,pn.MarginPure.TopLeft);
-  end;
-
- {
+ p:=VirtualParent as TWinControl;
+ if (p is TdhCustomPanel) then
  begin
- if (pn is TdhCustomPanel) and (TdhCustomPanel(pn).VirtualParent<>pn.Parent) then
- begin
-   TdhCustomPanel(pn).client
-//  Result:=AddPoint(Result,TdhMenu(pn).GetTotalPos);
-  //pn:=TdhCustomPanel(pn).VirtualParent;
-  exit;
- end else
- begin
-  inc(Result.X,pn.Left);
-  inc(Result.Y,pn.Top);
-  pn:=pn.Parent;
+  pn:=TdhCustomPanel(p);
+  if pn.IsRastered(false)=rsNo then
+   Result:=DecPoint(Result,pn.MarginPure.TopLeft);
  end;
- end;}
+
 end;
 
 
@@ -1371,14 +1296,10 @@ begin;
  _SetUniqueName(result,AnchorNameBase);
  if VerticalLayout then
  begin
-//  pn.Align:=alBottom;
   result.Top:=Height;
-//  pn.Align:=alTop;
  end else
  begin
-  //pn.Align:=alRight;
   result.Left:=Width;
-//  pn.Align:=alLeft;
  end;
  result.Parent:=Self;
  result.Align:=_NewControlsAlign;
@@ -1435,25 +1356,20 @@ begin
   begin
    NotifyCSSChanged([wcState]);
   end;
-  if ShareMenuPos then
+  MenuPosBrother:=GetMenuPosBrother(nil);
+  if MenuPosBrother=Self then
   begin
-   MenuPosBrother:=GetMenuPosBrother(nil);
-   if MenuPosBrother=Self then
+   MenuPosBrothers:=GetMenuPosBrothers;
+   for i:=0 to MenuPosBrothers.Count-1 do
    begin
-    MenuPosBrothers:=GetMenuPosBrothers;
-    for i:=0 to MenuPosBrothers.Count-1 do
-    begin
-     MenuPosBrother:=TdhMenu(MenuPosBrothers[i]);
-     MenuPosBrother.SetMenuPos(Left,Top);
-    end;
-   end else
-   if MenuPosBrother<>nil then
-   begin
+    MenuPosBrother:=TdhMenu(MenuPosBrothers[i]);
     MenuPosBrother.SetMenuPos(Left,Top);
    end;
+  end else
+  if MenuPosBrother<>nil then
+  begin
+   MenuPosBrother.SetMenuPos(Left,Top);
   end;
-  {if csLoading in ComponentState then exit;
-  UpdateMenuCoords;}
  end;
 end;
 
@@ -1516,7 +1432,6 @@ begin
  result:=Parent.ScreenToClient(FParentMenuItem.ClientToScreen(GetRelativePos));
 end;
 
-//@assert not CancelSetMenuPos
 procedure TdhMenu.UpdateMenuCoords;
 var p1:TPoint;
 begin
@@ -1524,10 +1439,12 @@ begin
  p1:=AddPoint(GetMenuCoordsOrigin,ComputedMenuPos);
  if not CancelSetMenuPos then
  begin
- assert(not CancelSetMenuPos);
- CancelSetMenuPos:=true;
- SetBounds(p1.X,p1.Y,Width,Height);
- CancelSetMenuPos:=false;
+  CancelSetMenuPos:=true;
+  try
+   SetBounds(p1.X,p1.Y,Width,Height);
+  finally
+   CancelSetMenuPos:=false;
+  end;
  end;
 end;
 
@@ -1538,21 +1455,14 @@ var p1:TPoint;
     i:integer;
     CancelSetBounds:boolean;
 begin
- if csDestroying in ComponentState then exit; //durch glCheckClose
+ if csDestroying in ComponentState then exit; // possible during glCheckClose
  R:=BoundsRect;
  Inherited;
  CancelSetBounds:=(FParentMenuItem<>nil) and (Parent<>FParentMenuItem.GetChildParent);
  if not CancelSetMenuPos and Visible and (FParentMenuItem<>nil) and not CancelSetBounds and not ((R.Left=Left) and (R.Top=Top)) and not IsInlineMenu then
- {if Auto then
- begin
-
- end else }
  begin
   p1:=GetMenuCoordsOrigin;
   SetMenuPos(Left-p1.X,Top-p1.Y);
-//  showmessage(name+':'+inttostr(FMenuLeft));
-{ FMenuLeft:=ALeft-p1.X;
-  FMenuTop:=ATop-p1.Y;}
  end;
  if Visible and not EqualRect(R,BoundsRect) then
  begin
@@ -1560,9 +1470,6 @@ begin
    if Controls[i] is TdhLink then
     TdhLink(Controls[i]).UpdateSubMenuCoords;
  end;
-{ if not IsSliding then
-  OriWidthHeight:=Point(Width,Height);
-}
 end;
 
 procedure TdhMenu.VisibleChanged;
@@ -1570,32 +1477,30 @@ var P:TdhMenu;
 begin
  inherited;
  try
- if FParentMenuItem=nil then exit;
- if not Visible then
- begin     
-  glCheckClose(FParentMenuItem);
-  exit;
- end;
- ToOpen:=Self;
- glCheckClose;
- ToOpen:=nil;
- if FParentMenuItem.HasParentMenu(P) then
-  P.Visible:=true;
- TailSubMenu:=Self;
- UpdateMenuCoords;
- BringSubmenusToFront;
+  if FParentMenuItem=nil then exit;
+  if not Visible then
+  begin
+   glCheckClose(FParentMenuItem);
+   exit;
+  end;
+  ToOpen:=Self;
+  glCheckClose;
+  ToOpen:=nil;
+  if FParentMenuItem.HasParentMenu(P) then
+   P.Visible:=true;
+  TailSubMenu:=Self;
+  UpdateMenuCoords;
  finally
   inherited;
  end;
 end;
 
 
-
 procedure TdhMenu.SetParent({$IFDEF CLX}const {$ENDIF}AParent: TWinControl);
 begin
   if ParentMenuItem<>nil then
    inherited SetParent(FParentMenuItem.GetChildParent as TWinControl) else
-  if {(PageControl=nil) and }(AParent is TdhLink) then
+  if AParent is TdhLink then
    ParentMenuItem:=TdhLink(AParent) else
    Inherited;
   if not (csDestroying in ComponentState) then
@@ -1620,7 +1525,6 @@ begin
   if FParentMenuItem<>nil then
   begin
    FParentMenuItem.FSubMenu:=nil;
-   //FParentMenuItem.UpdateMenuItemDesign;
    if not (csDestroying in FParentMenuItem.ComponentState) then
     glCheckClose(FParentMenuItem);
   end;
@@ -1629,52 +1533,13 @@ begin
   begin
    if FParentMenuItem.FSubMenu<>nil then
     FParentMenuItem.FSubMenu.ParentMenuItem:=nil;
- //  Value.SetSubMenu(nil);
    FParentMenuItem.FSubMenu:=Self;
-   //FParentMenuItem.UpdateMenuItemDesign;
    Visible:=OldVisible;
    UpdateParent;
   end else
    Visible:=OldVisible;
-  //Visible:=ParentMenuItem=nil;
  end;
 end;
-(*
-begin
- Visible:=False;
- //R:=BoundsRect;
- if FParentMenuItem=Value then exit;
- if (Value<>nil) and (csLoading in ComponentState) and not (csLoading in Value.ComponentState) then
- begin
-  Visible:=true;
-  exit;//kopiertes Menu wird gepasted
- end;
- if FParentMenuItem<>nil then
- begin
-  FParentMenuItem.FSubMenu:=nil;
-  FParentMenuItem.UpdateMenuItemDesign;
-  if not (csDestroying in FParentMenuItem.ComponentState) then
-   glCheckClose(FParentMenuItem);
- end;
- if (Value=nil) and not (csDestroying in ComponentState) then
- begin
-  UpdateMenuCoords;//SetBounds(R.Left,R.Top,Width,Height); //wegen OutOfDesignSelectable
- end;
- FParentMenuItem:=Value;
- if Value<>nil then
- begin
-  if Value.FSubMenu<>nil then
-   Value.FSubMenu.ParentMenuItem:=nil;
-//  Value.SetSubMenu(nil);
-  FParentMenuItem.FSubMenu:=Self;
-  FParentMenuItem.UpdateMenuItemDesign;
- end else
-  Visible:=true;
- {if not (csDestroying in ComponentState) then
-  UpdateControlState; }
- //Visible:=(FParentMenuItem=nil) or{ FParentMenuItem.IsOver} (FParentMenuItem.HTMLState=hsOver);
-
-end;*)
 
 function TdhMenu.HasOpenedMenu:boolean;
 var i:integer;
@@ -1690,7 +1555,7 @@ end;
 
 function TdhMenu.GetIsInlineMenu:boolean;
 begin
- result:=moInline in ComputedMenu.FMenuOptions;//HasParent and (FParentMenuItem<>nil) and (FParentMenuItem.Parent=Parent) and (Align<>alNone);
+ result:=moInline in ComputedMenu.FMenuOptions;
 end;
 
 function TdhMenu.NewControlsAlign:TAlign;
@@ -1700,22 +1565,10 @@ begin
   Result:=alLeft;
 end;
 
-function TdhLink.GetInlinePos:TPoint;
-begin
-  if Align=alLeft then
-  begin
-   result:=Point(Left+Width,Top);
-  end else
-  begin
-   result:=Point(Left,Top+Height);
-  end;
-end;
-
 procedure TdhMenu.UpdateInlineMenu;
 begin
  if FParentMenuItem<>nil then
  begin
-  //if (not Value)<>(Parent=FParentMenuItem.GetChildParent) then
   if moInline in ComputedMenu.FMenuOptions then
    Align:=FParentMenuItem.Align else
    Align:=alNone;
@@ -1730,7 +1583,6 @@ begin
 end;
 
 
-
 type TFakeApplication=class(TApplication);
 
 procedure TdhMenu.SlideNotify(Sender: TObject);
@@ -1738,31 +1590,21 @@ procedure TdhMenu.SlideNotify(Sender: TObject);
 var Msg: TMsg;
 {$ENDIF}
 begin
-// LockWindowUpdate(Handle);
-// IsSliding:=true;
  Height:=Math.min(Height+ComputedMenu.FSlidePixel,OriWidthHeight.Y);
-// IsSliding:=false;
  if Height=OriWidthHeight.Y then
  begin
   RestoreSlide();
   if ToOpen<>nil then
    glCheckClose;
  end;
-  //Application.ProcessMessages;
 {$IFNDEF CLX}
  TFakeApplication(Application).Idle(Msg); //to receive mouse-over messages while sliding
 {$ENDIF}
-  //Application.HandleMessage;
-//  LockWindowUpdate(0);
-// PaintBorder;
 end;
 
 procedure TdhMenu.SlideUpNotify(Sender: TObject);
 begin
-// LockWindowUpdate(Handle);
-// IsSliding:=true;
  Height:=max(Height-ComputedMenu.FSlidePixel,0);
-// IsSliding:=false;
  if Height=0 then
  begin
   SlideTimer.Enabled:=False;
@@ -1775,7 +1617,7 @@ var i:integer;
 begin
  ls.Add(Self);
  for i:=0 to ControlCount-1 do
- if (Controls[i] is TdhLink) then
+ if Controls[i] is TdhLink then
  begin
   ls.Add(Controls[i]);
   if TdhLink(Controls[i]).FSubMenu<>nil then
@@ -1941,72 +1783,35 @@ begin
 end;
 
 procedure TdhMenu.UpdateVerticalLayout;
-var i{,h,w}:integer;
-  { NeedAlign:boolean;}
-//var seIndex:TList;
+var i:integer;
 begin
-{ if not Value then
-  include(FMenuOptions,moHorizontalLayout) else
-  exclude(FMenuOptions,moHorizontalLayout);}
  if NoExtraVerticalMenuStyle then exit;
- if (csLoading in ComponentState) or not {AutoSize}(FAutoSize=asXY) then exit;
- {w:=-1;
- h:=-1;   }
- // OrderedControls
-// NeedAlign:=false;
+ if (csLoading in ComponentState) or not (FAutoSize=asXY) then exit;
  DisableAlign;
  try
- for i:=0 to ControlCount-1 do
- if (Controls[i] is TdhCustomPanel) and (Controls[i].Align in [alLeft,alTop]) then
- with Controls[i] do
- if ((Align=alTop)<>VerticalLayout) then
- begin
-// NeedAlign:=true;
- if VerticalLayout then
- begin
- { w:=max(Width,w);
-  h:=Height;}
-  Top:=Left;
-  Align:=alTop;
-  //Height:=h;
- end else
- begin
- { w:=max(Height,w);
-  h:=Width; }
-  Left:=Top;
-  Align:=alLeft;
-  //Width:=h;
- end;
- end;
+  for i:=0 to ControlCount-1 do
+  if (Controls[i] is TdhCustomPanel) and (Controls[i].Align in [alLeft,alTop]) then
+  with Controls[i] do
+  if ((Align=alTop)<>VerticalLayout) then
+  begin
+   if VerticalLayout then
+   begin
+    Top:=Left;
+    Align:=alTop;
+   end else
+   begin
+    Left:=Top;
+    Align:=alLeft;
+   end;
+  end;
  finally
   EnableAlign;
  end;
-{ if NeedAlign then
-  Realign;   }
-
-end;
-
-procedure TdhMenu.BringSubmenusToFront;
-var i:integer;
-begin
-{ if (FParentMenuItem<>nil) and not IsInlineMenu then
-  BringToFront;
-
- for i:=0 to ControlCount-1 do
- if (Controls[i] is TdhLink) then
-  TdhLink(Controls[i]).BringSubmenusToFront;}
 end;
 
 destructor TdhMenu.Destroy;
 begin                         
- {if ToOpen=Self then <-fehler, immer nil setzen}
- ToOpen:=nil;
-                      {
- if TailSubMenu=Self then
- if not GetParentPage(TailSubMenu).Visible then;  } {
- TailSubMenu:=nil; }
-{ if (TailSubMenu=self) and (TailSubMenu.FParentMenuItem<>nil) then
-  glCheckClose(FParentMenuItem);     }
+ ToOpen:=nil; //set always to nil
  if not FastDestroy then
   ParentMenuItem:=nil;                
  if TailSubMenu=Self then TailSubMenu:=nil;
@@ -2015,7 +1820,7 @@ end;
 
 procedure TdhMenu.WriteState(Writer: TWriter);
 begin
- if (FParentMenuItem<>nil){ and not IsInlineMenu} then
+ if FParentMenuItem<>nil then
  if not (csWriting in FParentMenuItem.ComponentState) then
  begin
  if (csWriting in Owner.ComponentState){normal saven, nicht ins Clipboard kopieren} or not Visible{ins ClipBoard nur wenn visible} then
@@ -2058,9 +1863,9 @@ procedure TdhMenu.PrepareAlign;
 begin
     ControlStyle:=ControlStyle-[csAcceptsControls];
     if not (Visible and (ParentMenuItem<>nil) and (ParentMenuItem.Align=Align) and IsInlineMenu and (Align in [alLeft,alTop])) then exit;
-    if (Align=alTop){ and (Top<>ParentMenuItem.GetInlinePos.Y)} then
+    if Align=alTop then
      Top:=ParentMenuItem.Top+1;
-    if (Align=alLeft){ and (Left<>ParentMenuItem.GetInlinePos.X)} then
+    if Align=alLeft then
      Left:=ParentMenuItem.Left+1;
 end;
 
@@ -2334,10 +2139,6 @@ begin
   inherited;
   if IsMain then
   begin
-   {if (FLinkPage<>nil) and (FLinkPage.PageControl<>nil) then
-   begin
-    FLinkPage.PageControl.PreferStyleChangeMenuSiblings(self,PreferStyle=nil);
-   end;}
    if (Parent<>nil) then
    begin
     PreferStyleChangeParentSiblings(self,PreferStyle=nil);
@@ -2354,7 +2155,6 @@ begin
  if ClearPrefer then
   SetPreferStyle(nil,false,false) else
   SetPreferStyle(Style,false,false);
- //DownForURLAnchor.PreferStyleChange(false);
  end;
 end;
 

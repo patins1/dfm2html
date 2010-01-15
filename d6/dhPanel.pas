@@ -104,7 +104,7 @@ const calNone=ealNone;
 
 type
   TOneChanged=(
-  wcChild, //propagates changes to childs
+  wcChild, //propagates changes to children
   wcParent, //InvalTop is not needed
   wcFont, //update Win Font
   wcColor, //update Win Color
@@ -747,8 +747,9 @@ type
     procedure WriteCenterRight(Writer: TWriter);
     function CenterMargins:TPoint;
     procedure CSSToWinControl(WhatChanged:TWhatChanged=[]);
-    procedure InvalTop(WithChilds,ExcludeOneself:boolean);
-    procedure InvalBack(const R2:TRect);
+    procedure InvalTop(IncludeChildren,IncludeSelf:boolean);
+    procedure InvalBack; overload;
+    procedure InvalBack(const R2:TRect); overload;
     function GetAffine(inv: boolean): TMyAffineTransformation;
     procedure WriteClientBottom(Writer: TWriter);
     procedure WriteClientLeft(Writer: TWriter);
@@ -932,10 +933,11 @@ type
     FImageFormat:TImageFormat;
     DragHPos, DragVPos: Integer;
     FDragOffset:TPoint;
-    TopIsValid,BackIsValid:boolean;
-    BackGraph:TMyBitmap32;
-    TopGraph:TMyBitmap32;
-    TransparentTop:TMyBitmap32;
+    BackGraph:TMyBitmap32; // opaque bitmap of the background - however if (BackGraph=TopGraph), the visual content may overlay it
+    TopGraph:TMyBitmap32; // opaque bitmap of the visual content
+    TransparentTop:TMyBitmap32; // transparent bitmap of the visual content without background information (by using semi-transparency)
+    BackIsValid:boolean; // whether BackGraph and TopGraph are up-to-date with the background
+    TopIsValid:boolean; // whether TopGraph is up-to-date with the visual content - the background information may be invalid
     _SelfCBound:TRect;
     VertScrollInfo: TMyScrollInfo;
     HorzScrollInfo: TMyScrollInfo;
@@ -1527,12 +1529,8 @@ function MyFindControl(c:TControl): TControl; overload;
 function MyFindDragTarget(const Pos: TPoint; AllowDisabled: Boolean): TControl;
 function FinalVisible(c:TControl):boolean;
 
-
-var InvRect:TRect;
-
-procedure InvalTrans(C:TControl; R2:TRect; NotChilds:boolean=false);
+procedure InvalTrans(C:TControl); overload;
 function GetCBound(c:TControl):TRect;
-function GetCBound2(c:TControl):TRect;
 function GetScreenClientBound(c:TControl):TRect;
 function GetPhysicalScreenClientBound(c:TControl):TRect;
 function rGetOffsetRect(R:TRect; P:TPoint):TRect;
@@ -2585,7 +2583,7 @@ procedure TdhCustomPanel.InvalDeepestBack;
 begin
  BehindAllOthers:=Self;
  try
-  InvalBack(InvRect);
+  InvalBack;
  finally
   BehindAllOthers:=nil;
  end;
@@ -2749,8 +2747,8 @@ begin
 {$ENDIF}
 
  if wcParent in WhatChanged then
-  InvalBack(InvRect) else
-  InvalTop(true,false);
+  InvalBack else
+  InvalTop(true,true);
 
  for _State:=low(TState) to high(TState) do
  if StyleArr[_State]<>nil then
@@ -5241,7 +5239,7 @@ begin
  HPos:=P.X;
  VPos:=P.Y;
  ScrollPaintChanged;
- InvalTop(SomethingIsFixed,not SomethingIsScrolled);
+ InvalTop(SomethingIsFixed,SomethingIsScrolled);
  assert(not PreventAlignControls);
  PreventAlignControls:=true;
  ScrollBy(OldPos.X-HPos,OldPos.Y-VPos);
@@ -5468,20 +5466,18 @@ begin
    if TopIsValid and (TopGraph<>nil) and not TopGraph.Empty then
    begin
     BeginPainting(TopGraph);
-    //ActTopGraph:=TopGraph;
     try
      DrawFrame;
     finally
-     //ActTopGraph:=nil;
      EndPainting;
     end;
     AlreadyUpdated:=true;
    end;
    InvalScrollbars;
-   InvalTop(not NCScrollbars,AlreadyUpdated);
+   InvalTop(not NCScrollbars,not AlreadyUpdated);
   end else
   begin
-   InvalTop(true,false);
+   InvalTop(true,true);
   end;
   if not SameScrollbars then
    BorderChanged;
@@ -5979,10 +5975,8 @@ begin
   if (c is TWinControl) and TWinControl(c).HandleAllocated then
   begin
 {$IFDEF CLX}
-   //QWidget_geometry(TWinControl(c).Handle,@Result);
   result:=c.ClientRect;
   rOffsetRect(result,c.ClientOrigin);
-
 {$ELSE}
    GetWindowRect(TWinControl(c).Handle,Result); //genauer falls Top und Left noch alte Werte haben, beim scrollen zum beispiel
 {$ENDIF}
@@ -6037,29 +6031,7 @@ begin
   result:=GetCBound(c);
 end;
 
-function GetCBound2(c:TControl):TRect;
-begin
- result:=GetCBound(c);
-   (*
- if c.Parent<>nil then
- begin    {
-  if c is TWinControl then
-  begin
-   GetWindowRect(TWinControl(c).Handle,Result); //genauer falls Top und Left noch alte Werte haben, beim scrollen zum beispiel
-  end else }
-  begin
-   result:=c.BoundsRect;
-   rOffsetRect(result,c.Parent.ClientOrigin);
-  end;
- end else
- begin
- result:=c.ClientRect;
- rOffsetRect(result,c.ClientOrigin);
- end;         *)
-end;
-
-procedure InvalTrans(C:TControl; R2:TRect; NotChilds:boolean=false);
-//var R2:TRect;
+procedure InvalTrans(C:TControl; const R2:TRect; IncludeChildren:boolean=true); overload;
 
 procedure AllInval(_Parent:TWinControl);
 var i:integer;
@@ -6071,16 +6043,12 @@ begin
      pn:=TdhCustomPanel(_Parent.Controls[I]);
      if (csDestroying in pn.ComponentState) or not (pn.BackIsValid and FinalVisible(pn)) then continue;
      pn.BackIsValid:=false;
-     //pn.TopIsValid:=false;
      pn.Invalidate;
      AllInval(pn);
  end else
  if _Parent.Controls[I] is TWinControl then
   AllInval(TWinControl(_Parent.Controls[I]));
 end;
-
-
-
 
 procedure Inval2(Self:TControl; _Parent:TWinControl);
 var R:TRect;
@@ -6101,28 +6069,17 @@ begin
      if not IsRectEmpty(R) then
      begin
       pn.BackIsValid:=false;
-      //pn.TopIsValid:=false;
       pn.Invalidate;
       Inval2(nil,pn);
      end;
     end;
 end;
 
-
 begin
-
-
-    If (c = Nil) or (c.Owner=nil) or (c.Parent=nil){ or ([csLoading,csDestroying] * C.Owner.ComponentState<>[])!!} then exit;
+    if (c=nil) or (c.Owner=nil) or (c.Parent=nil) then exit;
     if csLoading in c.ComponentState then exit;
-    {!!!}//if csDestroying in c.ComponentState then exit;
-    //!!!if (c is TWinControl) and not TWinControl(c).HandleAllocated then exit;
-    //if c is TCustomForm then exit;
-
-    if not NotChilds and (c is TWinControl) and not (csDestroying in c.ComponentState) then
+    if IncludeChildren and (c is TWinControl) and not (csDestroying in c.ComponentState) then
      AllInval(TWinControl(C));
-    if EqualRect(InvRect,R2) then
-     R2:=GetCBound2(c);
-    //GetWindowRect(C.Handle, R2);
     while (c.Parent<>nil) do
     begin
      Inval2(C,C.Parent);
@@ -6130,6 +6087,10 @@ begin
     end;
 end;
 
+procedure InvalTrans(C:TControl);
+begin
+    InvalTrans(C,GetCBound(C));
+end;
 
 function GetBitmapSize(bt:TBitmap; var len:integer; var data:pbyte):boolean;
 var height,linesize:integer;
@@ -6144,42 +6105,26 @@ begin
  end;
 end;
 
-
-//var b:array of byte;
-//var b:array of byte=nil;
-
-procedure TdhCustomPanel.InvalTop(WithChilds,ExcludeOneself:boolean);
+procedure TdhCustomPanel.InvalTop(IncludeChildren,IncludeSelf:boolean);
 var oriLen,actLen:integer;
     data:pbyte;
 begin
    if not TopIsValid then exit;
-   {if GetBitmapSize(pn.TopGraph,oriLen,data) then
-   begin
-    if oriLen>length(b) then
-     setlength(b,oriLen);
-    move(data^,b[0],oriLen);
-    pn.AssertTop;
-    if GetBitmapSize(pn.TopGraph,actLen,data) then
-    if (oriLen=actLen) and CompareMem(data,@b[0],oriLen) then
-    begin
-     pn.AssertTop;
-     exit;
-    end else
-     pn.AssertTop;
-   end;   }
-   if not ExcludeOneself then
+   if IncludeSelf then
    begin
     TopIsValid:=false;
    end;
    Invalidate;
-   //if WithChilds then
-   InvalTrans(Self,InvRect,not WithChilds);
+   InvalTrans(Self,GetCBound(Self),IncludeChildren);
 end;
 
+procedure TdhCustomPanel.InvalBack;
+begin
+ InvalBack(GetCBound(Self));
+end;
 
 procedure TdhCustomPanel.InvalBack(const R2:TRect);
 begin
- //if not TdhCustomPanel(Control).BackIsValid then exit;
  BackIsValid:=false;
  if TopIsValid and not((TransparentTop<>nil) and (TransparentTop.Width=Width) and (TransparentTop.Height=Height)) then
  begin
@@ -6246,7 +6191,7 @@ begin
    glUpdateOver(Self,Value,false) else
   if IsDlg then
   begin
-   InvalTop(true,false){(true)};
+   InvalTop(true,true);
   end;
  end;
 end;
@@ -6500,7 +6445,7 @@ destructor TdhCustomPanel.Destroy;
 var State:TState;
 begin
 
- InvalBack(InvRect);
+ InvalBack;
 
  {Free; //nicht FreeAndNil verwenden
  FCommon:=nil;
@@ -13150,14 +13095,14 @@ begin
    end;
    BackIsValid:=true;
 
-  if TopIsValid then
-  if TransparentTop=nil then
-   TopIsValid:=false else
-  begin
-   if BackIsValid and (BackGraph<>TopGraph) then
-    BackGraph.DrawTo(TopGraph);
-   TransparentTop.DrawTo(TopGraph);
-  end;
+   if TopIsValid then
+   if TransparentTop=nil then
+    TopIsValid:=false else
+   begin
+    if BackIsValid and (BackGraph<>TopGraph) then
+     BackGraph.DrawTo(TopGraph);
+    TransparentTop.DrawTo(TopGraph);
+   end;
   end;
  end;
 
@@ -16093,7 +16038,6 @@ initialization
  CombineReg:=_CombineReg;
 
  glIsDesignerSelected:=CustomIsDesignerSelected;
- InvRect:=Rect(-1,-1,-1,-1);
  try
  OldOnIdle:=Application.OnIdle;
  ObjIdleProc:=TObjIdleProc.Create;

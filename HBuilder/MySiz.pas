@@ -506,7 +506,7 @@ var
   ARect: TRect;
   GridBase:TPoint;
 begin
-  ARect:=GetCBound2(c);
+  ARect:=GetCBound(c);
   GridBase:=GetGridBase(c.Parent,false);
   ARect.Top := YGridAdjust(GridBase,ARect.Top);
   ARect.Left := XGridAdjust(GridBase,ARect.Left);
@@ -528,7 +528,7 @@ begin
   ARect.BottomRight:=Point(ARect.Left+c.Width,ARect.Top+c.Height);
  }
 
-  ARect:=GetCBound2(c);
+  ARect:=GetCBound(c);
   GridBase:=GetGridBase(c{.Parent},true);//ARect.TopLeft;
   if FDragStyle=dsMove then
   begin
@@ -673,7 +673,7 @@ begin
  Tabs.CommitChanges;
  FDragOffset := Mouse.CursorPos;
  if cw<>nil then
-  ClipSizing:=GetCBound2(cw);
+  ClipSizing:=GetCBound(cw);
  FDragging:=True;
  ActHintStr;
  NeedPaint;
@@ -693,7 +693,7 @@ end;
 function TMySiz.GetBase(c:TControl):TPoint;
 var R:TRect;
 begin
- result:=GetCBound2(c).TopLeft;
+ result:=GetCBound(c).TopLeft;
 end;
 
 function IsFinalShowing(c:TControl):boolean;
@@ -2106,7 +2106,7 @@ begin
     for i:=0 to p.ControlCount-1 do
     begin
      c:=p.Controls[i];
-     if EditableControl(c,false) and FinalVisible(c) and IntersectRect(DummyRect,ARect,GetCBound2(c)) then
+     if EditableControl(c,false) and FinalVisible(c) and IntersectRect(DummyRect,ARect,GetCBound(c)) then
      if FChildList.IndexOf(c)=-1 then
       FChildList.Add(c);
     end;
@@ -2357,7 +2357,7 @@ var i:integer;
 begin
  for i:=0 to FChildList.Count-1 do
  if (TObject(FChildList[i]) is TControl) and not (TObject(FChildList[i]) is TdhCustomPanel) then
-  InvalTrans(TControl(FChildList[i]),InvRect);
+  InvalTrans(TControl(FChildList[i]));
 { if not Before then
   NeedPaint;}
  //PreventBoundsChanging:=Before;

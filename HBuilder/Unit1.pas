@@ -1485,7 +1485,7 @@ begin
  begin
   DChild:=MDIChildren[i] as TPageContainer;
   DChild.InvalGrid;
-  InvalTrans(DChild,InvRect);
+  InvalTrans(DChild);
  end;
 
  if FontToCurrent then

@@ -937,7 +937,7 @@ type
     TopGraph:TMyBitmap32; // opaque bitmap of the visual content
     TransparentTop:TMyBitmap32; // transparent bitmap of the visual content without background information (by using semi-transparency)
     BackIsValid:boolean; // whether BackGraph and TopGraph are up-to-date with the background
-    TopIsValid:boolean; // whether TopGraph is up-to-date with the visual content - the background information may be invalid
+    TopIsValid:boolean; // whether TopGraph (and TransparentTop, if set) is up-to-date with the visual content - the background information may be invalid
     _SelfCBound:TRect;
     VertScrollInfo: TMyScrollInfo;
     HorzScrollInfo: TMyScrollInfo;
@@ -1521,8 +1521,8 @@ function TFakeControl(c:TControl):_TFakeControl; {$IFDEF VER160}unsafe;{$ENDIF}
 
 
 function GoodWin(c:TControl):TWinControl;
-function GetBaseZOrder(w:TControl; i:integer):integer;
-function GetChildPosition(c:TControl):integer;
+function GetBaseZOrder(Child:TControl; ChildPos:integer):integer;
+function GetChildPosition(Child:TControl):integer;
 function iControlAtPos(c:TWinControl; const pt: TPoint):TControl;
 function MyFindControl(Handle: HWnd): TControl; overload;
 function MyFindControl(c:TControl): TControl; overload;
@@ -2539,11 +2539,11 @@ begin
 end;
 
 
-function GetBaseZOrder(w:TControl; i:integer):integer;
+function GetBaseZOrder(Child:TControl; ChildPos:integer):integer;
 begin
- if (w.Align<>alTop) and (w.Parent<>nil) then
-  result:=i+1*w.Parent.ControlCount else
-  result:=i;
+ if (Child.Align<>alTop) and (Child.Parent<>nil) then
+  result:=ChildPos+1*Child.Parent.ControlCount else
+  result:=ChildPos;
 end;
 
 
@@ -2551,13 +2551,13 @@ end;
 
 var BehindAllOthers:TControl;
 
-function GetZOrder(w:TControl; i:integer):integer;
+function GetZOrder(Child:TControl; ChildPos:integer):integer; overload;
 begin
-  if w=BehindAllOthers then
+  if Child=BehindAllOthers then
    result:=-maxint else
-  if (w is TdhCustomPanel){ and not (csDestroying in w.ComponentState)} then
-   result:=TdhCustomPanel(w).AdjustZIndex(i,w.Parent.ControlCount) else
-   result:=GetBaseZOrder(w,i);
+  if Child is TdhCustomPanel then
+   result:=TdhCustomPanel(Child).AdjustZIndex(ChildPos,Child.Parent.ControlCount) else
+   result:=GetBaseZOrder(Child,ChildPos);
 end;
 
 function TdhCustomPanel.AdjustZIndex(ChildPos,ParentControlCount:integer):integer;
@@ -2565,18 +2565,18 @@ begin
  result:=GetBaseZOrder(Self,ChildPos)+ZIndex*ParentControlCount*8;
 end;
 
-function GetChildPosition(c:TControl):integer;
+function GetChildPosition(Child:TControl):integer;
 begin
- with c.Parent do
+ with Child.Parent do
  for result:=0 to ControlCount-1 do
- if Controls[result]=c then
+ if Controls[result]=Child then
   exit;
  result:=-1;
 end;
 
-function GetZOrder2(w:TControl):integer;
+function GetZOrder(Child:TControl):integer; overload;
 begin
- result:=GetZOrder(w,GetChildPosition(w));
+ result:=GetZOrder(Child,GetChildPosition(Child));
 end;
 
 procedure TdhCustomPanel.InvalDeepestBack;
@@ -2600,7 +2600,7 @@ begin
  if Parent=nil then exit;
  if Self is TdhCustomPanel then
  TdhCustomPanel(Self).InvalDeepestBack;
- sp:=GetZOrder2(Self);
+ sp:=GetZOrder(Self);
  besti:=0;
  besti:=-1;
  bestp:=maxint;
@@ -6033,7 +6033,7 @@ end;
 
 procedure InvalTrans(C:TControl; const R2:TRect; IncludeChildren:boolean=true); overload;
 
-procedure AllInval(_Parent:TWinControl);
+procedure InvalChildren(_Parent:TWinControl);
 var i:integer;
     pn:TdhCustomPanel;
 begin
@@ -6041,16 +6041,16 @@ begin
  if _Parent.Controls[I] is TdhCustomPanel then
  begin
      pn:=TdhCustomPanel(_Parent.Controls[I]);
-     if (csDestroying in pn.ComponentState) or not (pn.BackIsValid and FinalVisible(pn)) then continue;
+     if (csDestroying in pn.ComponentState) or not pn.BackIsValid or not FinalVisible(pn) then continue;
      pn.BackIsValid:=false;
      pn.Invalidate;
-     AllInval(pn);
+     InvalChildren(pn);
  end else
  if _Parent.Controls[I] is TWinControl then
-  AllInval(TWinControl(_Parent.Controls[I]));
+  InvalChildren(TWinControl(_Parent.Controls[I]));
 end;
 
-procedure Inval2(Self:TControl; _Parent:TWinControl);
+procedure InvalSiblings(Self:TControl; _Parent:TWinControl);
 var R:TRect;
     i,SelfZOrder:integer;
     pn:TdhCustomPanel;
@@ -6058,19 +6058,19 @@ begin
     if (csDestroying in _Parent.ComponentState) or (_Parent is TdhCustomPanel) and not TdhCustomPanel(_Parent).TopIsValid and not TdhCustomPanel(_Parent).ValidChildrenInvalidParent then exit;
     SelfZOrder:=0;
     if Self<>nil then
-     SelfZOrder:=GetZOrder2(Self);
+     SelfZOrder:=GetZOrder(Self);
     for I := 0 to _Parent.ControlCount - 1 do
     if (_Parent.Controls[I] is TdhCustomPanel) then
     begin
      pn:=TdhCustomPanel(_Parent.Controls[I]);
-     if (csDestroying in pn.ComponentState) or not (pn.BackIsValid and FinalVisible(pn) and not ((Self<>nil) and (GetZOrder(pn,i)<=SelfZOrder))) then continue;
+     if (csDestroying in pn.ComponentState) or not pn.BackIsValid or not FinalVisible(pn) or (Self<>nil) and (GetZOrder(pn,i)<=SelfZOrder) then continue;
      R:=GetCBound(pn);
      IntersectRect(R,R,R2);
      if not IsRectEmpty(R) then
      begin
       pn.BackIsValid:=false;
       pn.Invalidate;
-      Inval2(nil,pn);
+      InvalSiblings(nil,pn);
      end;
     end;
 end;
@@ -6079,10 +6079,10 @@ begin
     if (c=nil) or (c.Owner=nil) or (c.Parent=nil) then exit;
     if csLoading in c.ComponentState then exit;
     if IncludeChildren and (c is TWinControl) and not (csDestroying in c.ComponentState) then
-     AllInval(TWinControl(C));
+     InvalChildren(TWinControl(C));
     while (c.Parent<>nil) do
     begin
-     Inval2(C,C.Parent);
+     InvalSiblings(C,C.Parent);
      c:=c.Parent;
     end;
 end;
@@ -13074,22 +13074,20 @@ begin
  nWidth:=SelfCBound.Right-SelfCBound.Left;
  if BackIsValid and (BackGraph.Height<>nHeight) then
   BackIsValid:=false;
- if TopIsValid  and ((TopGraph.Height<>nHeight)) then
-  TopIsValid:=false; //note: next condition is dependent from this statement
+ if TopIsValid  and (TopGraph.Height<>nHeight) then
+  TopIsValid:=false;
  if BackIsValid and not TopIsValid and (BackGraph<>nil) and (BackGraph=TopGraph) then
   BackIsValid:=False;
 
- if not BackIsValid then
+ if not BackIsValid and not Opaque then
  begin
-  if not Opaque then
-  begin
    if BackGraph=nil then
     BackGraph:=TMyBitmap32.Create;
    BackGraph.SetSize(nWidth,nHeight);
    PaintOnlyBg:=glPaintOnlyBg;
    glPaintOnlyBg:=false;
    try
-    ParentPaintTo(Self,Parent,true,SelfCBound,SelfCBound,addheight,GetZOrder2(Self));
+    ParentPaintTo(Self,Parent,true,SelfCBound,SelfCBound,addheight,GetZOrder(Self));
    finally
     glPaintOnlyBg:=PaintOnlyBg;
    end;
@@ -13097,13 +13095,14 @@ begin
 
    if TopIsValid then
    if TransparentTop=nil then
-    TopIsValid:=false else
+   begin
+    TopIsValid:=false;
+   end else
    begin
     if BackIsValid and (BackGraph<>TopGraph) then
      BackGraph.DrawTo(TopGraph);
     TransparentTop.DrawTo(TopGraph);
    end;
-  end;
  end;
 
 
@@ -14172,7 +14171,7 @@ procedure TdhCustomPanel.VisibleChanged;
 begin
  Inherited;
  if HandleAllocated then
-  InvalBack(GetCBound(Self));
+  InvalBack;
 end;
 
 procedure TdhCustomPanel.ControlsListChanged(Control: TControl; Inserting: Boolean);

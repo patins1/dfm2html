@@ -6126,10 +6126,6 @@ end;
 procedure TdhCustomPanel.InvalBack(const R2:TRect);
 begin
  BackIsValid:=false;
- if TopIsValid and not((TransparentTop<>nil) and (TransparentTop.Width=Width) and (TransparentTop.Height=Height)) then
- begin
-  TopIsValid:=false;
- end;
  if not (csDestroying in ComponentState) then
   Invalidate;
  InvalTrans(Self,R2);
@@ -13072,10 +13068,12 @@ begin
   SelfCBound:=IncHeight(GetCBound(Self),addheight);
  nHeight:=SelfCBound.Bottom-SelfCBound.Top;
  nWidth:=SelfCBound.Right-SelfCBound.Left;
- if BackIsValid and (BackGraph.Height<>nHeight) then
+ if BackIsValid and ((BackGraph.Height<>nHeight) or (BackGraph.Width<>nWidth)) then
   BackIsValid:=false;
- if TopIsValid  and (TopGraph.Height<>nHeight) then
+ if TopIsValid  and ((TopGraph.Height<>nHeight) or (TopGraph.Width<>nWidth)) then
   TopIsValid:=false;
+ if (TransparentTop<>nil) and ((TransparentTop.Height<>nHeight) or (TransparentTop.Width<>nWidth)) then
+  FreeAndNil(TransparentTop);
  if BackIsValid and not TopIsValid and (BackGraph<>nil) and (BackGraph=TopGraph) then
   BackIsValid:=False;
 

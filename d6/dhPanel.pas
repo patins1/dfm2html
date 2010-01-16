@@ -9374,8 +9374,6 @@ begin
   Con:=Con.GetCommon.Use;
   result:=Con.GetCommon.FImageFormat;
  end;
- if result=ifInherit then
-  result:=ifSimple;
 end;
 
 function TdhCustomPanel.TotalInlineBox: boolean;
@@ -10274,8 +10272,8 @@ var x,y,w,h:integer;
     bbase,base,compareTo:PColor32;
     Eq:boolean;
 begin
- result.Left:={bmp.Width div 2}Between(TryX,0,bmp.Width-1);
- result.Top:={bmp.Height div 2}Between(TryY,0,bmp.Height-1);
+ result.Left:=Between(TryX,0,bmp.Width-1);
+ result.Top:=Between(TryY,0,bmp.Height-1);
  result.Right:=result.Left;
  result.Bottom:=result.Top;
 
@@ -14542,7 +14540,7 @@ type
   TDWORDArray = Array[Word] of DWORD;
   pDWORDArray = ^TDWORDArray;
 
-procedure NormalizeOpaque(Transparent:TMyBitmap32; Opaque:TMyBitmap32);
+procedure NormalizeBitTransparence(Transparent:TMyBitmap32; Opaque:TMyBitmap32);
 var P,P2: PColor32;
     i:integer;
 begin
@@ -14556,6 +14554,36 @@ begin
       P2^:=P2^ or $FF000000; //otherwise set full opacity
      Inc(P);
      Inc(P2);
+   end;
+end;
+
+function HasSemiTransparence(Transparent:TMyBitmap32):boolean;
+var P: PColor32;
+    i:integer;
+begin
+   P:=Transparent.PixelPtr[0,0];
+   for i:=0 to Transparent.Width*Transparent.Height-1 do
+   begin
+     if ((P^ shr 24)<>$00) and ((P^ shr 24)<>$FF) then
+     begin
+       result:=true;
+       exit;
+     end;
+     Inc(P);
+   end;
+   result:=false;
+end;
+
+procedure NormalizeSemiTransparence(Transparent:TMyBitmap32);
+var P: PColor32;
+    i:integer;
+begin
+   P:=Transparent.PixelPtr[0,0];
+   for i:=0 to Transparent.Width*Transparent.Height-1 do
+   begin
+     if P^ shr 24=$00 then
+      P^:=$0; //if fully transparent, then take this one color
+     Inc(P);
    end;
 end;
 
@@ -14766,7 +14794,7 @@ begin
    begin
     for X:=0 to result.Width-1 do
     begin
-     if Transparent.Pixel[x,y] shr 24=0 then
+     if Transparent.Pixel[x,y] shr 24=$00 then
       result.Pixels[x,y]:=result.transparentcolor;
      inc(P);
     end;
@@ -14877,7 +14905,7 @@ var Opaque2:TMyBitmap32;
 begin
  Opaque2:=TMyBitmap32.Create;
  Opaque2.Assign(Opaque);
- NormalizeOpaque(Transparent,Opaque2);
+ NormalizeBitTransparence(Transparent,Opaque2);
  result:=GetCRCFromBitmap32(Opaque2,w,h,ResumeCrc);
  Opaque2.Free;
 end;
@@ -14938,7 +14966,7 @@ begin
    begin
     TrimRightBottom(Transparent,w,h);
    end else
-   begin           
+   begin
     w:=Transparent.Width;
     h:=Transparent.Height;
    end;
@@ -14977,10 +15005,9 @@ begin
   result:=b;
 end;
 
-function getPhysicalImageFormat(pn:TdhCustomPanel;TransparentTop:TMyBitmap32):TPhysicalImageFormat;
-const LogicalToPhysicalFileFormat:array[TImageFormat] of TPhysicalImageFormat=(pifSaveAsGIF,pifSaveAsGIF,pifSaveAsPNG,pifSaveAsJPEG);
+function getPhysicalImageFormat(requested:TPhysicalImageFormat;TransparentTop:TMyBitmap32):TPhysicalImageFormat;
 begin
-  result:=LogicalToPhysicalFileFormat[pn.GetImageFormat];
+  result:=requested;
   if (result=pifSaveAsJPEG) and ((TransparentTop.Height<=1) or (TransparentTop.Width<=1)) then
   begin
    //jpeg implementation requires at least height>1 when saving
@@ -15034,12 +15061,15 @@ var pn:TdhCustomPanel;
     fingif,Sub:TGIFImage;
     GCE:TGIFGraphicControlExtension;
     PrevSubImage:TGIFFrame;
-    pnTopGraph,pnTransparentTop:TMyBitmap32;
+    pnTopGraph,pnTransparentTop,GraphToSplit:TMyBitmap32;
     EqArea:TRect;
     EqX,EqY:integer;
     EqSize:TRect;
     RasteringFiles:TPathName;
     AbsoluteRasteringFile:TPathName;
+    NeedOpaqueImage:boolean;
+    PhysicalImageFormat:TPhysicalImageFormat;
+    ImageFormat:TImageFormat;
 begin
 
   pn:=Owner;
@@ -15050,7 +15080,8 @@ begin
     exit;
   end;}
 
-  if (pn.GetImageFormat=ifSimple) and Owner.HasBackgroundImage(graph) and (graph is TGIFImage) and (TGIFImage(graph).Images.Count>=2) then
+  ImageFormat:=pn.GetImageFormat;
+  if (ImageFormat in [ifInherit,ifSimple]) and Owner.HasBackgroundImage(graph) and (graph is TGIFImage) and (TGIFImage(graph).Images.Count>=2) then
   begin
    _crc:=calc_crc32_String('.gif');
    Assert(not PreventGraphicOnChange);
@@ -15114,13 +15145,20 @@ begin
    end;
   end else
   begin
-   pn.AssertTop(addheight,true);
+   NeedOpaqueImage:=ImageFormat<>ifSemiTransparent;
+   pn.AssertTop(addheight,true,NeedOpaqueImage);
+   if not NeedOpaqueImage then
+    PhysicalImageFormat:=pifSaveAsPNG else
+   if ImageFormat=ifJPEG then
+    PhysicalImageFormat:=pifSaveAsJPEG else
+    PhysicalImageFormat:=pifSaveAsGIF;
    if HasSomething(pn.TransparentTop) then
    begin
-    if (csAcceptsControls in pn.ControlStyle) and (pn.EqArea.Left<>InvalidEqArea){ and (pn.GetImageFormat<>ifSemiTransparent)} then
+    if (csAcceptsControls in pn.ControlStyle) and (pn.EqArea.Left<>InvalidEqArea) then
     begin
-     pn.TopGraph.ResetAlpha; //transparency value is undefined for opaque image, so make it defined for GetEqArea to work correctly
-     EqArea:=GetEqArea(pn.TopGraph,(pn.EqArea.Left+pn.EqArea.Right) div 2,(pn.EqArea.Top+pn.EqArea.Bottom) div 2);
+     if NeedOpaqueImage then pn.TopGraph.ResetAlpha else NormalizeSemiTransparence(pn.TransparentTop); //normalize so that GetEqArea works correctly
+     if NeedOpaqueImage then GraphToSplit:=pn.TopGraph else GraphToSplit:=pn.TransparentTop;
+     EqArea:=GetEqArea(GraphToSplit,(pn.EqArea.Left+pn.EqArea.Right) div 2,(pn.EqArea.Top+pn.EqArea.Bottom) div 2);
      if not pn.VariableHeightSize and (EqArea.Bottom-EqArea.Top<pn.TransparentTop.Height div _if(pn.VariableHeightSize,4,2)) then
      begin
       //EqArea.Top:=pn.EqArea.Top; //then, alternative pages with different heights can reuse the same top three graphics
@@ -15134,7 +15172,9 @@ begin
      end;
      if (EqArea.Right<>EqArea.Left) and (EqArea.Bottom<>EqArea.Top) or (pn.VariableWidthSize and (EqArea.Right<>EqArea.Left)) or (pn.VariableHeightSize and (EqArea.Top<>EqArea.Bottom)){ or (EqArea.Right-EqArea.Left>=1) and (EqArea.Bottom-EqArea.Top>=1) and pn.VariableSize} then
      begin
-      pnTopGraph:=TMyBitmap32.Create;
+      if NeedOpaqueImage then
+       pnTopGraph:=TMyBitmap32.Create else
+       pnTopGraph:=nil;
       pnTransparentTop:=TMyBitmap32.Create;
       pnTransparentTop.DrawMode:=pn.TransparentTop.DrawMode;
       pn.TransparentTop.DrawMode:=dmOpaque;
@@ -15162,12 +15202,12 @@ begin
          RasteringFile:=EmptyStr;
         end else
         begin
-         pnTopGraph.SetSize(EqSize.Right-EqSize.Left,EqSize.Bottom-EqSize.Top);
-         pnTransparentTop.SetSize(pnTopGraph.Width,pnTopGraph.Height);
-         pn.TopGraph.DrawTo(pnTopGraph,pnTopGraph.BoundsRect,EqSize);
+         if NeedOpaqueImage then pnTopGraph.SetSize(EqSize.Right-EqSize.Left,EqSize.Bottom-EqSize.Top);
+         pnTransparentTop.SetSize(EqSize.Right-EqSize.Left,EqSize.Bottom-EqSize.Top);
+         if NeedOpaqueImage then pn.TopGraph.DrawTo(pnTopGraph,pnTopGraph.BoundsRect,EqSize);
          pn.TransparentTop.DrawTo(pnTransparentTop,pnTransparentTop.BoundsRect,EqSize);
          RasteringFile:=FinalImageID(pn)+PostFix+EqNaming[EqY,EqX];
-         result:=SaveImg(pnTopGraph,pnTransparentTop,RasteringFile,OwnState<>hsNormal,BaseRasteringFile,getPhysicalImageFormat(pn,pnTransparentTop),false);
+         result:=SaveImg(pnTopGraph,pnTransparentTop,RasteringFile,OwnState<>hsNormal,BaseRasteringFile,getPhysicalImageFormat(PhysicalImageFormat,pnTransparentTop),false);
         end;
         RasteringFiles:=RasteringFiles+RasteringFile+'|';
        end;
@@ -15175,7 +15215,7 @@ begin
        RasteringFile:=RasteringFiles;
       finally
        pn.TransparentTop.DrawMode:=pnTransparentTop.DrawMode;
-       pnTopGraph.Free;
+       if NeedOpaqueImage then pnTopGraph.Free;
        pnTransparentTop.Free;
       end;
       result:=true;
@@ -15183,7 +15223,7 @@ begin
      end;
     end;
     RasteringFile:=FinalImageID(pn)+PostFix+sst[OwnState];
-    result:=SaveImg(pn.TopGraph,pn.TransparentTop,RasteringFile,OwnState<>hsNormal,BaseRasteringFile,getPhysicalImageFormat(pn,pn.TransparentTop),true);
+    result:=SaveImg(pn.TopGraph,pn.TransparentTop,RasteringFile,OwnState<>hsNormal,BaseRasteringFile,getPhysicalImageFormat(PhysicalImageFormat,pn.TransparentTop),true);
    end else
     result:=false;
   end;

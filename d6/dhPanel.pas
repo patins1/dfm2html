@@ -913,7 +913,7 @@ type
     procedure InvDesigner;
     function ActStyle:TStyle;
     procedure Frame3D(Border:TEdgeAlign; Points: array of TPoint);
-    procedure SpecialBg(const ref_scrolled,ref_fixed:TRect; Src:TMyBitmap32; const brct: TRect; IsFixed:boolean{; OffsetPoint:TPoint});
+    procedure SpecialBg(const ref_scrolled,ref_fixed:TRect; Src:TMyBitmap32; const brct: TRect; IsFixed:boolean);
     procedure SpecialPaintBorder(const rct,brct: TRect);
     function IsAbsolutePositioned:boolean;
     function GetStyleByName(const name:TPropertyName; var r:TStyle):boolean;
@@ -9937,7 +9937,7 @@ begin
  Result.DrawMode:=OldDrawMode;
 end;
 
-procedure TdhCustomPanel.SpecialBg(const ref_scrolled,ref_fixed:TRect; Src:TMyBitmap32; const brct: TRect; IsFixed:boolean{; OffsetPoint:TPoint});
+procedure TdhCustomPanel.SpecialBg(const ref_scrolled,ref_fixed:TRect; Src:TMyBitmap32; const brct: TRect; IsFixed:boolean);
 var
   num_across, num_down,
   y_coord, x_coord,

@@ -12,7 +12,7 @@ uses
   {$ELSE}
   Controls, Windows, Messages, Graphics, Forms,
   {$ENDIF}
-  SysUtils, Classes, dhPanel, math, {$IFNDEF VER130}types,  {$ENDIF} BinList,GR32_Transforms,gr32,dhStrUtils,MyBitmap32;
+  SysUtils, Classes, dhPanel, math, {$IFNDEF VER130}types,  {$ENDIF} BinList,GR32_Transforms,gr32,dhStrUtils,StrUtils,MyBitmap32;
 
 
 {$IFDEF VER160}
@@ -54,24 +54,14 @@ type
     img_width:integer;
 
     procedure Clear; override;
-    destructor Destroy; override;             
     function GetBottomLeading: integer;
     function HasVerticalAlign: boolean;
     property BottomLeading:integer read GetBottomLeading;
  end;
-// TInlineElement=record {LsTree:array of TTreeItem; }StyleTree:TStyleTree; vn,bs:integer; {Breaking,HasStart,HasEnd:boolean;} end;
-// PInlineElement=^TInlineElement;
-// TStyleList=array of TInlineElement;
-// PStyleList=^TStyleList;
- TLineInfo=record RealOffsX,y:integer; offs:TRect; OffsX,lineavail,lmin,maxHeight,LineWidth,vn,bs:integer; {StyleList:TStyleList;} AllTrees{,lmin,lmax}:TList; InlineBreak:boolean; endat:integer; end;
+
+ TLineInfo=record RealOffsX,y:integer; offs:TRect; OffsX,lineavail,lmin,maxHeight,LineWidth,vn,bs:integer; AllTrees:TList; InlineBreak:boolean; endat:integer; end;
  PLineInfo=^TLineInfo;
 
-{.$DEFINE GC,k}
-//define GC to derive TdhLabel from TGraphicControl
-//Problems: ZIndex not works, mouse-cursor problems, flicker
-
-
-//  TdhLabel = class(TGraphicControl,ICon)
   TTrackChar=array of record vn,bs:integer; end;
 
   TdhCustomLabel = class(TdhCustomPanel,ICon)
@@ -96,7 +86,6 @@ type
     procedure PaintListItem(Canvas:TCanvas; const brct:TRect);
     procedure CalcCharHeights(StyleTree:TStyleTree; Canvas:TCanvas);
     procedure CalcVertOffsetAccumulate(StyleTree, RefStyleTree: TStyleTree);
-
   protected
     FHTMLText:HypeString;
     function PreventFull(Cause:TTransformations):boolean; override;
@@ -117,7 +106,6 @@ type
     procedure WndProc(var Message:TMessage); override;
 {$ENDIF}
     procedure Loaded; override;
-    procedure WriteFalse(Writer: TWriter);
     procedure WriteTrue(Writer: TWriter);
     procedure ControlsListChanged(Control: TControl; Inserting: Boolean); override;
     function GetActCursor:TCursor;
@@ -131,7 +119,6 @@ type
     function GetAutoRectPoint(AllowModifyX,AllowModifyY:boolean; NewWidth, NewHeight: Integer):TPoint;
     procedure GetAutoRect(AllowModifyX,AllowModifyY:boolean; var NewWidth, NewHeight: Integer); override;
     procedure GetInnerAutoRect(AllowModifyX,AllowModifyY:boolean; var NewWidth, NewHeight: Integer);
-    //procedure PreferStyleChange; override;
     procedure FocusPreferStyle(IsMain,RealChange:boolean); override;
     function GetHTMLState:TState; override;
     procedure ReadCaption(Reader: TReader);
@@ -183,15 +170,9 @@ type
     constructor Create(AOwner: TComponent); override;
     function AllHTMLCode:HypeString; override;
   published
-    //property Caption:TCaption write SetHTMLText stored false;
-    //property Center;
     property NoSiblingsBackground;
     property Text:HypeString read FHTMLText write SetHTMLText;
     property OnStateTransition;
-//    property TabOrder stored false;
-
-
-
     property HTMLAttributes;
     property ImageType;
     property ImageFormat;
@@ -199,12 +180,9 @@ type
     property Use;
     property Transparent;
     property AutoSizeXY;
-
     property Color;
     property Font;
     property Visible;
-
-    {not interpreted:}
     property Align;
     property Anchors;
     property Constraints;
@@ -212,18 +190,8 @@ type
     property Enabled;
     property ParentShowHint;
     property ShowHint;
-
     property Right;
     property Bottom;
-
-    {property OnCanResize;
-    property OnDockDrop;
-    property OnDockOver;
-    property OnEndDock;
-    property OnGetSiteInfo;
-    property OnStartDock;
-    property OnUnDock; }
-
     property OnClick;
     property OnConstrainedResize;
     property OnContextPopup;
@@ -264,7 +232,7 @@ uses dhStyleSheet,BasicHTMLElements;
 
 var _Unicode,UnicodeByNumbers:TStringList;
     UnicodeByNumbersList:TBinList;
-    
+
 var HTMLTags:TStringList;
 
 {$IFDEF CLX}
@@ -276,9 +244,6 @@ const IsCLX=false;
 const AAA=true and not IsCLX;
       AALevel=2;
 
-type PBoolean=^Boolean;
-
-
 var what_uni:array[AnsiChar] of integer;
     Win32PlatformIsUnicode:boolean=false;
 
@@ -287,8 +252,13 @@ type
     Name: HypeString;
     Code: WideChar;
   end;
-const
-HtmlLat1: array [0..252] of THtmlEntity = (
+
+{$IFDEF VER160}
+type PInteger=^Integer;
+{$ENDIF}
+
+
+const HtmlEntities: array [0..252] of THtmlEntity = (
   (Name: 'AElig'; Code: #$00C6),
   (Name: 'Aacute'; Code: #$00C1),
   (Name: 'Acirc'; Code: #$00C2),
@@ -385,9 +355,6 @@ HtmlLat1: array [0..252] of THtmlEntity = (
   (Name: 'yacute'; Code: #$00FD),
   (Name: 'yen'; Code: #$00A5),
   (Name: 'yuml'; Code: #$00FF),
-//  );
-
-//HtmlSpecial: array [0..32] of THtmlEntity = (
   (Name: 'Dagger'; Code: #$2021),
   (Name: 'OElig'; Code: #$0152),
   (Name: 'Scaron'; Code: #$0160),
@@ -421,9 +388,6 @@ HtmlLat1: array [0..252] of THtmlEntity = (
   (Name: 'tilde'; Code: #$02DC),
   (Name: 'zwj'; Code: #$200D),
   (Name: 'zwnj'; Code: #$200C),
-//  );
-
-//HtmlSymbol: array [0..123] of THtmlEntity = (
   (Name: 'Alpha'; Code: #$0391),
   (Name: 'Beta'; Code: #$0392),
   (Name: 'Chi'; Code: #$03A7),
@@ -547,16 +511,13 @@ HtmlLat1: array [0..252] of THtmlEntity = (
   (Name: 'upsilon'; Code: #$03C5),
   (Name: 'weierp'; Code: #$2118),
   (Name: 'xi'; Code: #$03BE),
-  (Name: 'zeta'; Code: #$03B6)
-  );
+  (Name: 'zeta'; Code: #$03B6));
 
 
 const endl_main=#10;
       endl_space=#13;
       markupBreak=endl_main;
       markupEmptyEle=#2;
-
-
 
 
 procedure Register;
@@ -577,38 +538,24 @@ begin
      result:=false;
 end;
 
-
-
-function StrPos(const S: HypeString; const Substr: HypeString; Index: Integer): Integer;
-begin
- if Substr<>'' then
- for Result:=Index to length(s) do
- if (S[Result]=Substr[1]) and (Copy(S,Result,Length(Substr))=Substr) then
-  exit;
- result:=0;
-end;
-
-
-
 function WithoutComments(const s:HypeString; repl:HypeChar):HypeString;
 var i,i2:integer;
 begin
  result:=s;
- i:=StrPos(result,'<!--',1);
+ i:=PosEx('<!--',result,1);
  while i<>0 do
  begin
-  i2:=StrPos(result,'-->',i);
+  i2:=PosEx('-->',result,i);
   if i2=0 then
    i2:=length(result)-(length('-->')-1);
   for i:=i to i2+length('-->')-1 do
    result[i]:=repl;
-  i:=StrPos(result,'<!--',i2+length('-->'));
+  i:=PosEx('<!--',result,i2+length('-->'));
  end;
 end;
 
-const PHP_TAG_PREFIX:HypeString='<?';
-
 function ContainsPHPTag(const s:HypeString):boolean;
+const PHP_TAG_PREFIX:HypeString='<?';
 begin
  result:=Pos(PHP_TAG_PREFIX,s)<>0;
 end;
@@ -618,7 +565,7 @@ var i2:integer;
 begin
  if not((i=0) or (i+2>length(s))) and (s[i+1]='?') then
  begin
-  i2:=StrPos(s,'?>',i+2);
+  i2:=PosEx('?>',s,i+2);
   if i2<>0 then
   begin
    i:=i2+length('?>');
@@ -628,7 +575,6 @@ begin
  end;
  result:=false;
 end;
-
 
 function getTag2(const s:HypeString; var vn,itag,itagbs:integer; var tag:HypeString; var text:HypeString; var Closing,EmptyEle:boolean):boolean;
 var i,i2:integer;
@@ -659,30 +605,10 @@ begin
  end;
  end;
  itag:=0;
- tag:='';  {
- if vn<=length(s) then
- begin
-  text:=AbsCopy(s,vn,maxint);
-  vn:=length(s)+1;
-  Closing:=true;
-  result:=true;
- end else   }
+ tag:='';
+
   result:=false;
 end;
-
-function Replace(var s:HypeString; vn,bs:integer; const Subst:HypeString):boolean;
-begin
- result:=AbsCopy(s,vn,bs)<>Subst;
- if result then
-  s:=AbsCopy(s,1,vn)+Subst+AbsCopy(s,bs,maxint);
-  //StuffString(s,vn,bs-vn,Subst);
-end;
-
-{$IFDEF VER160}
-type PInteger=^Integer;
-{$ENDIF}
-
-
 
 procedure TStyleTree.Clear;
 var i:integer;
@@ -694,39 +620,24 @@ begin
  inherited;
 end;
 
-destructor TStyleTree.Destroy;
-begin
- inherited;
-end;
-
-
-
-
 constructor TdhCustomLabel.Create(AOwner: TComponent);
 begin
   inherited;
-  ControlStyle := ControlStyle{ + [csReplicatable]} - [csAcceptsControls];
-  //ControlStyle := ControlStyle + [{csAcceptsControls,} csSetCaption];
+  ControlStyle := ControlStyle - [csAcceptsControls];
   AutoSizeXY:=asY;
   Width:=100;
 end;
-
-
 
 procedure TdhCustomLabel.DoCSSToWinControl(WhatChanged:TWhatChanged);
 begin
  if ([wcText,wcText2]*WhatChanged<>[]) and not (csLoading in ComponentState) then
   FreeLines;
-// if not (FCommon.LastActStyle in [hsOver,hsOverDown]) then
-//  ProcessMouseMove;//ClientStyleTree_starttag:=0;
- if (wcText in {,wcSize wegen AllEdgesPure, Blocking} WhatChanged) and not (csLoading in ComponentState) then
+ if (wcText in WhatChanged) and not (csLoading in ComponentState) then
   InvalInline;
  if wcName in WhatChanged then
   UpdateNames(nil,nil,false);
  Inherited;
- //if ([wcClientArea,wcFont,wcText]*WhatChanged<>[]) and not (csLoading in ComponentState) then
- // AdjustSize;
- ParseHTML; //müssen wir machen, da wir auf Namen-Änderungen reagieren müssen
+ ParseHTML; // to react on renaming
 end;
 
 procedure TdhCustomLabel.ControlsListChanged(Control: TControl; Inserting: Boolean);
@@ -735,11 +646,6 @@ begin
   if not (csReading in ComponentState) then
     if Inserting and (Control.Owner=Owner) then
     begin
-{     if Message.Control<>nil then
-      ShowMessage('Inserting:'+Name+'+'+Message.Control.Name) else
-      ShowMessage('Inserting:'+Name+' nil');
-}
-       //Result:=1;
      Control.Parent:=Parent;
      Control.BoundsRect:=Bounds(Control.Left+Left,Control.Top+Top,Control.Width,Control.Height);
     end;
@@ -798,6 +704,13 @@ end;
 
 procedure TdhCustomLabel.UpdateNames(InlineUse,NewInlineUse:ICon; PropagateChange:boolean);
 var Changed:boolean;
+
+function Replace(var s:HypeString; vn,bs:integer; const Subst:HypeString):boolean;
+begin
+ result:=AbsCopy(s,vn,bs)<>Subst;
+ if result then
+  s:=AbsCopy(s,1,vn)+Subst+AbsCopy(s,bs,maxint);
+end;
 
 procedure ItUpdateNames(StyleTree:TStyleTree);
 var w:integer;
@@ -919,11 +832,9 @@ begin
     ch:=WideChar(_Unicode.Objects[i+1]) else
     result:=false;
    end;
-  except //strtoint exception abfangen
+  except //catch strtoint exception
    result:=false;
   end;
-
-
 end;
 
 
@@ -941,10 +852,7 @@ function ConvertWideStringToUnicode(const s:WideString; NoTrivial:boolean):WideS
 var i:Integer;
 begin
  result:='';
- //if _Unicode<>nil then
  for i:=1 to length(s) do
- {if (ord(s[i])<=255) and (what_uni[AnsiChar(s[i])]<>0) and (s[i]<>' ') and (not NoTrivial or (s[i]<>'''')) then
-  result:=result+'&'+_Unicode[what_uni[AnsiChar(s[i])]]+';' else}
  if s[i]='&' then
   result:=result+'&amp;' else
  if s[i]='"' then
@@ -955,8 +863,6 @@ begin
   result:=result+'&lt;' else
  if s[i]='>' then
   result:=result+'&gt;' else
- {if (ord(s[i])>127) then
-  result:=result+CharRef(ord(s[i])) else}
   result:=result+s[i];
 end;
 
@@ -966,7 +872,7 @@ begin
  result:='';
  for i:=1 to length(s) do
  if (ord(s[i])>127) then
-  result:=result+CharRef(ord(s[i]{CodePageToWideString(s[i])[1]})) else
+  result:=result+CharRef(ord(s[i])) else
   result:=result+AnsiChar(s[i]);
 end;
 
@@ -981,13 +887,12 @@ begin
   result:=result+'&amp;';
  end else
   result:=result+s[i];
- //< und > checken fehlt
+ //todo: check for < and >
 end;
 
 function ConvertUnicodeToWideStringExt(const s:HypeString; var TrackChar:TTrackChar; offs:integer; mislegit:HypeChar):WideString;
 var i,o,old_i,ri,ti:integer;
     ch:WideChar;
-
 begin
  i:=1;
  ri:=1;
@@ -1012,7 +917,7 @@ begin
   end else
   if s[i]<>mislegit then
   begin
-   result[ri]:=s[i];//{WideChar}CodePageToWideString(s[i])[1];
+   result[ri]:=s[i];
    inc(ri);
    inc(i);
   end else
@@ -1104,7 +1009,6 @@ var i,i2,c,fwcapsIndex:integer;
     IsUpper:boolean;      
 var StyleTree2:TStyleTree;
 
-
 procedure SetStyleTree(vn,bs:integer; StyleTree:TStyleTree);
 var i:integer;
 begin
@@ -1127,11 +1031,7 @@ begin
  until StyleTree=nil;
 end;
 
-
-
-
 begin
- //SetLength(StyleList,Length(StyleList)+1);
  if StyleTree.IsImg then text:='';
  s:=text;
  s:=HypeSubstText(markupEmptyEle,'',s);
@@ -1139,10 +1039,7 @@ begin
  try
   if NoneStyle<>nil then
   begin
-   //s:='';
-   //ss:=s;
-   wtext:='';//markupEmptyEle;
-   //SkipNextSpace:=true;
+   wtext:='';
   end else
   begin
   if StyleTree.WhiteSpace<>cwsPre then
@@ -1153,13 +1050,9 @@ begin
    if (s[i]=' ') and (s[i-1]=' ') then
     s[i]:=#1;
    if (s<>'') and (s[1]=' ') and (SkipNextSpace or WhiteSpaceAtBlockBeginning(StyleTree)) then
-      //((gltext<>'') and (gltext[length(gltext)]=' ') and (Ptree[length(gltext)].WhiteSpace<>cwsPre) or (StyleTree.vn=length(gltext)+1) and StyleTree.Blocking) then
     s[1]:=#1;
-
    ss:=HypeSubstText(#1,'',s);
    SkipNextSpace:=(ss='') and SkipNextSpace or (ss<>'') and (ss[length(ss)]=' ');
-   //s:=ss;
-//   SkipNextSpace:=True;
   end else
   begin
    ss:=s;
@@ -1172,15 +1065,9 @@ begin
   if Closing and (ss='') and (StyleTree.vn=length(gltext)+1) then
   begin
    s:=markupEmptyEle;
-   //SkipNextSpace:=false;
   end;
   wtext:=ConvertUnicodeToWideStringExt(s,TrackChar,vn-1-length(spre),#1);
   end;
- {for i:=length(wtext) downto 1 do
- if wtext[i]=WideChar(#1) then
-  delete(wtext,i,1); }
- //s:=StringReplace(s,#1,'',[rfReplaceAll, rfIgnoreCase]);
-
 
  c:=length(Ptree);
  setlength(Ptree,c+length(wtext));
@@ -1224,8 +1111,8 @@ begin
   for i:=1 to length(wtext) do
   if HasSecCase(wtext[i],sec,IsUpper) and not IsUpper and not ((i-1>=1) and (HasSecCase(wtext[i-1],sec2,IsUpper)  or IsNumber(wtext[i-1]))) then
    wtext[i]:=sec;
-  cttUppercase: wtext:=WideUpperCase(wtext);//seccase(wtext,true);
-  cttLowercase: wtext:=WideLowerCase(wtext);//seccase(wtext,false);
+  cttUppercase: wtext:=WideUpperCase(wtext);
+  cttLowercase: wtext:=WideLowerCase(wtext);
   end;
 
  gltext:=gltext+wtext;
@@ -1263,11 +1150,8 @@ begin
  StyleTree.IsImg:=AllowImg and HasImage;
 end;
 
-
-//  ActPart:PInlineElement;
 var TagIndex,itagbs:integer;
 begin
-// if (csDesigning in ComponentState) then exit;
  if (TopStyleTree<>nil) then exit;
  if (csLoading in ComponentState) then exit;
  s:=FHTMLText;
@@ -1280,7 +1164,6 @@ begin
  s:=spre+s+ssuc;
  content_bs:=length(s)+1-length(ssuc);
  content_vn:=1+length(spre);
- //s:=StringReplace(s,#13,' ',[rfReplaceAll, rfIgnoreCase]);
  s:=WithoutComments(s,markupEmptyEle);
 
  gltext:='';
@@ -1292,8 +1175,7 @@ begin
  StyleTree.Blocking:=true;
  StyleTree.TagName:='#notag';
 
- Setlength(self.TrackChar,0);
- //SetLength(StyleList,0);
+ SetLength(self.TrackChar,0);
  SetLength(Ptree,1);
                    
  NoneStyle:=nil;
@@ -1301,24 +1183,13 @@ begin
 
  vn:=1;
  vn_old:=vn;
- //if not StyleTree.IsImg then
  while getTag2(s,vn,itag,itagbs,tag,text,Closing,EmptyEle) and (StyleTree<>nil) do
  begin
   PushText(vn_old);
   if tag='br' then
   begin
    text:='';
-   //StyleList[High(StyleList)].Breaking:=true;
-   //StyleList[High(StyleList)].HasEnd:=true;
-   {gltext:=gltext+markupBreak;
-   SetLength(Ptree,length(Ptree)+1);
-   Ptree[high(Ptree)]:=StyleTree;   }
    PushText(vn_old,true);
-   {with TrackChar[high(TrackChar)] do
-   begin
-    vn:=itag;
-    bs:=itagbs;
-   end; }
   end else
   if Closing then
   begin
@@ -1392,10 +1263,7 @@ begin
    PushText(vn);//generate at least one markupEmptyEle (may be only needed when using not-closed cdsNone-formatted tags)
   CloseTag(0);
  end;
-{ gltext:=gltext+markupBreak;
- SetLength(Ptree,length(Ptree)+1);
- Ptree[high(Ptree)]:=TopStyleTree;  }
-// TopStyleTree.bs:=length(gltext)+1;
+
  UseStyleTree:=nil;
 end;
 
@@ -1404,7 +1272,6 @@ procedure TdhCustomLabel.InvalInline;
 begin
  FreeLines;
  FreeAndNil(TopStyleTree);
-// ClientStyleTree_starttag:=0;
 end;
 
 
@@ -1559,15 +1426,6 @@ begin
  DoExit:=false;
 end;
 
-
-
-{procedure TdhCustomLabel.PaintBorder;
-begin
-  brct:=BorderClientRect;
-  rct:=MarginClientRect;
-  SpecialPaintBorder(rct,brct);
-end;}
-
 procedure TdhCustomLabel.DoTopPainting;
 begin
  PaintCaption;
@@ -1577,34 +1435,18 @@ end;
 procedure TdhCustomLabel.PaintCaption;
 var R: TRect;
 begin
-    if IsDlg then
-//    if FCommon.LastActStyle=hsOver then
-    //if FMouseControl=self then
-//    if Self=MyFindDragTarget(Mouse.CursorPos, True) then
-    if self.FIsOver then
-//     R:=ShrinkRect(GetClientRect,Rect(2,2,2,2));
-
+    if IsDlg and FIsOver then
     with GetCanvas do
     begin
      Brush.Color:=clBtnShadow;
      Pen.Style := psSolid;
-//     Pen.Mode := pmNotXor;
      Pen.Color := 126+106*256+218*256*256;
      Brush.Style := bsSolid;
      Brush.Color:= 198+190*256+239*256*256;
      Rectangle(ShrinkRect(TotalRect,Rect(2,2,2,2)));
-    end;    
-    {//R:=GetAutoRect(Width,Height);
-    OffsetRect(R,-R.Left,-R.Top);  }
-
-    //R:=GetCanvas.ClipRect;
+    end;
     R:=ActTopGraph.BoundsRect;
-
-//    AdjustLittle(R,true,false);
-//    OffsetRect(R,HPos,VPos); //Undo AdjustScrolling
-
     R:=ShrinkRect(R,ScrollEdgesPure);
-                      
     if not TextOnly and not TextExclude then
     begin
      PaintOuterBg;
@@ -1617,24 +1459,6 @@ begin
     end;
 end;
 
-                       {
-procedure TdhCustomLabel.AdjustLittle(var R:TRect; infl:boolean);
-begin
- if infl then
- begin
-  AdjustClientRect(R);
-  R:=InflRect(R,FCommon.AllEdgesPure);
- end else
- begin
-  NegRect(R);
-  AdjustClientRect(R);
-  R:=InflRect(R,FCommon.AllEdgesPure);
-  NegRect(R);
- end;
-end;
-                         }
-
-         
 function TdhCustomLabel.TextOnly:boolean;
 var tt:TTransformations;
 begin
@@ -1675,7 +1499,7 @@ begin
   NewHeight:=Y;
  end;
 end;
-                         
+
 //NewWidth may be only read if AllowModifyX=false
 //NewWidth always written
 //NewHeight accordingly
@@ -1693,18 +1517,15 @@ begin
 
     if GetSuperiorAutoRect(AllowModifyX,AllowModifyY,NewWidth,NewHeight) then exit;
 
-
     Rect.TopLeft:=Point(0,0);
-
-    Rect.Right:=NewWidth{-r.Left-r.Right};
-    //Rect.Bottom:=Rect.Top;//max(Rect.Top,Rect.Bottom);
+    Rect.Right:=NewWidth;
     Rect.Bottom:=maxint;
 
     T:=nil;
     if not EasyBounds(Transformations,T,Rect.Right,Rect.Bottom,HorzRotated,VertRotated) then
      Rect.Right:=maxint else
     if AllowModifyX then
-     Rect.Right:=maxint{not maxint, for Win98};
+     Rect.Right:=maxint;
     FreeAndNil(T);
 
     DoDrawText(Rect,true);
@@ -1728,20 +1549,9 @@ begin
      if not TextExclude then
       AdjustLittle(Rect.Right,Rect.Bottom,false);
     end;
-    (*
-    if (Rect.Right=high(smallint){as csLoading}) {or EmptyContent} {or (Caption='') }then //case Caption=''
-    begin
-     Rect.Right:=Rect.Left;
-     {if FCommon.IsAbsolutePositioned then
-      //Rect.Bottom:=Rect.Top+(-Font.Height);
-      inc(Rect.Bottom,-Font.Height);}
-    end;*)
 
-    //if AllowModifyX then
      NewWidth:=Rect.Right-Rect.Left;
-    //if AllowModifyY then
      NewHeight:=Rect.Bottom-Rect.Top;
-
 end;
 
 
@@ -1751,7 +1561,6 @@ begin
 end;
 
 {$IFNDEF VER160}
-
 function _WStr(lpString: PWideChar; cchCount: Integer): WideString; //{$IFDEF VER160}unsafe;{$ENDIF}
 begin
   if cchCount = -1 then
@@ -1759,7 +1568,6 @@ begin
   else
     Result := Copy(WideString(lpString), 1, cchCount);
 end;
-
 {$ENDIF}
 
 function TdhCustomLabel.CenterVertical:boolean;
@@ -1794,19 +1602,19 @@ begin
     try
 
     ActLineY:=ActLine.y;
-    if CenterVertical{ and (StyleTree<>TopStyleTree)}{and (StyleTree.StyleElement<>nil)} then
+    if CenterVertical then
      inc(ActLineY,(AvailY-TotalHeight) div 2);
 
     if (ti=0) then
      UseStyleTree.ry:=-ActLine.lmin+ActLineY else
-    if (UseStyleTree.VerticalAlign=atTop) then
+    if UseStyleTree.VerticalAlign=atTop then
      UseStyleTree.ry:=0+ActLineY else
     if (UseStyleTree.VerticalAlign=atBottom) then
      UseStyleTree.ry:=ActLine.maxHeight-UseStyleTree.LineHeight+ActLineY else
     if UseStyleTree.RefStyleTree<>nil then
      UseStyleTree.ry:=UseStyleTree.VerticalAlign+UseStyleTree.RefStyleTree.ry else
-     UseStyleTree.ry:=0; //sollte net eintreten
-                        
+     UseStyleTree.ry:=0; //should not occur
+
     ActLineY:=ActLine.y;
     if CenterVertical and (StyleTree<>TopStyleTree) then
      inc(ActLineY,(AvailY-TotalHeight) div 2);
@@ -1816,7 +1624,7 @@ begin
      startx:=StyleTree.offs.Left;
      endx:=Avail-StyleTree.offs.Right;
      EndAt:=Lines[UseStyleTree.LastBlockLine].EndAt;
-     if (UseStyleTree.img_width<>0){ and (StyleTree=TopStyleTree)}{ and CanAutoSizeX(Self)} then
+     if UseStyleTree.img_width<>0 then
       endx:=startx+UseStyleTree.img_width;
      if StyleTree=TopStyleTree then
       EndAt:=AvailY;
@@ -1849,14 +1657,12 @@ begin
       end;
      end;
     end;
-    //if UseStyleTree.ParentStyle=nil then continue;
 
     if StyleTree.Blocking and (UseStyleTree.vn<>ActLine.vn) then
     begin
      result:=false;
      exit;
     end;
-
 
     brct:=InflRect(UseStyleTree.PaddingRect,PaddingPure);
     rct:=BorderPure;
@@ -1957,13 +1763,10 @@ begin
 
    if (gltext[vn]<>markupEmptyEle) then
    begin
-{    if AAA and _AntiAliasing then
-     Canvas.Font.Size:=Canvas.Font.Size * (1 shl AALevel);}
     sz.cx:=-20;
 {$IFDEF CLX}
     FontMetrics:=QFontMetrics_create(Canvas.Font.Handle);
     try
-//    QPainter_fontMetrics(Canvas.Handle,FontMetrics);
     for ii:=vn to bs-1 do
      P[ii]:=QFontMetrics_width(FontMetrics,@gltext[ii]);
     finally
@@ -2047,23 +1850,14 @@ var
 {$ELSE}
     FontMetrics:QFontMetricsH;
 {$ENDIF}
-begin  
+begin
    UseStyleTree:=StyleTree;
    CSSToFont(Canvas.Font);
    StyleTree.FontSize:=Abs(Canvas.Font.Height);
-                
-{   if AAA and _AntiAliasing then
-   begin
-    for ii:=bs-1 downto vn do
-     P[ii]:=(P[ii] + (1 shl AALevel - 1)) shr AALevel;
-    tm_tmHeight:=(tm_tmHeight + (1 shl AALevel - 1)) shr AALevel;
-    tm_tmAscent:=(tm_tmAscent + (1 shl AALevel - 1)) shr AALevel;
-   end;}
 
 {$IFDEF CLX}
    FontMetrics:=QFontMetrics_create(Canvas.Font.Handle);
    try
-    //QPainter_fontMetrics(Canvas.Handle,FontMetrics);
     tm_tmAscent:=QFontMetrics_ascent(FontMetrics);
     tm_tmHeight:=QFontMetrics_height(FontMetrics);
    finally
@@ -2074,7 +1868,6 @@ begin
    tm_tmHeight:=tm.tmHeight;
    tm_tmAscent:=tm.tmAscent;
 {$ENDIF}
-
 
    StyleTree.LineHeight:=tm_tmHeight;
 
@@ -2173,8 +1966,6 @@ var
     _WrapAlways:boolean;
     cx,delta,bs:integer;
 
-
-
 begin                      
   UseStyleTree:=nil;
   _WrapAlways:=WrapAlways;
@@ -2198,10 +1989,8 @@ begin
    take:=take+Pall[BisChar];
    StyleTree:=Ptree[BisChar];
    end else
-    StyleTree:=nil{Ptree[BisChar-1]};
+    StyleTree:=nil;
 
-   //if not (take>ActLine.lineavail) then
-   //if (BisChar=1) or (StyleTree<>Ptree[BisChar-1]) or (BisChar=length(gltext)) or (StyleTree<>Ptree[BisChar+1]) then
    while StyleTree<>nil do
    begin
     if StyleTree.Blocking then
@@ -2210,14 +1999,7 @@ begin
      ForceBreak:=true;
      BreakByBlock:=true;
      break;
-    end(* else
-    if (StyleTree.bs=BisChar{+1}) then
-    begin
-     //inc(BisChar);
-     ForceBreak:=true;
-     BreakByBlock:=true;
-     break;
-    end*);
+    end;
     StyleTree:=StyleTree.ParentStyle;
    end;
 
@@ -2237,7 +2019,6 @@ begin
    end;
    end;
 
-
    end;
     if not ForceBreak and (gltext[BisChar]=markupBreak) then
    begin
@@ -2250,12 +2031,11 @@ begin
 
     if not ForceBreak then
     while (i2>StartChar) and (
-     _WrapAlways and not((gltext[i2-1]=' ') and ({(gltext[i2-1]<>' ') or} {(i2+1<=high(Ptree)) and }(gltext[i2]<>' '))) or
+     _WrapAlways and not((gltext[i2-1]=' ') and (gltext[i2]<>' ')) or
      not _WrapAlways and
      not ((Ptree[i2].IsImg or (gltext[i2]=' ') and (Ptree[i2].WhiteSpace<>cwsPre)) and
          ((Ptree[i2-1].WhiteSpace=cwsNormal) or (Ptree[i2].WhiteSpace=cwsNormal) or (i2+1<=high(Ptree)) and (Ptree[i2+1].WhiteSpace=cwsNormal)))) do
       dec(i2);
-
 
     ii:=i2;
     while (ii>StartChar) and (gltext[ii-1]=' ') and (Ptree[ii-1].WhiteSpace<>cwsPre) do
@@ -2278,7 +2058,6 @@ begin
      inc(BisChar);
 
    if not ((gltext[StartChar]=markupEmptyEle) and not Ptree[StartChar].IsImg) then
-//    if gltext[StartChar]<>markupEmptyEle then
      margintop:=0;
 
     ActLine.offs.Bottom:=0;
@@ -2323,17 +2102,13 @@ begin
     UseStyleTree:=Ptree[bs-1];
     if Italic then
     begin
-     {cx:=TextExtent(gltext[bs-1]).cx;
-     delta:=cx-P[bs-1];}
-     //delta:=P[bs-1] div 3;
-     delta:=round({TextExtent(gltext[bs-1]).cy}UseStyleTree.ContentHeight{set in CalcCharHeights}/4.65);
+     delta:=round(UseStyleTree.ContentHeight{set in CalcCharHeights}/4.65);
      if delta<>0 then
      begin
       inc(Psuc[bs-1],delta);
       inc(Pall[bs-1],delta);
      end;
     end;
-    //inc(Pall[bs-1],Psuc[bs-1]);
     UseStyleTree:=nil;
     end;
 
@@ -2404,9 +2179,7 @@ begin
   Cascaded.LineHeight:='normal';
  StyleTree.LineHeight:=GetLineHeight(Cascaded.LineHeight,StyleTree.LineHeight,ComputedFontSize);
 
-
- //VPercent:=StyleTree.LineHeight; //für image oder button muß alte line-height bei GetVerticalAlignPixels verwendet werden (bei anderen bleibt line-height unverändert)
- VPercent:=ComputedFontSize; //eigentlich line-height (nach css spec, firefox macht ähnliches), doch lieber wie IE machen
+ VPercent:=ComputedFontSize; //should use line-height (StyleTree.LineHeight) to conforming to css spec, similar does firefox, however better do it as IE
 
  if StyleTree.IsImg then
  begin
@@ -2414,7 +2187,7 @@ begin
  end else
  if StyleTree.IsBut then
  begin
-  VPercent:=StyleTree.LineHeight; //wie firefox
+  VPercent:=StyleTree.LineHeight; //as firefox
   dec(lmin,StyleTree.AllEdgesPure.Top);
   inc(lmax,StyleTree.AllEdgesPure.Bottom);
   StyleTree.LineHeight:=lmax-lmin;
@@ -2449,8 +2222,6 @@ function TStyleTree.HasVerticalAlign:boolean;
 begin
  result:=(VerticalAlign<>atBottom) and (VerticalAlign<>atTop);
 end;
-
-
 
 //calculates vert. offset of box's(StyleTree) top edge to the first ascendant's(RefStyleTree) box edge with vertical-align<>none
 procedure TdhCustomLabel.CalcVertOffsetAccumulate(StyleTree,RefStyleTree:TStyleTree);
@@ -2501,7 +2272,7 @@ function TdhCustomLabel.OneFormattedChar(StyleTree:TStyleTree; ActLine:PLineInfo
 var vn:integer;
 begin
  for vn:=max(StyleTree.vn,ActLine.vn) to min(StyleTree.bs,ActLine.bs)-1 do
- if (Ptree[vn]=StyleTree){ and (gltext[vn]<>markupBreak)} and not((gltext[vn]=markupEmptyEle) and not Ptree[vn].IsImg) then
+ if (Ptree[vn]=StyleTree) and not((gltext[vn]=markupEmptyEle) and not Ptree[vn].IsImg) then
  begin
   result:=true;
   exit;
@@ -2524,35 +2295,9 @@ begin
  for line:=0 to high(Lines) do
  begin
   ActLine:=@Lines[line];
-  {if l+1<=high(Lines) then
-   ActLine.bs:=Lines[l+1].vn else
-   ActLine.bs:=length(gltext)+1;  }
 
   ActLine.maxHeight:=0;
   ActLine.lmin:=0;
-  //if not ((ActLine.vn+1=ActLine.bs) and (gltext[ActLine.vn]=markupEmptyEle) and not Ptree[ActLine.vn].IsImg {or (ActLine.vn=ActLine.bs) }) then
-  begin
-  { for ti:=0 to ActLine.AllTrees.Count-1 do
-   begin
-    StyleTree:=TStyleTree(ActLine.AllTrees[ti]);
-    StyleTree.lmin:=maxint;
-    StyleTree.lmax:=-maxint;
-   end;   }
-   {for vn:=ActLine.vn to ActLine.bs-1 do
-   if (Ptree[vn].lmin=maxint) and (gltext[vn]<>markupBreak) and not((gltext[vn]=markupEmptyEle) and not Ptree[vn].IsImg) then
-   begin
-    StyleTree:=Ptree[vn];
-    if StyleTree.attach<>atNone then
-    begin
-     StyleTree.lmin:=0;
-     StyleTree.lmax:=StyleTree.tmHeight;
-    end else
-    begin
-     StyleTree.lmin:=StyleTree.Top;
-     StyleTree.lmax:=StyleTree.Top+StyleTree.tmHeight;
-    end;
-   end;    }
-
 
    for ti:=ActLine.AllTrees.Count-1 downto 0 do
    begin
@@ -2580,8 +2325,6 @@ begin
     if not StyleTree.HasVerticalAlign then
     begin
      if StyleTree.lmin<>maxint then
-     //if StyleTree.ParentStyle=nil then //not-outermost bottom/top valigned boxes shall not determine height, =firefox, <>IE
-     //if StyleTree.lmax-StyleTree.lmin>ActLine.maxHeight then
      begin
       ActLine.maxHeight:=StyleTree.lmax-StyleTree.lmin;
       ActLine.lmin:=StyleTree.lmin;
@@ -2591,25 +2334,7 @@ begin
      StyleTree.ParentStyle.lmin:=min(StyleTree.ParentStyle.lmin,StyleTree.lmin);
      StyleTree.ParentStyle.lmax:=max(StyleTree.ParentStyle.lmax,StyleTree.lmax);
     end;
-    {if StyleTree.lmin<>maxint then
-    if not OneFormattedChar(StyleTree,ActLine) then
-    begin
-     StyleTree.LineHeight:=StyleTree.lmax-StyleTree.VerticalAlign;
-     StyleTree.ContentHeight:=StyleTree.lmax-StyleTree.VerticalAlign;
-     StyleTree.VerticalAlign:=StyleTree.lmin;
-    end; }
    end;
-
-   (*StyleTree:=TStyleTree(ActLine.AllTrees[0]);
-   if StyleTree.lmin=maxint then
-   begin
-    StyleTree.lmin:=StyleTree.Top;
-    ActLine.maxHeight:=max(ActLine.maxHeight,StyleTree.tmHeight);
-      //StyleTree.lmax:=StyleTree.Top+StyleTree.tmHeight;
-   end;
-   //ActLine.maxHeight:={glmax-glmin}StyleTree.lmax-StyleTree.lmin;
-   ActLine.lmin:=StyleTree.lmin;*)
-  end;
 
   inc(TotalHeight,ActLine.maxHeight+ActLine.offs.Top+ActLine.offs.Bottom);
   ActLine.endat:=TotalHeight;
@@ -2624,7 +2349,6 @@ var ActLine:PLineInfo;
     prev,prev2,spaces,actspace:integer;
     StyleTree:TStyleTree;
 begin
-
   _TextAlign:=ctaCenter;//Set value only to compile without warnings. Value should never be used.
   y:=0;
   for l:=0 to high(Lines) do
@@ -2674,9 +2398,6 @@ begin
   end;
 end;
 
-
-
-
 procedure TdhCustomLabel.Prefetch(StyleTree:TStyleTree);
 var w:integer;
 begin
@@ -2702,9 +2423,6 @@ begin
   UseStyleTree:=nil;
  end;
 end;
-
-
-
 
 procedure TdhCustomLabel.BuildLines;
 begin
@@ -2743,11 +2461,8 @@ begin
  end;
 end;
 
-
-
 function TdhCustomLabel.ClientStyleTree:TStyleTree;
 var act_pos:integer;
-
 
 function FindStartTag(StyleTree:TStyleTree):TStyleTree;
 var c:TStyleTree;
@@ -2781,96 +2496,43 @@ begin
    end;
    result:=nil;
 end;
-                {
-var StyleTree,c:TStyleTree;
-    i:integer;
-    resume:boolean;      }
+
 begin
- //nicht .endtag benutzen da innerhalb von ParseHTML noch nicht gesetzt, aber .starttag schon gesetzt
- if (TopStyleTree<>nil) and (length(ClientStyleTree_starttag)>=1)(*(ClientStyleTree_starttag>=1) and (ClientStyleTree_starttag<=length(FHTMLText)){ and (ClientStyleTree_starttag<=high(Ptree))}*) then
+ //dont use .endtag since not set within ParseHTML, but .starttag is already set
+ if (TopStyleTree<>nil) and (length(ClientStyleTree_starttag)>=1) then
  begin
   act_pos:=0;
   result:=FindStartTag(TopStyleTree);
   exit;
-   {
-  StyleTree:=TopStyleTree;
-  repeat
-   resume:=false;
-   for i:=0 to StyleTree.Count-1 do
-   begin
-    c:=TStyleTree(StyleTree[i]);
-    if c.starttag=ClientStyleTree_starttag then
-    begin
-     result:=c;
-     exit;
-    end else
-    if (ClientStyleTree_starttag>=c.starttag) and (ClientStyleTree_starttag<=c.endtag) then
-    begin
-     StyleTree:=c;
-     resume:=true;
-     break;
-    end;
-   end;
-  until not resume;}
  end;
  result:=nil;
 end;
 
 
-
-
 procedure TdhCustomLabel.FreeLines;
 var l:integer;
 begin
-  //ClientStyleTree:=nil;
-  //ClientAnchor:=nil;
   for l:=0 to high(Lines) do
    Lines[l].AllTrees.Free;
   SetLength(Lines,0);
 end;
-
-
 
 procedure TdhCustomLabel.FocusPreferStyle(IsMain,RealChange:boolean);
 begin
  inherited FocusPreferStyle(IsMain,RealChange or glPaintOnlyBg);
 end;
 
-{procedure TdhCustomLabel.PreferStyleChange;
-begin
- Inherited;
- InvalInline;
- ParseHTML; //müssen wir machen, da wir auf Namen-Änderungen reagieren müssen
-end;
- }
 function TdhCustomLabel.GetComputedFontSize:single;
 begin
- if (UseStyleTree=nil){ or (UseStyleTree.ParentStyle=nil)} then
+ if UseStyleTree=nil then
  begin
-  {result:=HasParent;
-  if result then
-   res:=-TFakeControl(Parent).Font.Height;}
   result:=inherited GetComputedFontSize;
   exit;
  end;
- result:=UseStyleTree.FontSize;  {
- _UseStyleTree:=UseStyleTree;
- try
-  if ReferParent then
-   UseStyleTree:=UseStyleTree.ParentStyle;
-  //result:=FCommon.GetFontSize(res);
-  res:=FCommon.FontSizePx;
-  result:=true;
- finally
- UseStyleTree:=_UseStyleTree;
- end;         }
+ result:=UseStyleTree.FontSize;
 end;
 
-
-var toba:boolean;
-
 var HelpB:TBitmap32;
-
 
 {$R-}
 procedure BlackWhiteReplace(Bt:TBitmap32; w,h:integer; Color:TColor32);
@@ -2883,7 +2545,6 @@ begin
  P:=Bt.PixelPtr[0,y];
  for x:=0 to w-1 do
  begin
-//  if integer(p) div 10 mod 2=1 then
   P^:=dword(min(($FF-GreenComponent(P^))*5 div 4,$FF)) shl 24 or Color;
   inc(P);
  end;
@@ -2946,15 +2607,9 @@ var line,ti,x,y,vn,bs:integer;
     rct,brct,rct2,rct3,TextRct:TRect;
     StyleTree:TStyleTree;
     TextSizes:TPoint;
-//    dyn:TIntegerDynArray;
     StyleElement:ICon;
-    SaveIndex: Integer;
     ClpRct:TRect;
     _AntiAliasing:boolean;
-                            
-var c1,c2:int64;
-
-var        
 {$IFNDEF CLX}     
   LogFont: TLogFont;        
   fh:HFont;
@@ -2963,13 +2618,9 @@ var
   OldClipRect:TRect;
   level:Integer;
 begin
-// if (csLoading in ComponentState) then exit;
-
  ParseHTML;
  if TopStyleTree<>nil then
  begin
-  //FreeLines;
-
   if (length(Lines)=0) or (avail<>ConstraintsRect.Right-ConstraintsRect.Left) then
   begin
    FreeLines;
@@ -2977,7 +2628,6 @@ begin
    BuildLines;
   end else
    avail:=ConstraintsRect.Right-ConstraintsRect.Left;
-
 
   if CalcRect then
   begin
@@ -2987,23 +2637,10 @@ begin
   begin
   _AntiAliasing:=AntiAliasing;
   Canvas:=GetCanvas;
-  SaveIndex:=0;
   ClpRct:=ConstraintsRect;
-  {rct:=FCommon.MarginClientRect;
-  brct:=FCommon.BorderClientRect;
-  FCommon.SpecialBg(rct,brct);
-  FCommon.SpecialPaintBorder(rct,brct); }
-{$IFNDEF CLX}
-  QueryPerformanceCounter(c1);
-{$ENDIF}
   for line:=0 to high(Lines) do
   begin
-
    ActLine:=@Lines[line];
-  { try
-   for ti:=0 to ActLine.AllTrees.Count-1 do;
-   except
-   end;    }
 
    for ti:=0 to ActLine.AllTrees.Count-1 do
    if FocContainer(ActLine,ti,rct,brct,ConstraintsRect.Bottom-ConstraintsRect.Top) then
@@ -3015,40 +2652,20 @@ begin
    if StyleTree=TopStyleTree then
    begin
     ClpRct:=brct;
-{$IFNDEF CLX}
-{    if SaveIndex=0 then //only needed for SpecialPaintBorder
-    begin
-     SaveIndex := SaveDC(Canvas.Handle);
-     IntersectClipRect(Canvas.Handle, brct.Left,brct.Top,brct.Right,brct.Bottom);
-    end; }
-{$ENDIF}
    end else
-   //if ti<>0 then //=0 wird am Anfang schon gezeichnet (TopStyleTree)
-   if Visibility{ and not ((Display=cdsNone) and (TopStyleTree<>StyleTree))} then
+   if Visibility then
    begin
     OffsetRect(brct,-HPos,-VPos);
     OffsetRect(rct,-HPos,-VPos);
     if Display=cdsListItem then
      PaintListItem(Canvas,brct);
-
-        {
-    if SaveIndex=0 then
-    begin
-     rct.Top:=0;
-    end;      }
-    //if OneFormattedChar(UseStyleTree,ActLine) then         Würde Hintergrundfarbe nicht zeichnen
-    //if not OneFormattedChar(UseStyleTree,ActLine) then
-    // FocContainer(ActLine,ti,rct,brct,ConstraintsRect.Bottom-ConstraintsRect.Top);
-    begin
-     IntersectRect(rct2,rct,ClpRct);
-     if not IsRectEmpty(rct2) then
-      SpecialPaintBorder(rct,brct);
-     rct:=rct2;
-     rct3:=brct;
-     IntersectRect(brct,brct,ClpRct);
-     //if UseStyleTree<>TopStyleTree then
-     SpecialBg(rct3,rct3,ActTopGraph,brct,false{,Point(0,0)});
-    end;
+    IntersectRect(rct2,rct,ClpRct);
+    if not IsRectEmpty(rct2) then
+     SpecialPaintBorder(rct,brct);
+    rct:=rct2;
+    rct3:=brct;
+    IntersectRect(brct,brct,ClpRct);
+    SpecialBg(rct3,rct3,ActTopGraph,brct,false);
    end;
    end;
 
@@ -3082,22 +2699,17 @@ begin
    begin
     Canvas.Brush.Style:=bsSolid;
     Canvas.Brush.Color:=Canvas.Font.Color;
-    //Canvas.Pen.Style:=psClear;
     Canvas.FillRect(Bounds(TextRct.Left, TextRct.Top, TextRct.Right-TextRct.Left, 1));
-    //Canvas.Pen.Style:=psSolid;
    end;
 
     Canvas.Brush.Color:=clRed; //seems to be necessary, otherwise TextOut is not transparent
     Canvas.Brush.Style:=bsClear;
-
-    toba:=not toba;
 
     if not _AntiAliasing and IsOpaqueColor(FontColor) then
     begin
 {$IFDEF CLX}
      Canvas.TextRect(ClpRct, TextRct.Left, TextRct.Top, copy(gltext,vn, bs-vn));
 {$ELSE}
-//     Canvas.TextRect(ClpRct, TextRect.Left, TextRect.Top,  copy(gltext,vn, bs-vn));
      ExtTextOutW(Canvas.Handle, TextRct.Left, TextRct.Top, ETO_CLIPPED, @ClpRct, PWideChar(@gltext[vn]), bs-vn, PInteger(@Pall[vn]));
 {$ENDIF}
     end else
@@ -3108,33 +2720,17 @@ begin
     GetObject(Canvas.Font.Handle,
             SizeOf(LogFont),
             @LogFont);
-    LogFont.lfQuality := {PROOF_QUALITY}ANTIALIASED_QUALITY{NONANTIALIASED_QUALITY };
-{            if toba and false then
-   LogFont.lfQuality := ANTIALIASED_QUALITY else
-   LogFont.lfQuality:=0;}
-
-//   LogFont.lfOutPrecision:=7;
-//   LogFont.lfEscapement:=-900;
+    LogFont.lfQuality := ANTIALIASED_QUALITY;
 
     fh:=CreateFontIndirect(LogFont);
     Canvas.Font.Handle := fh;
-
-     {GetFontUnicodeRanges
-         GetTextCharsetInfo  }
-//  SelectObject(Canvas.Handle, Canvas.Font.Handle);
-
-{.$IFDEF VER160}
-    //dyn:=copy(Pall,vn,bs-vn);
-//    ExtTextOutW(Canvas.Handle, ActLine.RealOffsX+x+Ppre[vn], UseStyleTree.ry+y, 0, Rect(0,0,maxint,maxint), copy(gltext,vn,bs-vn), bs-vn, copy(Pall,vn,bs-vn));
-{.$ELSE}
-//    Canvas.TextOut(ActLine.RealOffsX+x+Ppre[vn], UseStyleTree.ry, copy(gltext,vn,bs-vn));
 
     if HelpB=nil then
     begin
      HelpB:=TBitmap32.Create;
      HelpB.Canvas.Brush.Style:=bsClear;
     end;
-    TextSizes:=Point(AddP(vn,bs)+AddP(bs-1,bs){bei kursiver Schrift letzer buchstabe},UseStyleTree.ContentHeight);
+    TextSizes:=Point(AddP(vn,bs)+AddP(bs-1,bs){at italics font the last char},UseStyleTree.ContentHeight);
     HelpB.Width:=max(HelpB.Width,TextSizes.X);
     HelpB.Height:=max(HelpB.Height,TextSizes.Y);
     HelpB.FillRect(0,0,TextSizes.X,TextSizes.Y,$FFFFFFFF);
@@ -3163,22 +2759,9 @@ begin
     ActTopGraph.ClipRect:=OldClipRect;
    end;
 
-    {
-   if FCommon.Overline then
-   begin
-    Canvas.Brush.Style:=bsSolid;
-    Canvas.Brush.Color:=Canvas.Font.Color;
-    //Canvas.Pen.Style:=psClear;
-    Canvas.FillRect(Bounds(ActLine.RealOffsX+x+Ppre[vn], UseStyleTree.ry+y,AddP(vn,bs),1));
-    //Canvas.Pen.Style:=psSolid;
-   end;   }
-
-{.$ENDIF}
 
     end;
-    {teil:=AnsiString(_WStr(PWideChar(@gltext[vn]),bs-vn));
-    ExtTextOutA(Canvas.Handle, OffsX+x+Ppre[vn], UseStyleTree.PaddingRect.Top, 0, nil, PAnsiChar(teil), length(teil), PInteger(@Pall[vn]));
-    }
+
     finally
      inc(Pall[vn],Ppre[vn]);
      inc(Pall[bs-1],Psuc[bs-1]);
@@ -3187,26 +2770,11 @@ begin
     inc(x,AddP(vn,bs));
    end;
   end;
-{$IFNDEF CLX}
-  if SaveIndex<>0 then
-   RestoreDC(Canvas.Handle, SaveIndex);
-{$ENDIF}
-
-{$IFNDEF CLX}
-  QueryPerformanceCounter(c2);
-{$ENDIF}  
   end;
-
-  //FreeLines;
 
   UseStyleTree:=nil;
  end;
 end;
-
-{procedure TdhCustomLabel.BeforeTextOut(Font:TFont);
-begin
-
-end;}
 
 procedure TdhCustomLabel.DefineProperties(Filer: TFiler);
 begin
@@ -3214,7 +2782,6 @@ begin
  if not WithMeta and (Filer is TWriter) then exit;
  Filer.DefineProperty('HTMLText', SkipValue, nil, false);
 end;
-
 
 procedure TdhCustomLabel.ReadCaption(Reader: TReader);
 begin
@@ -3235,18 +2802,12 @@ begin
   result:=cttNone;
 end;
 
-function TdhCustomLabel.AntiAliasing:boolean{TCSSAntiAliasing};
+function TdhCustomLabel.AntiAliasing:boolean;
 begin
  if GetVal(pcAntiAliasing) then
   result:=Cascaded.AntiAliasing else
   result:=false;
-   {
- if FCommon.GetVal(pcAntiAliasing,Value) then
-  result:=Value.AntiAliasing else
-  result:=caaNone;   }
 end;
-
-
 
 function TdhCustomLabel.WhiteSpace:TCSSWhiteSpace;
 begin
@@ -3302,23 +2863,13 @@ end;
 {$IFNDEF CLX}
 procedure TdhCustomLabel.WndProc(var Message:TMessage);
 begin
-
-                                         {
- if (Message.Msg=CM_MOUSEENTER) or (Message.Msg=CM_MOUSELEAVE) then
-  FCommon.UpdateMouse(Message.Msg=CM_MOUSEENTER);}
  if (Message.Msg=WM_LBUTTONDOWN) or (Message.Msg=WM_LBUTTONUP) then
  begin
-//  FCommon.CheckDesignState;
-//  PostMessage(Handle, CM_INVALIDATE, 0, 0);
  if TransitionInvalidates then
- if (TopStyleTree<>nil) and (TopStyleTree.Count>=1) then //for speed, wenn kein Inline-Element vorhanden, sondern z.b. nur ein Image ist  
-  NotifyCSSChanged(ActStyleChanged{[wcSize,wcNoOwnCSS]}); //falls Inline-Element in Down-Zustand ist
-   //csLButtonDown may have changed
-//  if RuntimeMode and (csDesigning in ComponentState) and HasParentMenu(P) and (FSubMenu=nil) then
-//   PostMessage(Handle,WM_LBUTTONDBLCLK,0,0);
+ if (TopStyleTree<>nil) and (TopStyleTree.Count>=1) then //for speed, when there is no inline-element, but e.g. only an image
+  NotifyCSSChanged(ActStyleChanged{[wcSize,wcNoOwnCSS]}); //for the case the inline-element is in down-state
  end;
  inherited;
-
 end;
 {$ENDIF}
 
@@ -3331,11 +2882,6 @@ procedure TdhCustomLabel.Loaded;
 begin
  Inherited;
  RenameNames;
-end;
-
-procedure TdhCustomLabel.WriteFalse(Writer: TWriter);
-begin
- Writer.WriteBoolean(false);
 end;
 
 
@@ -3425,18 +2971,13 @@ begin
  result:=false;
 end;
 
-
-
 begin
  inherited;
  if TransitionInvalidates then exit;
 
-{ if (csDesigning in ComponentState) and  not RuntimeMode then
-  exit;}
  P:=Mouse.CursorPos;
  DecPt(P,GetCBound(Self).TopLeft);
  IncPt(P,Point(HPos,VPos));
-// DecPt(P,FCommon.ScrollEdgesPure.TopLeft);
  R:=Rect(0,0,Width,Height);
  DoDrawText(R,true);
  OldClientStyleTree:=ClientStyleTree;
@@ -3453,18 +2994,14 @@ begin
    end;
    pStyleTree:=pStyleTree.ParentStyle;
   end;
-  //ClientStyleTree_starttag:=NewClientStyleTree.starttag;
  end else
  begin
   SetLength(ClientStyleTree_starttag,0);
-  //ClientStyleTree_starttag:=0;
  end;
 
   if ((OldClientStyleTree<>ClientStyleTree) or StateChanged) and (Transi(OldClientStyleTree) or Transi(ClientStyleTree))   then
   begin
     NotifyCSSChanged(ActStyleChanged);
-    //InvalInline;
-    //FCommon.NotifyCSSChanged([{wcClientArea,}{wcCursor,}wcNoOwnCSS]);
   end;
 end;
 
@@ -3496,7 +3033,6 @@ begin
   result:=0;
 end;
 
-
 begin
  inherited;
  P:=Mouse.CursorPos;
@@ -3526,10 +3062,8 @@ begin
               UseStyleTree:=nil;
             end;
 end;
-                        
 
 {$IFNDEF CLX}
-
 procedure TdhCustomLabel.WMSetCursor(var Message: TWMSetCursor);
 var
   Cursor: TCursor;
@@ -3628,16 +3162,15 @@ var i:integer;
 begin
  _Unicode:=TStringList.Create;
 
- for i:=0 to high (HtmlLat1) do
+ for i:=0 to high (HtmlEntities) do
  begin
 {$IFDEF VER160}
-  _Unicode.AddObject(HtmlLat1[i].Name,HtmlLat1[i].Code);
+  _Unicode.AddObject(HtmlEntities[i].Name,HtmlEntities[i].Code);
 {$ELSE}
-  _Unicode.AddObject(HtmlLat1[i].Name,Pointer(HtmlLat1[i].Code));
+  _Unicode.AddObject(HtmlEntities[i].Name,Pointer(HtmlEntities[i].Code));
 {$ENDIF}
  end;
 
- //_Unicode.CaseSensitive:=true;
  _Unicode.Sorted:=true;
 
  UnicodeByNumbers:=TStringList.Create;
@@ -3647,8 +3180,6 @@ begin
  for i:=0 to UnicodeByNumbers.Count-1 do
  begin
   UnicodeByNumbersList.Add(UnicodeByNumbers.Objects[i]);
-{  UnicodeByNumbers[i]:=inttostr(Integer(UnicodeByNumbers.Objects[i]));
-  UnicodeByNumbers.Objects[i]:=}
  end;
 
  for i:=0 to _Unicode.Count-1 do
@@ -3673,7 +3204,7 @@ procedure TdhLabel.SetName(const Value: TComponentName);
 var
   ChangeText: Boolean;
 begin
-  ChangeText := {(csSetCaption in ControlStyle) and }
+  ChangeText :=
     not (csLoading in ComponentState) and (Name = FHTMLText) and
     ((Owner = nil) or not (Owner is TControl) or
     not (csLoading in TControl(Owner).ComponentState));
@@ -3688,7 +3219,7 @@ begin
    Result.X:=Width-VertScrollBar else
    Result.X:=Width;
   Result.Y:=0;
-  GetInnerAutoRect(false,true,result.X,result.Y); //breitestes wort
+  GetInnerAutoRect(false,true,result.X,result.Y);
 end;
 
 function TStyleTree.GetBottomLeading: integer;

@@ -18,14 +18,12 @@ const def_outp='def_outp';
 
 type
 
-  //THTMLImplementation=(hiEmbedded,hiScript);
   TScrolling=(scAuto,scYes,scNo);
 
   TdhPage=class;
 
   TdhPageControl = class(TdhCustomPanel)
   private
-    { Private declarations }
     FPages:TList;
     FActivePage: TdhPage;
     FSelectFirstTab: boolean;
@@ -38,8 +36,7 @@ type
     procedure SetActivePage(Value: TdhPage);
     procedure RemovePage(Page: TdhPage);
     procedure InsertPage(Page: TdhPage);
-    Function FindNextPage(CurPage: TdhPage;
-     GoForward, CheckTabVisible: Boolean): TdhPage;
+    Function FindNextPage(CurPage: TdhPage; GoForward, CheckTabVisible: Boolean): TdhPage;
     function LaterSelected: TdhPage;
     function GetPage(Index: Integer): TdhPage;
     function GetRealActivePage: TdhPage;
@@ -50,15 +47,11 @@ type
     procedure Activate(p: TdhPage; ActivatedBy: TControl);
     function IsGlobalActive: boolean;
   protected
-    { Protected declarations }
     procedure SetZOrder(TopMost: Boolean); override;
     procedure Loaded; override;
     function AdjustZIndex(ChildPos,ParentControlCount:integer):integer; override;
     procedure CalcVariableSizes(FirstPass:boolean); override;
-
   public
-    { Public declarations }
-
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
     property Pages[Index: Integer]: TdhPage read GetPage;
@@ -70,12 +63,9 @@ type
     function EffectsAllowed: boolean; override;
     procedure PreferStyleChangeMenuSiblings(caller:TdhCustomPanel; ClearPrefer:boolean);
   published
-    { Published declarations }
-    //property Style stored false;
     property Anchors;
     property ActivePage: TdhPage read FActivePage write SetActivePage;
     property PageCount:integer read GetPageCount;
-    //property HTMLImplementation:THTMLImplementation read GetHTMLImplementation write SetHTMLImplementation stored false default hiEmbedded;
     property SelectFirstTab:boolean read FSelectFirstTab write FSelectFirstTab default true;
     property FixedHeight:boolean read FFixedHeight write SetFixedHeight;
     property DynamicNavigation:boolean read FDynamicNavigation write SetDynamicNavigation default false;
@@ -85,7 +75,6 @@ type
   private
     FTitle: HypeString;
     FPageControl:TdhPageControl;
-    OldFormat:boolean;
     FOutputDirectory: TPathName;
     FHTMLBody: HypeString;
     FHTMLBodyClose: HypeString;
@@ -107,14 +96,12 @@ type
     FUseIFrame:boolean;
     procedure SetTitle(const Value: HypeString);
     procedure SetPageControl(APageControl: TdhPageControl);
-    //procedure WriteDownAnchor(Writer: TWriter);
     procedure WriteInitialProps(Writer: TWriter);
     procedure WriteHeightDiff(Writer: TWriter);
     procedure WriteTrue(Writer: TWriter);
     function GetPageIndex: Integer;
     procedure SetPageIndex(const Value: Integer);
     procedure VisibleChanged; override;
-    procedure ReadOldFormat(Reader: TReader);
     function IsOutputDirectoryStored: Boolean;
     function GetDefaultOutputDirectory: TPathName;
     procedure SetOutputDirectory(const Value: TPathName);
@@ -124,43 +111,31 @@ type
     procedure SetFTPURL(const Value: TPathName);
     procedure EnableMouseWheelData;
     procedure UpdateHidden;
-
   protected
-    { Protected declarations }
-    //function WhiteBackground: boolean; override;
     procedure SetZOrder(TopMost: Boolean); override;
     function AdjustZIndex(ChildPos,ParentControlCount:integer):integer; override;
-    procedure SetName(const Value: TComponentName); override;
     function NeedPadding(HasRastering:TRasterType): boolean; override;
-    //function Opaque: boolean; override;
     procedure PaintWhiteBackground(ref_brct: TRect; Src: TMyBitmap32; const brct: TRect); override;
-    //function SomethingIsFixed: boolean; override;
     function SomethingIsScrolled: boolean; override;
     function HeightDiff: integer; override;
     procedure WriteState(Writer: TWriter); override;
     procedure DefineProperties(Filer: TFiler); override;
-
 {$IFDEF CLX}
     procedure SetParent(const AParent: TWidgetControl); override;
 {$ELSE}
     procedure SetParent(AParent: TWinControl); override;
 {$ENDIF}
-
     procedure Loaded; override;
     function VirtualParent:TControl; override;
     function EffectsAllowed: boolean; override;
-    //function GetClientAdjusting:TRect; override;
     procedure AdjustBackgroundColor(var Col: TCSSColor); override;
     procedure SetScrolling(Value:TScrolling);
     procedure UpdateScrolling(changed:Boolean=True);
     function AlwaysVisibleVisibility:boolean; override;
-
     procedure SetUseIFrame(value:boolean);
     function CanBeTopPC:boolean; override;
     function GetImageDir:TPathName; override;
-
   public
-    { Public declarations }
     function AllHTMLCode:HypeString; override;
     function Find(FTP,FileName:TPathName; CRC:DWORD; AddOrReplace:boolean):boolean;
     function DynamicNavigation:boolean;
@@ -169,7 +144,6 @@ type
     function IsHTMLBody:boolean;
     function IsPHP:boolean;
     function IsInternalHTMLBody:boolean;
-    //function IsTopHTMLBody: boolean;
     function IsScrollable:boolean;
     function IsInternalScrollable:boolean;
     function IsTopScrollable: boolean;
@@ -189,7 +163,6 @@ type
     procedure RemoveDownIfURL(c:TControl);
     procedure ScrollPage(PageDown:boolean);
   published
-    { Published declarations }
     property UseIFrame:boolean read FUseIFrame write SetUseIFrame;
     property Align stored IsAlignStored nodefault;
     property Title:HypeString read FTitle write SetTitle;
@@ -212,18 +185,9 @@ type
     property GeneratedCSSFile:TPathName read FGeneratedCSSFile write FGeneratedCSSFile;
     property PageIndex: Integer read GetPageIndex write SetPageIndex stored False;
     property Visible stored false;
-
     property VertPosition;
     property HorzPosition;
-
     property Scrolling:TScrolling read FScrolling write SetScrolling default scAuto;
-
-    {property Font stored false;
-    property ParentFont stored false;
-    property ParentColor stored false;
-    property Color stored false;
-    property Align stored false;  }
-
   end;
 
 procedure _SetUniqueName(Self:TComponent; const s:TComponentName);
@@ -257,7 +221,7 @@ function FinalGeneratedCSSFile(const GeneratedCSSFile:TPathName):TPathName;
 implementation
 
 
-uses {dhScrollBox,}dhMenu,dhDirectHTML;
+uses dhMenu,dhDirectHTML;
 
 var PageControlBitmap:TBitmap=nil;
 
@@ -268,29 +232,8 @@ begin
   RegisterComponents('DFM2HTML', [TdhPageControl,TdhPage]);
 end;
 
-{ TdhPageControl }    
-
 procedure _SetUniqueName(Self:TComponent; const s:TComponentName);
-var i:integer;
-    NewName:TComponentName;
 begin
-(*
- with Self do
- For i := 1 to High(Integer) do
- begin
-  NewName:=s+inttostr(i);
-  if Owner.FindComponent(NewName)=nil then
-  begin
-   Name:=NewName;
-   exit;
-  end;
-{  try
-   Name:=s+inttostr(i);
-  except
-   Continue;
-  end;
-  exit;}
- end;*)
  Self.Name:=_GetUniqueName(Self,s);
 end;
 
@@ -301,7 +244,6 @@ var i:integer;
 begin
  sl:=TStringList.Create;
  try
-
  with Self.Owner do
  for i:=0 to ComponentCount-1 do
  if Components[i] is TdhCustomPanel then
@@ -316,12 +258,6 @@ begin
    result:=NewName;
    exit;
   end;
-{  try
-   Name:=s+inttostr(i);
-  except
-   Continue;
-  end;
-  exit;}
  end;
  finally
   sl.Free;
@@ -335,7 +271,6 @@ begin
   result:=0;
 end;
 
-
 function TdhPage.BetterNotToDelete(DeletionList:TList; var Reason:WideString):boolean;
 var DownForURLAnchor:TdhLink;
     i:integer;
@@ -346,7 +281,7 @@ begin
  DownForURLAnchor:=FPageControl.FDownForURLAnchors[i];
  if (DownForURLAnchor.LinkPage=Self) and (DeletionList.IndexOf(DownForURLAnchor)=-1) then
  begin                                     
-  Reason:=WFormat(REFOBJECT_STR,[Name,DownForURLAnchor.Name]); //is linked by
+  Reason:=WFormat(REFOBJECT_STR,[Name,DownForURLAnchor.Name]);
   result:=true;
   exit;
  end;
@@ -370,8 +305,6 @@ begin
   Visible:=false;
 end;
 
-
-
 destructor TdhPageControl.Destroy;
 var
   I: Integer;
@@ -391,76 +324,24 @@ begin
    Proc(TComponent(FPages[I]));
 end;
 
-(*
-
-procedure TdhPageControl.SetHTMLImplementation(
-  const Value: THTMLImplementation);
-{var sc:TdhScrollingWinControl;
-    sHeight:integer;
-    OldValue:THTMLImplementation;}
-begin
-
- FDynamicNavigation:=Value=hiScript;
-{ FHTMLImplementation:=Value;
- if FHTMLImplementation=hiIFrame then
-  FHTMLImplementation:=hiEmbedded;
- }
-{ if FHTMLImplementation<>Value then
- begin
-  OldValue:=FHTMLImplementation;
-  FHTMLImplementation:=Value;
-  if csLoading in ComponentState  then exit;
-
-  if FHTMLImplementation=hiIFrame then
-  begin
-   sc:=TdhScrollBox.Create(Owner);
-   _SetUniqueName(sc,'dhScrollBox');
-   TFakeControl(sc).ParentColor:=true;
-   sc.Parent:=Parent;
-   sc.BoundsRect:=Bounds(Left,Top,Width+16,Height);
-   Left:=0;
-   Top:=0;
-   self.Parent:=sc;
-  end else
-  if OldValue=hiIFrame then
-  begin
-   sHeight:=Height;
-   sc:=Parent as TdhScrollingWinControl;
-   BoundsRect:=Bounds(sc.Left,sc.Top,Width,sc.Height);
-   Parent:=sc.Parent;
-   Height:=sHeight;
-   sc.Free;
-  end;
- end; }
-end;
-*)
-
 constructor TdhPage.Create(AOwner: TComponent);
 begin
   inherited;
-  //Align:=alTop;
   ControlStyle:=ControlStyle+[csNoDesignVisible];
   Visible := False;
   NCScrollbars:=true;
-  //EdgesInScrolledArea:=true;
   OutputDirectory:=def_outp;
   FBackgroundSoundForever:=true;
-//  FDownForURLAnchors:=TList.Create;
 end;
-
-
 
 destructor TdhPage.Destroy;
 begin
   if FPageControl <> nil then
     FPageControl.RemovePage(Self);
-//  FreeAndNil(FDownForURLAnchors);
   inherited Destroy;
 end;
 
-
 procedure TdhPageControl.DoTopPainting;
-
 var
   rct:TRect;
 begin
@@ -475,17 +356,12 @@ begin
    end;
    if (PageControlBitmap<>nil) then
     GetCanvas.Draw(0,0,PageControlBitmap);
- end;  
-
- // inherited;
-// PaintOuterBg;
-// FCommon.SpecialPaintBorder(FCommon.MarginClientRect,FCommon.BorderClientRect);
+ end;
 end;
 
 procedure TdhPage.SetTitle(const Value: HypeString);
 begin
   FTitle := Value;
-  //(GetTopForm(Self) as TForm).Caption:=FTitle;
 end;
 
 procedure ReleaseResourcesRecursively(pn:TdhCustomPanel);
@@ -507,7 +383,7 @@ begin
 
  if FActivePage<>Value then
  begin
-  //if Parent<>nil then Parent.DisableAlign;  //würde in PushHeight blockieren
+  //if Parent<>nil then Parent.DisableAlign;  //would block PushHeight
 
   if (csLoading in ComponentState) and FSelectFirstTab and not(csDesigning in ComponentState) and (PageCount<>0) and (ActivePage<>Pages[0]) then
   begin
@@ -531,27 +407,18 @@ begin
   UpdateLinks(OldActivePage,false);
   if FActivePage<>nil then
    FActivePage.Visible:=true;
-  if (OldActivePage<>nil){ and FActivePage.HandleAllocated}{in Destroy, visible:=false setzt SetFocus neu} then
+  if OldActivePage<>nil then
   begin
-   {if FActivePage.ContainsControl(GetParentForm(Self).ActiveControl) then
-   begin
-    Windows.SetFocus(0);
-    GetParentForm(Self).ActiveControl:=nil;
-   end; }
    OldActivePage.Visible:=false;
    ReleaseResourcesRecursively(OldActivePage);
-   //make old unvisible before making new visible, to keep scroll position in a parent scrollable object
+   //make old unvisible *after* making new visible, to keep scroll position in a parent scrollable object
   end;
-
-
-  //if Parent<>nil then Parent.EnableAlign;
  end;
 end;
 
 procedure TdhPageControl.PushHeight(diff:integer);
 var P:TWinControl;
 begin
-
  if csReading in ComponentState then exit;
  if diff=0 then exit;
  if FFixedHeight then exit;
@@ -574,12 +441,9 @@ begin
  result:=(PageControl<>nil) and (PageControl.ActivePage=Self);
 end;
 
-
-
-
 procedure TdhPageControl.UpdateLinks(OldActivePage:TdhPage; OnlyLocal:boolean);
-var {i,}ii:integer;
-var {c,cc,}DownForURLAnchor:TdhLink;
+var ii:integer;
+var DownForURLAnchor:TdhLink;
     sl:TList;
 
 procedure ItUpdateLinks(p:TWinControl);
@@ -592,14 +456,11 @@ begin
   ItUpdateLinks(TWinControl(p.Controls[i]));
 end;
 
-
 begin
-// CancelCheckDesignState:=false;
-// for i:=0 to PageCount-1 do   
  if not (csLoading in ComponentState) then //for speed
- for ii:=0 to {Pages[i].}FDownForURLAnchors.Count-1 do
+ for ii:=0 to FDownForURLAnchors.Count-1 do
  begin
- DownForURLAnchor:={Pages[i].}FDownForURLAnchors[ii];
+ DownForURLAnchor:=FDownForURLAnchors[ii];
  if not (csDestroying in DownForURLAnchor.ComponentState) then
   DownForURLAnchor.CheckDesignState;
  end;
@@ -624,16 +485,6 @@ begin
  end;
 end;
 
-
-         {
-function TdhPage.WhiteBackground:boolean;
-begin
- result:=FCommon.IsScrollArea;
-end;
-
-          }
-
-
 procedure TdhPage.AdjustBackgroundColor(var Col:TCSSColor);
 begin
  if IsHTMLBody and IsTopScrollable then
@@ -644,14 +495,6 @@ begin
  end;
 end;
 
-
-
-{function TdhPage.Opaque:boolean;
-begin
- result:=FCommon.IsScrollArea or (inherited Opaque);
-// result:=false;
-end;
- }
 procedure TdhPage.PaintWhiteBackground(ref_brct:TRect; Src:TMyBitmap32; const brct: TRect);
 var BPos:TPoint;
 var num_across,num_down:integer;
@@ -659,8 +502,6 @@ var num_across,num_down:integer;
     R,R2:TRect;
 begin
  if not IsScrollArea then exit;
-
- //Src.FillRectS(brct,clWhite32);
 
  if RuntimeMode then exit;
 
@@ -678,7 +519,6 @@ begin
  begin
   x_coord := (x * W) + BPos.X;
   y_coord := (y * H) + BPos.Y;
-  //Canvas.Draw(x_coord, y_coord, FPicture.Graphic);
   R:=Bounds(x_coord+FGridX,y_coord,FGridX,FGridY);
   R2:=R;
   IntersectRect(R,R,brct);
@@ -730,14 +570,6 @@ begin
 
 end;
 
-                             {
-
-function TdhPage.SomethingIsFixed:boolean;
-var Picture:TPicture;
-begin
- result:=not FCommon.NCScrollbars or (FCommon.BackgroundAttachment=cbaFixed) and FCommon.HasBackgroundImage(Picture);
-end;
-                            }
 procedure TdhPage.SetPageControl(APageControl: TdhPageControl);
 begin
   if FPageControl <> APageControl then
@@ -745,7 +577,6 @@ begin
     if FPageControl <> nil then FPageControl.RemovePage(Self);
     if APageControl <> nil then APageControl.InsertPage(Self);
     if PageControl<>nil then Parent := PageControl.Parent;
-    //if PageControl=nil then Visible:=true;
     UpdateScrolling;
   end;
 end;   
@@ -756,15 +587,11 @@ begin
  NewHeight:=24;
 end;
 
-
 procedure TdhPageControl.InsertPage(Page: TdhPage);
 begin
   FPages.Add(Page);
   Page.FPageControl := Self;
-//  Page.UpdateTabShowing;
 end;
-
-
 
 procedure TdhPage.SetZOrder(TopMost: Boolean);
 begin
@@ -784,9 +611,6 @@ begin
   UpdateZIndex(FPages[i]);
 end;
 
-
-
-
 procedure TdhPageControl.RemovePage(Page: TdhPage);
 var
   NextSheet: TdhPage;
@@ -805,7 +629,6 @@ begin
 
   NextSheet := FindNextPage(Page, True, not (csDesigning in ComponentState));
   if NextSheet = Page then NextSheet := nil;
-  //Page.SetTabShowing(False);
   Page.FPageControl := nil;
   FPages.Remove(Page);
   SetActivePage(NextSheet);
@@ -834,21 +657,11 @@ begin
         Dec(I);
       end;
       Result := FPages[I];
-      if not CheckTabVisible{ or Result.TabVisible} then Exit;
+      if not CheckTabVisible then Exit;
     until I = StartIndex;
   end;
   Result := nil;
 end;
-
-
-
-                   {
-function TdhPage.GetHTMLImplementation: THTMLImplementation;
-begin
- if FPageControl=nil then
-  result:=hiEmbedded else
-  result:=FPageControl.HTMLImplementation;
-end;               }
 
 
 function TdhPage.DynamicNavigation:boolean;
@@ -863,7 +676,6 @@ var
     i,w:integer;
 begin
  result:=false;
- //FileName:=Lowercase(FileName);
  for i:=Low(Uploaded) to High(Uploaded) do
  if Uploaded[i].FTP=FTP then
  with Uploaded[i] do
@@ -958,14 +770,11 @@ var P:TControl;
     addheight:integer;
 begin
   inherited;
-  Filer.DefineProperty('Caption', ReadOldFormat, nil, false);
   if (csLoading in ComponentState) or not WithMeta and (Filer is TWriter) then exit;
-  Filer.DefineProperty('DownAnchor', SkipValue, {WriteDownAnchor}WriteTrue, {DownForURLAnchor<>nil}false);
   Filer.DefineProperty('HeightDiff', SkipValue, WriteHeightDiff, (FPageControl<>nil) and (FPageControl.ActivePage<>nil));
   Filer.DefineProperty('Selected', SkipValue, WriteTrue, IsLaterSelected);
   Filer.DefineProperty('InitialProps', SkipValue, WriteInitialProps, IsHTMLBody);
   Filer.DefineProperty('IsPHP', SkipValue, WriteTrue, IsPHP);
-//  Filer.DefineProperty('NotFixScrollbar', SkipValue, WriteTrue, IsIFrame and not FCommon.IsVertScrollBarVisible);
 
   if IsTopScrollable then
   begin
@@ -988,22 +797,12 @@ begin
      ID:=pn.Name;
      Rastering:=pn.Style.RasteringFile;
     end;
-    //;f
    end;
-   //pn.AssertTop(addheight);
    inc(addheight,pn.HeightDiff);
    p:=p.Parent;
   end;
 
-
 end;
-
-procedure TdhPage.ReadOldFormat(Reader:TReader);
-begin
- Self.SkipValue(Reader);
- OldFormat:=true;
-end;
-
 
 function TdhPage.IsLaterSelected:boolean;
 begin
@@ -1017,11 +816,6 @@ begin
   result:=ActivePage;
 end;
 
-{procedure TdhPage.WriteDownAnchor(Writer: TWriter);
-begin
- Writer.WriteString(FinalID(DownForURLAnchor));
-end;
- }
 procedure TdhPage.WriteInitialProps(Writer: TWriter);
 var PropChoose:TPropChoose;
     s:AString;
@@ -1034,11 +828,8 @@ begin
  if not((PropChoose=pcColor) and (Cascaded.Color=clBlackCSS) or (PropChoose=pcBackgroundColor) or (PropChoose=pcFontStyle) and (Cascaded.FontStyle=cfsNormal) or (PropChoose=pcFontWeight) and (Cascaded.FontWeight=cfwNormal)) then
   s:=s+GetCSSPropName(PropChoose)+':'+GetCSSPropValue(PropChoose)+';';
  end;
-
  Writer.WriteString(s);
 end;
-
-
 
 
 procedure TdhPage.WriteHeightDiff(Writer: TWriter);
@@ -1069,8 +860,6 @@ begin
   FPageControl.FPages.Move(PageIndex, Value);
 end;
 
-
-
 function TdhPageControl.GetRealActivePage: TdhPage;
 begin
  result:=LaterSelected;
@@ -1095,7 +884,7 @@ begin
   glPostAddCompo(result);   
 end;
 
-function RectHeight(r:TRect):integer;
+function RectHeight(r:TRect):integer; inline;
 begin
  result:=r.Bottom-r.Top;
 end;
@@ -1110,7 +899,6 @@ begin
    page:=PageControl.Pages[i];
    if page=Self then continue;
    page.Anchors:=Anchors;
-   //page.Center:=Center;
    if page.Align<>Align then
     page.Align:=Align;
    if PageControl.FFixedHeight then
@@ -1125,59 +913,17 @@ procedure TdhPage.SetBounds(ALeft, ATop, AWidth, AHeight: Integer);
 {$ELSE}
 procedure TdhPage.ChangeBounds(ALeft, ATop, AWidth, AHeight: Integer);
 {$ENDIF}
-var diff,i:integer;
-    r:TRect;
 begin
  if not (csLoading in ComponentState) and IsActivePage and not StopAdjusting then
  begin
-
-  {for i:=0 to PageControl.PageCount-1 do
-  if PageControl.Pages[i]<>Self then
-  begin
-   PageControl.Pages[i].Anchors:=Anchors;
-   if PageControl.Pages[i].Align<>Align then
-    PageControl.Pages[i].Align:=Align;
-   if PageControl.FFixedHeight then
-    PageControl.Pages[i].SetBounds(ALeft,ATop,AWidth,AHeight) else
-    PageControl.Pages[i].SetBounds(ALeft,ATop,AWidth,PageControl.Pages[i].Height);
-  end; }
-
   if ((Align in [alLeft,alRight]) and (AHeight=RectHeight(AdjustedClientRect(Parent)))) then
   begin
    Inherited;
    exit;
   end;
-
- {if akBottom in Anchors then
- begin
-  diff:=Height-AHeight;
-  AHeight:=Height;
-  inherited;
- end else} {
- begin
-  diff:=Height;
-  inherited;
-  diff:=Height-diff;
- end;      }
-  diff:=AHeight-Height;
-  PageControl.PushHeight(diff);
-
+  PageControl.PushHeight(AHeight-Height);
   StopAdjusting:=true;
-  r:=self.BoundsRect;
-  for i:=0 to PageControl.PageCount-1 do
-  if PageControl.Pages[i]<>Self then
-  begin                {
-   PageControl.Pages[i].Anchors:=Anchors;
-   if PageControl.Pages[i].Align<>Align then
-    PageControl.Pages[i].Align:=Align;  }
-   //if not(akBottom in Anchors) then
-{   if PageControl.FFixedHeight then
-    PageControl.Pages[i].SetBounds(r.Left,r.Top,r.Right-r.Left,r.Bottom-r.Top) else
-    PageControl.Pages[i].SetBounds(r.Left,r.Top,r.Right-r.Left,PageControl.Pages[i].Height);
-}
-  end;
-  //if not (Align in [alLeft,alRight]) then
-   Inherited;              
+  Inherited;
   StopAdjusting:=false;
   UpdateHidden;
  end else
@@ -1193,14 +939,10 @@ begin
   if not (csWriting in Owner.ComponentState) and not (csWriting in Parent.ComponentState) then
   begin
    writer.Position:=writer.Position-4{=length(Classes.FilerSignature)};
-//   showmessage('EXIT:'+owner.name+'.'+name+': '+booltostr((FParentMenuItem<>nil) and not(csWriting in FParentMenuItem.ComponentState) and not IsInlineMenu,true)+' '+booltostr(csWriting in Owner.ComponentState,true)+' '+booltostr(not Visible,true));
   end;
   exit;
  end;
-
- //showmessage(owner.name+'.'+name+': '+booltostr((FParentMenuItem<>nil) and not(csWriting in FParentMenuItem.ComponentState) and not IsInlineMenu,true)+' '+booltostr(csWriting in Owner.ComponentState,true)+' '+booltostr(not Visible,true));
  Inherited;
-
 end;
 
 {$IFNDEF CLX}
@@ -1210,67 +952,41 @@ procedure TdhPage.SetParent(const AParent: TWidgetControl);
 {$ENDIF}
 var F:TCustomForm;
 begin
-
   if PageControl<>nil then
    inherited SetParent(PageControl.Parent) else
-  if {(PageControl=nil) and }(AParent is TdhPageControl) then
+  if AParent is TdhPageControl then
    PageControl:=TdhPageControl(AParent) else
-//  if {(PageControl=nil) and }(AParent<>nil) and (GetParentTab(AParent,true) is TdhPage) and (TdhPage(GetParentTab(AParent,true)).PageControl<>nil) then
-//   PageControl:=TdhPage(GetParentTab(AParent,true)).PageControl else
-  Inherited;
+   Inherited;
   if not (csDestroying in ComponentState) then
-  begin
    UpdateScrolling;
-  end;
 end;
 
 
 procedure TdhPage.EnableMouseWheelData;
 var F:TCustomForm;
 begin
-   //showmessage('ok1');
    if IsTopScrollable then
    begin
     F := GetParentForm(Self);
     if F <> nil then
       F.SetFocusedControl(Self);
-
-{    if (F<>nil) and (F.ActiveControl<>nil) then
-     showmessage('ok foc '+F.ActiveControl.Name) else
-    if (F<>nil) then
-     showmessage('ok not foc') else
-     showmessage('ok not form');}
   end;
 end;
-
-
 
 function TdhPage.IsAlignStored:boolean;
 begin
  if IsTopScrollable then
   result:=Align<>alClient else
   result:=Align<>alNone;
-
-// result:=not IsTopBody;
 end;
-
-
 
 procedure TdhPage.Loaded;
 begin
- if (PageControl<>nil) and OldFormat then
- begin
- Left:=Left+PageControl.Left;
- Top:=Top+PageControl.Top;
- end;
  Inherited;
  UpdateScrolling(false);
  if (PageControl<>nil) and (PageControl.ActivePage<>nil) and Visible then
   PageControl.ActivePage:=Self;
 end;
-
-
-
 
 procedure TdhPageControl.Loaded;
 begin
@@ -1285,13 +1001,6 @@ begin
  if PageControl<>nil then
   PageControl.ActivePage:=Self;
 end;
-
-{function TdhPage.GetParentComponent: TComponent;
-begin
- if PageControl<>nil then
-  result:=PageControl else
-  result:=Parent;;
-end;}
 
 function TdhPage.VirtualParent: TControl;
 begin    
@@ -1384,10 +1093,8 @@ begin
     continue;
   if page.PageControl<>nil then
   if page.PageControl.IsVirtualParentOf(ori) then
-  //if page.PageControl=ori.PageControl then
   begin
    if not page.IsVirtualParentOf(ori) then
-   //if page<>ori then
     continue;
   end else
   if not page.IsLaterSelected then
@@ -1401,7 +1108,6 @@ begin
  end;
  result:=false;
 end;
-
 
 var p:TControl;
 begin
@@ -1423,12 +1129,6 @@ begin
  result:=IsHTMLBody and IsInternalScrollable;
 end;
 
-{function TdhPage.IsTopHTMLBody:boolean;
-begin
- result:=IsHTMLBody and not IsInternalHTMLBody;
-end;}
-
-
 function TdhPage.EffectsAllowed: boolean;
 begin
  result:=not IsScrollable;
@@ -1446,13 +1146,6 @@ begin
   result:=inherited AdjustZIndex(ChildPos,ParentControlCount)
 end;
 
-procedure TdhPage.SetName(const Value: TComponentName);
-begin
-  inherited;
-//  if IsBody and not IsIFrame and (Parent<>nil) and (Align=alClient) then
-//   Parent.Name:=Name;
-end;
-
 function TdhPage.IsOutputDirectoryStored: Boolean;
 begin
  result:=GetOutputDirectory<>GetDefaultOutputDirectory;
@@ -1461,7 +1154,6 @@ end;
 function TdhPage.GetDefaultOutputDirectory:TPathName;
 var p:TControl;
 begin
-// if Parent is TCustomForm then
  p:=Parent;
  while (p<>nil) and not (p is TdhPage) do
   p:=p.Parent;
@@ -1520,20 +1212,12 @@ begin
  end;
 end;
 
-{function TdhPageControl.GetHTMLImplementation: THTMLImplementation;
-begin
- if FDynamicNavigation then
-  result:=hiScript else
-  result:=hiEmbedded;
-end; }
-
 procedure TdhPageControl.Activate(p:TdhPage; ActivatedBy:TControl);
 var i:integer;
 begin
  if ActivatedBy is TdhLink then
  begin
   i:=FDownForURLAnchors.IndexOf(ActivatedBy);
-
   if (i<>-1) and (i<>FDownForURLAnchors.Count-1) then
   begin
    FDownForURLAnchors.Delete(i);
@@ -1544,20 +1228,7 @@ begin
 end;
 
 procedure TdhPage.Activate(ActivatedBy:TControl);
-var i:integer;
-    p:TdhPage;
 begin
- {if ActivatedBy is TdhLink then
- begin
-  p:=TdhLink(ActivatedBy).LinkTab;
-  i:=p.FDownForURLAnchors.IndexOf(ActivatedBy);
-  if i<>p.FDownForURLAnchors.Count-1 then
-  begin
-   p.FDownForURLAnchors.Delete(i);
-   p.FDownForURLAnchors.Add(ActivatedBy);
-  end;
- end;
- PageControl.ActivePage:=Self;  }
  PageControl.Activate(Self,ActivatedBy);
 end;
 
@@ -1601,8 +1272,6 @@ begin
   result:=true;
 end;
 
-
-
 procedure TdhPage.AddDownIfURL(c: TControl);
 begin
  if (FPageControl<>nil) and (FPageControl.FDownForURLAnchors.IndexOf(c)=-1) then
@@ -1634,34 +1303,6 @@ begin
  result:=FHTMLTop+FHTMLHead+FHTMLBody+FHTMLBodyClose;
 end;
 
-(*
-function TdhPage.GetClientAdjusting: TRect;
-begin
- result:=ScrollArea_Edges;
- exit;
- if self.IsScrollable then
- begin
-  //result:=PhysicalClientEdgesWithScrollbars;
-
-  if true or IsHTMLBody then
-   result:=Rect(0,0,0,0) else
-   result:=inherited GetClientAdjusting;
-  {if FCommon.IsHorzScrollBarVisible then
-   result.Bottom:=16;
-  if {not IsIFrame or  }{FCommon.IsVertScrollBarVisible then
-   result.Right:=16;*}
-
-  with FCommon.ScrollEdgesPure do
-  begin
-   Result.Right:=Left+Right;
-   Result.Bottom:=Top+Bottom;
-  end;
-
-  //result.BottomRight:=FCommon.ScrollEdgesPure.BottomRight;
- end else
-  result:=inherited GetClientAdjusting;
-end;*)
-
 function TdhPageControl.EffectsAllowed: boolean;
 begin
  result:=false;
@@ -1672,7 +1313,6 @@ begin
  if FPublishURL<>Value then
  begin
   FPublishURL := Value;
-  //Uploaded.Clear;
  end;
 end;
 
@@ -1697,11 +1337,7 @@ end;
 
 procedure TdhPage.UpdateScrolling(changed:Boolean=True);
 begin
-   if csLoading in ComponentState then
-   begin
-   if csLoading in ComponentState then
-   exit;
-   end;
+   if csLoading in ComponentState then exit;
    FVertScrollbarAlwaysVisible:=IsScrollable and (FScrolling=scYes) or IsTopScrollable;
    FHorzScrollbarAlwaysVisible:=IsScrollable and (FScrolling=scYes) and not IsHTMLBody;
    FVertScrollbarNeverVisible:=IsScrollable and (FScrolling=scNo);
@@ -1710,16 +1346,10 @@ begin
    IsScrollArea:=IsScrollable;
    if changed then
     ScrollingParametersChanged;
-   {if IsTopScrollable then
-   begin
-    Align:=alClient;
-   end;}
    if PageControl=nil then
-    Visible:=true;  //!!
+    Visible:=true;
    EnableMouseWheelData;
 end;
-
-
 
 function TdhPage.AlwaysVisibleVisibility:boolean;
 begin
@@ -1764,15 +1394,10 @@ begin
  result:=GoodWebPathDelimiters(result);
 end;
 
-
-
-
 initialization
-// RegisterClasses([TdhPage]);
 
 finalization
 
  FreeAndNil(PageControlBitmap);
-
 
 end.

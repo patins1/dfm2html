@@ -539,7 +539,7 @@ end;
 
 function TdhLink.GetLastPage:TdhPage;
 begin
- if (FPageRange<>0) and (FLinkPage<>nil) and (FLinkPage.PageControl<>nil){ and (FLinkPage.HTMLImplementation in [hiScript,hiEmbedded])} then
+ if (FPageRange<>0) and (FLinkPage<>nil) and (FLinkPage.PageControl<>nil) then
   result:=FLinkPage.PageControl.Pages[min(FLinkPage.PageIndex+min(abs(FPageRange),1000),FLinkPage.PageControl.PageCount-1)] as TdhPage else
   result:=nil;
 end;

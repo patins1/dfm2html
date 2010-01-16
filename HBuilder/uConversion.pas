@@ -88,7 +88,7 @@ type tnest= class(TList)
     sUse{,img}:string;
     img:boolean;
     OverBasedOnDown,DownOverlayOver,NeverVisible,IsPopupMenu,IsInlineMenu:boolean;
-    ChildInfo,{DownAnchor,}Characters,hclass,PureFileName,dclass,addprops,LinkPage,insertloc,ParentMenuItem:string;
+    ChildInfo,Characters,hclass,PureFileName,dclass,addprops,LinkPage,insertloc,ParentMenuItem:string;
     FClient{,ClientAdj}:TRect;
     bo:TBounds;
     HorzPosition,VertPosition:integer;
@@ -1824,9 +1824,6 @@ begin
   if directIE then if not (akTop in nest.Anchors) then AddStyle('bottom','expression('+inttostr(Client.Bottom-(bo.Top+bo.Height))+'-'+nest.offsetParent+'.clientHeight % 2)');
  end;
  if akRight in nest.Anchors then
-{if (pnest<>nil) and pnest.IsBody and not((pnest.parent<>nil) and pnest.parent.HasProp('NotFixScrollbar')) then
-  AddStyle('right',Client.Right-(bo.Left+bo.Right)-16) else
-}
  begin
   AddStyle('right',Client.Right-(bo.Left+bo.Width));
   //if (pnest<>nil) and pnest.IsBody then
@@ -3509,8 +3506,6 @@ begin
   //id:=GetName(Node);
 
 
-   { if HasProp('DownAnchor',s) then
-     AddAttr('DownAnchor',s);    }
 {   if HasProp('Style.IsPre') then
     AddAttr('escape','no');
  }
@@ -4217,14 +4212,12 @@ begin
     snest.IsPC:=true;
     //snest.Melt:=true;
     snest.parentTS.HasSubTS:=true;
-    //HasProp('DownAnchor',snest.DownAnchor);
     snest.IsSel:=HasProp('Selected');
     {AddAttr('noframe','true');
     DoEle('newpage',true,true,true);
     snest.IsPC:=true;
     snest.Melt:=true;
     snest.parentTS.HasSubTS:=true;
-    HasProp('DownAnchor',snest.DownAnchor);
     snest.IsSel:=HasProp('Selected');  }
    end else
    begin

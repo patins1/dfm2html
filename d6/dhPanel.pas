@@ -937,7 +937,8 @@ type
     TopGraph:TMyBitmap32; // opaque bitmap of the visual content
     TransparentTop:TMyBitmap32; // transparent bitmap of the visual content without background information (by using semi-transparency)
     BackIsValid:boolean; // whether BackGraph and TopGraph are up-to-date with the background
-    TopIsValid:boolean; // whether TopGraph (and TransparentTop, if set) is up-to-date with the visual content - the background information may be invalid
+    TopIsValid:boolean; // whether TopGraph is up-to-date with the visual content - the background information may be invalid
+    TransparentTopIsValid:boolean; // whether TransparentTop is up-to-date with the visual content
     _SelfCBound:TRect;
     VertScrollInfo: TMyScrollInfo;
     HorzScrollInfo: TMyScrollInfo;
@@ -954,7 +955,7 @@ type
 {$ENDIF}
     procedure ChildrenAdjustStrong(DeltaX,DeltaY:Integer);
     procedure InvalDeepestBack;
-    procedure AssertTop(addheight:integer; NeedTransparentImage:boolean=false);
+    procedure AssertTop(addheight:integer; NeedTransparentImage:boolean=false; NeedOpaqueImage:boolean=true);
     procedure PaintHidden;
     procedure BeginPainting(bmp:TMyBitmap32);
     procedure EndPainting;
@@ -6106,13 +6107,12 @@ begin
 end;
 
 procedure TdhCustomPanel.InvalTop(IncludeChildren,IncludeSelf:boolean);
-var oriLen,actLen:integer;
-    data:pbyte;
 begin
    if not TopIsValid then exit;
    if IncludeSelf then
    begin
     TopIsValid:=false;
+    TransparentTopIsValid:=false;
    end;
    Invalidate;
    InvalTrans(Self,GetCBound(Self),IncludeChildren);
@@ -6136,6 +6136,7 @@ var State:TState;
 begin
  BackIsValid:=false;
  TopIsValid:=false;
+ TransparentTopIsValid:=false;
  if HandleAllocated then
   Invalidate;
  for State:=low(TState) to high(TState) do
@@ -9133,7 +9134,7 @@ begin
      //IntersectRect(R,R,CutR);
      //if not IsRectEmpty(R) then
       PaintParentBGs(Self, p, CutR,SelfCBound);
-   end;                     
+   end;
    R:=GetCBound(ppn);
    ref_fixed:=GetOffsetRect(ppn.ScrollArea,R.Left-CutR.Left,R.Top-CutR.Top);
    ref_scrolled:=GetOffsetRect(ppn.GetInnerClientArea,R.Left-CutR.Left,R.Top-CutR.Top);
@@ -13056,7 +13057,9 @@ begin
  result:=false;
 end;
 
-
+{if NeedTransparentImage is true, then TransparentTopIsValid will be true after this method returns, thus TransparentTop will contain the current visual contents;
+ if NeedOpaqueImage is true, then TopGraph will contain the current visual contents painted over a valid background
+}
 procedure TdhCustomPanel.AssertTop;
 var SelfCBound:TRect;
     nWidth,nHeight:integer;
@@ -13072,12 +13075,12 @@ begin
   BackIsValid:=false;
  if TopIsValid  and ((TopGraph.Height<>nHeight) or (TopGraph.Width<>nWidth)) then
   TopIsValid:=false;
- if (TransparentTop<>nil) and ((TransparentTop.Height<>nHeight) or (TransparentTop.Width<>nWidth)) then
-  FreeAndNil(TransparentTop);
- if BackIsValid and not TopIsValid and (BackGraph<>nil) and (BackGraph=TopGraph) then
+ if TransparentTopIsValid and ((TransparentTop.Height<>nHeight) or (TransparentTop.Width<>nWidth)) then
+  TransparentTopIsValid:=false;
+ if BackIsValid and not TopIsValid and (BackGraph=TopGraph) then
   BackIsValid:=False;
 
- if not BackIsValid and not Opaque then
+ if NeedOpaqueImage and not BackIsValid and not Opaque then
  begin
    if BackGraph=nil then
     BackGraph:=TMyBitmap32.Create;
@@ -13092,7 +13095,7 @@ begin
    BackIsValid:=true;
 
    if TopIsValid then
-   if TransparentTop=nil then
+   if not TransparentTopIsValid then
    begin
     TopIsValid:=false;
    end else
@@ -13104,7 +13107,7 @@ begin
  end;
 
 
- if not TopIsValid or NeedTransparentImage and (TransparentTop=nil) then
+ if NeedOpaqueImage and not TopIsValid then
  begin
   if TopGraph=nil then
   if BackGraph<>nil then
@@ -13112,28 +13115,43 @@ begin
    TopGraph:=TMyBitmap32.Create;
 
   TopGraph.SetSize(nWidth,nHeight);
-  if BackIsValid and (BackGraph<>TopGraph) and not TopIsValid then
+  if BackIsValid and (BackGraph<>TopGraph) then
    BackGraph.DrawTo(TopGraph);
-  FreeAndNil(TransparentTop);
+ end;
+
+ if not TransparentTopIsValid then
+   FreeAndNil(TransparentTop);
 
   if not Visibility and (not AlwaysVisibleVisibility or ((Parent is TdhCustomPanel) and not TdhCustomPanel(Parent).Visibility)) then
   begin
-   if ((csDesigning in ComponentState) or IsDlg) and not ((Parent is TdhCustomPanel) and not TdhCustomPanel(Parent).Visibility) then
-    PaintHidden;
-   if NeedTransparentImage then
+   if NeedOpaqueImage and not TopIsValid then
+   begin
+    if ((csDesigning in ComponentState) or IsDlg) and not ((Parent is TdhCustomPanel) and not TdhCustomPanel(Parent).Visibility) then
+     PaintHidden;
+    TopIsValid:=true;
+   end;
+   if NeedTransparentImage and not TransparentTopIsValid then
    begin
     TransparentTop:=TMyBitmap32.Create;
     TransparentTop.SetSize(nWidth,nHeight);
+    TransparentTopIsValid:=true;
    end;
   end else
-  if NeedTransparentImage or IsRasterized then
+  if NeedTransparentImage and not TransparentTopIsValid or NeedOpaqueImage and not TopIsValid and IsRasterized then
   begin
-   TransparentTop:=TransPainting(nWidth,nHeight);
-   if not TopIsValid then
+   if not TransparentTopIsValid then
+   begin
+    TransparentTop:=TransPainting(nWidth,nHeight);
+    TransparentTopIsValid:=true;
+   end;
+   if NeedOpaqueImage and not TopIsValid then
    begin
     TransparentTop.DrawTo(TopGraph);
+    TopIsValid:=true;
    end;
   end else
+ if NeedOpaqueImage and not TopIsValid then
+ begin
   if not TopGraph.Empty then
   begin
    BeginPainting(TopGraph);
@@ -13764,9 +13782,7 @@ begin
  begin
  if not Opaque then
  begin
-  if not (TopIsValid and (TransparentTop<>nil)) then
-   AssertTop(0,true);
-  if TopIsValid and (TransparentTop<>nil) then
+  AssertTop(0,true,false);
   if AlphaComponent(TransparentTop.PixelS[P.X,P.Y]) = 0 then
   begin
    result:=false;
@@ -15044,6 +15060,7 @@ begin
     try
     repeat
      pn.TopIsValid:=false;
+     pn.TransparentTopIsValid:=false;
      pn.AssertTop(addheight,true);
      if HasSomething(pn.TransparentTop) then
      begin
@@ -15071,6 +15088,7 @@ begin
       PrevSubImage:=nil;
       repeat
        pn.TopIsValid:=false;
+       pn.TransparentTopIsValid:=false;
        pn.AssertTop(addheight,true);
        if HasSomething(pn.TransparentTop) then
        begin
@@ -15155,7 +15173,7 @@ begin
        end;
        RasteringFiles:=RasteringFiles+inttostr(EqArea.Top)+'|'+inttostr(pn.TransparentTop.Height-EqArea.Bottom)+'|'+inttostr(EqArea.Left)+'|'+inttostr(pn.TransparentTop.Width-EqArea.Right)+'|';
        RasteringFile:=RasteringFiles;
-      finally     
+      finally
        pn.TransparentTop.DrawMode:=pnTransparentTop.DrawMode;
        pnTopGraph.Free;
        pnTransparentTop.Free;

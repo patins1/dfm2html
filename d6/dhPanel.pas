@@ -15147,6 +15147,8 @@ begin
   begin
    NeedOpaqueImage:=ImageFormat<>ifSemiTransparent;
    pn.AssertTop(addheight,true,NeedOpaqueImage);
+   if NeedOpaqueImage and (ImageFormat=ifInherit) and HasSemiTransparence(pn.TransparentTop) then
+     NeedOpaqueImage:=false;
    if not NeedOpaqueImage then
     PhysicalImageFormat:=pifSaveAsPNG else
    if ImageFormat=ifJPEG then

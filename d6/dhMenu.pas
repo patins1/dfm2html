@@ -8,7 +8,7 @@ uses
   {$ELSE}
   Controls, Windows, Messages, Graphics, Forms, Dialogs, ExtCtrls,
   {$ENDIF}
-  SysUtils, Classes, math, typinfo, {$IFNDEF VER130} types, {$ENDIF}
+  SysUtils, Classes, math, typinfo,
   dhPanel, dhLabel, dhPageControl, dhStyleSheet, dhStrUtils;
 
 type TMenuOption=(moNoAuto,moHorizontalLayout,moInline,moSlide,moClickToOpen,moResumeOpen,moStatic);

@@ -3,7 +3,7 @@ unit Unit2;
 interface
 
 uses
-  SysUtils, Classes, TypInfo, {$IFNDEF VER130} types, {schnelles IntersectRect} {$ENDIF}
+  SysUtils, Classes, TypInfo,
 {$IFDEF CLX}
   QControls, QForms, Qt, QGraphics, QDialogs, QExtCtrls, QComCtrls,
   QStdCtrls, QImgList, QMenus, QStyle,  QTntStdCtrls,
@@ -20,7 +20,7 @@ uses
   dhPageControl, dhStyleSheet, dhMenu,
   math, Unit3, funcutils, uGradientWizard, dhDirectHTML,
   dhEdit, dhMemo, dhCheckBox,dhHTMLForm, dhFileField,
-  {ColorPickerButton,}  dhColorPicker, OpenSave,
+  dhColorPicker, OpenSave,
   dhMultilineCaptionEdit, dhRadioButton,
   hComboBox, hEdit, hMemo,
   dhOleContainer,dhFile,dhHiddenField,GR32,
@@ -30,8 +30,6 @@ uses
 
 
 var PropsAlign:TAlign=alBottom;
-
-//const ButtonClear:array[boolean] of TColor=(clBlack,clGray);
 
 type
   TTabs = class(TMyForm,IhLogReceiver)

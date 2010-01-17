@@ -9,7 +9,7 @@ unit MySiz;
 interface
 
 uses
- SysUtils, Classes, TypInfo, {$IFNDEF VER130} types, {schnelles IntersectRect} {$ENDIF}
+ SysUtils, Classes, TypInfo, types,
 {$IFDEF CLX}
   QControls, QForms, Qt, QGraphics, QDialogs, QExtCtrls, QComCtrls,  QStdCtrls, QClipbrd, QMenus,
 {$ELSE}
@@ -2071,7 +2071,7 @@ end;
 
         
 procedure TMySiz.DesignMouseUp(Button: TMouseButton);
-var ARect,DummyRect:TRect;
+var ARect:TRect;
     i:integer;
     c:TControl;
     p:TWinControl;
@@ -2106,7 +2106,7 @@ begin
     for i:=0 to p.ControlCount-1 do
     begin
      c:=p.Controls[i];
-     if EditableControl(c,false) and FinalVisible(c) and IntersectRect(DummyRect,ARect,GetCBound(c)) then
+     if EditableControl(c,false) and FinalVisible(c) and DoIntersectStrong(ARect,GetCBound(c)) then
      if FChildList.IndexOf(c)=-1 then
       FChildList.Add(c);
     end;
@@ -2114,7 +2114,7 @@ begin
    end;
   end else
   begin
-  changed:=false;             
+  changed:=false;
   gm:=GetGoodMouse;
   for i:=0 to FChildList.Count-1 do
   begin

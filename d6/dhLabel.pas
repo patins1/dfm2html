@@ -12,15 +12,11 @@ uses
   {$ELSE}
   Controls, Windows, Messages, Graphics, Forms,
   {$ENDIF}
-  SysUtils, Classes, dhPanel, math, {$IFNDEF VER130}types,  {$ENDIF} BinList,GR32_Transforms,gr32,dhStrUtils,StrUtils,MyBitmap32;
+  SysUtils, Classes, dhPanel, math, types, BinList,GR32_Transforms,gr32,dhStrUtils,StrUtils,MyBitmap32;
 
 
 {$IFDEF VER160}
 {$UNSAFECODE ON}
-{$ENDIF}
-
-{$IFDEF VER130}
-type TIntegerDynArray=array of integer;
 {$ENDIF}
 
 function inttoalpha(i:integer):HypeString;
@@ -113,7 +109,6 @@ type
     procedure WMSetCursor(var Message: TWMSetCursor); message WM_SETCURSOR;
 {$ENDIF}
     procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;
-    procedure DefineProperties(Filer: TFiler); override;
     procedure DoCSSToWinControl(WhatChanged:TWhatChanged); override;
     procedure UpdateNames(InlineUse,NewInlineUse:ICon; PropagateChange:boolean); override;
     function GetAutoRectPoint(AllowModifyX,AllowModifyY:boolean; NewWidth, NewHeight: Integer):TPoint;
@@ -2774,13 +2769,6 @@ begin
 
   UseStyleTree:=nil;
  end;
-end;
-
-procedure TdhCustomLabel.DefineProperties(Filer: TFiler);
-begin
- inherited;
- if not WithMeta and (Filer is TWriter) then exit;
- Filer.DefineProperty('HTMLText', SkipValue, nil, false);
 end;
 
 procedure TdhCustomLabel.ReadCaption(Reader: TReader);

@@ -8,7 +8,7 @@ interface
 
 uses
 
-  SysUtils, Classes, TypInfo, {$IFNDEF VER130} types, {schnelles IntersectRect} {$ENDIF}
+  SysUtils, Classes, TypInfo,
 {$IFDEF CLX}
   QControls, QForms, Qt, QGraphics, QDialogs, QExtCtrls, QComCtrls,  QStdCtrls, QTntStdCtrls,
   QImgList, QMenus, QClipbrd, QStyle,

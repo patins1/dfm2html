@@ -20,30 +20,16 @@ uses
 {$IFDEF VER160}
   Borland.Vcl.Design.DesignIntf,Borland.Vcl.Design.DesignEditors,Borland.Vcl.Design.VCLEditors,Borland.Vcl.Design.DesignMenus,RTLConsts, {variants,}types,
 {$ELSE}
-{$IFDEF VER130}
-  dsgnintf, toolintf, Menus, Consts,
-{$ELSE}
-  Consts,PicEdit,DesignIntf,DesignEditors,VCLEditors,DesignMenus,RTLConsts, {variants, }
+  Consts,PicEdit,DesignIntf,DesignEditors,VCLEditors,DesignMenus,RTLConsts,
 {$ENDIF}
 {$ENDIF}
-{$ENDIF}
-  //stredit,
-  (*ToolsAPI,*)dhMultiLine,typinfo, dhLabel,dhMenu,dhDirectHTML,dhPageControl,dhPanel,dhStyleSheet,dhStrUtils;
+  dhMultiLine,typinfo, dhLabel,dhMenu,dhDirectHTML,dhPageControl,dhPanel,dhStyleSheet,dhStrUtils;
 
 const StyleCol=clYellow;
 
 
 type
-
-{$IFDEF VER130}
-  IMenuItem=TMenuItem;
-  IProperty=TPropertyEditor;
-  TDesignerSelections=TDesignerSelectionList;
-{$ENDIF}
-
-
-
-  TCSSFontFamilyProperty = class(TFontNameProperty{$IFNDEF VER130}, ICustomPropertyListDrawing{$ENDIF})
+  TCSSFontFamilyProperty = class(TFontNameProperty, ICustomPropertyListDrawing)
   public
     function GetAttributes: TPropertyAttributes; override;
     procedure GetValues(Proc: TGetStrProc); override;
@@ -51,19 +37,19 @@ type
 
     { ICustomPropertyListDrawing }
     procedure ListMeasureHeight(const Value: AnsiString; ACanvas: TCanvas;
-      var AHeight: Integer); {$IFDEF VER130} override;{$ENDIF}
+      var AHeight: Integer);
     procedure ListMeasureWidth(const Value: AnsiString; ACanvas: TCanvas;
-      var AWidth: Integer); {$IFDEF VER130} override;{$ENDIF}
+      var AWidth: Integer);
     procedure ListDrawValue(const Value: AString; ACanvas: TCanvas;
-      const ARect: TRect; ASelected: Boolean); {$IFDEF VER130} override;{$ENDIF}
+      const ARect: TRect; ASelected: Boolean);
   end;
 
-  TCSSCursorProperty = class(TCursorProperty{$IFNDEF VER130}, ICustomPropertyListDrawing{$ENDIF})
+  TCSSCursorProperty = class(TCursorProperty, ICustomPropertyListDrawing)
     function GetValue: AString; override;
     procedure GetValues(Proc: TGetStrProc); override;
     procedure SetValue(const Value: AString); override;
     procedure ListDrawValue(const Value: AnsiString; ACanvas: TCanvas;
-      const ARect: TRect; ASelected: Boolean); {$IFDEF VER130} override;{$ENDIF}
+      const ARect: TRect; ASelected: Boolean);
   end;
 
   TMyPictureProperty=class(TPictureProperty)
@@ -95,16 +81,15 @@ type
     procedure SetValue(const Value: AString); override;
   end;
 
-  TCSSColorProperty = class(TColorProperty{$IFNDEF VER130}, ICustomPropertyDrawing, ICustomPropertyListDrawing{$ENDIF})
+  TCSSColorProperty = class(TColorProperty, ICustomPropertyDrawing, ICustomPropertyListDrawing)
     function GetValue: AString; override;
     procedure GetValues(Proc: TGetStrProc); override;
     procedure SetValue(const Value: AString); override;
     procedure ListDrawValue(const Value: AString; ACanvas: TCanvas;
-      const ARect: TRect; ASelected: Boolean); {$IFDEF VER130} override;{$ENDIF}
+      const ARect: TRect; ASelected: Boolean);
     procedure PropDrawValue(ACanvas: TCanvas; const ARect: TRect;
-      ASelected: Boolean); {$IFDEF VER130} override;{$ENDIF}
+      ASelected: Boolean);
   end;
-
 
   TdhComponentEditor=class(TDefaultEditor)
     procedure ExecuteVerb(Index: Integer); override;
@@ -115,16 +100,16 @@ type
 
   TdhLabelEditor=class(TdhComponentEditor)
     MyFirst: IProperty;
-    procedure MyCheckEdit({$IFNDEF VER130}const {$ENDIF}Prop: IProperty);
+    procedure MyCheckEdit(const Prop: IProperty);
     procedure Edit; override;
   end;
 
-  TStyleClassProperty=class(TClassProperty{$IFNDEF VER130},ICustomPropertyDrawing{$ENDIF})
+  TStyleClassProperty=class(TClassProperty,ICustomPropertyDrawing)
     function GetValue: AString; override;
     procedure PropDrawName(ACanvas: TCanvas; const ARect: TRect;
-      ASelected: Boolean); {$IFDEF VER130} override;{$ENDIF}
+      ASelected: Boolean);
     procedure PropDrawValue(ACanvas: TCanvas; const ARect: TRect;
-      ASelected: Boolean); {$IFDEF VER130} override;{$ENDIF}
+      ASelected: Boolean);
   end;
 
   TBorderClassProperty=class(TClassProperty)
@@ -145,8 +130,6 @@ type
     procedure GetValues(Proc: TGetStrProc); override;
   end;
 
-
-
   TUseProperty = class(TComponentProperty)
   protected
     sProc: TGetStrProc;
@@ -155,32 +138,8 @@ type
     //procedure SetValue(const Value: AString); override;
     procedure GetValues(Proc: TGetStrProc); override;
   end;
-               
 
-(*  TFormNameEditor = class(TStringProperty)
-  public
-    function GetAttributes: TPropertyAttributes; override;
-    procedure GetValues(Proc: TGetStrProc); override;
-//    procedure SetValue(const Value: AString); override;
-  end;
-  *)
-
-
-  (*
-  TVarEditor = class(TPropertyEditor)
-    function GetAttributes: TPropertyAttributes; override;
-    function GetValue: AString; override;
-    procedure SetValue(const Value: AString); override;
-  end;
-
-  TMarginProperty = class(TVarEditor)
-  public
-    procedure GetValues(Proc: TGetStrProc); override;
-    function GetAttributes: TPropertyAttributes; override;
-  end;
-  *)
-
-  TFontSizeProperty = class({TVarEditor}TStringProperty)
+  TFontSizeProperty = class(TStringProperty)
   public
     procedure GetValues(Proc: TGetStrProc); override;
   end;
@@ -192,26 +151,11 @@ type
     procedure SetValue(const Value: AString); override;
   end;
 
-
   TBackgroundPositionProperty = class(TStringProperty)
   public
     function GetAttributes: TPropertyAttributes; override;
     procedure GetValues(Proc: TGetStrProc); override;
   end;
-
- (*
-  TFormProperty = class(TComponentProperty{$IFNDEF VER130},ICustomPropertyDrawing{$ENDIF})
-  protected
-    procedure PropDrawName(ACanvas: TCanvas; const ARect: TRect;
-      ASelected: Boolean); {$IFDEF VER130} override;{$ENDIF}
-    procedure PropDrawValue(ACanvas: TCanvas; const ARect: TRect;
-      ASelected: Boolean); {$IFDEF VER130} override;{$ENDIF}
-  public
-    procedure SetValue(const Value: AString); override;
-    procedure GetValues(Proc: TGetStrProc); override;
-    function GetValue: AString; override;
-  end;
-     *)
 
   TBasedFormProperty = class(TComponentProperty)
   protected
@@ -221,7 +165,6 @@ type
     //procedure SetValue(const Value: AString); override;
     procedure GetValues(Proc: TGetStrProc); override;
   end;
-
 
   TJvHintProperty = class(TStringProperty)
   public
@@ -247,141 +190,13 @@ begin
  end;
 end;
 
-
-
-
-
-         {
-function ColorToString(Color: TColor): AnsiString;
-begin
-  if Color=colInherit then
-   Result:=scolInherit else
-  if Color=colTransparent then
-   Result:=scolTransparent else
-  if not ColorToIdent(Color, Result) then
-    FmtStr(Result, '%s%.8x', [HexDisplayPrefix, Color]);
-end;
-
-function StringToColor(const S: AnsiString): TColor;
-begin
-  if S=scolInherit then
-   Result:=colInherit else
-  if S=scolTransparent then
-   Result:=colTransparent else
-  if not IdentToColor(S, Longint(Result)) then
-    Result := TColor(StrToInt(S));
-end;
-             }
-                  {
-function ColorToIdent(Color: Longint; var Ident: AnsiString): Boolean;
-begin
-//showmessage('ColorToIdent');
- result:=true;
- if Color=colInherit then
-  Ident:=scolInherit else
- if Color=colTransparent then
-  Ident:=scolTransparent else
- if not Graphics.ColorToIdent(Color,Ident) then
-  Ident:='#'+inttohex(Color and 255,2)+inttohex((Color shr 8) and 255,2)+inttohex((Color shr 16) and 255,2);
-end;
-
-function IdentToColor(const Ident: AnsiString; var Color: Longint): Boolean;
-begin
- Result:=true;
- if Ident=scolInherit then
-  Color:=colInherit else
- if Ident=scolTransparent then
-  Color:=colTransparent else
- if not OurStringToColor(Ident, Longint(Color)) then
-  result:=Graphics.IdentToColor(Ident,Color);
-end;     }
-
-              {
-function ColorToString(Color: TColor): AnsiString;
-begin
-  if not ColorToIdent(Color, Result) then
-    FmtStr(Result, '%s%.8x', [HexDisplayPrefix, Color]);
-end;
-
-function StringToColor(const S: AnsiString): TColor;
-begin
-  if not IdentToColor(S, Longint(Result)) then
-    Result := TColor(StrToInt(S));
-end;
-                }
-
-                (*
-function GetForms:TStringList;
-
-//var i:integer;
-//var intFormCount,intLoopCount:integer;
-var
-  XModuleServices: IOTAModuleServices;
-  XModule: IOTAModule;
-  XModuleInfo: IOTAModuleInfo;
-  XProject: IOTAProject;
-  XResult: HRESULT;
-  XFormMame: AnsiString;
-  i: integer;
-begin
- Result:=TStringList.Create;
-  if Assigned(BorlandIDEServices) then begin
-    XResult:=BorlandIDEServices.QueryInterface(IOTAModuleServices,XModuleServices);
-    if (XResult=S_Ok) and Assigned(XModuleServices) then begin
-      XModule:=XModuleServices.CurrentModule;
-      if Assigned(XModule) and (XModule.OwnerCount>0) then begin
-        XProject:=XModule.Owners[0];
-{      if Assigned(XModule) and (XModule.GetOwnerCount>0) then begin
-        XProject:=XModule.GetOwner(0);
-}
-        if Assigned(XProject) then begin
-          for i:=0 to XProject.GetModuleCount-1 do begin
-            XModuleInfo:=XProject.GetModule(i);
-            if Assigned(XModuleInfo) then begin
-              XFormMame:=XModuleInfo.FormName;
-              if trim(XFormMame)<>''
-                then Result.Add(XModuleInfo.FormName);
-              end;
-            end;
-          XProject:=nil;
-          end;
-        XModule:=nil;
-        end;
-      XModuleServices:=nil;
-      end;
-    end;
-      {
-  intFormCount := ToolServices.GetFormCount;
-  for intLoopCount := 0 to IntFormCount-1 do
-   Result.Add(ToolServices.GetFormName(intLoopCount));
-         }
-
-//  Designer.GetComponentNames(GetTypeData(TypeInfo(TForm)), Proc);
-{ for i:=0 to Screen.FormCount-1 do
-  Result.Add(Screen.Forms[i].Name);}
-
-end;
-*)
-
-{$IFDEF VER130}
-procedure DefaultPropertyListDrawValue(const Value: AnsiString; Canvas: TCanvas;
-  const Rect: TRect; Selected: Boolean);
-begin
-  Canvas.TextRect(Rect, Rect.Left + 1, Rect.Top + 1, Value);
-end;
-{$ENDIF}
-
 procedure TCSSColorProperty.PropDrawValue(ACanvas: TCanvas; const ARect: TRect;
   ASelected: Boolean);
 begin
   if GetVisualValue <> '' then
     ListDrawValue(GetVisualValue, ACanvas, ARect, True{ASelected})
   else
-{$IFDEF VER130}
-   Inherited;
-{$ELSE}
     DefaultPropertyDrawValue(Self, ACanvas, ARect);
-{$ENDIF}
 end;
 
 
@@ -429,7 +244,6 @@ begin
     begin
     Brush.Color := TColor(L);
     // set things up and do the work
-    //Brush.Color := StringToColor(Value);
     Pen.Color := ColorToBorderColor(ColorToRGB(Brush.Color));
     Rectangle(ARect.Left + 1, ARect.Top + 1, Right - 1, ARect.Bottom - 1);
     end else
@@ -584,7 +398,7 @@ begin
 //  RegisterPropertyEditor(TypeInfo(AnsiString), TdhPanel, 'Hint', TMultiLineCaptionProperty);
   RegisterComponentEditor(TdhStyleSheet,TdhComponentEditor);
   RegisterComponentEditor(TdhCustomPanel,TdhComponentEditor);
-  RegisterComponentEditor(TdhLink,{TdhComponentEditor}TdhLabelEditor);
+  RegisterComponentEditor(TdhLink,TdhLabelEditor);
   RegisterComponentEditor(TdhLabel,TdhLabelEditor);
   //RegisterComponentEditor(TdhDirectHTML,TdhLabelEditor);
   RegisterPropertyEditor(TypeInfo(AnsiString), TdhCustomPanel, 'Text', TMultiLineCaptionProperty);
@@ -595,7 +409,6 @@ begin
   RegisterPropertyEditor(TypeInfo(AnsiString), TdhPage, 'MetaKeywords', TJvHintProperty);
 //  RegisterPropertyEditor(TypeInfo(AnsiString), TdhPureHTML, 'InsertText', TMultiLineCaptionProperty);
 //  RegisterPropertyEditor(TypeInfo(AnsiString), TdhCustomPanel, 'Log', TMultiLineCaptionProperty);
-//  RegisterPropertyEditor(TypeInfo(TFormName), TdhCustomPanel, '', TFormNameEditor);
 //  RegisterPropertyEditor(TypeInfo(TForm), TdhPanel, 'AForm', TFormComponentProperty);
   RegisterPropertyEditor(TypeInfo(TStyle), TdhCustomPanel, '', TStyleClassProperty);
 
@@ -624,20 +437,13 @@ begin
 
   RegisterPropertyEditor(TypeInfo(TCSSVerticalAlign), TStyle, 'VerticalAlign', TVerticalAlignProperty);
   RegisterPropertyEditor(TypeInfo(TCSSBackgroundPosition), TStyle, 'BackgroundPosition', TBackgroundPositionProperty);
-       {
-  RegisterPropertyEditor(TypeInfo(TCSSMargin), TStyle, 'Margin', TMarginProperty);
-  RegisterPropertyEditor(TypeInfo(TCSSMargin), TStyle, 'MarginBottom', TMarginProperty);
-  RegisterPropertyEditor(TypeInfo(TCSSMargin), TStyle, 'MarginTop', TMarginProperty);
-  RegisterPropertyEditor(TypeInfo(TCSSMargin), TStyle, 'MarginLeft', TMarginProperty);
-  RegisterPropertyEditor(TypeInfo(TCSSMargin), TStyle, 'MarginRight', TMarginProperty);
-}
+
   RegisterPropertyEditor(TypeInfo(TCSSFontSize), TStyle, 'FontSize', TFontSizeProperty);
   RegisterPropertyEditor(TypeInfo(TCSSFontFamily), TStyle, 'FontFamily', TCSSFontFamilyProperty);
 
 
   RegisterPropertyEditor(TypeInfo(AnsiString), TdhLink, 'Target', TTargetProperty);
   RegisterPropertyEditor(TypeInfo(TControl), TdhCustomPanel, 'Use', TUseProperty);
-  //RegisterPropertyEditor(TypeInfo(TCustomForm), TdhCustomPanel, 'LinkForm', TFormProperty);
 
 //  RegisterPropertyEditor(TypeInfo(TdhTabSheet), TdhCustomPanel, 'LinkTab', TBasedFormProperty);
   RegisterPropertyEditor(TypeInfo(TdhLink), TdhCustomPanel, 'LinkAnchor', TBasedFormProperty);
@@ -662,14 +468,7 @@ end;
 
 function TCSSColorProperty.GetValue: AString;
 begin
-  Result := dhPanel.ColorToString(TColor(GetOrdValue));{
-  Result:=ColorToString(TColor(GetOrdValue));
-  if Result='clNone' then
-   Result:=scolTransparent else
-  if Result='clNone' then
-   Result:=scolTransparent else
-  if (Result<>'') and (Result[1]='$') then
-   Result:='#'+copy(Result,8,2)+copy(Result,6,2)+copy(Result,4,2);}
+  Result := dhPanel.ColorToString(TColor(GetOrdValue));
 end;
 
 
@@ -693,23 +492,11 @@ begin
     SetOrdValue(NewValue)
   else
     inherited SetValue(Value);
-{var L:integer;
-begin
-  if IdentToColor(Value, NewValue) then
- if Value=scolTransparent then
-  SetOrdValue(colTransparent) else
- if OurStringToColor(Value,L) then
-  SetOrdValue(L) else
-  Inherited;  }
 end;
-
-type
-  TCharSet = TSysCharSet;
 
 {$IFDEF WIN32}
  {$D-}
 {$ENDIF}
-
 
 function TMultiLineCaptionProperty.GetAttributes: TPropertyAttributes;
 begin
@@ -831,62 +618,6 @@ begin
   Result:=[paValueList, paRevertable];
 end;
 
-{procedure TMarginProperty.GetValues(Proc: TGetStrProc);
-begin
-// proc('auto');
-end;
-}
-
-
-{function TFontSizeProperty.GetValue: AString;
-begin
-  Value := VarToStrDef(GetVarValue, '(Null)');
-end;
- }
- (*
-function TFormNameEditor.GetAttributes: TPropertyAttributes;
-begin
-  Result:=[paValueList, paRevertable];
-end;
-
-
-procedure TFormNameEditor.GetValues(Proc: TGetStrProc);
-var i:integer;
-    sl:TStringList;
-begin
- sl:=GetForms;
- for i:=0 to sl.Count-1 do
-  Proc(sl[i]);
- sl.Free;
-end;
-*)
-(*
-procedure TFormProperty.GetValues(Proc: TGetStrProc);
-var i:integer;
-    sl:TStringList;
-begin
-{ sl:=GetForms;
- for i:=0 to sl.Count-1 do
-  Proc(sl[i]);
- sl.Free;
-}
- inherited;
-end;*)
-
-{procedure TFormNameEditor.SetValue(const Value: AString);
-var sl:TStringList;
-begin
- sl:=GetForms;
- try
- if (Value<>'') and (sl.IndexOf(Value)=-1) then
-  raise EPropertyError.Create(SInvalidPropertyValue);
- finally
-  sl.Free;
- end;
- Inherited;
-end;
-}
-
 
 procedure TStyleClassProperty.PropDrawName(ACanvas: TCanvas; const ARect: TRect;
       ASelected: Boolean);
@@ -906,21 +637,12 @@ begin
   end;
   end;
 
-{$IFDEF VER130}
-   Inherited;
-{$ELSE}
   DefaultPropertyDrawName(Self, ACanvas, ARect);
-{$ENDIF}
 end;
 
 procedure TdhLabelEditor.Edit;
-{$IFDEF VER130}
-var
-  Components: TDesignerSelections;
-{$ELSE}
 var
   Components: IDesignerSelections;
-{$ENDIF}
 begin
   Components := TDesignerSelections.Create;
   Components.Add(Component);
@@ -995,11 +717,7 @@ begin
     exit;
    end;
   end;   }
-{$IFDEF VER130}
-   Inherited;
-{$ELSE}
    DefaultPropertyDrawValue(Self, ACanvas, ARect);
-{$ENDIF}
 end;
 
 procedure TdhComponentEditor.ExecuteVerb(Index: Integer);
@@ -1164,7 +882,6 @@ end;
            }
 
 
-
 procedure TBasedFormProperty._Proc(const S: AString);
 var c:TComponent;
 begin
@@ -1181,181 +898,9 @@ begin
   Designer.GetComponentNames(GetTypeData(GetPropType),_Proc);
 end;
 
-
-(*
-function TFormProperty.GetValue: AString;
-var pn:TdhLink;
-begin   {
- if (PropCount=1) and (GetComponent(0) is TdhLink) then
- begin
-  pn:=TdhLink(GetComponent(0));
-  pn.CheckS;
-  if pn.LastLinkForm<>'' then
-  begin
-   result:=pn.LastLinkForm;
-   exit;
-  end;
- end; }
- Result := Inherited GetValue;
-end;
-
-
-procedure TFormProperty.PropDrawName(ACanvas: TCanvas; const ARect: TRect; ASelected: Boolean);
-var pn:TdhLink;
-begin
-{ if not RuntimeMode and (PropCount=1) and (GetComponent(0) is TdhLink) then
- begin
-  pn:=TdhLink(GetComponent(0));
-  if pn.LastLinkForm<>'' then
-  begin
-   ACanvas.Font.Color:=clGray;
-  end;
- end;}
-{$IFDEF VER130}
-   Inherited;
-{$ELSE}
-  DefaultPropertyDrawName(Self, ACanvas, ARect);
-{$ENDIF}
-end;
-
-*)
-
-
-(*
-procedure TFormProperty.PropDrawValue(ACanvas: TCanvas; const ARect: TRect;
-      ASelected: Boolean);
-begin
-
-//   showmessage(GetVisualValue+':'+GetValue+' '+booltostr(AllEqual,true));
- if GetComponentReference=nil then
-  ACanvas.Font.Color:=clGray;
- if PropCount=1 then
-  ACanvas.TextRect(ARect, ARect.Left + 1, ARect.Top + 1, GetValue) else
-  ACanvas.TextRect(ARect, ARect.Left + 1, ARect.Top + 1, GetVisualValue);
-*)(*
-{$IFDEF VER130}
-   Inherited;
-{$ELSE}
-   DefaultPropertyDrawValue(Self, ACanvas, ARect);
-{$ENDIF}
-*)
-(*end;
-*)
-
-(*
-procedure TFormProperty.SetValue(const Value: AString);
-var
-  Component: TComponent;
-  s:AnsiString;
-  var f:TForm ;
-begin  //IDesignNotification IDesignerHook
-  if Value = '' then
-    Component := nil
-  else
-  begin
-    {Component := Designer.GetComponent(Value);
-    try
-    //    s:=GetTypeData(GetPropType)^.ClassType.ClassName;
-    s:=Designer.GetComponentName(Component);
-    except
-    s:='nb';
-    end;
-    if Component=nil then
-     s:='nil';
-    if FindForm(Value,f) then
-    begin
-     s:=f.ClassName;
-     Component:=f;
-    end; }
-    Component:=nil;
-    if FindForm(Value,f) then
-    begin
-     Component:=f;
-    end;
-    if not (Component is GetTypeData(GetPropType)^.ClassType) then
-      raise EPropertyError.Create('Invalid property value'{+Component.ClassName});
-
-  end;
-  SetOrdValue(LongInt(Component));
-end;
-*)
-
-
-{function TVarEditor.GetAttributes: TPropertyAttributes;
-begin
-  Result:=[paValueList, paRevertable];
-end;
-
-function TMarginProperty.GetAttributes: TPropertyAttributes;
-begin
-  Result:=[paRevertable];
-end;
-
-function TVarEditor.GetValue: AString;
-
-  function GetVariantStr(const Value: Variant): AnsiString;
-  begin
-    case VarType(Value) of
-      varBoolean:
-        Result := BooleanIdents[Value = True];
-      varCurrency:
-        Result := CurrToStr(Value);
-    else
-      Result := VarToStr(Value);
-    end;
-  end;
-
-var
-  Value: Variant;
-begin
-  Value := GetVarValue;
-  Result := GetVariantStr(Value);
-end;
-
-procedure TVarEditor.SetValue(const Value: AString);
-
-  function Cast(var Value: Variant; NewType: Integer): Boolean;
-  var
-    V2: Variant;
-  begin
-    Result := True;
-    if NewType = varCurrency then
-      Result := Pos(CurrencyString, Value) > 0;
-    if Result then
-    try
-      VarCast(V2, Value, NewType);
-      Result := (NewType = varDate) or (VarToStr(V2) = VarToStr(Value));
-      if Result then Value := V2;
-    except
-      Result := False;
-    end;
-  end;
-
-var s:AnsiString;
-var
-  V: Variant;
-  OldType: Integer;
-begin
- s:=LowerCase(Trim(Value));
- if SubEqualEnd('px',s) then
-  s:=CopyLess(s,2);
-
-
-  OldType := VarType(GetVarValue);
-  V := s;
-  if Value = '' then
-    VarClear(V) else
-  if not Cast(V, OldType) then
-    V := Value;
-  SetVarValue(V);
-end;
-}
-
-
 function TCSSFontFamilyProperty.GetAttributes: TPropertyAttributes;
 begin
   Result:=[paMultiSelect, paValueList, paRevertable];
-//!  Result := [paMultiSelect, paValueList, paSortList, paRevertable];
 end;
 
 procedure TCSSFontFamilyProperty.GetValues(Proc: TGetStrProc);
@@ -1453,8 +998,6 @@ begin
  inherited SetValue(s);
 end;
 
-{ TMyPictureProperty }
-
 procedure TMyPictureProperty.Edit;
 var
   PictureEditor: TPictureEditor;
@@ -1478,9 +1021,6 @@ begin
     Result := srNone else
     Result := '(' + Picture.Graphic.ClassName + ')';
 end;
-
-
-{ TBorderRadiusClassProperty }
 
 function TBorderRadiusClassProperty.GetValue: AString;
 var st:TStyle;
@@ -1511,8 +1051,6 @@ begin
   end;
   result:= inherited GetValue;
 end;
-
-{ TJvHintProperty }
 
 function TJvHintProperty.GetAttributes: TPropertyAttributes;
 begin

@@ -21,7 +21,7 @@ interface
 {.$ENDIF}
 
 uses
-  SysUtils, Classes, TypInfo, {$IFNDEF VER130} types, {schnelles IntersectRect} {$ENDIF}
+  SysUtils, Classes, TypInfo,
   pngimage, {$IFDEF MSWINDOWS}ShellAPI,jpeg,{$ELSE}libc,{$ENDIF}
 {$IFDEF CLX}
   GIFImage,QControls, QForms, Qt, QGraphics, QDialogs, QExtCtrls,
@@ -30,7 +30,7 @@ uses
  {$IFDEF VER210}GIFImg{$ELSE}GIFImage{$ENDIF},Controls, Forms, Windows, Messages, Graphics, Dialogs, ExtCtrls, appevnts{Application.OnIdle:= überschreiben mit eigenem code},
   ComCtrls, CommCtrl, StdCtrls, clipbrd,
 {$ENDIF}
-  math{$IFNDEF VER130}{, variants}{$ENDIF}{$IFDEF DEB},funcutils,jclDebug{$ENDIF},
+  math{$IFDEF DEB},funcutils,jclDebug{$ENDIF},
   GR32,GR32_Transforms,gauss,GR32_Blend,GR32_LowLevel,crc,BinList,MyBitmap32,dhStrUtils;
 
 {$IFDEF VER210}
@@ -2105,14 +2105,6 @@ begin
  result:=GetTopForm(c).Name+'.'+c.Name;
 end;
 
-
-
-{$IFDEF VER130}
-type TFakeReader=class(TReader);
-{$ELSE}
-type TFakeReader=TReader;
-{$ENDIF}
-
 function GoodAngle(Value:integer):integer;
 begin
   result:=Value mod 360;
@@ -2129,7 +2121,7 @@ end;
 
 procedure _SkipValue(Reader: TReader);
 begin
- TFakeReader(Reader).SkipValue;
+ Reader.SkipValue;
 end;
 
 function InUseList(P,LookUp:ICon):boolean;
@@ -13998,7 +13990,7 @@ begin
    ClientHeight:=Bottom-Top;
   end;
 
-  Rect := Types.Rect(0,0,AControl.Width,AControl.Height);//AControl.ClientRect wäre falsch
+  Rect := MakeRect(0,0,AControl.Width,AControl.Height);//AControl.ClientRect would be wrong
   Rect.TopLeft := ScreenToClient(AControl.ClientToScreen(Rect.TopLeft));
   Rect.BottomRight := ScreenToClient(AControl.ClientToScreen(Rect.BottomRight));
   if Rect.Left < 0 then

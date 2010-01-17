@@ -2,8 +2,8 @@ unit uConversion;
 
 interface
 
-uses       
- SysUtils, Classes, TypInfo, {$IFNDEF VER130} types, {schnelles IntersectRect} {$ENDIF}
+uses
+ SysUtils, Classes, TypInfo,
 {$IFDEF CLX}
   QControls, QForms, Qt, QGraphics, QDialogs, QExtCtrls, QComCtrls,  QStdCtrls, QMask, QButtons,
 {$ELSE}
@@ -15,7 +15,7 @@ uses
   htmlrout, RTLConsts,
   dhFile,dhHTMLForm, dhPanel, dhPageControl, dhMultilineCaptionEdit, dhStyleSheet, dhOleContainer,dhHiddenField,
   dhDirectHTML, dhMenu, dhLabel, dhCheckBox, dhRadioButton, dhEdit, dhMemo, dhFileField,dhSelect,
-  UseFastStrings, {GIFImage, JPeg, }//crc,
+  UseFastStrings,
   math,binlist,bintree,dhStrUtils;
 
 const directIE=false;

@@ -3,19 +3,16 @@ unit dhHTMLForm;
 interface
 
 uses
-
   Types,
   {$IFDEF CLX}
   QControls, QGraphics, QStdCtrls, QMask,
   {$ELSE}
   Controls, Windows, Messages, Graphics, StdCtrls, Mask,
   {$ENDIF}
-
   SysUtils, Classes, dhPanel, dhStyleSheet,dhSelect,
   dhMemo,dhEdit,dhCheckBox,dhRadioButton,dhMenu,dhLabel,BasicHTMLElements,dhHiddenField,dhFileField,dhStrUtils;
 
 type
-
   TFormMethod=(fmtGet,fmtPost);
   TdhHTMLForm = class(TdhPanel)
   private
@@ -24,13 +21,12 @@ type
   protected
     FAction:TPathName;
     FMethod:TFormMethod;
-    procedure DefineProperties(Filer: TFiler); override;
   public
-    constructor Create(AOwner: TComponent); override;
-    procedure Loaded; override;
     procedure Submit(link:TdhLink);
     procedure Reset;
     function AllHTMLCode:HypeString; override;
+    class procedure ResetFields(c:TWinControl);
+    class procedure MemorizeFields(c:TWinControl);
   published
     property Action:TPathName read FAction write FAction;
     property Method:TFormMethod read FMethod write FMethod default fmtGet;
@@ -39,24 +35,11 @@ type
 
 procedure Register;
 
-procedure ResetFields(c:TWinControl);
-procedure MemorizeFields(c:TWinControl);
-
 implementation
 
 procedure Register;
 begin
  RegisterComponents('DFM2HTML', [TdhHTMLForm]);
-end;
-
-constructor TdhHTMLForm.Create(AOwner: TComponent);
-begin
- inherited;
-end;
-
-procedure TdhHTMLForm.Loaded;
-begin
- inherited;
 end;
 
 function GoodForm(const s:WideString):WideString;
@@ -69,7 +52,7 @@ begin
   result:=result+s[i];
 end;
 
-procedure ResetFields(c:TWinControl);
+class procedure TdhHTMLForm.ResetFields(c:TWinControl);
 var i:integer;
 begin
  if c is TdhMemo then
@@ -89,7 +72,7 @@ begin
   ResetFields(TWinControl(c.Controls[i]));
 end;
 
-procedure MemorizeFields(c:TWinControl);
+class procedure TdhHTMLForm.MemorizeFields(c:TWinControl);
 var i:integer;
 begin
  if c is TdhMemo then
@@ -107,32 +90,6 @@ begin
  for i:=0 to c.ControlCount-1 do
  if (c.Controls[i] is TWinControl) and not (c.Controls[i] is TdhStyleSheet) then
   MemorizeFields(TWinControl(c.Controls[i]));
-end;
-
-
-procedure TdhHTMLForm.DefineProperties(Filer: TFiler);
-
-function HasFileUpload(p:TWinControl):boolean;
-var i:integer;
-begin
- if p is TdhFileField then
- begin
-  result:=true;
-  exit;
- end;  
- for i:=0 to p.ControlCount-1 do
- if (p.Controls[i] is TWinControl) and HasFileUpload(TWinControl(p.Controls[i])) then
- begin           
-  result:=true;
-  exit;
- end;
- result:=false;
-end;
-
-begin
- inherited;
- if not WithMeta and (Filer is TWriter) then exit;
- Filer.DefineProperty('FileUpload', SkipValue, WriteTrue, HasFileUpload(self));
 end;
 
 procedure TdhHTMLForm.Reset;

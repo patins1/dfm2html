@@ -53,7 +53,7 @@ end;
 
 procedure TMyForm.SkipValue(Reader: TReader);
 begin
- _SkipValue(Reader);
+ Reader.SkipValue;
 end;
 
 end.

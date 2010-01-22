@@ -31,13 +31,10 @@ uses
   ComCtrls, CommCtrl, StdCtrls, clipbrd,
 {$ENDIF}
   math{$IFDEF DEB},funcutils,jclDebug{$ENDIF},
-  GR32,GR32_Transforms,gauss,GR32_Blend,GR32_LowLevel,crc,BinList,MyBitmap32,dhStrUtils;
+  GR32,GR32_Transforms,gauss,GR32_Blend,GR32_LowLevel,BinList,MyBitmap32,dhStrUtils,WideStrUtils;
 
 {$IFDEF VER210}
 const GIFPaintPerHand=false;
-type TFastPaint=^DWORD;
-var FastPaint:TFastPaint;
-    FastPaintWidth:integer;
 type TPatchedGIFRenderer=class(TGIFRenderer)
   public
     procedure Draw(ACanvas: TCanvas; const Rect: TRect); override;
@@ -51,7 +48,6 @@ type TPatchedGifImage=class(TGifImage)
   strict protected
     function CreateRenderer: TCustomGIFRenderer; override;
 end;
-var ForcedGIFRenderer:TGIFRenderer32=nil;
 {$ENDIF}
 
 const EmptyStr='';
@@ -59,16 +55,12 @@ const EmptyStr='';
 var QUOTEINVALIDVALUE_STR:WideString='"%" is not a valid value';
 var REFOBJECT_STR:WideString= '% is referenced by %';
 
-var glSaveBin:function(_crc:DWORD; var RasteringFile,AbsoluteRasteringFile:TPathName; CheckBaseRasteringFile:boolean; BaseRasteringFile:TPathName; var NeedSave:boolean; NeedSameFileName:boolean):boolean;
-var glAfterSaveBin:procedure;
-
 type TASXY=(asNone,asX,asY,asXY);
 
 const asar:array[boolean,boolean] of TASXY=((asNone,asY),(asX,asXY));
 
 const default_borderwidth=1;
 
-var WithMeta:boolean=false;
 {$IFDEF CLX}
 type HWND=QWidgetH;
 {$ENDIF}
@@ -83,14 +75,14 @@ type
 
 const atTop=-maxint;
       atBottom=maxint;
+const InvalidCSSPos=maxint;
+      InvalidEqArea=maxint;
+
 
 
 {$IFDEF CLX}
 const VK_ESCAPE=Key_Escape;
 {$ENDIF}
-
-
-var glUpdateOver:TUpdateOver;
 
 type TEdgeAlign= (ealNone, ealTop, ealBottom, ealLeft, ealRight);
 type TCornerAlign=TEdgeAlign;
@@ -154,9 +146,6 @@ const CSSCursorMap:array[TCSSCursor] of TCursor=
 
 
 type TRasterType=(rsNo,rsFull,rsRounded,rsRGBA,rsSemi,rsStretch,rsSplit,rsFullWithoutText);
-const rasterReason:array[TRasterType] of AString=(EmptyStr,'enabled Effects','rounded corners','RGBA colors','a semi-transparent image','the image type "Stretch"','the image type "Split"','enabled Effects (not applying to textual content)');
-
-const EnableIgnoreCSS=True;
 
 type
   TCSSTextDecoration=(ctdNone,ctdUnderline,ctdOverline,ctdLineThrough,ctdBlink);
@@ -198,13 +187,6 @@ type
   TPhysicalImageFormat=(pifSaveAsGIF,pifSaveAsPNG,pifSaveAsJPEG);
   TEffectsOnText=(etInclude,etExclude,etOnly);
 
-const sStyle:array[TState] of TPropertyName=('Style','StyleOver','StyleDown','StyleOverDown');
-
-
-const InvalidCSSPos=maxint;
-      InvalidEqArea=maxint;
-
-
 type  TPropChoose=(pcAntiAliasing,pcBackgroundAttachment,pcBackgroundColor,pcBackgroundImage,pcBackgroundPosition,pcBackgroundRepeat,pcBorderColor,pcBorderRadius, pcBorderWidth,pcBorderStyle,pcColor,pcContentAfter,pcContentBefore,pcCursor,pcDirection,pcDisplay,pcEffects,pcFontFamily,pcFontSize,pcFontStyle,pcFontVariant,pcFontWeight,pcLetterSpacing,pcLineHeight,pcListStyleType,
                    pcMargin,pcMinHeight,pcMinWidth,pcPadding,pcTextAlign,pcTextDecoration,pcTextIndent,pcTextTransform,pcTransformationsMatrix,pcVerticalAlign,pcVisibility,pcWhiteSpace,pcWordSpacing,pcZIndex,pcOther);
 var pcChanges:array[TPropChoose] of TWhatChanged=({pcAntiAliasing}[{empty}],{pcBackgroundAttachment}[],{pcBackgroundColor}[wcColor],{pcBackgroundImage}[wcSize,wcText],{pcBackgroundPosition}[],{pcBackgroundRepeat}[],{pcBorderColor}[],{pcBorderRadius}[],{pcBorderWidth}[wcSize,wcText2],{pcBorderStyle}[wcSize,wcText2],{pcColor}[wcFont],{pcContentAfter}[wcText,wcSize],{pcContentBefore}[wcText,wcSize],{pcCursor}[wcCursor],{pcDirection}[wcText2,wcSize],{pcDisplay}[wcText,wcSize],{pcEffects}[wcSize],{pcFontFamily}[wcFont,wcText2,wcSize],{pcFontSize}[wcFont,wcText2,wcSize],{pcFontStyle}[wcSize,wcFont,wcText2],{pcFontVariant}[wcText,wcSize],{pcFontWeight}[wcFont,wcText2,wcSize],{pcLetterSpacing}[wcText2,wcSize],{pcLineHeight}[wcText2,wcSize],{pcListStyleType}[],
@@ -212,8 +194,6 @@ var pcChanges:array[TPropChoose] of TWhatChanged=({pcAntiAliasing}[{empty}],{pcB
 
 
 type
-
-
 
   TdhCustomPanel=class;
   TOnStateTransition=procedure(Sender: TdhCustomPanel; OldState:TState) of object;
@@ -426,7 +406,7 @@ type
   TImageState=(isUninitialized,isAnalyzed,isOnePixel,isSemiTransparent,isAnimatedGIF);
 
   TLocationImage=class(TPersistent)
-  private
+  public
     FOnChange:TNotifyEvent;
     FPictureID:TPictureID;
     FPath:TPathName;
@@ -448,7 +428,7 @@ type
     procedure ReleaseResources;
     function CachingIsUseful:Boolean;
     procedure Clear;
-  public                             
+  public
     property PictureID:TPictureID read FPictureID;
     function HasPath: Boolean;
     function GraphicExtension:TPathName;
@@ -535,7 +515,7 @@ type
   IChangeReceiver=TdhCustomPanel;
 
   TStyle = class(TPersistent)
-  private
+  protected
     procedure ReadBool(Reader: TReader);
     procedure SkipValue(Reader: TReader);
     function BaseWH: TPoint;
@@ -543,9 +523,7 @@ type
     function BaseMargin(IgnoreCSS:TRasterType):TRect;
     function BaseBorder(IgnoreCSS:TRasterType):TRect;
     function BaseBorderColors:TColorName;
-    function PrepareBGImage:boolean;
     procedure WriteNewPadding(Writer: TWriter);
-    procedure Write0px(Writer: TWriter);
     procedure WriteNewMargin(Writer: TWriter);
     function BaseRasteringFile:TPathName;
     procedure CopyFrom(s: TStyle; sub:boolean);
@@ -555,7 +533,6 @@ type
     procedure SetDirection(const Value: TCSSDirection);
     procedure SetBefore(const Value: HypeString);
     procedure SetAfter(const Value: HypeString);
-    function IsBorderColorsStored:boolean;
   protected
     OwnState:TState;
     FBorderColors:TColorName;
@@ -601,6 +578,7 @@ type
     FTextIndent:TCSSTextIndent;
     FTransformations:TTransformations;
     FBorderRadius:TCSSBorderRadius;
+    function CalculateBorderColors:TColorName;
     function GetStyleVal(PropChoose:TPropChoose; {var Value:TCSSProp; }const Align:TEdgeAlign):boolean;
     function GetNameByStyle:TPropertyName;
     procedure InitMisc;
@@ -631,20 +609,12 @@ type
     procedure SetTextDecorations(Value:TCSSTextDecorations);
     procedure pcs(WhatChanged:TWhatChanged);
     procedure pc(PropChoose:TPropChoose);
-    procedure WriteContentWidth(Writer: TWriter);
-    procedure WriteContentHeight(Writer: TWriter);
-    procedure WriteRastering(Writer: TWriter);
-    procedure WriteBackgroundImageUrl(Writer: TWriter);
-    procedure WriteBorderColors(Writer: TWriter);
-    procedure WriteTrue(Writer: TWriter);
     procedure DefineProperties(Filer: TFiler); override;
     function UndefFilter(IsRastered:boolean):boolean;
     procedure PictureChange(Sender: TObject);
   public
-    Owner:IChangeReceiver;
+Owner:IChangeReceiver;
     RasteringFile:TPathName;
-    function ProposedBackgroundFilename: TPathName;
-    function PrepareRastering(addheight:integer; const PostFix:TPathName): boolean;
     function IsMarginCleared(Align:TEdgeAlign):boolean;
     function IsBGImageCleared: boolean;
     function IsEdgeCleared(Align: TEdgeAlign): boolean;
@@ -669,6 +639,7 @@ type
     function GetBorderByName(const name:TPropertyName; var r:TCSSBorder):boolean;
     procedure ClearEdge(Align:TEdgeAlign);
     property Borders[Align:TEdgeAlign]:TCSSBorder read GetBorder;
+    property RepresentingState:TState read OwnState;
   published
     property Border: TCSSBorder read FBorders[ealNone] write FBorders[ealNone];
     property BorderTop: TCSSBorder read FBorders[ealTop] write FBorders[ealTop];
@@ -735,26 +706,19 @@ type
 {$ELSE}
   TdhCustomPanel = class(TWinControl,ICon)
 {$ENDIF}
-  private
+  protected
     FNoSiblingsBackground:boolean;
     FIsScrollArea: boolean;
     FDownOverlayOver: boolean;
     Fetching,FIsDlg:boolean;
     procedure CopyFrom(Use:ICon; sub:boolean);
     procedure AddInfo(sl: TStringList);
-    procedure WriteRealAutoSizeXY(Writer: TWriter);
-    procedure WriteCenterLeft(Writer: TWriter);
-    procedure WriteCenterRight(Writer: TWriter);
     function CenterMargins:TPoint;
     procedure CSSToWinControl(WhatChanged:TWhatChanged=[]);
     procedure InvalTop(IncludeChildren,IncludeSelf:boolean);
     procedure InvalBack; overload;
     procedure InvalBack(const R2:TRect); overload;
     function GetAffine(inv: boolean): TMyAffineTransformation;
-    procedure WriteClientBottom(Writer: TWriter);
-    procedure WriteClientLeft(Writer: TWriter);
-    procedure WriteClientRight(Writer: TWriter);
-    procedure WriteClientTop(Writer: TWriter);
     function GetBold: boolean;
     procedure SetBold(const Value: boolean);
     function GetItalic: boolean;
@@ -777,8 +741,6 @@ type
     function GetFontSize: TCSSFontSize;
     procedure SetIsScrollArea(const Value: boolean);
     function IsDefinedOuter(ob: TObject): boolean;
-    procedure WriteMarginHorz(Writer: TWriter);
-    procedure WriteMarginVert(Writer: TWriter);
     procedure SetIsDlg(Value:Boolean);
     function GetSpecialBorderType:TSpecialBorderType;
     procedure LockDefinedCSS(var sStyleArr:TStyleArray);
@@ -790,12 +752,13 @@ type
     function HasBackgroundImage:boolean; overload;
     function HasImage: boolean; overload;
     function HasImage(var PicWidth, PicHeight: integer): boolean; overload;
-    function GetImageDir:TPathName; virtual;
     procedure SetChildOrder(Child: TComponent; Order: Integer); override;
 
   public
     function HasBackgroundImage(var FPicture: TGraphic): boolean; overload;
     function HasBackgroundImage(var FPicture:TLocationImage):boolean; overload;
+    procedure _SetUniqueName(const s:TComponentName);
+    class function _GetUniqueName(_Self:TComponent; const s:TComponentName):TComponentName;
 
   public
     IsVertScrollBarVisible,IsHorzScrollBarVisible:boolean;
@@ -850,10 +813,8 @@ type
     procedure GetStylesFromUse;
     procedure GetStylesFromElement(Use:ICon);
     function HasTransformations(var tt: TTransformations): boolean;
-    procedure DoDefineProperties(Filer: TFiler);
     procedure ReleaseResources;
     procedure CheckDesignState(inv:boolean=true);
-    procedure WriteTrue(Writer: TWriter);
     procedure CSSToFont(Font:TFont=nil);
     function GetCharset:TFontCharset;
     procedure CSSToColor;
@@ -923,7 +884,7 @@ type
     function IsVirtualParentOf(pn:TControl):boolean;
     function GetLev:integer;
 
-  private
+  protected
     FTooltip:HypeString;
     EqArea:TRect;
     FPreciseClick:boolean;
@@ -1164,7 +1125,7 @@ type
 {$ENDIF}
 {$ENDIF}
     procedure SetName(const Value: TComponentName); override;
-    procedure Loaded; override; 
+    procedure Loaded; override;
     function GetTransparent:boolean;
     function SemiTransparent:boolean;
     procedure SetTransparent(Value: boolean);
@@ -1174,7 +1135,6 @@ type
     procedure SetStyle(Index:TState; Value:TStyle);
     procedure AdjustClientRect(var Rect: TRect); override;
     procedure DefineProperties(Filer: TFiler); override;
-    procedure WriteFalse(Writer: TWriter);
 {    procedure CustomAlignPosition(Control: TControl; var NewLeft, NewTop, NewWidth,
       NewHeight: Integer; var AlignRect: TRect; AlignInfo: TAlignInfo); override;
  }
@@ -1355,36 +1315,163 @@ type
     property OnStartDrag;
   end;
 
-type TPreAddCompo=procedure(parent:TdhCustomPanel);
-type TPostAddCompo=procedure(Page:TdhCustomPanel{; Anchor:TControl});
-var glPreAddCompo:TPreAddCompo;
-var glPostAddCompo:TPostAddCompo;
+  IRelativePathProvider=interface ['{F26D0C91-801B-44A4-86CC-0D265F94F7C6}']
+    function GetRelativePath(const Path:TPathName):TPathName;
+    function GetAbsolutePath(const Path:TPathName):TPathName;
+  end;
 
-function GetCursorBack(Cursor:TCursor):TCSSCursor;
-function FindForm(Value:TComponentName; var f:TForm):boolean;
+  WException=class (Exception)
+  public
+    WMessage:WideString;
+    constructor Create(const Value:WideString);
+    property Message: WideString read WMessage write WMessage;
+  end;
 
+  TPreAddCompo=procedure(parent:TdhCustomPanel);
 
-function GetCRCFromBitmap32(b:TMyBitmap32; w,h:integer; ResumeCrc:DWORD=0):DWORD;
+  TPostAddCompo=procedure(Page:TdhCustomPanel);
 
 function IdentToColor(const Ident: TColorName; var Color: Longint): Boolean;
 function ColorToString(Color: TCSSColor): TColorName; overload;
 function ColorToString(Color: Longint): TColorName; overload;
-function CursorToString(Cursor: TCSSCursor): TEnumName;
+function CSSColorToColor(const Color:TCSSColor):TColor;
+function ColorToCSSColor(const Color:TColor):TCSSColor;
+function CSSColorToColor32(const Color:TCSSColor):TColor32;
+function Color32ToCSSColor(const Color:TColor32):TCSSColor;
+function IsOpaqueColor(Color:TCSSColor): boolean;
+function GetPixelCombineNormal(F: TColor32; B: TColor32; M: TColor32=255):TColor32;
+Function ApplyDark(Color:TColor; HowMuch:Byte):TColor;
 
+function CursorToString(Cursor: TCSSCursor): TEnumName;
+function GetCursorBack(Cursor:TCursor):TCSSCursor;
+
+function GetVerticalAlignPixels(const Value:TCSSVerticalAlign; FontAscend,FontHeight,OwnAscend,OwnHeight,OwnLineHeight:integer):integer;
+function GetLetterSpacing(const Value:TCSSLetterSpacing; FontSize:single):Integer;
+function GetWordSpacing(const Value:TCSSWordSpacing; FontSize:single):Integer;
+function GetLineHeight(const Value:TCSSLineHeight; ContentHeight,FontSize:integer):integer;
+function GetTextIndentPixels(Value:TCSSTextIndent; const FontSize:single):integer;
+function GetFontSizePixels(const Value:TCSSFontSize; const ParentFontSize:single):single;
+function GetBackgroundPixels(Value:TCSSBackgroundPosition; const rct:TRect; imgWidth,imgHeight:integer; var res:TPoint):boolean;
+procedure SplitBackgroundPixels(Value:TCSSBackgroundPosition; var v1,v2:TCSSBackgroundPosition);
+function GetHyphens(const s:TEnumName; from:integer=4):TEnumName;
+function GetCSSPropName(PropChoose:TPropChoose):TEnumName;
+function GetCSSPropValue(PropChoose:TPropChoose{; var Value:TCSSProp}):TEnumName;
+function WithPX(const s:AString):AString;
+function GetNearestFont(const s:TFontName):TFontName;
+function GetFontList(const s:TFontName):TStringList;
+function GetBorderRadiusPixels(Value:TCSSRadius; var res:TPoint):boolean;overload;
+function GetBorderRadiusString(al:TEdgeAlign):TEnumName;
+function GetBorderRadiusStringSafari(al:TEdgeAlign):TEnumName;
+function GetBorderRadiusStringMoz(al:TEdgeAlign):TEnumName;
+
+procedure AddRect(var Rect:TRect; a:TRect); //Rect:=Rect+a-b
+function GetAddRect(Rect:TRect; a:TRect):TRect;
+function ShrinkRect(const a,b:TRect):TRect;
+function InflRect(const a,b:TRect):TRect;
+function EqualPoint(const P1, P2: TPoint): Boolean;
+procedure DecPt(var pt:TPoint; const decr:TPoint);
+procedure IncPt(var pt:TPoint; const decr:TPoint);
+function Between(i,_min,_max:integer):integer;
+function AddPoint(const a:TPoint; const b:TPoint):TPoint;
+function rGetOffsetRect(R:TRect; P:TPoint):TRect;
+procedure rOffsetRect(var Rect: TRect; D:TPoint);
+function DoIntersectStrong(R1,R2:TRect):boolean;
+function IsNullRect(const R:TRect):boolean;
+
+function FindForm(Value:TComponentName; var f:TForm):boolean;
+function GetVirtualParent(C:TControl):TControl;
+function GetTopForm(P:TControl):TScrollingWinControl;
+function NameWithForm(c:TControl):TComponentName;
+function GoodWin(c:TControl):TWinControl;
+function GetBaseZOrder(Child:TControl; ChildPos:integer):integer;
+procedure UpdateZIndex(Self:TWinControl);
+function GetChildPosition(Child:TControl):integer;
+function iControlAtPos(c:TWinControl; const pt: TPoint):TControl;
+function MyFindControl(Handle: HWnd): TControl; overload;
+function MyFindControl(c:TControl): TControl; overload;
+function MyFindDragTarget(const Pos: TPoint; AllowDisabled: Boolean): TControl;
+function FinalVisible(c:TControl):boolean;
+function findIRelativePathProvider(C:TControl):IRelativePathProvider;
+
+function GetCBound(c:TControl):TRect;
+function GetScreenClientBound(c:TControl):TRect;
+function GetPhysicalScreenClientBound(c:TControl):TRect;
+function AdjustedClientRect(c:TWinControl):TRect;
+function GetBoundsFor(c:TControl; DeltaLeft,DeltaTop,DeltaWidth,DeltaHeight:integer):TRect;
+function GetLocalClientBound(c:TControl):TRect;
+function _GetNotClipped(Self: TControl; OnlyOneParent:boolean=False):TRect;
+
+function GetAs32(Graphic:TGraphic):TMyBitmap32;
+function GetGraphicExtension(Graphic:TGraphic):TPathName;
+procedure SaveGraphic(g:TGraphic; const FileName: TPathName);
+function GetGifImageFromBitmap32(Transparent:TBitmap32; Opaque:TBitmap32):TGifImage;
+{$IFNDEF CLX}
+function GetPNGObjectPTFromGif(gif:TGIFImage):TPngImage;
+function GetPNGObjectPTFromGifAndBitmap32(Transparent:TMyBitmap32; gif:TGIFImage):TPngImage;
+function GetJPEGImageFromBitmap32(Src:TMyBitmap32):TJPEGImage;
+{$ENDIF}
+function GetPNGObjectFromBitmap32(Src:TBitmap32):TGraphic;
+function GetBitmap32FromPNGObject(png:TPngImage):TMyBitmap32;
+function GetNewGif:TGifImage;
+procedure CloseGif(GIF:TGifImage);
+function AddGIFSubImageFromBitmap32(Transparent:TBitmap32; Opaque:TBitmap32; GIF:TGIFImage; Loop:boolean=false; CopyFrom:TGIFFrame=nil; PrevSubImage:TGIFFrame=nil):TGIFFrame;
+
+procedure DoCalcStrongToWeak(var ALeft,ATop,AWidth,AHeight:integer; const ClientBound:TRect; Anchors:TAnchors; const CSSRight,CSSBottom:integer);
+function GetSimplifiedAnchors(Anchors:TAnchors; ParentAnchors:TAnchors; StopSimplifyingRight,StopSimplifyingBottom:boolean):TAnchors;
+function _RealAnchors(Anchors:TAnchors; img:boolean):TAnchors;
+
+function WFormat(const c:WideString; const Args: array of const):WideString;
+procedure Browse(URL:TPathName; Viewer:TPathName; maxi:boolean; browse:boolean=false);
+procedure GetRepeatings(var BPos:TPoint; var num_across,num_down:integer; W,H:integer; const brct:TRect; RepeatX,RepeatY:boolean);
 procedure FixDialogBorderStyle(Form:TForm);
 procedure FixDialogBorderStyleToTool(Form:TForm);
+function ConsumeMouseWheel(c:TControl; WheelDelta: Integer):boolean;
+procedure InvalTrans(C:TControl); overload;
 
-procedure Browse(URL:TPathName; Viewer:TPathName; maxi:boolean; browse:boolean=false);
+procedure Register;
 
-var _RuntimeMode:boolean=false;
+const NoWH=-1;
+const AutoInherit=[{pcDisplay,}{pcAntiAliasing,}pcDirection,pcTextAlign,{pcWhiteSpace (div, pre true),}pcTextIndent,pcTextTransform,     pcFontSize,pcFontFamily,pcColor,pcFontStyle,pcFontVariant,pcFontWeight,pcLetterSpacing,pcLineHeight,pcListStyleType,pcTextDecoration,   pcCursor,pcVisibility,pcWordSpacing];
+const NextStyle:array[boolean] of TState=(hsOver,hsDown);
+const NextStyleOld:array[boolean,TState] of TState=((hsNormal,hsNormal,hsNormal,hsOver),(hsNormal,hsNormal,hsNormal,hsDown));
+const VertScrollbar=16;
+      HorzScrollbar=16;
+      VertScrollbarButtonHeight=16;
+      HorzScrollbarButtonWidth=16;
+const sStyle:array[TState] of TPropertyName=('Style','StyleOver','StyleDown','StyleOverDown');
+const EnableIgnoreCSS=True;
+
+var
+    glPreAddCompo:TPreAddCompo;
+    glPostAddCompo:TPostAddCompo;
+    glIsDesignerSelected:function (Control:TControl):boolean;
+    _RuntimeMode:boolean=false;
     DesignStyle:TState=hsNormal;
     glPaintOnlyBg:boolean;
-var CancelCheckDesignState:boolean;
+    CancelCheckDesignState:boolean;
     glSelCompo,glEventObj:TControl;
-    glSharing:boolean;
-    OuterControl:TControl;
     Cascaded:TCascaded;
     StoredChecking:boolean=false;
+    PreventAdjustMargin:boolean=false;
+    ValStyle:TPersistent=nil;
+    TopTextDecoration,ParentTextDecoration:TCSSTextDecorations;
+    IsFromParent:boolean;
+    SelfHit:boolean;
+    CancelInvDesigner:boolean;
+    NotifyDebug:procedure(s:AString);
+    UseCSS3:boolean=false;
+    PreventGraphicOnChange:boolean=false;
+    WithMeta:boolean=false;
+    glOnDefineProperties:TNotifyEvent=nil;
+    glUpdateOver:TUpdateOver;
+    ForcedGIFRenderer:TGIFRenderer32=nil;
+
+implementation
+
+const GetItalicFontStyle:array[boolean] of TCSSFontStyle=(cfsNormal,cfsItalic);
+const GetBoldFontWeight:array[boolean] of TCSSFontWeight=(cfwNormal,cfwBold);
+
+const rasterReason:array[TRasterType] of AString=(EmptyStr,'enabled Effects','rounded corners','RGBA colors','a semi-transparent image','the image type "Stretch"','the image type "Split"','enabled Effects (not applying to textual content)');
 
 const
   cl3DFace = clBtnFace;
@@ -1465,197 +1552,6 @@ var
     {,
     (Value: clNone; Name: 'inherit')});
 
-function FinalID(c:TControl):TComponentName;
-function CanAutoSizeX(Self:TControl):boolean;
-
-function GetVerticalAlignPixels(const Value:TCSSVerticalAlign; FontAscend,FontHeight,OwnAscend,OwnHeight,OwnLineHeight:integer):integer;
-function GetLetterSpacing(const Value:TCSSLetterSpacing; FontSize:single):Integer;
-function GetWordSpacing(const Value:TCSSWordSpacing; FontSize:single):Integer;
-function GetLineHeight(const Value:TCSSLineHeight; ContentHeight,FontSize:integer):integer;
-function GetTextIndentPixels(Value:TCSSTextIndent; const FontSize:single):integer;
-function GetFontSizePixels(const Value:TCSSFontSize; const ParentFontSize:single):single;
-function GetBackgroundPixels(Value:TCSSBackgroundPosition; const rct:TRect; imgWidth,imgHeight:integer; var res:TPoint):boolean;
-procedure SplitBackgroundPixels(Value:TCSSBackgroundPosition; var v1,v2:TCSSBackgroundPosition);
-
-function GoodAngle(Value:integer):integer;
-function GetTopForm(P:TControl):TScrollingWinControl;
-function NameWithForm(c:TControl):TComponentName;
-function GetHyphens(const s:TEnumName; from:integer=4):TEnumName;
-procedure AddRect(var Rect:TRect; a:TRect); //Rect:=Rect+a-b
-function GetAddRect(Rect:TRect; a:TRect):TRect;
-function ShrinkRect(const a,b:TRect):TRect;
-function InflRect(const a,b:TRect):TRect;
-function EqualPoint(const P1, P2: TPoint): Boolean;
-
-function GetLocalClientBound(c:TControl):TRect;
-procedure GetRepeatings(var BPos:TPoint; var num_across,num_down:integer; W,H:integer; const brct:TRect; RepeatX,RepeatY:boolean);
-
-function GetNearestFont(const s:TFontName):TFontName;
-function GetFontList(const s:TFontName):TStringList;
-function GetAs32(Graphic:TGraphic):TMyBitmap32;
-
-function GetGraphicExtension(Graphic:TGraphic):TPathName;
-procedure SaveGraphic(g:TGraphic; const FileName: TPathName);
-
-
-procedure _SkipValue(Reader: TReader);
-
-const AutoInherit=[{pcDisplay,}{pcAntiAliasing,}pcDirection,pcTextAlign,{pcWhiteSpace (div, pre true),}pcTextIndent,pcTextTransform,     pcFontSize,pcFontFamily,pcColor,pcFontStyle,pcFontVariant,pcFontWeight,pcLetterSpacing,pcLineHeight,pcListStyleType,pcTextDecoration,   pcCursor,pcVisibility,pcWordSpacing];
-
-
-
-type _TFakeControl=class(TControl)
-  public
-    property Color;
-    property ParentFont;
-end;
-
-
-
-function HasSemiBmp32(res:TMyBitmap32):boolean;
-
-{$IFNDEF CLX}
-function GetJPEGImageFromBitmap32(Src:TMyBitmap32):TJPEGImage; 
-{$ENDIF}
-
-function TFakeControl(c:TControl):_TFakeControl; {$IFDEF VER160}unsafe;{$ENDIF}
-
-
-function GoodWin(c:TControl):TWinControl;
-function GetBaseZOrder(Child:TControl; ChildPos:integer):integer;
-function GetChildPosition(Child:TControl):integer;
-function iControlAtPos(c:TWinControl; const pt: TPoint):TControl;
-function MyFindControl(Handle: HWnd): TControl; overload;
-function MyFindControl(c:TControl): TControl; overload;
-function MyFindDragTarget(const Pos: TPoint; AllowDisabled: Boolean): TControl;
-function FinalVisible(c:TControl):boolean;
-
-procedure InvalTrans(C:TControl); overload;
-function GetCBound(c:TControl):TRect;
-function GetScreenClientBound(c:TControl):TRect;
-function GetPhysicalScreenClientBound(c:TControl):TRect;
-function rGetOffsetRect(R:TRect; P:TPoint):TRect;
-procedure rOffsetRect(var Rect: TRect; D:TPoint);
-function AdjustedClientRect(c:TWinControl):TRect;
-function DoIntersectStrong(R1,R2:TRect):boolean;
-function IsNullRect(const R:TRect):boolean;
-function GetBoundsFor(c:TControl; DeltaLeft,DeltaTop,DeltaWidth,DeltaHeight:integer):TRect;
-
-var glIsDesignerSelected:function (Control:TControl):boolean;
-
-
-function GetVirtualParent(C:TControl):TControl;
-procedure DecPt(var pt:TPoint; const decr:TPoint);
-procedure IncPt(var pt:TPoint; const decr:TPoint);
-
-
-procedure UpdateZIndex(Self:TWinControl);
-function GetGifImageFromBitmap32(Transparent:TBitmap32; Opaque:TBitmap32):TGifImage;
-{$IFNDEF CLX}
-function GetPNGObjectPTFromGif(gif:TGIFImage):TPngImage;
-function GetPNGObjectPTFromGifAndBitmap32(Transparent:TMyBitmap32; gif:TGIFImage):TPngImage;
-{$ENDIF}
-function GetPNGObjectFromBitmap32(Src:TBitmap32):TGraphic;
-function GetBitmap32FromPNGObject(png:TPngImage):TMyBitmap32;
-
-
-
-procedure Register;
-
-
-const GetItalicFontStyle:array[boolean] of TCSSFontStyle=(cfsNormal,cfsItalic);
-const GetBoldFontWeight:array[boolean] of TCSSFontWeight=(cfwNormal,cfwBold);
-
-var ValStyle:TPersistent=nil;
-
-function GetCSSPropName(PropChoose:TPropChoose):TEnumName;
-function GetCSSPropValue(PropChoose:TPropChoose{; var Value:TCSSProp}):TEnumName;
-function WithPX(const s:AString):AString;
-
-function ConsumeMouseWheel(c:TControl; WheelDelta: Integer):boolean;
-
-
-var TopTextDecoration,ParentTextDecoration:TCSSTextDecorations;
-var IsFromParent:boolean;
-    SelfHit:boolean;
-
-var
-    CancelInvDesigner:boolean;
-
-var NotifyDebug:procedure(s:AString);
-const VertScrollbar=16;
-      HorzScrollbar=16;
-      VertScrollbarButtonHeight=16;
-      HorzScrollbarButtonWidth=16;
-
-var UseCSS3:boolean=false;
-function GetBorderRadiusPixels(Value:TCSSRadius; var res:TPoint):boolean;overload;
-function GetBorderRadiusString(al:TEdgeAlign):TEnumName;
-function GetBorderRadiusStringSafari(al:TEdgeAlign):TEnumName;
-function GetBorderRadiusStringMoz(al:TEdgeAlign):TEnumName;
-
-
-function _GetNotClipped(Self: TControl; OnlyOneParent:boolean=False):TRect;
-
-type TObjIdleProc=class
-    procedure DoMouseIdle(Sender: TObject; var Done: Boolean);
-  private
-    procedure ApplicationEvents1Exception(Sender: TObject; E: Exception);
-end;
-
-const sst:array[TState] of TPathName=('_nm','_ov','_dn','_od');
-
-
-
-const NextStyle:array[boolean] of TState=(hsOver,hsDown);
-const NextStyleOld:array[boolean,TState] of TState=((hsNormal,hsNormal,hsNormal,hsOver),(hsNormal,hsNormal,hsNormal,hsDown));
-                               
-var PreventGraphicOnChange:boolean=false;
-
-procedure DoCalcStrongToWeak(var ALeft,ATop,AWidth,AHeight:integer; const ClientBound:TRect; Anchors:TAnchors; const CSSRight,CSSBottom:integer);
-function GetSimplifiedAnchors(Anchors:TAnchors; ParentAnchors:TAnchors; StopSimplifyingRight,StopSimplifyingBottom:boolean):TAnchors;
-function _RealAnchors(Anchors:TAnchors; img:boolean):TAnchors;
-
-function hh(i:integer):AString;
-
-function HasSubTS(p:TdhCustomPanel):boolean;
-
-function GetPixelCombineNormal(F: TColor32; B: TColor32; M: TColor32=255):TColor32;
-Function ApplyDark(Color:TColor; HowMuch:Byte):TColor;
-
-function CSSColorToColor(const Color:TCSSColor):TColor;
-function ColorToCSSColor(const Color:TColor):TCSSColor;
-function CSSColorToColor32(const Color:TCSSColor):TColor32;
-function Color32ToCSSColor(const Color:TColor32):TCSSColor;
-function IsOpaqueColor(Color:TCSSColor): boolean;
-
-function WFormat(const c:WideString; const Args: array of const):WideString;
-
-function WideStringReplace(const S, OldPattern, NewPattern: WideString;
-  Flags: TReplaceFlags): WideString;
-
-function CutCurrentDir(const path:TPathName):TPathName;
-function FinalImageFolder(c:TControl):TPathName;
-
-type WException=class (Exception)
-  public
-    WMessage:WideString;
-    constructor Create(const Value:WideString);
-    property Message: WideString read WMessage write WMessage;
-end;
-
-type IRelativePathProvider=interface ['{F26D0C91-801B-44A4-86CC-0D265F94F7C6}']
-    function GetRelativePath(const Path:TPathName):TPathName;
-    function GetAbsolutePath(const Path:TPathName):TPathName;
-end;
-
-function findIRelativePathProvider(C:TControl):IRelativePathProvider;
-
-implementation
-
-
-var PreventAdjustMargin:boolean=false;
-
 const MyDragThreshold=5;
 var MyDragStartPos:TPoint;
 
@@ -1699,49 +1595,6 @@ var cc:WideString;
 begin
  cc:=WideStringReplace(c,'%','%s',[rfReplaceAll]);
  WideFmtStr(result,cc,Args)
-end;
-
-function WideStringReplace(const S, OldPattern, NewPattern: WideString;
-  Flags: TReplaceFlags): WideString;
-var
-  SearchStr, Patt, NewStr: WideString;
-  Offset: Integer;
-begin
-  if rfIgnoreCase in Flags then
-  begin
-    SearchStr := WideUpperCase(S);
-    Patt := WideUpperCase(OldPattern);
-  end else
-  begin
-    SearchStr := S;
-    Patt := OldPattern;
-  end;
-  NewStr := S;
-  Result := EmptyStr;
-  while SearchStr <> EmptyStr do
-  begin
-    Offset := Pos(Patt, SearchStr);
-    if Offset = 0 then
-    begin
-      Result := Result + NewStr;
-      Break;
-    end;
-    Result := Result + Copy(NewStr, 1, Offset - 1) + NewPattern;
-    NewStr := Copy(NewStr, Offset + Length(OldPattern), MaxInt);
-    if not (rfReplaceAll in Flags) then
-    begin
-      Result := Result + NewStr;
-      Break;
-    end;
-    SearchStr := Copy(SearchStr, Offset + Length(Patt), MaxInt);
-  end;
-end;
-
-function CutCurrentDir(const path:TPathName):TPathName;
-begin
-  result:=path;
-  while Copy(result,1,Length('./'))='./' do
-   result:=Copy(result,Length('./')+1,MaxInt);
 end;
 
 procedure TProxyReader.DefineBinaryProperty(const Name: AString;
@@ -1996,11 +1849,6 @@ begin
 {$ENDIF}
 end;
 
-function hh(i:integer):AString;
-begin
- result:=inttohex(i,8);
-end;
-
 procedure DecPt(var pt:TPoint; const decr:TPoint);
 begin
  dec(pt.X,decr.X);
@@ -2028,7 +1876,6 @@ end;
 
 
 
-const NoWH=-1;
 
 const DefaultNoncomputedFontSize=EmptyStr;//muß EmptyStr sein für SetFontSize
 
@@ -2053,6 +1900,13 @@ public
     property Ctl3D;
 {$ENDIF}    
 end;
+
+type _TFakeControl=class(TControl)
+  public
+    property Color;
+    property ParentFont;
+end;
+
 
 function ColorToColor32(Color:TColor):TColor32;
 begin
@@ -2091,25 +1945,9 @@ type PBoolean=^Boolean;
      glTrans,glATShiftX,glATShiftY:single;
      glRotate:integer;
 
-
-
-
-
-function HasSomething(bt:TMyBitmap32):boolean;
-begin
- result:=not bt.Empty;//{(bt<>nil) and }(bt.Width<>0) and (bt.Height<>0);
-end;
-
 function NameWithForm(c:TControl):TComponentName;
 begin
  result:=GetTopForm(c).Name+'.'+c.Name;
-end;
-
-function GoodAngle(Value:integer):integer;
-begin
-  result:=Value mod 360;
-  if result<0 then
-   result:=result+360;
 end;
 
 function MapMod(Value,m:integer):integer;
@@ -2117,11 +1955,6 @@ begin
   result:=Value mod m;
   if result<0 then
    result:=result+m;
-end;
-
-procedure _SkipValue(Reader: TReader);
-begin
- Reader.SkipValue;
 end;
 
 function InUseList(P,LookUp:ICon):boolean;
@@ -2150,6 +1983,12 @@ end;
 function EqualPoint(const P1, P2: TPoint): Boolean;
 begin
   Result := (P1.X = P2.X) and (P1.Y = P2.Y);
+end;
+
+function AddPoint(const a:TPoint; const b:TPoint):TPoint;
+begin
+ result.X:=a.X+b.X;
+ result.Y:=a.Y+b.Y;
 end;
 
 function NotNull(const P1: TPoint): Boolean;
@@ -2910,27 +2749,13 @@ end;
 
 procedure TStyle.SkipValue(Reader: TReader);
 begin
- _SkipValue(Reader);
+ Reader.SkipValue;
 end;
-               
 
 procedure TdhCustomPanel.SkipValue(Reader: TReader);
 begin
- _SkipValue(Reader);
+ Reader.SkipValue;
 end;
-
-procedure TStyle.WriteContentWidth(Writer: TWriter);
-begin
- Writer.WriteInteger(_ContentWidthHeight.X);
-end;
-
-
-procedure TStyle.WriteContentHeight(Writer: TWriter);
-begin
- Writer.WriteInteger(_ContentWidthHeight.Y);
-end;
-
-
 
 function GetShorter(const Top,Right,Bottom,Left:AString):AString;
 begin
@@ -2953,59 +2778,10 @@ begin
   Writer.WriteString(GetShorter(IntToStr(Top)+'px',IntToStr(Right)+'px',IntToStr(Bottom)+'px',IntToStr(Left)+'px'));
 end;
 
-procedure TStyle.Write0px(Writer: TWriter);
-begin
- Writer.WriteString('0px');
-end;
-
-procedure TdhCustomPanel.WriteClientLeft(Writer: TWriter);
-begin
- Writer.WriteInteger(GetClientAdjusting.Left);
-end;
-
-procedure TdhCustomPanel.WriteMarginVert(Writer: TWriter);
-begin
- with MarginPure do
-  Writer.WriteInteger(Top+Bottom);
-end;
-
-procedure TdhCustomPanel.WriteMarginHorz(Writer: TWriter);
-begin
- with MarginPure do
-  Writer.WriteInteger(Left+Right);
-end;
-
-procedure TdhCustomPanel.WriteClientTop(Writer: TWriter);
-begin
- Writer.WriteInteger(GetClientAdjusting.Top);
-end;
-
-procedure TdhCustomPanel.WriteClientBottom(Writer: TWriter);
-begin
- Writer.WriteInteger(GetClientAdjusting.Bottom);
-end;
-
-procedure TdhCustomPanel.WriteClientRight(Writer: TWriter);
-begin
- Writer.WriteInteger(GetClientAdjusting.Right);
-end;
-
 procedure TStyle.ReadBool(Reader: TReader);
 begin
  Reader.ReadBoolean;
 end;
-
-
-procedure TStyle.WriteTrue(Writer: TWriter);
-begin
- Writer.WriteBoolean(true);
-end;
-
-procedure TdhCustomPanel.WriteTrue(Writer: TWriter);
-begin
- Writer.WriteBoolean(true);
-end;
-
 
 function TdhCustomPanel.BetterNotToDelete(DeletionList:TList; var Reason:WideString):boolean;
 var i:integer;
@@ -3034,71 +2810,6 @@ begin
   result:=false;
 end;
 
-function FinalID(c:TControl):TComponentName;
-var O:TComponent;
-begin
- result:=c.Name;
- O:=c.Owner;
- while (O<>nil) and (O.Owner<>nil) and not (O is TForm) do
- begin
-  result:=O.Name+result;
-  O:=O.Owner;
- end;
-end;
-
-function FinalImageID(c:TControl):TPathName;
-begin
- result:=FinalImageFolder(c)+FinalID(c);
-end;
-
-
-function FinalImageFolder(c:TControl):TPathName;
-begin
- result:='';
- while (c<>nil) do
- begin
-  if c is TdhCustomPanel then
-  begin
-    result:=CutCurrentDir(TdhCustomPanel(c).GetImageDir)+result;
-  end;
-  c:=c.Parent;
- end;
-end;
-
-
-procedure TdhCustomPanel.WriteFalse(Writer: TWriter);
-begin
- Writer.WriteBoolean(false);
-end;
-
-function AllAlignedTop(Self:TWinControl):boolean;
-var i:integer;
-begin
- for i:=0 to Self.ControlCount-1 do
- if (Self.Controls[i].Align<>alTop) and (Self.Controls[i].Owner<>Self) and (Self.Controls[i].Owner=Self.Owner) then
- begin
-  result:=false;
-  exit;
- end;
- result:=Self.ControlCount<>0; //wenn keine Kindelemente, dann nicht autosize!
-end;
-
-function AutoSizeX(Self:TControl):boolean;
-begin
- result:={Self.AutoSize and not}((self is TdhCustomPanel) and {not} (TdhCustomPanel(self).FAutoSize in [asX,asXY]));
- if result and (csAcceptsControls in Self.ControlStyle) and (Self is TWinControl) then
-  result:=AllAlignedTop(TWinControl(Self));
-end;
-
-function AutoSizeY(Self:TControl):boolean;
-begin
- result:={Self.AutoSize and not}((self is TdhCustomPanel) and {not} (TdhCustomPanel(self).FAutoSize in [asY,asXY])) and not (Self.Align in [alLeft,alRight]);
- if result and (csAcceptsControls in Self.ControlStyle) and (Self is TWinControl) then
-  result:=AllAlignedTop(TWinControl(Self));
- if result and (Self is TdhCustomPanel) then
-  result:=TdhCustomPanel(Self).AllowAutoSizeY;
-end;
-
 function TdhCustomPanel.AllowAutoSizeY:boolean;
 begin
  result:=true;
@@ -3122,77 +2833,6 @@ begin
   exit;
  end else
   result:=Controls[i].Align;
-end;
-
-
-function CanAutoSizeX(Self:TControl):boolean;
-begin
- if Self.Align=alBottom then
- begin
-  result:=false;
-  exit;
- end;
- if (Self.Align=alTop) and (Self.Parent is TdhCustomPanel) and TdhCustomPanel(Self.Parent).IsScrollArea then
- begin
-  result:=false;//because a width must be provided when applying the IE selection bugfix
-  exit;
- end;
- if (Self is TdhCustomPanel) and TdhCustomPanel(Self).HorizontalCenter then
- begin
-  result:=false;
-  exit;
- end;
- if AutoSizeX(Self) then
- begin
-  result:=true;
-  exit;
- end;
- if Self.Align<>alTop then
- begin
-  result:=false;
-  exit;
- end;
- if AutoSizeY(Self) then
- begin
-  result:=true;
-  exit;
- end;
- Self:=Self.Parent;  
- if Self is TTabSheet then
-  Self:=Self.Parent;
- while (Self<>nil) do
- begin
-  if Self.Parent=nil then
-  begin
-   result:=true;
-   exit;
-  end;
-  if not AutoSizeX(Self) then
-  begin
-   result:=true;
-   exit;
-  end;
-  if (Self.Align<>alTop) then
-  begin
-   result:=false;
-   exit;
-  end;
-  Self:=Self.Parent;
-  if Self is TTabSheet then
-   Self:=Self.Parent;
- end; 
- result:=true;
-end;
-
-
-function RealAutoSizeXY(Self:TControl):TASXY;
-begin
- result:=asar[CanAutoSizeX(Self),AutoSizeY(Self)];
-end;
-
-procedure TdhCustomPanel.WriteRealAutoSizeXY(Writer: TWriter);
-begin
- Writer.WriteIdent(GetEnumName(TypeInfo(TASXY),Integer(RealAutoSizeXY(Self))));
 end;
 
 function TdhCustomPanel.CenterMargins:TPoint;
@@ -3220,19 +2860,6 @@ begin
   Inc(Result.Y,Right);
  end;
 end;
-
-procedure TdhCustomPanel.WriteCenterLeft(Writer: TWriter);
-begin
- Writer.WriteInteger(CenterMargins.X);
-end;
-
-procedure TdhCustomPanel.WriteCenterRight(Writer: TWriter);
-begin
- Writer.WriteInteger(CenterMargins.Y);
-end;
-
-
-
 
           
 function InStyleSheet(p:TControl):boolean;
@@ -3265,57 +2892,6 @@ begin
    result:=false;
 end;
 
-
-procedure TdhCustomPanel.DoDefineProperties(Filer:TFiler);
-var NeedClientArea,NeedMargin:boolean;
-    HasRastering:TRasterType;
-begin
- if not WithMeta and (Filer is TWriter) then exit;
-{$IFDEF CLX}
- Filer.DefineProperty('DesignSize', SkipValue, nil, False);
-{$ENDIF}
-
- Filer.DefineProperty('TabOrder', SkipValue, nil, false);
-
- if (csLoading in ComponentState) then exit;
-
- HasRastering:=IsRastered(false);
-
- Filer.DefineProperty('TheoreticRastering', nil, WriteTrue, (HasRastering<>rsNo) and (HasRastering=rsFull));
- Filer.DefineProperty('TheoreticRasteringBG', nil, WriteTrue, (HasRastering<>rsNo) and (HasRastering<>rsFull));
- Filer.DefineProperty('img', nil, WriteTrue, GetImageType=bitImage);
-
- if InStylesheet(Self) then exit;
-
- if HorizontalCenter then
- with CenterMargins do
- begin
-  Filer.DefineProperty('CenterLeft', nil, WriteCenterLeft, X<>0);
-  Filer.DefineProperty('CenterRight', nil, WriteCenterRight, Y<>0);
- end;
- Filer.DefineProperty('RealAutoSizeXY', nil, WriteRealAutoSizeXY, RealAutoSizeXY(Self)<>self.FAutoSize);
- Filer.DefineProperty('NeedBlock', nil, WriteTrue, GetVal(pcDisplay) and (Cascaded.Display=cdsInline));
-
- NeedClientArea:=ChildHasAnchor([akLeft, akTop, akRight, akBottom]) and (HasRastering=rsNo);
- if NeedClientArea then
- with GetClientAdjusting do
- begin
-  Filer.DefineProperty('ClientLeft', nil, WriteClientLeft, Left<>0);
-  Filer.DefineProperty('ClientTop', nil, WriteClientTop, Top<>0);
-  Filer.DefineProperty('ClientBottom', nil, WriteClientBottom, Bottom<>0);
-  Filer.DefineProperty('ClientRight', nil, WriteClientRight, Right<>0);
- end;
-
- NeedMargin:= not (csLoading in ComponentState) and (HasRastering=rsNo) and not (IsScrollArea and EdgesInScrolledArea);
- if NeedMargin then
- with self.MarginPure do
- begin
-  Filer.DefineProperty('MarginHorz', nil, WriteMarginHorz, (Left+Right<>0) and (Anchors*[akLeft,akRight]=[akRight]));
-  Filer.DefineProperty('MarginVert', nil, WriteMarginVert, (Top+Bottom<>0) and (Anchors*[akTop,akBottom]=[akBottom]));
- end;
-
- Filer.DefineProperty('VariableSize',SkipValue,WriteTrue, VariableSize );
-end;
 
 procedure TdhCustomPanel.ReleaseResources;
 var State:TState;
@@ -3402,17 +2978,6 @@ begin
  result:=(FImageState=isOnePixel) and (Owner.Owner.GetImageFormat=ifSemiTransparent);
 end;
 
-function HasSemi(Graphic:TGraphic):boolean;
-var res:TMyBitmap32;
-begin
-  res:=GetAs32(Graphic);
-  try
-   result:=HasSemiBmp32(res);
-  finally
-   res.Free;
-  end;
-end;
-
 function HasSemiBmp32(res:TMyBitmap32):boolean;
 var P: PColor32;
     i:integer;
@@ -3432,6 +2997,16 @@ begin
   result:=false;
 end;
 
+function HasSemi(Graphic:TGraphic):boolean;
+var res:TMyBitmap32;
+begin
+  res:=GetAs32(Graphic);
+  try
+   result:=HasSemiBmp32(res);
+  finally
+   res.Free;
+  end;
+end;
 
 function TLocationImage.ImgNeedBeRastered:boolean;
 begin
@@ -3477,20 +3052,6 @@ begin
   end else
    result:=false;
 end;
-
-function HasSubTS(p:TdhCustomPanel):boolean;
-var i:integer;
-begin
- if not p.IsScrollArea then
- for i:=0 to p.ControlCount-1 do
- if (p.Controls[i] is TdhCustomPanel) and (TdhCustomPanel(p.Controls[i]).CanBeTopPC or HasSubTS(TdhCustomPanel(p.Controls[i]))) then
- begin
-  result:=true;
-  exit;
- end;
- result:=false;
-end;
-
 
 procedure TdhCustomPanel.FocusPreferStyle(IsMain,RealChange:boolean);
 begin
@@ -3543,235 +3104,10 @@ begin
 end;
 
 procedure TStyle.DefineProperties(Filer: TFiler);
-var HasRastering:TRasterType;
-
-
-var
-     R,R2:TRect;
-var
-    ReallyRastering,ReallyBGImage:boolean;
-    _NeedNewPadding,_NeedNewMargin:boolean;
-
-
-procedure ShrinkWH(PutAllToPadding:boolean);
-var IE6:TRect;
 begin
-  PreventAdjustMargin:=true;
-  try
-   if Owner.IncludeBorderAndPadding then
-   begin
-    if PutAllToPadding then
-    begin
-     IE6:=Rect(0,0,0,0);
-    end else
-    begin
-     IE6:=Owner.MarginPure;
-    end;
-   end else
-   begin
-    if PutAllToPadding then
-    begin
-     IE6:=Owner.AllEdgesPure;
-    end else
-    begin
-     IE6:=Owner.AllEdgesPure;
-    end;
-   end;
-  finally
-   PreventAdjustMargin:=false;
-  end;
-
-   with IE6 do
-   begin
-   if _ContentWidthHeight.X<>NoWH then
-    Dec( _ContentWidthHeight.X,Left+Right);
-   if _ContentWidthHeight.Y<>NoWH then
-    Dec( _ContentWidthHeight.Y,Top+Bottom);
-   end;
-end;
-
-var ALeft,ATop:integer;
-
-var prev,next:TdhCustomPanel;
-
-procedure GetTopIndexes(pn:TdhCustomPanel; var prev,next:TdhCustomPanel);
-var i:integer;
-    p:TWinControl;
-    c:TControl;
-    best_prev,best_next:integer;
-    pnTop:integer;
-begin
- pnTop:=pn.BoundTop;
- best_prev:=-maxint;
- best_next:=maxint;
- prev:=nil;
- next:=nil;
- p:=pn.Parent;
- for i:=0 to p.ControlCount-1 do
- begin
-  c:=p.Controls[i];
-  if (c.Align=alTop) and (c is TdhCustomPanel) then
-  if (c.Top<pnTop) and (c.Top>best_prev) then
-  begin
-   best_prev:=c.Top;
-   prev:=TdhCustomPanel(c);
-  end else
-  if (c.Top>pnTop) and (c.Top<best_next) then
-  begin
-   best_next:=c.Top;
-   next:=TdhCustomPanel(c);
-  end;
- end;
- if prev is TdhCustomPanel then
- begin
-  if (TdhCustomPanel(prev).BoundNextSibling<>pn) and (TdhCustomPanel(prev).BoundNextSibling<>nil) then
-   prev:=TdhCustomPanel(prev).BoundNextSibling;
- end;
- if pn.BoundNextSibling<>nil then
-  next:=pn.BoundNextSibling;
-
-end;
-
-
-begin
- inherited;
-
-
- if (csLoading in Owner.ComponentState) or not WithMeta and (Filer is TWriter) then exit;
-
-
-
-
-  HasRastering:=Owner.IsRastered(false);
-  glPaintOnlyBg:=not (HasRastering in [rsNo{needed for TdhLabel.FocusPreferStyle},rsFull]);
-
-  Owner.SetPreferStyle(Self,false,true);
-  try
-  Filer.DefineProperty('T1X1', nil, WriteTrue, (HasRastering=rsNo) and BackgroundImage.ImgIsT1X1);
-  if (HasRastering<>rsNo) and InStylesheet(Owner) then
-   HasRastering:=rsNo;
-  _NeedNewPadding:=Owner.NeedPadding(HasRastering);
-  _NeedNewMargin:=(HasRastering<>rsNo) and (Owner.Align=alTop);
-  Filer.DefineProperty('UndefFilter', nil, WriteTrue, UndefFilter(HasRastering<>rsNo));
-
-  Filer.DefineProperty('BorderColors', SkipValue, WriteBorderColors, IsBorderColorsStored);
-
-  if HasRastering<>rsNo then
-  with Owner do
-  begin               
-   InitSelfCBound(_ContentWidthHeight);
-   if _NeedNewPadding then
-   begin
-    ShrinkWH(true);
-   end;
-  end else
-  if Owner.HasImage then
-  with Owner do
-  begin
-   _ContentWidthHeight:=GetWantedSize;
-    ShrinkWH(false);
-  end else
-  begin
-   if {(Self=Owner.FStyle) or }RealAutoSizeXY(Owner)=asXY then
-   begin
-     _ContentWidthHeight:=Point(NoWH,NoWH);
-   end else
-   begin
-    //pn.CalcStrongToWeak(ALeft,ATop,_ContentWidthHeight.X,_ContentWidthHeight.Y);
-     _ContentWidthHeight:=Point(Owner.Width,Owner.Height);
-   end;
-   ShrinkWH(false);
-  end;
-
-  ReallyRastering:=false;
-  if HasRastering<>rsNo then
-  if HasSubTS(Owner) then
-  begin
-   RasteringFile:='x';
-   ReallyRastering:=true;
-  end else
-   ReallyRastering:=Assigned(glSaveBin) and PrepareRastering(0,EmptyStr);
-  Filer.DefineProperty('Rastering', SkipValue, WriteRastering, ReallyRastering and not glPaintOnlyBg);
-  Filer.DefineProperty('BGRastering', SkipValue, WriteRastering, ReallyRastering and glPaintOnlyBg);
-
-  ReallyBGImage:=not ReallyRastering and Assigned(glSaveBin) and PrepareBGImage;
-  Filer.DefineProperty('BackgroundImageUrl', SkipValue, WriteBackgroundImageUrl, ReallyBGImage);
-
-
-  if Owner.IsScrollArea and Owner.EdgesInScrolledArea then
-  begin
-   _ContentWidthHeight:=Point(NoWH,NoWH);
-  end;
-
-
-  IsWidthStored:=(_ContentWidthHeight.X<>NoWH) and (_ContentWidthHeight.X<>BaseWH.X);
-  IsHeightStored:=(_ContentWidthHeight.Y<>NoWH) and (_ContentWidthHeight.Y<>BaseWH.Y);
-
-  Filer.DefineProperty('Width', SkipValue, WriteContentWidth, IsWidthStored);
-  Filer.DefineProperty('Height', SkipValue, WriteContentHeight, IsHeightStored);
-
-  if (Owner.Anchors*[akBottom,akRight]<>[]) then
-  begin
-   _GetWantedSize:=Owner.GetWantedSize;
-   Filer.DefineProperty('NeedRight',SkipValue,WriteTrue, _GetWantedSize.X<>Owner.StyleArr[hsNormal]._GetWantedSize.X);
-   Filer.DefineProperty('NeedBottom',SkipValue,WriteTrue, _GetWantedSize.Y<>Owner.StyleArr[hsNormal]._GetWantedSize.Y);
-  end;
-
-
-  IsNewPaddingStored:=false;
-  if _NeedNewPadding then
-  begin
-   PreventAdjustMargin:=true;
-   try
-    _BasePadding:=Owner.AllEdgesPure;
-   finally
-    PreventAdjustMargin:=false;
-   end;
-   IsNewPaddingStored:=true;
-  end else
-  if (HasRastering<>rsNo) and (OwnState=hsNormal) then
-  begin
-   _BasePadding:=Rect(0,0,0,0);
-   IsNewPaddingStored:=true;
-  end;
-  IsNewPaddingStored:=IsNewPaddingStored and not EqualRect(_BasePadding,BasePadding(HasRastering));
-  Filer.DefineProperty('NewPadding', SkipValue, WriteNewPadding, IsNewPaddingStored);
-
-  IsNewMarginStored:=false;
-  if _NeedNewMargin then
-  begin
-   _BaseMargin:=Rect(0,0,0,0);
-   GetTopIndexes(Owner,prev,next);
-   if prev<>nil then
-   begin
-     _BaseMargin.Top:={min(}-min(prev.MarginWidthNormalStyle(ealBottom),Owner.MarginWidth(ealTop)){,prev.StyleArr[hsNormal]._BaseMargin.Bottom)};
-   end;
-   if next<>nil then
-   begin
-     _BaseMargin.Bottom:={min(}-min(next.MarginWidthNormalStyle(ealTop),Owner.MarginWidth(ealBottom)){,next.StyleArr[hsNormal]._BaseMargin.Top)};
-   end;
-   IsNewMarginStored:=true;
-  end else
-  if ((HasRastering<>rsNo) or IsNewPaddingStored) then
-  begin
-   _BaseMargin:=Rect(0,0,0,0);
-   IsNewMarginStored:=true;
-  end;
-  IsNewMarginStored:=IsNewMarginStored and not EqualRect(_BaseMargin,BaseMargin(HasRastering));
-  Filer.DefineProperty('NewMargin', SkipValue, WriteNewMargin, IsNewMarginStored);
-
-  IsNewBorderStored:=false;
-  if ((HasRastering<>rsNo) or IsNewPaddingStored) then
-  begin
-   _BaseBorder:=Rect(0,0,0,0);
-   IsNewBorderStored:=true;
-  end;           
-  IsNewBorderStored:=IsNewBorderStored and not EqualRect(_BaseBorder,BaseBorder(HasRastering));
-  Filer.DefineProperty('NewBorder', SkipValue, Write0px, IsNewBorderStored);
-  finally
-   Owner.SetPreferStyle(nil,false,true);
-   glPaintOnlyBg:=false;
-  end;
+  inherited;
+  if Assigned(glOnDefineProperties) then
+    glOnDefineProperties(Self);
 end;
 
 function TdhCustomPanel.UsePn:TdhCustomPanel;
@@ -5041,7 +4377,6 @@ end;
 
 procedure TdhCustomPanel.UpdateMouse(MouseEnter:boolean);
 begin
- if OuterControl<>nil then exit;
  if ManageEventBubbling(Self) then
  if not (csDesigning in ComponentState) then
   SetIsOver(MouseEnter);
@@ -7178,7 +6513,7 @@ end;
                        *)
 
 
-function TStyle.IsBorderColorsStored:boolean;
+function TStyle.CalculateBorderColors:TColorName;
 var Align:TEdgeAlign;
     NeedCompact,NeedColor:boolean;
     BorderColors:array[TEdgeAlign] of TColorName;
@@ -7198,7 +6533,7 @@ begin
  FBorderColors:=GetShorter(BorderColors[ealTop],BorderColors[ealRight],BorderColors[ealBottom],BorderColors[ealLeft]);
  if (FBorderColors<>EmptyStr) and (FBorderColors=BaseBorderColors) then
   FBorderColors:=EmptyStr;
- result:=(FBorderColors<>EmptyStr){ and (FBorderColors<>BaseBorderColors)};
+ result:=FBorderColors;
 end;
 
 
@@ -9416,11 +8751,6 @@ begin
  result:=HasImage(PicWidth,PicHeight);
 end;
 
-function TdhCustomPanel.GetImageDir:TPathName;
-begin
- result:='';
-end;
-
 procedure TdhCustomPanel.SetChildOrder(Child: TComponent; Order: Integer);
 begin
   inherited;
@@ -9700,24 +9030,10 @@ begin
        result.Clear($00000000) else
        result.Clear($AA000000);
       if result.Empty then Exit;
-      //Canvas := TCanvas.Create;
-      try
-        //Canvas.Handle := result.Handle;
         Canvas:=result.Canvas;
-        if (gif.Images.Count = 1) or // Only one image
-          (not gif.Animate) then // Don't animate
-        begin
-         FastPaint:=TFastPaint(result.PixelPtr[0,0]);
-         FastPaintWidth:=result.Width;
-        end;
         if (ForcedGIFRenderer<>nil) and (ForcedGIFRenderer.Image=gif) then
          ForcedGIFRenderer.Draw(Canvas, MakeRect(0, 0, result.Width, result.Height)) else
          TGraphicAccess(Source).Draw(Canvas, MakeRect(0, 0, result.Width, result.Height));
-        //result.ResetAlpha;
-      finally
-        //Canvas.Free;
-        FastPaint:=nil;
-      end;
   end;
 
   if not GIFPaintPerHand then
@@ -10259,118 +9575,9 @@ begin
 end;
 
 
-function GetEqArea(bmp:TMyBitmap32;TryX,TryY:integer):TRect;
-var x,y,w,h:integer;
-    bbase,base,compareTo:PColor32;
-    Eq:boolean;
-begin
- result.Left:=Between(TryX,0,bmp.Width-1);
- result.Top:=Between(TryY,0,bmp.Height-1);
- result.Right:=result.Left;
- result.Bottom:=result.Top;
-
- //compare horizontal lines
- bbase:=bmp.PixelPtr[0,result.Top];
- compareTo:=bmp.PixelPtr[0,result.Bottom+1];
- w:=bmp.Width;
- h:=bmp.Height;
-
- for y:=result.Bottom+1 to h-1 do
- begin
-  base:=bbase;
-  Eq:=true;
-  for x:=0 to w-1 do
-  begin
-   if base^<>compareTo^ then
-   begin
-    Eq:=false;
-    break;
-   end;
-   inc(base);
-   inc(compareTo);
-  end;
-  if Eq then
-  begin
-   inc(result.Bottom);
-  end;
- end;
-
- for y:=result.Top-1 downto 0 do
- begin
-  compareTo:=bmp.PixelPtr[0,result.Top-1];
-  base:=bbase;
-  Eq:=true;
-  for x:=0 to w-1 do
-  begin
-   if base^<>compareTo^ then
-   begin
-    Eq:=false;
-    break;
-   end;
-   inc(base);
-   inc(compareTo);
-  end;
-  if Eq then
-  begin
-   dec(result.Top);
-  end;
- end;
-
-
- //compare vertical lines
- bbase:=bmp.PixelPtr[result.Left,0];
- compareTo:=bmp.PixelPtr[result.Right+1,0];
-
- for x:=result.Right+1 to w-1 do
- begin                                
-  compareTo:=bmp.PixelPtr[result.Right+1,0];
-  base:=bbase;
-  Eq:=true;
-  for y:=0 to h-1 do
-  begin
-   if base^<>compareTo^ then
-   begin
-    Eq:=false;
-    break;
-   end;
-   inc(base,w);
-   inc(compareTo,w);
-  end;
-  if Eq then
-  begin
-   inc(result.Right);
-  end;
- end;
-
- for x:=result.Left-1 downto 0 do
- begin
-  compareTo:=bmp.PixelPtr[result.Left-1,0];
-  base:=bbase;
-  Eq:=true;
-  for y:=0 to h-1 do
-  begin
-   if base^<>compareTo^ then
-   begin
-    Eq:=false;
-    break;
-   end;
-   inc(base,w);
-   inc(compareTo,w);
-  end;
-  if Eq then
-  begin
-   dec(result.Left);
-  end;
- end;
-
- inc(result.Right);
- inc(result.Bottom);
-
-end;
-
 procedure TdhCustomPanel.PaintOuterBorder;
 var rct,brct: TRect;
-begin           
+begin
   brct:=self.ScrollAreaWithScrollbars;
   rct:=InflRect(brct,BorderPure);
   SpecialPaintBorder(rct,brct);
@@ -13228,7 +12435,7 @@ var R:TRect;
 begin
  if Parent=nil then exit;
  AssertTop(0);
- if HasSomething(TopGraph) then
+ if not TopGraph.Empty then
  begin
     TopGraph.DrawTo(Canvas.Handle,0,0);
  end;
@@ -13239,7 +12446,7 @@ end;
 procedure TdhCustomPanel.PaintWindow(DC: HDC);
 begin
  AssertTop(0);
- if HasSomething(TopGraph) then
+ if not TopGraph.Empty then
  begin
   with ClientBound do CopyRect2(DC,Rect(0,0,Right-Left,Bottom-Top),TopGraph.Canvas,Rect(Left,Top,Right,Bottom));
  end;
@@ -13692,7 +12899,8 @@ begin
  Filer.DefineProperty('ExplicitTop', SkipValue, nil, false);
  Filer.DefineProperty('ExplicitWidth', SkipValue, nil, false);
  Filer.DefineProperty('ExplicitHeight', SkipValue, nil, false);
- DoDefineProperties(Filer);
+ if Assigned(glOnDefineProperties) then
+   glOnDefineProperties(Self);
 end;
 
 function TdhCustomPanel.GetStyle(Index:TState):TStyle;
@@ -14026,6 +13234,11 @@ begin
  //do nothing
 end;
 
+type TObjIdleProc=class
+    procedure DoMouseIdle(Sender: TObject; var Done: Boolean);
+  private
+    procedure ApplicationEvents1Exception(Sender: TObject; E: Exception);
+end;
 
 var OldOnIdle:TIdleEvent;
     ObjIdleProc:TObjIdleProc;
@@ -14364,7 +13577,7 @@ end;
 
 procedure TTransformations.SkipValue(Reader: TReader);
 begin
- _SkipValue(Reader);
+ Reader.SkipValue;
 end;
 
 procedure TTransformations.SetShiftX(const Value: integer);
@@ -14532,54 +13745,7 @@ type
   TDWORDArray = Array[Word] of DWORD;
   pDWORDArray = ^TDWORDArray;
 
-procedure NormalizeBitTransparence(Transparent:TMyBitmap32; Opaque:TMyBitmap32);
-var P,P2: PColor32;
-    i:integer;
-begin
-   assert((Transparent.Width=Opaque.Width) and (Transparent.Height=Opaque.Height));
-   P:=Transparent.PixelPtr[0,0];
-   P2:=Opaque.PixelPtr[0,0];
-   for i:=0 to Transparent.Width*Transparent.Height-1 do
-   begin
-     if P^ shr 24=$00 then
-      P2^:=$0 else //if fully transparent, then take this one color
-      P2^:=P2^ or $FF000000; //otherwise set full opacity
-     Inc(P);
-     Inc(P2);
-   end;
-end;
-
-function HasSemiTransparence(Transparent:TMyBitmap32):boolean;
-var P: PColor32;
-    i:integer;
-begin
-   P:=Transparent.PixelPtr[0,0];
-   for i:=0 to Transparent.Width*Transparent.Height-1 do
-   begin
-     if ((P^ shr 24)<>$00) and ((P^ shr 24)<>$FF) then
-     begin
-       result:=true;
-       exit;
-     end;
-     Inc(P);
-   end;
-   result:=false;
-end;
-
-procedure NormalizeSemiTransparence(Transparent:TMyBitmap32);
-var P: PColor32;
-    i:integer;
-begin
-   P:=Transparent.PixelPtr[0,0];
-   for i:=0 to Transparent.Width*Transparent.Height-1 do
-   begin
-     if P^ shr 24=$00 then
-      P^:=$0; //if fully transparent, then take this one color
-     Inc(P);
-   end;
-end;
-
-function ReduceColorsWithTransparentColorReservation(GIFImage:TGIFImage; Bitmap:TBitmap):TBitmap;   
+function ReduceColorsWithTransparentColorReservation(GIFImage:TGIFImage; Bitmap:TBitmap):TBitmap;
 var Bitmaps:TList;
     Palette:hPalette;
 begin
@@ -14736,7 +13902,7 @@ begin
   result.DitherMode := dmFloydSteinberg;
 end;
 
-        
+
 procedure CloseGif(GIF:TGifImage);
 begin
  GIF.Optimize([{ooCrop, Opera cannot deal with cropping: treats as if cropped edges not exist}ooMerge,ooCleanup,ooColorMap],GIF.ColorReduction,GIF.DitherMode,GIF.ReductionBits);
@@ -14864,147 +14030,11 @@ begin
  end;
 end;
 
-
-
-procedure TStyle.WriteRastering(Writer: TWriter);
-begin
- Writer.WriteString(RasteringFile);
-end;
-
-procedure TStyle.WriteBackgroundImageUrl(Writer: TWriter);
-begin
- Writer.WriteString(BGImageFile);
-end;
-
-
-procedure TStyle.WriteBorderColors(Writer: TWriter);
-begin
- Writer.WriteString(FBorderColors);
-end;
-
-function GetCRCFromBitmap32(b:TMyBitmap32; w,h:integer; ResumeCrc:DWORD=0):DWORD; overload;
-var y:integer;
-begin
-   result:=w;
-   result:=calc_crc32(sizeof(result),@result,ResumeCrc);
-   if w<>0 then
-   for y:=0 to h-1 do
-    result:=calc_crc32(w*sizeof(TColor32),PByte(b.PixelPtr[0,y]),result);
-end;
-
-function GetCRCFromBitmap32(Transparent,Opaque:TMyBitmap32; w,h:integer; ResumeCrc:DWORD=0):DWORD; overload;
-var Opaque2:TMyBitmap32;
-begin
- Opaque2:=TMyBitmap32.Create;
- Opaque2.Assign(Opaque);
- NormalizeBitTransparence(Transparent,Opaque2);
- result:=GetCRCFromBitmap32(Opaque2,w,h,ResumeCrc);
- Opaque2.Free;
-end;
-
-
-procedure TrimBottom(b:TMyBitmap32; var w,h:integer);
-var x,y:integer;
-begin
-   for y:=h-1 downto 0 do
-   for x:=0 to w-1 do
-   if b.Pixel[x,y] and $FF000000<>0 then
-   begin
-    h:=y+1;
-    exit;
-   end;
-end;
-
-procedure TrimRight(b:TMyBitmap32; var w,h:integer);
-var x,y:integer;
-begin
-   for x:=w-1 downto 0 do
-   for y:=0 to h-1 do
-   if b.Pixel[x,y] and $FF000000<>0 then
-   begin
-    w:=x+1;
-    exit;
-   end;
-end;
-
-procedure TrimRightBottom(b:TMyBitmap32; var w,h:integer);
-begin
-   w:=b.Width;
-   h:=b.Height;
-   TrimBottom(b,w,h);
-   TrimRight(b,w,h);
-   if (w=0) or (h=0) then
-   begin
-    w:=0;
-    h:=0;
-   end;
-end;
-
-
-
-function SaveImg(Opaque:TMyBitmap32; Transparent:TMyBitmap32; var RasteringFile:TPathName; CheckBaseRasteringFile:boolean; BaseRasteringFile:TPathName; PhysicalImageFormat:TPhysicalImageFormat; AllowCutWhiteSpace:boolean):boolean;
-var gif_pre:TMyBitmap32;
-    i,w,h:integer;
-    _crc:DWORD;
-    graph:TGraphic;
-    NeedSave:boolean;
-    AbsoluteRasteringFile:TPathName;
-const ext:array[TPhysicalImageFormat] of AnsiString=('.gif','.png','.jpg');
-begin
-
-   RasteringFile:=RasteringFile+ext[PhysicalImageFormat];
-   _crc:=calc_crc32_String(ext[PhysicalImageFormat]);
-   if AllowCutWhiteSpace then
-   begin
-    TrimRightBottom(Transparent,w,h);
-   end else
-   begin
-    w:=Transparent.Width;
-    h:=Transparent.Height;
-   end;
-   if PhysicalImageFormat=pifSaveAsGIF then
-   begin
-    _crc:=GetCRCFromBitmap32(Transparent,Opaque,w,h,_crc);
-   end else
-   if PhysicalImageFormat=pifSaveAsPNG then
-   begin
-    _crc:=GetCRCFromBitmap32(Transparent,w,h,_crc);
-   end else
-   begin
-    _crc:=GetCRCFromBitmap32(Opaque,w,h,_crc);
-   end;
-
-   result:=glSaveBin(_crc,RasteringFile,AbsoluteRasteringFile,CheckBaseRasteringFile,BaseRasteringFile,NeedSave,false);
-
-  if NeedSave then
-  try
-  if PhysicalImageFormat=pifSaveAsGIF then
-   graph:=GetGifImageFromBitmap32(Transparent,Opaque) else
-  if PhysicalImageFormat=pifSaveAsJPEG then
-   graph:=GetJPEGImageFromBitmap32(Opaque) else
-   graph:=GetPNGObjectFromBitmap32(Transparent);
-   graph.SaveToFile(AbsoluteRasteringFile);
-   graph.Free;
-   glAfterSaveBin;
-  except
-  end;
-end;
-
 function _if(q:boolean; a,b:integer):integer;
 begin
  if q then
   result:=a else
   result:=b;
-end;
-
-function getPhysicalImageFormat(requested:TPhysicalImageFormat;TransparentTop:TMyBitmap32):TPhysicalImageFormat;
-begin
-  result:=requested;
-  if (result=pifSaveAsJPEG) and ((TransparentTop.Height<=1) or (TransparentTop.Width<=1)) then
-  begin
-   //jpeg implementation requires at least height>1 when saving
-   result:=pifSaveAsGIF;
-  end;
 end;
 
 constructor TGIFRenderer32.Create(AImage: TGIFImage);
@@ -15038,229 +14068,6 @@ begin
   Result.Animate := Animate;
 end;
 
-
-var EqSizing:array[0..2,0..2] of TRect;
-const EqNaming:array[0..2,0..2] of TPathName=(('_topleft','_topmiddle','_topright'),('_middleleft','_middle','_middleright'),('_bottomleft','_bottommiddle','_bottomright'));
-
-function TStyle.PrepareRastering(addheight:integer; const PostFix:TPathName):boolean;
-var pn:TdhCustomPanel;
-    graph:TGraphic;
-    OldFrameIndex,NewFrameIndex,w,h:integer;
-    _crc:DWORD;
-    NeedSave:boolean;
-    bt:TBitmap;
-
-    fingif,Sub:TGIFImage;
-    GCE:TGIFGraphicControlExtension;
-    PrevSubImage:TGIFFrame;
-    pnTopGraph,pnTransparentTop,GraphToSplit:TMyBitmap32;
-    EqArea:TRect;
-    EqX,EqY:integer;
-    EqSize:TRect;
-    RasteringFiles:TPathName;
-    AbsoluteRasteringFile:TPathName;
-    NeedOpaqueImage:boolean;
-    PhysicalImageFormat:TPhysicalImageFormat;
-    ImageFormat:TImageFormat;
-begin
-
-  pn:=Owner;
-
-  {TODO: SpeedupGeneration if RasteringFile<>'' then
-  begin
-    result:=true;
-    exit;
-  end;}
-
-  ImageFormat:=pn.GetImageFormat;
-  if (ImageFormat in [ifInherit,ifSimple]) and Owner.HasBackgroundImage(graph) and (graph is TGIFImage) and (TGIFImage(graph).Images.Count>=2) then
-  begin
-   _crc:=calc_crc32_String('.gif');
-   Assert(not PreventGraphicOnChange);
-   PreventGraphicOnChange:=true;
-   try
-    ForcedGIFRenderer:=TGIFRenderer32.Create(TGIFImage(graph));
-    try
-    repeat
-     pn.TopIsValid:=false;
-     pn.TransparentTopIsValid:=false;
-     pn.AssertTop(addheight,true);
-     if HasSomething(pn.TransparentTop) then
-     begin
-      TrimRightBottom(pn.TransparentTop,w,h);
-      _crc:=GetCRCFromBitmap32(pn.TransparentTop,pn.TopGraph,w,h,_crc);
-     end;
-     OldFrameIndex:=TGIFImage(graph).Images.IndexOf(ForcedGIFRenderer.Frame);
-     ForcedGIFRenderer.NextFrame;
-     NewFrameIndex:=TGIFImage(graph).Images.IndexOf(ForcedGIFRenderer.Frame);
-    until not (NewFrameIndex>OldFrameIndex);
-    finally
-      FreeAndNil(ForcedGIFRenderer);
-    end;
-
-    RasteringFile:=FinalImageID(pn)+PostFix+sst[OwnState];
-    RasteringFile:=RasteringFile+'.gif';
-    result:=glSaveBin(_crc,RasteringFile,AbsoluteRasteringFile,OwnState<>hsNormal,BaseRasteringFile,NeedSave,false);
-
-    if NeedSave then
-    begin
-     ForcedGIFRenderer:=TGIFRenderer32.Create(TGIFImage(graph));
-     fingif:=GetNewGif;
-     try
-     try
-      PrevSubImage:=nil;
-      repeat
-       pn.TopIsValid:=false;
-       pn.TransparentTopIsValid:=false;
-       pn.AssertTop(addheight,true);
-       if HasSomething(pn.TransparentTop) then
-       begin
-        PrevSubImage:=AddGIFSubImageFromBitmap32(pn.TransparentTop,pn.TopGraph,fingif,true,ForcedGIFRenderer.Frame,PrevSubImage);
-       end;
-       OldFrameIndex:=TGIFImage(graph).Images.IndexOf(ForcedGIFRenderer.Frame);
-       ForcedGIFRenderer.NextFrame;
-       NewFrameIndex:=TGIFImage(graph).Images.IndexOf(ForcedGIFRenderer.Frame);
-      until not (NewFrameIndex>OldFrameIndex);
-      CloseGif(fingif);
-      //fingif.OptimizeColorMap; //saves many kb at many frames
-      fingif.SaveToFile(AbsoluteRasteringFile);
-      glAfterSaveBin;
-     except
-     end;
-     finally
-      FreeAndNil(ForcedGIFRenderer);
-      fingif.Free;
-     end;
-    end;
-   finally
-    PreventGraphicOnChange:=false;
-   end;
-  end else
-  begin
-   NeedOpaqueImage:=ImageFormat<>ifSemiTransparent;
-   pn.AssertTop(addheight,true,NeedOpaqueImage);
-   if NeedOpaqueImage and (ImageFormat=ifInherit) and HasSemiTransparence(pn.TransparentTop) then
-     NeedOpaqueImage:=false;
-   if not NeedOpaqueImage then
-    PhysicalImageFormat:=pifSaveAsPNG else
-   if ImageFormat=ifJPEG then
-    PhysicalImageFormat:=pifSaveAsJPEG else
-    PhysicalImageFormat:=pifSaveAsGIF;
-   if HasSomething(pn.TransparentTop) then
-   begin
-    if (csAcceptsControls in pn.ControlStyle) and (pn.EqArea.Left<>InvalidEqArea) then
-    begin
-     if NeedOpaqueImage then pn.TopGraph.ResetAlpha else NormalizeSemiTransparence(pn.TransparentTop); //normalize so that GetEqArea works correctly
-     if NeedOpaqueImage then GraphToSplit:=pn.TopGraph else GraphToSplit:=pn.TransparentTop;
-     EqArea:=GetEqArea(GraphToSplit,(pn.EqArea.Left+pn.EqArea.Right) div 2,(pn.EqArea.Top+pn.EqArea.Bottom) div 2);
-     if not pn.VariableHeightSize and (EqArea.Bottom-EqArea.Top<pn.TransparentTop.Height div _if(pn.VariableHeightSize,4,2)) then
-     begin
-      //EqArea.Top:=pn.EqArea.Top; //then, alternative pages with different heights can reuse the same top three graphics
-      EqArea.Top:=0;
-      EqArea.Bottom:=EqArea.Top;
-     end;
-     if not pn.VariableWidthSize and (EqArea.Right-EqArea.Left<pn.TransparentTop.Width div _if(pn.VariableWidthSize,4,2)) then
-     begin
-      EqArea.Left:=0;
-      EqArea.Right:=EqArea.Left;
-     end;
-     if (EqArea.Right<>EqArea.Left) and (EqArea.Bottom<>EqArea.Top) or (pn.VariableWidthSize and (EqArea.Right<>EqArea.Left)) or (pn.VariableHeightSize and (EqArea.Top<>EqArea.Bottom)){ or (EqArea.Right-EqArea.Left>=1) and (EqArea.Bottom-EqArea.Top>=1) and pn.VariableSize} then
-     begin
-      if NeedOpaqueImage then
-       pnTopGraph:=TMyBitmap32.Create else
-       pnTopGraph:=nil;
-      pnTransparentTop:=TMyBitmap32.Create;
-      pnTransparentTop.DrawMode:=pn.TransparentTop.DrawMode;
-      pn.TransparentTop.DrawMode:=dmOpaque;
-      try
-
-       EqSizing[0,0]:=Rect(0,0,EqArea.Left,EqArea.Top);
-       EqSizing[1,0]:=Rect(EqArea.Left,0,Min(EqArea.Left+1,EqArea.Right),EqArea.Top);
-       EqSizing[2,0]:=Rect(EqArea.Right,0,pn.TransparentTop.Width,EqArea.Top);
-
-       EqSizing[0,1]:=Rect(0,EqArea.Top,EqArea.Left,Min(EqArea.Top+1,EqArea.Bottom));
-       EqSizing[1,1]:=Rect(EqArea.Left,EqArea.Top,Min(EqArea.Left+1,EqArea.Right),Min(EqArea.Top+1,EqArea.Bottom));
-       EqSizing[2,1]:=Rect(EqArea.Right,EqArea.Top,pn.TransparentTop.Width,Min(EqArea.Top+1,EqArea.Bottom));
-
-       EqSizing[0,2]:=Rect(0,EqArea.Bottom,EqArea.Left,pn.TransparentTop.Height);
-       EqSizing[1,2]:=Rect(EqArea.Left,EqArea.Bottom,Min(EqArea.Left+1,EqArea.Right),pn.TransparentTop.Height);
-       EqSizing[2,2]:=Rect(EqArea.Right,EqArea.Bottom,pn.TransparentTop.Width,pn.TransparentTop.Height);
-
-       RasteringFiles:=EmptyStr;
-       for EqY:=0 to 2 do
-       for EqX:=0 to 2 do
-       begin
-        EqSize:=EqSizing[EqX,EqY];
-        if (EqSize.Left=EqSize.Right) or (EqSize.Bottom=EqSize.Top) then
-        begin
-         RasteringFile:=EmptyStr;
-        end else
-        begin
-         if NeedOpaqueImage then pnTopGraph.SetSize(EqSize.Right-EqSize.Left,EqSize.Bottom-EqSize.Top);
-         pnTransparentTop.SetSize(EqSize.Right-EqSize.Left,EqSize.Bottom-EqSize.Top);
-         if NeedOpaqueImage then pn.TopGraph.DrawTo(pnTopGraph,pnTopGraph.BoundsRect,EqSize);
-         pn.TransparentTop.DrawTo(pnTransparentTop,pnTransparentTop.BoundsRect,EqSize);
-         RasteringFile:=FinalImageID(pn)+PostFix+EqNaming[EqY,EqX];
-         result:=SaveImg(pnTopGraph,pnTransparentTop,RasteringFile,OwnState<>hsNormal,BaseRasteringFile,getPhysicalImageFormat(PhysicalImageFormat,pnTransparentTop),false);
-        end;
-        RasteringFiles:=RasteringFiles+RasteringFile+'|';
-       end;
-       RasteringFiles:=RasteringFiles+inttostr(EqArea.Top)+'|'+inttostr(pn.TransparentTop.Height-EqArea.Bottom)+'|'+inttostr(EqArea.Left)+'|'+inttostr(pn.TransparentTop.Width-EqArea.Right)+'|';
-       RasteringFile:=RasteringFiles;
-      finally
-       pn.TransparentTop.DrawMode:=pnTransparentTop.DrawMode;
-       if NeedOpaqueImage then pnTopGraph.Free;
-       pnTransparentTop.Free;
-      end;
-      result:=true;
-      exit;
-     end;
-    end;
-    RasteringFile:=FinalImageID(pn)+PostFix+sst[OwnState];
-    result:=SaveImg(pn.TopGraph,pn.TransparentTop,RasteringFile,OwnState<>hsNormal,BaseRasteringFile,getPhysicalImageFormat(PhysicalImageFormat,pn.TransparentTop),true);
-   end else
-    result:=false;
-  end;
-end;
-
-
-function TStyle.ProposedBackgroundFilename: TPathName;
-begin
- result:=FinalImageID(Owner)+sst[OwnState]+FBackgroundImage.GraphicExtension
-end;
-
-function TStyle.PrepareBGImage:boolean;
-var NeedSave:boolean;
-    AbsoluteBGImageFile:TPathName;
-    StringContent:TFileContents;
-begin
- result:=false;
- if not IsPictureStored then
-  exit;
-
- StringContent:='';
- if FBackgroundImage.HasPath then
- try
-  StringContent:=StringFromFile(FBackgroundImage.GetAbsolutePath);
- except
-  // let the dummy image be load next
- end;
- if StringContent='' then
-  StringContent:=AsString(FBackgroundImage.RequestGraphic);
-
- BGImageFile:=ProposedBackgroundFilename;
- result:=glSaveBin(calc_crc32_String(StringContent),BGImageFile,AbsoluteBGImageFile,false,EmptyStr,NeedSave,false);
-
- if NeedSave then
- try
-  StringToFile(AbsoluteBGImageFile,StringContent);
-  glAfterSaveBin;
- except
- end;
- result:=true;
-end;
-
-
 procedure TStyle.ClearEdge(Align: TEdgeAlign);
 begin
  FBorders[Align].Clear;
@@ -15268,7 +14075,6 @@ begin
  FPaddings[Align]:=vsrInherit;
  pcs(pcChanges[pcMargin]+pcChanges[pcPadding]+(pcChanges[pcBorderWidth]+pcChanges[pcBorderColor]+pcChanges[pcBorderStyle]));
 end;
-
 
 procedure TBlurEffect.Changed;
 begin
@@ -15801,6 +14607,38 @@ begin
   end;
 end;
 
+procedure TdhCustomPanel._SetUniqueName(const s:TComponentName);
+begin
+ Self.Name:=_GetUniqueName(Self,s);
+end;
+
+class function TdhCustomPanel._GetUniqueName(_Self:TComponent; const s:TComponentName):TComponentName;
+var i:integer;
+    NewName:TComponentName;
+    sl:TStringList;
+begin
+ sl:=TStringList.Create;
+ try
+ with _Self.Owner do
+ for i:=0 to ComponentCount-1 do
+ if Components[i] is TdhCustomPanel then
+  TdhCustomPanel(Components[i]).TryBrokenReferences(sl);
+ sl.CaseSensitive:=false;
+ with _Self do
+ For i := 1 to High(Integer) do
+ begin
+  NewName:=s+inttostr(i);
+  if (Owner.FindComponent(NewName)=nil) and (sl.IndexOf(NewName)=-1) then
+  begin
+   result:=NewName;
+   exit;
+  end;
+ end;
+ finally
+  sl.Free;
+ end;
+end;
+
 procedure TdhCustomPanel.OnMouseTimer(Sender:TObject);
 begin
  MouseTimer.Interval:=30;
@@ -15853,7 +14691,7 @@ end;
 function TdhCustomPanel.GetOpaquePainting(var TopGraph:TMyBitmap32):boolean;
 begin
   AssertTop(0);
-  result:=HasSomething(Self.TopGraph);
+  result:=not Self.TopGraph.Empty;
   if result then
    TopGraph:=Self.TopGraph;
 end;
@@ -15874,7 +14712,7 @@ begin
   RC:=ScrollArea;
   ExcludeClipRect(DC, RC.Left, RC.Top, RC.Right, RC.Bottom);
   AssertTop(0);
-  if HasSomething(TopGraph) then
+  if not TopGraph.Empty then
   begin
    CopyRect2(DC,TotalRect,TopGraph.Canvas,TotalRect);
   end;
@@ -16108,8 +14946,6 @@ initialization
  RegisterIntegerConsts(TypeInfo(TCSSColor), dhPanel.IdentToColor, dhPanel.ColorToIdent);
 
  glBinList:=TBinList.Create;
-
- hh(0);
 
 // inttohex((GetBlendMemEx(i+{ $FF0000FF}$80008A84,$FFFFFFFF,{255 shl 16 div 255 + 1}255)),8);
 

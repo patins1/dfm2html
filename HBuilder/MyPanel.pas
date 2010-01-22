@@ -41,7 +41,7 @@ end;
 
 procedure TMyPanel.SkipValue(Reader: TReader);
 begin
- _SkipValue(Reader);
+ Reader.SkipValue;
 end;
 
 end.

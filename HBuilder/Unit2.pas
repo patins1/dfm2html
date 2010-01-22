@@ -26,7 +26,7 @@ uses
   dhOleContainer,dhFile,dhHiddenField,GR32,
   MyPageControl, MyFontDialog,
   MySpinEdit, MyTrackBar, hCheckBox, dhSelect, UseFastStrings, DKLang,UIConstants,uWException,
-  MyGroupBox, MyPanel, MyForm, Contnrs, dhStrUtils;
+  MyGroupBox, MyPanel, MyForm, Contnrs, dhStrUtils, uMetaWriter;
 
 
 var PropsAlign:TAlign=alBottom;
@@ -2492,6 +2492,13 @@ var i:integer;
 begin
   for i:=0 to Selection.Count-1 do
    (TObject(Selection[i]) as TdhCustomPanel).ActStyle.Effects.Assign(tt);
+end;
+
+function GoodAngle(Value:integer):integer;
+begin
+  result:=Value mod 360;
+  if result<0 then
+   result:=result+360;
 end;
 
 procedure TTabs.spAngleChange(Sender: TObject);
@@ -5468,7 +5475,7 @@ begin
   if fsize=-1 then
    sfsize:='(File not found)' else
    sfsize:=GetByteStr(fsize);
-  fileInfo:=DKFormat(FILEINFO_FILENAME)+': '+f.ProposedFileName+'<br>'+DKFormat(FILEINFO_FILESIZE)+':'+sfsize+'<br>'+'<STYLE_FileInfo>'+DKFormat(FILEINFO_HOWTOLINK,f.Name)+'</STYLE_FileInfo>';
+  fileInfo:=DKFormat(FILEINFO_FILENAME)+': '+ProposedFileName(f)+'<br>'+DKFormat(FILEINFO_FILESIZE)+':'+sfsize+'<br>'+'<STYLE_FileInfo>'+DKFormat(FILEINFO_HOWTOLINK,f.Name)+'</STYLE_FileInfo>';
   if f.Usage=fuMusic then
    fileInfo:=fileInfo+'<br>'+'<STYLE_FileInfo>'+DKFormat(FILEINFO_MUSIC)+'</STYLE_FileInfo>';
   if f.Usage=fuFlash then

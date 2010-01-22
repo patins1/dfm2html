@@ -12,7 +12,7 @@ uses
 {$ENDIF}
   SysUtils, Classes, htmlrout, MySpinEdit,
   dhPageControl, dhPanel, dhLabel, FuncUtils,UseFastStrings, MyPageControl, DKLang, MyForm,
-  MyGroupBox, dhStrUtils;
+  MyGroupBox, dhStrUtils, uMetaWriter;
 
 type
   TPageWizard = class(TMyForm)

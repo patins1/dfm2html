@@ -9,22 +9,19 @@ type
   TdhCustomEdit = class(TdhCustomLabel)
   private
     FReadOnly: boolean;
-    procedure WriteCols(Writer: TWriter);
-    procedure WriteRows(Writer: TWriter);
   protected
     FInitialValue:HypeString;
+    procedure NearestMod(m,frame:integer; var n,times:integer);
     procedure Loaded; override;
     procedure GetModifiedText(var pre,s,suc:HypeString); override;
     function NeedPadding(HasRastering:TRasterType): boolean; override;
     function EffectsAllowed: boolean; override;
-    procedure DefineProperties(Filer: TFiler); override;
     procedure GetAutoRect(AllowModifyX,AllowModifyY:boolean; var NewWidth, NewHeight: Integer); override;
     procedure GetRowsCols(AllowModifyX,AllowModifyY:boolean; var NewWidth, NewHeight, Rows, Cols: Integer); virtual;
   public
     property ReadOnly:boolean read FReadOnly write FReadOnly default False;
     procedure Reset;
     procedure Memorize;
-    constructor Create(AOwner: TComponent); override;
   published
     property HTMLAttributes;
     property ImageType;
@@ -33,30 +30,17 @@ type
     property Use;
     property Transparent;
     property AutoSizeXY;
-
     property Color;
     property Font;
     property Visible;
-
-    {not interpreted:}
     property Align;
     property Anchors;
     property Constraints;
     property Enabled;
     property ParentShowHint;
     property ShowHint;
-                             
     property Right;
     property Bottom;
-    
-    {property OnCanResize;
-    property OnDockDrop;
-    property OnDockOver;
-    property OnEndDock;
-    property OnGetSiteInfo;
-    property OnStartDock;
-    property OnUnDock; }
-
     property OnClick;
     property OnConstrainedResize;
     property OnContextPopup;
@@ -91,25 +75,20 @@ type
 
 procedure Register;
 
-procedure NearestMod(m,frame:integer; var n,times:integer);
-
 implementation
 
 uses BasicHTMLElements;
-
 
 procedure Register;
 begin
   RegisterComponents('DFM2HTML', [TdhEdit]);
 end;
 
-
-procedure NearestMod(m,frame:integer; var n,times:integer);
+procedure TdhCustomEdit.NearestMod(m,frame:integer; var n,times:integer);
 begin
  times:=((n-frame)+m div 2) div m;
  n:=times * m + frame;
 end;
-
 
 procedure TdhCustomEdit.GetRowsCols(AllowModifyX,AllowModifyY:boolean; var NewWidth, NewHeight, Rows,Cols: Integer);
 var Rect:TRect;
@@ -138,7 +117,6 @@ begin
   IsScrollArea:=true;
   FVertScrollbarNeverVisible:=true;
   FHorzScrollbarNeverVisible:=true;
-  //EdgesInScrolledArea:=true;
   Width:=121;
 end;
 
@@ -167,12 +145,10 @@ begin
   Memorize;
 end;
 
-
 procedure TdhCustomEdit.Memorize;
 begin                  
   FInitialValue:=FHTMLText;
 end;
-
 
 function TdhCustomEdit.NeedPadding(HasRastering:TRasterType): boolean;
 begin
@@ -189,39 +165,6 @@ begin
   inherited SetHTMLText(HypeSubstText(#13,' ',Value));
 end;
 
-procedure TdhCustomEdit.DefineProperties(Filer: TFiler);
-var NewWidth, NewHeight, Rows, Cols:integer;
-begin
- inherited;                         
- if (csLoading in ComponentState) or not WithMeta and (Filer is TWriter) then exit;
-
- NewWidth:=Width;
- NewHeight:=Height;
- GetRowsCols(CanAutoX, CanAutoY, NewWidth, NewHeight, Rows, Cols);
- Filer.DefineProperty('Rows', nil, WriteRows, Rows>0);
- Filer.DefineProperty('Columns', nil, WriteCols, Cols>0);
-end;
-
-procedure TdhCustomEdit.WriteRows(Writer: TWriter);
-var NewWidth, NewHeight, Rows, Cols:integer;
-begin
- NewWidth:=Width;
- NewHeight:=Height;
- GetRowsCols(false, true, NewWidth, NewHeight, Rows, Cols);
- Writer.WriteInteger(Rows);
-end;
-
-
-procedure TdhCustomEdit.WriteCols(Writer: TWriter);
-var NewWidth, NewHeight, Rows, Cols:integer;
-begin
- NewWidth:=Width;
- NewHeight:=Height;
- GetRowsCols(true, false, NewWidth, NewHeight, Rows, Cols);
- Writer.WriteInteger(Cols);
-end;
-
-
 procedure TdhEdit.SetPassword(const Value: boolean);
 begin
  if FPassword<>Value then
@@ -236,11 +179,6 @@ begin
  if FPassword then
   s:=StringOfChar('*',length(s));
  inherited;
-end;
-
-constructor TdhCustomEdit.Create(AOwner: TComponent);
-begin
-  inherited;
 end;
 
 end.

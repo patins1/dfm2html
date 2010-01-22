@@ -9,7 +9,7 @@ uses
   {$ELSE}
   Controls, Windows, Messages, Graphics, Forms, StdCtrls, Dialogs, Menus, Buttons, UnicodeCtrls,
   {$ENDIF}
-  Classes, dhStyleSheet, dhPanel, dhLabel, dhPageControl, dhMenu, UseFastStrings, Math, DKLang, MyForm,dhStrUtils;
+  Classes, dhStyleSheet, dhPanel, dhLabel, dhPageControl, dhMenu, UseFastStrings, Math, DKLang, MyForm,dhStrUtils,uMetaWriter;
 
 type
   TdhMultilineCaptionEdit2 = class(TMyForm)

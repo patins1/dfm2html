@@ -96,9 +96,6 @@ type
     FUseIFrame:boolean;
     procedure SetTitle(const Value: HypeString);
     procedure SetPageControl(APageControl: TdhPageControl);
-    procedure WriteInitialProps(Writer: TWriter);
-    procedure WriteHeightDiff(Writer: TWriter);
-    procedure WriteTrue(Writer: TWriter);
     function GetPageIndex: Integer;
     procedure SetPageIndex(const Value: Integer);
     procedure VisibleChanged; override;
@@ -119,7 +116,6 @@ type
     function SomethingIsScrolled: boolean; override;
     function HeightDiff: integer; override;
     procedure WriteState(Writer: TWriter); override;
-    procedure DefineProperties(Filer: TFiler); override;
 {$IFDEF CLX}
     procedure SetParent(const AParent: TWidgetControl); override;
 {$ELSE}
@@ -134,15 +130,12 @@ type
     function AlwaysVisibleVisibility:boolean; override;
     procedure SetUseIFrame(value:boolean);
     function CanBeTopPC:boolean; override;
-    function GetImageDir:TPathName; override;
   public
     function AllHTMLCode:HypeString; override;
-    function Find(FTP,FileName:TPathName; CRC:DWORD; AddOrReplace:boolean):boolean;
     function DynamicNavigation:boolean;
     procedure Activate(ActivatedBy: TControl);
     function IsAlternativePage:boolean;
     function IsHTMLBody:boolean;
-    function IsPHP:boolean;
     function IsInternalHTMLBody:boolean;
     function IsScrollable:boolean;
     function IsInternalScrollable:boolean;
@@ -190,33 +183,16 @@ type
     property Scrolling:TScrolling read FScrolling write SetScrolling default scAuto;
   end;
 
-procedure _SetUniqueName(Self:TComponent; const s:TComponentName);
-function _GetUniqueName(Self:TComponent; const s:TComponentName):TComponentName;
-
-var Uploaded:array of record FTP:TPathName; Files:array of record FileName:TPathName; CRC:DWORD; end; end;
-
 type TGridDisplay=(gdNone,gdDotted,gdChecked,gdLined);
-
-var
-     FGridX, FGridY: integer;
-     FGridDisplay:TGridDisplay;
-     FViewer:TPathName;
-     FSmartPublishing:boolean;
-     FPassiveFTP:boolean;
-     FAutoUpdate:boolean;
+var  GridDefinition: record
+     GridX, GridY: integer;
+     GridDisplay:TGridDisplay;
+end;
 
 procedure Register;
 
 function GoodLocalPath(const path:TPathName):TPathName;
 function GoodPathDelimiters(const path:TPathName):TPathName;
-function GoodWebPathDelimiters(const path:TPathName):TPathName;
-function AdjustAlternativeRastering(const TopPC,ID:TComponentName; var Rastering:TPathName):boolean;
-function IsAbsolute(s:TPathName):boolean;
-
-function FinalGeneratedJavaScriptFile(const GeneratedJavaScriptFile:TPathName):TPathName;
-function FinalGeneratedImageFolder(const GeneratedImageFolder:TPathName):TPathName;
-function FinalGeneratedCSSFile(const GeneratedCSSFile:TPathName):TPathName;
-
 
 implementation
 
@@ -230,38 +206,6 @@ var StopAdjusting:boolean;
 procedure Register;
 begin
   RegisterComponents('DFM2HTML', [TdhPageControl,TdhPage]);
-end;
-
-procedure _SetUniqueName(Self:TComponent; const s:TComponentName);
-begin
- Self.Name:=_GetUniqueName(Self,s);
-end;
-
-function _GetUniqueName(Self:TComponent; const s:TComponentName):TComponentName;
-var i:integer;
-    NewName:TComponentName;
-    sl:TStringList;
-begin
- sl:=TStringList.Create;
- try
- with Self.Owner do
- for i:=0 to ComponentCount-1 do
- if Components[i] is TdhCustomPanel then
-  TdhCustomPanel(Components[i]).TryBrokenReferences(sl);
- sl.CaseSensitive:=false;
- with Self do
- For i := 1 to High(Integer) do
- begin
-  NewName:=s+inttostr(i);
-  if (Owner.FindComponent(NewName)=nil) and (sl.IndexOf(NewName)=-1) then
-  begin
-   result:=NewName;
-   exit;
-  end;
- end;
- finally
-  sl.Free;
- end;
 end;
 
 function TdhPage.HeightDiff:integer;
@@ -507,11 +451,12 @@ begin
 
  if not(csDesigning in ComponentState) then exit;
 
- case FGridDisplay of
+ with GridDefinition do
+ case GridDisplay of
  gdChecked:
  begin
- W:=FGridX*2;
- H:=FGridY*2;
+ W:=GridX*2;
+ H:=GridY*2;
  BPos:=ref_brct.TopLeft;
  GetRepeatings(BPos,num_across,num_down,W,H,brct,true,true);
  for x := 0 to num_across-1 do
@@ -519,12 +464,12 @@ begin
  begin
   x_coord := (x * W) + BPos.X;
   y_coord := (y * H) + BPos.Y;
-  R:=Bounds(x_coord+FGridX,y_coord,FGridX,FGridY);
+  R:=Bounds(x_coord+GridX,y_coord,GridX,GridY);
   R2:=R;
   IntersectRect(R,R,brct);
   if not IsRectEmpty(R) then
    Src.FillRect(R.Left,r.Top,r.Right,R.Bottom,clSilver);
-  R:=Bounds(x_coord,y_coord+FGridY,FGridX,FGridY);
+  R:=Bounds(x_coord,y_coord+GridY,GridX,GridY);
   R2:=R;
   IntersectRect(R,R,brct);
   if not IsRectEmpty(R) then
@@ -533,8 +478,8 @@ begin
  end;
  gdDotted:
  begin
- W:=FGridX;
- H:=FGridY;
+ W:=GridX;
+ H:=GridY;
  BPos:=ref_brct.TopLeft;
  GetRepeatings(BPos,num_across,num_down,W,H,brct,true,true);
  for x := 0 to num_across-1 do
@@ -548,8 +493,8 @@ begin
  end;
  gdLined:
  begin
- W:=FGridX;
- H:=FGridY;
+ W:=GridX;
+ H:=GridY;
  BPos:=ref_brct.TopLeft;
  GetRepeatings(BPos,num_across,num_down,W,H,brct,true,true);
  y:=0;
@@ -579,7 +524,7 @@ begin
     if PageControl<>nil then Parent := PageControl.Parent;
     UpdateScrolling;
   end;
-end;   
+end;
 
 procedure TdhPageControl.GetAutoRect(AllowModifyX,AllowModifyY:boolean; var NewWidth, NewHeight: Integer); 
 begin
@@ -663,7 +608,6 @@ begin
   Result := nil;
 end;
 
-
 function TdhPage.DynamicNavigation:boolean;
 begin
  if FPageControl=nil then
@@ -671,137 +615,9 @@ begin
   result:=FPageControl.DynamicNavigation;
 end;
 
-function TdhPage.Find(FTP,FileName:TPathName; CRC:DWORD; AddOrReplace:boolean):boolean;
-var
-    i,w:integer;
-begin
- result:=false;
- for i:=Low(Uploaded) to High(Uploaded) do
- if Uploaded[i].FTP=FTP then
- with Uploaded[i] do
- begin
-  for w:=Low(Files) to High(Files) do
-  if Files[w].FileName=FileName then
-  begin
-   if AddOrReplace then
-   begin
-    Files[w].CRC:=CRC;
-    exit;
-   end else
-   begin
-    result:=Files[w].CRC=CRC;
-    exit;
-   end;
-  end;
-  if AddOrReplace then
-  begin
-   if FileName='*' then
-   begin
-    SetLength(Files,0);
-   end else
-   begin
-    SetLength(Files,Length(Files)+1);
-    Files[High(Files)].FileName:=FileName;
-    Files[High(Files)].CRC:=CRC;
-   end;
-   exit;
-  end else
-  begin
-   result:=(FileName='*') and (Length(Files)<>0);
-   exit;
-  end;
- end;
- if AddOrReplace then
- begin
-  SetLength(Uploaded,Length(Uploaded)+1);
-  Uploaded[High(Uploaded)].FTP:=FTP;
-  with Uploaded[High(Uploaded)] do
-  begin
-   SetLength(Files,Length(Files)+1);
-   Files[High(Files)].FileName:=FileName;
-   Files[High(Files)].CRC:=CRC;
-  end;
-  exit;
- end else
- begin
-  result:=false;
-  exit;
- end;
-end;
-
-
-var AlternativeRasterings:array of record TopPC,ID:TComponentName;Rastering:TPathName; end;
-
-function AdjustAlternativeRastering(const TopPC,ID:TComponentName; var Rastering:TPathName):boolean;
-var i:integer;
-begin
- result:=true;
- for i := 0 to High(AlternativeRasterings) do
- if (AlternativeRasterings[i].TopPC=TopPC) and (AlternativeRasterings[i].ID=ID) then
- begin
-  Rastering:=AlternativeRasterings[i].Rastering;
-  exit;
- end;
-end;
-
-function IsAbsolute(s:TPathName):boolean;
-begin
- if (length(s)>=2) and (s[2]=DriveDelim) then
- begin
-  result:=true;
-  exit;
- end;
- if (length(s)>=1) and (s[1]=PathDelim) then
- begin
-  result:=true;
-  exit;
- end;
- result:=false;
-end;
-
 function TdhPage.CanBeTopPC:boolean;
 begin
  result:=(PageControl<>nil) and not PageControl.DynamicNavigation{ and not PageControl.FixedHeight};
-end;
-
-procedure TdhPage.DefineProperties(Filer: TFiler);
-var P:TControl;
-    pn:TdhCustomPanel;
-    addheight:integer;
-begin
-  inherited;
-  if (csLoading in ComponentState) or not WithMeta and (Filer is TWriter) then exit;
-  Filer.DefineProperty('HeightDiff', SkipValue, WriteHeightDiff, (FPageControl<>nil) and (FPageControl.ActivePage<>nil));
-  Filer.DefineProperty('Selected', SkipValue, WriteTrue, IsLaterSelected);
-  Filer.DefineProperty('InitialProps', SkipValue, WriteInitialProps, IsHTMLBody);
-  Filer.DefineProperty('IsPHP', SkipValue, WriteTrue, IsPHP);
-
-  if IsTopScrollable then
-  begin
-    SetLength(AlternativeRasterings,0);
-  end;             
-  if not CanBeTopPC or HasSubTS(Self) then exit;
-  addheight:=0;
-  P:=Self;
-  while P is TdhCustomPanel do
-  begin
-   pn:=TdhCustomPanel(P);
-   if pn.IsScrollArea then break;
-   if pn<>self then
-   if (pn.IsRastered(false)<>rsNo) and Assigned(glSaveBin) and pn.Style.PrepareRastering(addheight,'_'+Self.Name) then
-   begin
-    SetLength(AlternativeRasterings,Length(AlternativeRasterings)+1);
-    with AlternativeRasterings[High(AlternativeRasterings)] do
-    begin
-     TopPC:=Self.Name;
-     ID:=pn.Name;
-     Rastering:=pn.Style.RasteringFile;
-    end;
-   end;
-   inc(addheight,pn.HeightDiff);
-   p:=p.Parent;
-  end;
-
 end;
 
 function TdhPage.IsLaterSelected:boolean;
@@ -814,32 +630,6 @@ begin
  if SelectFirstTab and (PageCount<>0) then
   result:=FPages[0] else
   result:=ActivePage;
-end;
-
-procedure TdhPage.WriteInitialProps(Writer: TWriter);
-var PropChoose:TPropChoose;
-    s:AString;
-begin
- s:='';
- for PropChoose:=low(TPropChoose) to high(TPropChoose) do
- begin
- if not (GetVal(PropChoose) and not IsInUseList(ValStyle)) then
-  continue;
- if not((PropChoose=pcColor) and (Cascaded.Color=clBlackCSS) or (PropChoose=pcBackgroundColor) or (PropChoose=pcFontStyle) and (Cascaded.FontStyle=cfsNormal) or (PropChoose=pcFontWeight) and (Cascaded.FontWeight=cfwNormal)) then
-  s:=s+GetCSSPropName(PropChoose)+':'+GetCSSPropValue(PropChoose)+';';
- end;
- Writer.WriteString(s);
-end;
-
-
-procedure TdhPage.WriteHeightDiff(Writer: TWriter);
-begin
- Writer.WriteInteger(Height-PageControl.ActivePage.Height);
-end;
-
-procedure TdhPage.WriteTrue(Writer: TWriter);
-begin
- Writer.WriteBoolean(true);
 end;
 
 function TdhPageControl.GetPage(Index: Integer): TdhPage;
@@ -870,7 +660,7 @@ begin
  if Assigned(glPreAddCompo) then
   glPreAddCompo(Self);
  result:=TdhPage.Create(Owner);
- result.Name:=_GetUniqueName(result,'Page');
+ result._SetUniqueName('Page');
  result.Visible:=false;
  result.PageControl:=self;
  if ActivePage<>nil then
@@ -961,7 +751,6 @@ begin
    UpdateScrolling;
 end;
 
-
 procedure TdhPage.EnableMouseWheelData;
 var F:TCustomForm;
 begin
@@ -1019,7 +808,6 @@ begin
    Pages[i].SetBounds(Left,Top,Width,Height) else
 end;
 
-
 procedure TdhPageControl.CalcVariableSizes(FirstPass:boolean);
 var p:TControl;
 begin
@@ -1035,7 +823,7 @@ end;
 
 function TdhPage.SomethingIsScrolled: boolean;
 begin
- result:=(Inherited SomethingIsScrolled) or (csDesigning in ComponentState) and (FGridDisplay<>gdNone);
+ result:=(Inherited SomethingIsScrolled) or (csDesigning in ComponentState) and (GridDefinition.GridDisplay<>gdNone);
 end;
 
 function TdhPage.NeedPadding(HasRastering:TRasterType):boolean;
@@ -1047,7 +835,6 @@ function TdhPage.IsAlternativePage: boolean;
 begin
  result:=not IsScrollable;
 end;
-
 
 function TdhPage.IsScrollable: boolean;
 begin
@@ -1067,61 +854,6 @@ end;
 function TdhPage.IsHTMLBody: boolean;
 begin
  result:=IsScrollable and (FUseIFrame or IsTopScrollable);
-end;
-
-
-function TdhPage.IsPHP:boolean;
-
-function FindPHP(p:TWinControl; ori:TdhPage):boolean;
-var i:integer;
-    page:TdhPage;
-begin
- if p is TdhCustomPanel then
- begin
-  if ContainsPHPTag(TdhCustomPanel(p).AllHTMLCode) then
-  begin
-   result:=true;
-   exit;
-  end;
- end;
- for i:=0 to p.ControlCount-1 do
- begin
- if (p.Controls[i] is TdhPage) then
- begin
-  page:=TdhPage(p.Controls[i]);
-  if page.IsHTMLBody then
-    continue;
-  if page.PageControl<>nil then
-  if page.PageControl.IsVirtualParentOf(ori) then
-  begin
-   if not page.IsVirtualParentOf(ori) then
-    continue;
-  end else
-  if not page.IsLaterSelected then
-    continue;
- end;
- if (p.Controls[i] is TWinControl) and FindPHP(TWinControl(p.Controls[i]),ori) then
- begin
-  result:=true;
-  exit;
- end;
- end;
- result:=false;
-end;
-
-var p:TControl;
-begin
- p:=self;
- while (p<>nil) do
- begin
-  if (p is TdhPage) and TdhPage(p).IsHTMLBody then
-  begin
-   result:=FindPHP(TdhPage(p),self);
-   exit;
-  end;
-  p:=p.Parent;
- end;
- result:=false;
 end;
 
 function TdhPage.IsInternalHTMLBody: boolean;
@@ -1175,11 +907,6 @@ begin
  result:=path;
  result:=StringReplace(result,'/',PathDelim,[rfReplaceAll]);
  result:=StringReplace(result,'\',PathDelim,[rfReplaceAll]);
-end;
-
-function GoodWebPathDelimiters(const path:TPathName):TPathName;
-begin
- result:=StringReplace(path,'\','/',[rfReplaceAll]);
 end;
 
 procedure TdhPage.SetOutputDirectory(const Value: TPathName);
@@ -1316,7 +1043,6 @@ begin
  end;
 end;
 
-
 procedure TdhPage.SetUseIFrame(value:boolean);
 begin
  if FUseIFrame<>Value then
@@ -1354,44 +1080,6 @@ end;
 function TdhPage.AlwaysVisibleVisibility:boolean;
 begin
  result:=IsHTMLBody;
-end;
-
-function TdhPage.GetImageDir:TPathName;
-begin
- result:=FinalGeneratedImageFolder(GeneratedImageFolder);
-end;
-
-function FinalGeneratedJavaScriptFile(const GeneratedJavaScriptFile:TPathName):TPathName;
-begin
- if (GeneratedJavaScriptFile='') or IsAbsolute(GoodWebPathDelimiters(GeneratedJavaScriptFile)) then
-  result:='dfm2html.js' else
-  begin
-   result:=GeneratedJavaScriptFile;
-   if System.Pos('.js',LowerCase(result))=0 then
-    result:=result+'.js';
-  end;
- result:=GoodWebPathDelimiters(result);
-end;
-
-function FinalGeneratedImageFolder(const GeneratedImageFolder:TPathName):TPathName;
-begin
- result:=GeneratedImageFolder;
- if (result='') or IsAbsolute(GoodWebPathDelimiters(GeneratedImageFolder)) then
-  result:='.';
- result:=GoodLocalPath(result);
- result:=GoodWebPathDelimiters(result);
-end;
-
-function FinalGeneratedCSSFile(const GeneratedCSSFile:TPathName):TPathName;
-begin
- if (GeneratedCSSFile='') or IsAbsolute(GoodWebPathDelimiters(GeneratedCSSFile)) then
-  result:='' else
-  begin
-   result:=GeneratedCSSFile;
-   if System.Pos('.css',LowerCase(result))=0 then
-    result:=result+'.css';
-  end;                      
- result:=GoodWebPathDelimiters(result);
 end;
 
 initialization

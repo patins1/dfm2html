@@ -941,12 +941,12 @@ end;
 
 class function TMySiz.XGridAdjust(const GridBase:TPoint; X: integer): integer;
 begin
- with FuncSettings do Result :=ZGridAdjust(GridBase.X,X,FGridX);
+ with GridDefinition do Result :=ZGridAdjust(GridBase.X,X,GridX);
 end;
 
 class function TMySiz.YGridAdjust(const GridBase:TPoint; Y: integer): integer;
 begin
- with FuncSettings do Result :=ZGridAdjust(GridBase.Y,Y,FGridY);
+ with GridDefinition do Result :=ZGridAdjust(GridBase.Y,Y,GridY);
 end;
 
 
@@ -1345,12 +1345,12 @@ begin
 
 
   if [ssShift,ssCtrl]*Shift=[ssShift,ssCtrl] then
-  with FuncSettings do
+  with GridDefinition do
   case Key of
-    VK_UP: DeltaBounds(0,-FGridY,0,0);
-    VK_DOWN: DeltaBounds(0,FGridY,0,0);
-    VK_LEFT: DeltaBounds(-FGridX,0,0,0);
-    VK_RIGHT: DeltaBounds(FGridX,0,0,0);
+    VK_UP: DeltaBounds(0,-GridY,0,0);
+    VK_DOWN: DeltaBounds(0,GridY,0,0);
+    VK_LEFT: DeltaBounds(-GridX,0,0,0);
+    VK_RIGHT: DeltaBounds(GridX,0,0,0);
   end else
   if ssShift in Shift then
   case Key of
@@ -1437,7 +1437,7 @@ begin
   end;
  // if NeedScroll then
   if not glPreventScrollInView then
-   dhMenu.ScrollInView(cc.Parent,cc,false);
+   TdhLink.ScrollInView(cc.Parent,cc,false);
  end;
   dhMainForm.UpdateCommands(true,false);
   NeedPaint;

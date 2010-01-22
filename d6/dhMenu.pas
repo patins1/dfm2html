@@ -34,7 +34,6 @@ type
     FPreferDownStyles:boolean;
     function IsButton:boolean;
     procedure SetLayout(const Value: TLinkType);
-    procedure WriteComputedLayout(Writer: TWriter);
     procedure SetPreferDownStyles(const Value: boolean);
   protected
     function IsAnchor:boolean; virtual;
@@ -43,7 +42,6 @@ type
     procedure ClearObjectStyles; override;
     function TotalInlineBox: boolean; override;  
     function GetPreferDownStyles:boolean; override;
-    procedure DefineProperties(Filer: TFiler); override;
     procedure DoStateTransition(OldState: TState); override;
     function TransitionInvalidates: boolean; override;
 {$IFNDEF CLX}
@@ -106,13 +104,9 @@ type
     function GetChildParent: TComponent; override;
     function IsAnchor:boolean; override;
     procedure TimerNotify(Sender: TObject);
-    procedure WriteTrue(Writer: TWriter);
-    procedure WriteRealLastPage(Writer: TWriter);
-    procedure WriteRealLinkPage(Writer: TWriter);
     function GetLastPage:TdhPage;
     function RealLastPage:TdhPage;
     function RealLinkPage:TdhPage;
-    procedure DefineProperties(Filer: TFiler); override;
     function NeedJS:boolean;
     function NeedID:boolean;
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
@@ -134,6 +128,7 @@ type
     procedure DoClickAction(Initiator:TdhCustomPanel); override;
     property Auto:boolean read GetAuto write SetAuto;
     function AutoRelevant:boolean;
+    class procedure ScrollInView(p,cc:TControl; ForceTop:boolean);
     class procedure NavigateLocation(Page: TdhPage; Anchor: TControl; ActivatedBy:TdhLink);
     procedure TryBrokenReferences(sl:TStringList); override;
     procedure GetChildren(Proc: TGetChildProc; Root: TComponent); override;
@@ -158,7 +153,7 @@ type
   end;
 
   TdhMenu = class(TdhPanel)
-  private
+  protected
     function IsMainMenu: boolean;
     procedure SetReactionTime(const Value: TReactionTime);
     procedure UpdateParent;
@@ -194,15 +189,10 @@ type
     procedure UpdateVerticalLayout;
     procedure SetParentMenuItem(Value:TdhLink);
     procedure WriteState(Writer: TWriter); override;
-    procedure WriteRealMenuLeft(Writer: TWriter);
-    procedure WriteRealMenuTop(Writer: TWriter);
     procedure WriteMenuLeft(Writer: TWriter);
     procedure WriteMenuTop(Writer: TWriter);
     procedure ReadMenuLeft(Reader: TReader);
     procedure ReadMenuTop(Reader: TReader);
-    procedure WritePadw(Writer: TWriter);
-    procedure WriteAlPos(Writer: TWriter);
-    procedure WriteOnlyIf(Writer: TWriter);
     procedure DefineProperties(Filer: TFiler); override;
     procedure SlideNotify(Sender: TObject);
     procedure SlideUpNotify(Sender: TObject);
@@ -216,7 +206,6 @@ type
     function HasOpenedMenu:boolean;
     function GetVerticalLayout:boolean;
     property VerticalLayout:boolean read GetVerticalLayout;
-    function GetTotalPos:TPoint;
     function IsVirtual:boolean;
     function LeaveY:boolean; override;
     procedure PrepareAlign; override;
@@ -250,9 +239,6 @@ type
   end;
 
 function GetParentPage(P:TControl; SameLevel:boolean=false; AllowPage:boolean=true):TWinControl;
-function FindPage(c:TControl; var res:TWinControl; RealActivePage:boolean):boolean;
-procedure ScrollInView(p,cc:TControl; ForceTop:boolean);
-
 
 procedure Register;
 
@@ -273,34 +259,6 @@ var
     ToOpen:TdhMenu=nil;
     IsSliding:boolean=false;
 
-function FindPage(c:TControl; var res:TWinControl; RealActivePage:boolean):boolean;
-var i:integer;
-    r:TdhPage;
-begin
- if (c is TdhPageControl) then
- begin
-  if RealActivePage then
-   r:=TdhPageControl(c).RealActivePage else
-   r:=TdhPageControl(c).ActivePage;
-  if r<>nil then
-  begin
-   res:=r;
-   result:=true;
-   exit;
-  end;
- end;
- if c is TWinControl then
- with TWinControl(c) do
- for i:=0 to ControlCount-1 do
- if not((Controls[i] is TdhPage) and (TdhPage(Controls[i]).PageControl<>nil)) then
- if FindPage(Controls[i],res,RealActivePage) then
- begin
-  result:=True;
-  exit;
- end;
- result:=false;
-end;
-
 function GetParentPage(P:TControl; SameLevel:boolean; AllowPage:boolean):TWinControl;
 begin
  if SameLevel and (P is TWinControl) then
@@ -315,7 +273,6 @@ begin
  IsSliding:=_IsSliding;
 end;
 
-
 procedure SetTimer(OnTimer: TNotifyEvent; Interval:Cardinal; const Timer:TTimer);
 begin
  if Timer.Enabled then
@@ -329,7 +286,6 @@ begin
    Timer.Enabled:=true;
 end;
 
-
 procedure TdhMenu.RestoreSlide;
 begin
   Height:=OriWidthHeight.Y;
@@ -338,8 +294,6 @@ begin
   SlideTimer.Enabled:=False;
   SetIsSliding(false,self);
 end;
-
-
 
 procedure glCheckClose(CloseItem:TdhLink=nil);
 var p:TdhMenu;
@@ -410,20 +364,6 @@ begin
   ToOpen.OpenMenu;
 end;
 
-function GetPageID(LinkPage:TWinControl; FindFile:boolean=False):TControl ;
-var apage:TWinControl;
-const BottomUp=false;
-begin
-  apage:=LinkPage;
-  if BottomUp then
-   while FindPage(apage,apage,true) do
-   else
-   while (apage is TdhPage) and (TdhPage(apage).PageControl<>nil) do
-    apage:=GetParentPage(apage);
-  result:=apage;
-end;
-
-
 procedure TdhLink.SetBounds(ALeft, ATop, AWidth, AHeight: Integer);
 var R:TRect;
 begin
@@ -442,7 +382,7 @@ begin
  if Assigned(glPreAddCompo) then
   glPreAddCompo(Self);
  result:=TdhMenu.Create(Owner);
- _SetUniqueName(result,MenuNameBase);
+ result._SetUniqueName(MenuNameBase);
  result.ParentMenuItem:=Self;
  if HasParentMenu(P) and P.FindSuitable(nil,result.SuitableKind,result.GetLev,BestUse,result) then
  begin
@@ -459,16 +399,6 @@ end;
 function TdhDynLabel.TransitionInvalidates: boolean;
 begin
  result:=true;
-end;
-
-procedure TdhLink.WriteRealLastPage(Writer: TWriter);
-begin
- Writer.WriteString(FinalID(RealLastPage));
-end;
-
-procedure TdhLink.WriteRealLinkPage(Writer: TWriter);
-begin
- Writer.WriteString(FinalID(RealLinkPage));
 end;
 
 procedure TdhLink.WriteSLinkPage(Writer: TWriter);
@@ -491,11 +421,6 @@ begin
  SLinkAnchor:=Reader.ReadString;
 end;
 
-procedure TdhLink.WriteTrue(Writer: TWriter);
-begin
- Writer.WriteBoolean(true);
-end;
-
 function TdhLink.NeedJS:boolean;
 begin
  result:=(loNoOverIfDown in ComputedOptions) or (loDownIfMouseDown in ComputedOptions) and not IsButton or
@@ -507,34 +432,6 @@ end;
 function TdhLink.NeedID:boolean;
 begin
  result:=(FSubMenu<>nil);
-end;
-
-procedure TdhDynLabel.DefineProperties(Filer: TFiler);
-begin
- inherited;
- if (csLoading in ComponentState) or not WithMeta and (Filer is TWriter) then exit;
- Filer.DefineProperty('ComputedLayout', nil, WriteComputedLayout, ComputedLayout<>GetDefaultLayout);
-end;
-
-procedure TdhLink.DefineProperties(Filer: TFiler);
-var NotSelfTargeted:boolean;
-begin
-  inherited;
-  if not WithMeta and (Filer is TWriter) then exit;
-  NotSelfTargeted:=(FLinkPage<>nil) and (GetPageID(GetParentPage(Self),True)<>GetPageID(FLinkPage,True));
-  Filer.DefineProperty('NeedJS', SkipValue, WriteTrue, NeedJS);
-  Filer.DefineProperty('NeedID', SkipValue, WriteTrue, NeedID);
-  Filer.DefineProperty('Linked', SkipValue, WriteTrue, (FLinkPage<>nil) and FLinkPage.IsLaterSelected and (GetLastPage=nil) and (NotSelfTargeted or FLinkPage.DynamicNavigation));
-  Filer.DefineProperty('RealLastPage', SkipValue, WriteRealLastPage, (GetLastPage<>nil) and FLinkPage.DynamicNavigation and not NotSelfTargeted);
-  Filer.DefineProperty('RealLinkPage', SkipValue, WriteRealLinkPage, (FLinkPage<>nil) and FLinkPage.DynamicNavigation and not NotSelfTargeted);
-  Filer.DefineProperty('NotIfUrl', SkipValue, WriteTrue, (FLinkPage<>nil) and not (loDownIfUrl in ComputedOptions) and (NotSelfTargeted or FLinkPage.DynamicNavigation));
-  Filer.DefineProperty('SLinkPage', ReadSLinkPage, WriteSLinkPage, SLinkPage<>'');
-  Filer.DefineProperty('SLinkAnchor', ReadSLinkAnchor, WriteSLinkAnchor, SLinkAnchor<>'');
-  Filer.DefineProperty('TabTarget', SkipValue, WriteTrue, False);
-  Filer.DefineProperty('Href', SkipValue, WriteTrue, False);
-  Filer.DefineProperty('IfUrl', SkipValue, WriteTrue, False);
-  Filer.DefineProperty('IfDown', SkipValue, WriteTrue, False);
-  Filer.DefineProperty('IsLine', SkipValue, WriteTrue, False);
 end;
 
 function TdhLink.GetLastPage:TdhPage;
@@ -758,7 +655,6 @@ begin
 
 end;
 
-
 class procedure TdhLink.NavigateLocation(Page:TdhPage; Anchor:TControl; ActivatedBy:TdhLink);
 var apage:TWinControl;
 begin
@@ -773,11 +669,11 @@ begin
  end;
  if Anchor<>nil then
  begin
-  dhMenu.ScrollInView(Anchor.Parent,Anchor,true);
+  TdhLink.ScrollInView(Anchor.Parent,Anchor,true);
  end;
 end;
 
-procedure ScrollInView(p,cc:TControl; ForceTop:boolean);
+class procedure TdhLink.ScrollInView(p,cc:TControl; ForceTop:boolean);
 var R:TRect;
 begin
   if p=nil then exit;
@@ -936,7 +832,6 @@ begin
    TdhCustomPanel(_glSelCompo).CheckDesignState;
   if (Self is TdhCustomPanel) then
    TdhCustomPanel(Self).CheckDesignState;
-
   if not (glSelCompo is TdhCustomPanel) then
    glSelCompo:=nil;//since only TdhCustomPanel.Destroy would reset it
 end;
@@ -1028,7 +923,6 @@ begin
  result:=(FLink<>'') or (FLinkAnchor<>nil) or (FLinkPage<>nil) or (FFormButtonType<>fbNone);
 end;
 
-
 function TdhDynLabel.IsAnchor:boolean;
 begin
  result:=false;
@@ -1105,7 +999,6 @@ begin
  glCheckClose;
 end;
 
-
 destructor TdhLink.Destroy;
 begin
  if not FastDestroy then
@@ -1121,7 +1014,6 @@ function TdhDynLabel.IsButton:boolean;
 begin
  result:=ComputedLayout=ltButton;
 end;
-
 
 function TdhDynLabel.CenterVertical:boolean;
 begin
@@ -1148,21 +1040,7 @@ begin
  if FSubMenu.IsInlineMenu then
   Result:=Parent else
   Result := GetParentPage(Self);
-end;                
-
-function AddPoint(const a:TPoint; const b:TPoint):TPoint;
-begin
- result.X:=a.X+b.X;
- result.Y:=a.Y+b.Y;
 end;
-
-
-function DecPoint(const a:TPoint; const b:TPoint):TPoint;
-begin
- result.X:=a.X-b.X;
- result.Y:=a.Y-b.Y;
-end;
-
 
 function TdhMenu.MenuPos:TPoint;
 begin
@@ -1178,73 +1056,14 @@ begin
   Result:=ComputedMenu.MenuPos;
 end;
 
-
-function TdhMenu.GetTotalPos:TPoint;
-var p:TWinControl;
-    pn:TdhCustomPanel;
-begin
- assert(IsVirtual);
-
- Result:=AddPoint(GetRelativePos,ComputedMenuPos);
- p:=VirtualParent.Parent;
- while p<>nil do
- begin
-  if (p is TdhCustomPanel) and TdhCustomPanel(p).IsAbsolutePositioned then
-  begin
-   pn:=TdhCustomPanel(p);
-   if pn.IsRastered(false)=rsNo then
-    Result:=AddPoint(Result,pn.BorderPure.TopLeft);
-  end;
-  p:=p.Parent;
- end;
-
- p:=VirtualParent as TWinControl;
- if (p is TdhCustomPanel) then
- begin
-  pn:=TdhCustomPanel(p);
-  if pn.IsRastered(false)=rsNo then
-   Result:=DecPoint(Result,pn.MarginPure.TopLeft);
- end;
-
-end;
-
-
-
-procedure TdhMenu.WriteRealMenuLeft(Writer: TWriter);
-begin
- Writer.WriteInteger(GetTotalPos.X);
-end;
-
-procedure TdhMenu.WriteRealMenuTop(Writer: TWriter);
-begin
- Writer.WriteInteger(GetTotalPos.Y);
-end;
-
 procedure TdhMenu.WriteMenuTop(Writer: TWriter);
 begin
  Writer.WriteInteger(FMenuTop);
 end;
 
-
 procedure TdhMenu.WriteMenuLeft(Writer: TWriter);
 begin
  Writer.WriteInteger(FMenuLeft);
-end;
-
-procedure TdhMenu.WritePadw(Writer: TWriter);
-begin
- with GetAddRect(PaddingPure,BorderPure) do
-  Writer.WriteInteger(Left+Right);
-end;
-
-procedure TdhMenu.WriteAlPos(Writer: TWriter);
-begin
- Writer.WriteInteger(FParentMenuItem.Top+1);
-end;
-
-procedure TdhMenu.WriteOnlyIf(Writer: TWriter);
-begin
- Writer.WriteString(FinalID(FParentMenuItem.FLinkPage));
 end;
 
 procedure TdhMenu.ReadMenuLeft(Reader: TReader);
@@ -1262,18 +1081,11 @@ begin
  result:=FParentMenuItem<>nil;
 end;
 
-
 procedure TdhMenu.DefineProperties(Filer: TFiler);
 begin
   inherited;
   Filer.DefineProperty('MenuLeft', ReadMenuLeft, WriteMenuLeft, FMenuLeft<>0);
   Filer.DefineProperty('MenuTop', ReadMenuTop, WriteMenuTop, FMenuTop<>0);
-  if not WithMeta and (Filer is TWriter) then exit;
-  Filer.DefineProperty('RealMenuLeft', SkipValue, WriteRealMenuLeft, not IsInlineMenu and IsVirtual);
-  Filer.DefineProperty('RealMenuTop', SkipValue, WriteRealMenuTop, not IsInlineMenu and IsVirtual);
-  Filer.DefineProperty('OnlyIf', SkipValue, WriteOnlyIf, {(moStatic in ComputedMenu.FMenuOptions) and }IsInlineMenu and (FParentMenuItem<>nil) and (FParentMenuItem.LinkPage<>nil) and not FParentMenuItem.LinkPage.DynamicNavigation);
-  Filer.DefineProperty('padw', SkipValue, WritePadw, moSlide in ComputedMenu.FMenuOptions);
-  Filer.DefineProperty('AlPos', SkipValue, WriteAlPos, (FParentMenuItem<>nil) and IsInlineMenu and (Align=alTop));
 end;
 
 constructor TdhMenu.Create(AOwner: TComponent);
@@ -1293,7 +1105,7 @@ begin;
  if Assigned(glPreAddCompo) then
   glPreAddCompo(Self);
  result:=TdhLink.Create(Owner);
- _SetUniqueName(result,AnchorNameBase);
+ result._SetUniqueName(AnchorNameBase);
  if VerticalLayout then
  begin
   result.Top:=Height;
@@ -1423,7 +1235,6 @@ begin
  result:=FParentMenuItem=nil;
 end;
 
-
 function TdhMenu.GetMenuCoordsOrigin:TPoint;
 begin
  result:=Point(0,0);
@@ -1447,7 +1258,6 @@ begin
   end;
  end;
 end;
-
 
 procedure TdhMenu.SetBounds(ALeft, ATop, AWidth, AHeight: Integer);
 var p1:TPoint;
@@ -1494,7 +1304,6 @@ begin
   inherited;
  end;
 end;
-
 
 procedure TdhMenu.SetParent({$IFDEF CLX}const {$ENDIF}AParent: TWinControl);
 begin
@@ -1582,7 +1391,6 @@ begin
   Parent:=FParentMenuItem.GetChildParent as TWinControl;
 end;
 
-
 type TFakeApplication=class(TApplication);
 
 procedure TdhMenu.SlideNotify(Sender: TObject);
@@ -1631,7 +1439,6 @@ begin
   ls.Add(Controls[i]);
 end;
 
-
 function GetTopStyleMenu(c:TControl):TdhMenu;
 begin
  while (c<>nil) and not (c.Parent is TdhStyleSheet) do
@@ -1647,7 +1454,6 @@ begin
   result:=dfMenuItem else
   result:=SuitableKind;
 end;
-
 
 function TdhMenu.FindSuitable(MenuStyles:TList; SuitableKind:TDesignedFor; Lev:Integer; var BestUse:TdhCustomPanel; ForWhich:TControl):boolean;
 var i:integer;
@@ -1699,7 +1505,6 @@ begin
  if SelfCreated then
   MenuStyles.Free;
 end;
-
 
 function TdhMenu.SuitableKind:TDesignedFor;
 begin
@@ -1836,12 +1641,10 @@ begin
  Inherited;
 end;
 
-
 function TdhLink.DownIfDown:boolean;
 begin
  result:=true;//not((FSubMenu<>nil) and (moStatic in FSubMenu.ComputedMenu.MenuOptions));
 end;
-
 
 procedure TdhMenu.ControlsListChanged(Control: TControl; Inserting: Boolean);
 begin
@@ -1857,7 +1660,6 @@ begin
   result:=FParentMenuItem else
   result:=Parent;
 end;
-
 
 procedure TdhMenu.PrepareAlign;
 begin
@@ -1890,7 +1692,6 @@ begin
  end;
 end;
 
-
 function TdhDynLabel.GetFinal: ICon;
 begin
   result:=nil;
@@ -1900,7 +1701,6 @@ begin
   ltLink:   result:=dhStrEditDlg.a;
   end;
 end;
-
 
 procedure TdhMenu.SetReactionTime(const Value: TReactionTime);
 begin
@@ -1915,16 +1715,6 @@ begin
  if IsVirtual and not IsInlineMenu then        
   result:=maxint-500-1*ParentControlCount+ChildPos+GetLev else
   result:=inherited AdjustZIndex(ChildPos,ParentControlCount);
-end;
-
-procedure TdhDynLabel.WriteComputedLayout(Writer: TWriter);
-begin
- Writer.WriteIdent(GetEnumName(TypeInfo(TLinkType),Integer(ComputedLayout)));
-end;
-
-procedure WriteValue(Writer: TWriter; Value: TValueType);
-begin        
-  Writer.Write(Value, SizeOf(Value));
 end;
 
 procedure TdhDynLabel.ClearObjectStyles;
@@ -2002,7 +1792,6 @@ begin
  end;
 end;
 
-
 function TdhLink.ComputedOptions:TAnchorOptions;
 var Con:ICon;
 begin
@@ -2042,8 +1831,6 @@ begin
    result:=TdhLink(Con.GetCommon);
  end;
 end;
-
-
 
 function TdhLink.GetAuto: boolean;
 begin
@@ -2147,7 +1934,6 @@ begin
    InitSelfCBound(dummy);
 end;
 
-
 procedure TdhLink.PreferStyleChangeMenuSibling(caller:TdhCustomPanel; ClearPrefer:boolean);
 begin
  if (Self<>caller) and not Down then
@@ -2164,7 +1950,6 @@ begin
  ReactionTime:=fromMenu.ReactionTime;
 end;
 
-
 function TdhLink.BoundNextSibling:TdhCustomPanel;
 begin
  if (FSubMenu<>nil) and FSubMenu.IsInlineMenu then
@@ -2178,7 +1963,6 @@ begin
   Result:=FParentMenuItem.Top+1 else
   Result:=Top;
 end;
-
 
 procedure TdhMenu.CalcVariableSizes(FirstPass:boolean);
 var i:integer;

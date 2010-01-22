@@ -14,7 +14,6 @@ uses
 type
   TdhDirectHTML = class(TdhPanel)
   private
-    { Private declarations }
     FHTML:HypeString;
     FGenerateContainer:boolean;
   protected
@@ -68,41 +67,32 @@ begin
   H:=max(H,19);
   if not TextOnly then
    AdjustLittle(W,H,false);
-
  if AllowModifyX then
   NewWidth:=W;
  if AllowModifyY then
   NewHeight:=H;
-
-
  GetSuperiorAutoRect(AllowModifyX,AllowModifyY,NewWidth,NewHeight);
 end;
 
 procedure TdhDirectHTML.DoTopPainting;
 begin
-
  if (csDesigning in ComponentState) then
  begin
    if (TempBitmap=nil) then
    begin
     TempBitmap := TBitmap.Create;
-    TempBitmap.LoadFromResourceName(HInstance, 'TDHDIRECTHTMLPURE');  
+    TempBitmap.LoadFromResourceName(HInstance, 'TDHDIRECTHTMLPURE');
     TempBitmap.Transparent:=true;
     TempBitmap.TransparentColor:=clYellow;
    end;
-
   if (TempBitmap<>nil) then
   if not IsRasterized and not HasBackgroundImage then
   with Self.AllEdgesPure do
    GetCanvas.Draw(max(-2,-4+Left),max(-2,-4+Top),TempBitmap);
  end;
-
-
- begin
-  if FAutoSize<>asXY then PaintBorder else PaintOuterBorder;
-  PaintOuterBg;
-  DrawFrame;
- end;
+ if FAutoSize<>asXY then PaintBorder else PaintOuterBorder;
+ PaintOuterBg;
+ DrawFrame;
 end;
 
 constructor TdhDirectHTML.Create(AOwner: TComponent);
@@ -121,8 +111,5 @@ end;
 initialization
 
 finalization
-
  FreeAndNil(TempBitmap);
-
-
 end.

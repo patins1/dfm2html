@@ -39,7 +39,6 @@ end;
 
 procedure TdhHiddenField.DoTopPainting;
 begin
-
  if (csDesigning in ComponentState) then
  begin
    if (PageControlBitmap=nil) then
@@ -50,7 +49,6 @@ begin
    if (PageControlBitmap<>nil) then
     GetCanvas.Draw(0,0,PageControlBitmap);
  end;
-
 end;
 
 function TdhHiddenField.EffectsAllowed: boolean;

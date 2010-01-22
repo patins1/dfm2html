@@ -77,7 +77,6 @@ type
     procedure WMGetDlgCode(var Message: TWMGetDlgCode); message WM_GETDLGCODE;
 {$ENDIF}
     function GetCount: integer;
-    procedure WriteHTMLOptions(Writer: TWriter);
   protected
     procedure ProcessFrameEvent(FrameEventType: TFrameEventType); override;
     procedure Loaded; override;
@@ -89,7 +88,6 @@ type
     procedure KeyPress(var Key: AChar); override;
     procedure KeyDown(var Key: Word; Shift: TShiftState); override;
     procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
-    procedure DefineProperties(Filer: TFiler); override;
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
@@ -172,7 +170,7 @@ begin
   result:=dhStrEditDlg.listbox else
   result:=nil;
 end;
-                                 
+
 procedure TdhSelect.RecreateText;
 
 function GetDisplayText(i:integer):HypeString;
@@ -182,7 +180,6 @@ begin
     result:='&nbsp;';
    if Assigned(FOnGetDisplayText) then FOnGetDisplayText(Self,Items[i],result);
 end;
-
 
 var i,index:integer;
 var s:HypeString;
@@ -690,30 +687,6 @@ end;
 function TdhSelect.GetCount: integer;
 begin
  result:=Items.Count;
-end;
-
-procedure TdhSelect.DefineProperties(Filer: TFiler);
-begin
- inherited;
- if (csLoading in ComponentState) or not WithMeta and (Filer is TWriter) then exit;
- Filer.DefineProperty('HTMLOptions', nil, WriteHTMLOptions, Count<>0);
-end;
-
-procedure TdhSelect.WriteHTMLOptions(Writer: TWriter);
-var i:integer;
-    s:HypeString;
-begin
- s:='';
- for i:=0 to Count-1 do
- begin
-  s:=s+'<option';
-  if Items[i].Value<>'' then
-   s:=s+' value="'+ConvertWideStringToUnicode(Items[i].Value,true)+'"';
-  if Items[i].Selected then
-   s:=s+' selected="selected"';
-  s:=s+'>'+ConvertWideStringToUnicode(Items[i].Text,true)+'</option>';
- end;
- Writer.WriteWideString(s);
 end;
 
 end.

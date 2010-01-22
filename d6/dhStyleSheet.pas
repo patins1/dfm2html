@@ -145,8 +145,8 @@ begin
   result:=TdhLink.Create(Self.Owner) else
   result:=TdhLabel.Create(Self.Owner);
  if anAnchor then
-  _SetUniqueName(result,'Link') else
-  _SetUniqueName(result,'Label');
+  result._SetUniqueName('Link') else
+  result._SetUniqueName('Label');
  result.Top:={VPos+Height}GetInnerClientArea.Bottom+Height{maxint};
  result.Align:=alTop;
  result.Parent:=Self;

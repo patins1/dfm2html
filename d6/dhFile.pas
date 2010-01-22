@@ -8,41 +8,32 @@ uses
   QControls, QGraphics,
   {$ELSE}
   Controls, Windows, Messages, forms, Graphics,
-
   {$ENDIF}
-   SysUtils, Classes,  dhPanel,GR32,dhLabel,crc,math,dhStrUtils;
-
+   SysUtils, Classes,  dhPanel,GR32,dhLabel,math,dhStrUtils;
 
 type
 
   TFileUsage=(fuPure,fuFlash,fuMusic,fuJavascript);
 
   TdhFile = class(TdhPanel)
-  private
+  protected
     FData:TFileContents;
     FFileName:TPathName;
-    HTMLFileName:TPathName;
     FUsage: TFileUsage;
     FLoop: boolean;
     FLinked: boolean;
     procedure WriteData(Stream: TStream);
     procedure ReadData(Stream: TStream);
-    function PrepareHTMLFile: boolean;
-    procedure WriteHTMLFileName(Writer: TWriter);
     procedure SetUsage(const Value: TFileUsage);
     function IsLoopStored: Boolean;
     procedure SetLinked(const Value: boolean);
-  protected
     procedure DefineProperties(Filer: TFiler); override;
     function GetData(var FileData:TFileContents):boolean;
     procedure SetASXY(const Value: TASXY); override;
   public
-    function ProposedFileName: TPathName;
     function HasFile:Boolean;
     function FileSize:integer;
     constructor Create(AOwner: TComponent); override;
-    destructor Destroy; override;
-    procedure Invalidate; override;
     procedure LoadFromFile(const FileName:TPathName; Linked:boolean);
     procedure DoTopPainting; override;
     procedure GetAutoRect(AllowModifyX,AllowModifyY:boolean; var NewWidth, NewHeight: Integer); override;
@@ -55,56 +46,23 @@ type
     property Usage:TFileUsage read FUsage write SetUsage default fuPure;
     property Loop:boolean read FLoop write FLoop stored IsLoopStored;
     property Linked:boolean read FLinked write SetLinked;
-
-    //property Center;
-
     property HTMLAttributes;
     property ImageType;
     property ImageFormat;
-
     property Style;
     property Use;
     property Transparent;
     property AutoSizeXY;
-
     property Color;
     property Font;
     property Visible;
-
-    {not interpreted:}
-    //property AutoSize;
     property Align;
     property Anchors;
     property Constraints;
     property Cursor;
-{    property Ctl3D;
-    property UseDockManager default True;
-    property DockSite;
-    property DragCursor;
-    property DragKind;
-    property DragMode;
-}
     property Enabled;
-//    property FullRepaint;
-//    property Locked;
-//    property ParentBiDiMode;
-//    property ParentColor;
-//    property ParentCtl3D;
-//    property ParentFont;
     property ParentShowHint;
-//    property PopupMenu;
     property ShowHint;
-//    property TabStop;
-
-
-    {property OnCanResize;
-    property OnDockDrop;
-    property OnDockOver;
-    property OnEndDock;
-    property OnGetSiteInfo;
-    property OnStartDock;
-    property OnUnDock; }
-
     property OnClick;
     property OnConstrainedResize;
     property OnContextPopup;
@@ -119,7 +77,6 @@ type
     property OnMouseUp;
     property OnResize;
     property OnStartDrag;
-
   end;
 
 procedure Register;
@@ -147,33 +104,10 @@ begin
  NotifyCSSChanged([wcNoOwnCSS,wcNoComputedCSS]);
 end;
 
-
 procedure TdhFile.DefineProperties(Filer: TFiler);
-var ReallyFile,InvalidFile:boolean;
 begin
   inherited;
   Filer.DefineBinaryProperty('Data', ReadData, WriteData, HasFile and not Linked);
-  if not WithMeta and (Filer is TWriter) then exit;
-  ReallyFile:=not (csLoading in ComponentState) and Assigned(glSaveBin) and PrepareHTMLFile;
-  InvalidFile:=false;
-  if not (csLoading in ComponentState) and Assigned(glSaveBin) and not ReallyFile and HasFile then
-  begin
-   HTMLFileName:=ProposedFileName;
-   ReallyFile:=true;
-   InvalidFile:=true;
-  end;
-  Filer.DefineProperty('HTMLFileName', SkipValue, WriteHTMLFileName, ReallyFile);
-  Filer.DefineProperty('InvalidFile', SkipValue, WriteTrue, InvalidFile);
-end;
-
-destructor TdhFile.Destroy;
-begin
-  inherited;
-end;
-
-procedure TdhFile.Invalidate;
-begin
-  inherited;
 end;
 
 procedure TdhFile.WriteData(Stream: TStream);
@@ -184,7 +118,6 @@ begin
   if DataSize<>0 then
    Stream.WriteBuffer(FData[1], DataSize);
 end;
-
 
 procedure TdhFile.ReadData(Stream: TStream);
 var DataSize:integer;
@@ -231,13 +164,10 @@ begin
  DrawFrame;
 end;
 
-
 function TdhFile.EffectsAllowed: boolean;
 begin
  result:=false;
 end;
-
-
 
 procedure TdhFile.GetAutoRect(AllowModifyX, AllowModifyY: boolean; var NewWidth, NewHeight: Integer);
 var PicWidth,PicHeight,W,H:integer;
@@ -260,40 +190,9 @@ begin
  GetSuperiorAutoRect(AllowModifyX,AllowModifyY,NewWidth,NewHeight);
 end;
 
-
 function TdhFile.HasFile: Boolean;
 begin
  result:=FFileName<>'';
-end;
-
-procedure TdhFile.WriteHTMLFileName(Writer: TWriter);
-begin
- Writer.WriteString(HTMLFileName);
-end;
-
-function TdhFile.ProposedFileName:TPathName;
-begin
- result:=FinalID(Self)+ExtractFileExt(FFileName);
-end;
-
-
-function TdhFile.PrepareHTMLFile:boolean;
-var NeedSave:boolean;
-    FileData:TFileContents;
-    AbsoluteHTMLFileName:TPathName;
-begin
- result:=false;
- if not GetData(FileData) then
-  exit;
- HTMLFileName:=ProposedFileName;
- result:=glSaveBin(calc_crc32_String(FileData),HTMLFileName,AbsoluteHTMLFileName,false,'',NeedSave,false);
- if NeedSave then
- try
-  StringToFile(AbsoluteHTMLFileName,FileData);
-  glAfterSaveBin;
- except
-  result:=false;
- end;
 end;
 
 procedure TdhFile.SetUsage(const Value: TFileUsage);

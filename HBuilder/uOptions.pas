@@ -10,7 +10,7 @@ uses
   Controls, Windows, Messages, Graphics, Forms, Dialogs, StdCtrls, ComCtrls,
   ShellAPI, Mask, ExtCtrls,  clipbrd, Spin, UnicodeCtrls,
 {$ENDIF}
-  dhPanel, dhLabel, dhPageControl, MySpinEdit, MyPageControl, dhStyleSheet, DKLang;
+  dhPanel, dhLabel, dhPageControl, MySpinEdit, MyPageControl, dhStyleSheet, DKLang, dhStrUtils;
 
             
 type TLaunchAction=(suaChoice,suaLast,suaNone);
@@ -19,8 +19,11 @@ type TFuncSettings=object
      LRUfiles:TStringList;
      Compress:boolean;
      LaunchAction:TLaunchAction;
+     FViewer:TPathName;
+     FSmartPublishing:boolean;
+     FPassiveFTP:boolean;
+     FAutoUpdate:boolean;
 end;
-
 
 type
   TOptions = class(TTntForm)
@@ -108,11 +111,11 @@ end;
 procedure TOptions.LoadSettings(var FuncSettings: TFuncSettings);
 begin
  Adjusting:=true;
- With FuncSettings do
+ With FuncSettings do with GridDefinition do
  begin
-  spGridX.StoredValue:=FGridX;
-  spGridY.StoredValue:=FGridY;
-  cbGridDisplay.ItemIndex:=Integer(FGridDisplay);
+  spGridX.StoredValue:=GridX;
+  spGridY.StoredValue:=GridY;
+  cbGridDisplay.ItemIndex:=Integer(GridDisplay);
   cCompress.Checked:=Compress;
   cCSS3.Checked:=UseCSS3;
   eViewer.Text:=FViewer;
@@ -137,7 +140,7 @@ begin
   if (dhMainForm.Act<>nil) and (dhMainForm.Act.MySiz.FindBody<>nil) then
   begin
    lDirectoryCache.Text:=GetFTPShortcut(dhMainForm.Act.MySiz.FindBody);
-   bClearFocusedCache.Enabled:=dhMainForm.Act.MySiz.FindBody.Find(GetFTPShortcut(dhMainForm.Act.MySiz.FindBody),'*',0,false);
+   bClearFocusedCache.Enabled:=Find(GetFTPShortcut(dhMainForm.Act.MySiz.FindBody),'*',0,false);
   end else
    lDirectoryCache.Text:='';
   cAutoUpdate.Checked:=FAutoUpdate;
@@ -147,11 +150,11 @@ end;
 
 procedure TOptions.SaveSettings(var FuncSettings: TFuncSettings);
 begin
- With FuncSettings do
+ With FuncSettings do with GridDefinition do
  begin
-  FGridX:=spGridX.Value;
-  FGridY:=spGridY.Value;
-  FGridDisplay:=TGridDisplay(cbGridDisplay.ItemIndex);
+  GridX:=spGridX.Value;
+  GridY:=spGridY.Value;
+  GridDisplay:=TGridDisplay(cbGridDisplay.ItemIndex);
   Compress:=cCompress.Checked;
   UseCSS3:=cCSS3.Checked;
   FViewer:=eViewer.Text;
@@ -266,7 +269,7 @@ end;
 
 procedure TOptions.bClearFocusedCacheClick(Sender: TObject);
 begin
- dhMainForm.Act.MySiz.FindBody.Find(GetFTPShortcut(dhMainForm.Act.MySiz.FindBody),'*',0,true);
+ Find(GetFTPShortcut(dhMainForm.Act.MySiz.FindBody),'*',0,true);
  cSmartPublishingClick(nil);
 end;
 

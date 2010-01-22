@@ -212,7 +212,7 @@ end;
 
 procedure TMoreMisc.SkipValue(Reader: TReader);
 begin
- _SkipValue(Reader);
+ Reader.SkipValue;
 end;
 
 

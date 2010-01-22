@@ -9,7 +9,7 @@ uses
   {$ELSE}
   Dialogs, Controls, Windows, Messages, Graphics, StdCtrls, ShellAPI, Mask, Forms, Buttons, Spin, UnicodeCtrls,
   {$ENDIF}
-  SysUtils, Classes, Types, dhPanel, dhPageControl, dhLabel, binlist, DKLang, MyForm, dhStrUtils;
+  SysUtils, Classes, Types, dhPanel, dhPageControl, dhLabel, binlist, DKLang, MyForm, dhStrUtils, uMetaWriter;
 
 type
   TChooseUnicode = class(TMyForm)

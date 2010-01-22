@@ -43,8 +43,6 @@ type
     procedure OnOleExit(Sender: TObject);
     procedure SetTransparentWhite(const Value: boolean);
     procedure SetUsage(Value:TOleUsage);
-    //function PrepareOleImage: boolean;
-    //procedure WriteOleImage(Writer: TWriter);
     //procedure PaintOle;
     //procedure SetTransparentColor(const Value: TCSSColor);
   protected
@@ -63,61 +61,27 @@ type
     procedure Invalidate; override;
     function RequiresRastering:boolean; override;
   published
-    //property TransparentColor:TCSSColor read FTransparentColor write SetTransparentColor default colInherit;
     property TransparentWhite:boolean read FTransparentWhite write SetTransparentWhite default true;
     property Usage:TOleUsage read FUsage write SetUsage;
-
-    //property Center;
-
     property HTMLAttributes;
     property ImageType;
     property ImageFormat;
-
     property Style;
     property Use;
     property Transparent;
     property AutoSizeXY;
-
     property Color;
     property Font;
     property Visible;
-
-    {not interpreted:}
-    //property AutoSize;
     property Align;
     property Anchors;
     property Constraints;
     property Cursor;
-{    property Ctl3D;
-    property UseDockManager default True;
-    property DockSite;
-    property DragCursor;
-    property DragKind;
-    property DragMode;
-}
     property Enabled;
-//    property FullRepaint;
-//    property Locked;
-//    property ParentBiDiMode;
-//    property ParentColor;
-//    property ParentCtl3D;
-//    property ParentFont;
     property ParentShowHint;
-//    property PopupMenu;
     property ShowHint;
-//    property TabStop;
-                             
     property Right;
     property Bottom;
-
-    {property OnCanResize;
-    property OnDockDrop;
-    property OnDockOver;
-    property OnEndDock;
-    property OnGetSiteInfo;
-    property OnStartDock;
-    property OnUnDock; }
-
     property OnClick;
     property OnConstrainedResize;
     property OnContextPopup;
@@ -472,70 +436,11 @@ end;     }
 type TFakeControl=class(TControl);
 
 procedure TdhOleContainer.DefineProperties(Filer: TFiler);
-//var ReallyOleImage:boolean;
 begin
   inherited;
   TFakeControl(ole).DefineProperties(Filer);
-  if not WithMeta and (Filer is TWriter) then exit;
   Filer.DefineProperty('Link', SkipValue, WriteLink, ole.Linked);
-
-  {if WithMeta then
-  begin                                     
-   //DefineProperties(Filer);
-//   ReallyOleImage:=not (csLoading in ComponentState) and Assigned(glSaveBin) and PrepareOleImage;
-//   Filer.DefineProperty('OleImage', SkipValue, WriteOleImage, ReallyOleImage);
-  end; }
 end;
-
-{
-procedure TdhOleContainer.WriteOleImage(Writer: TWriter);
-begin
- Writer.WriteString(ExtractFileName(OleImageFile));
-end;
-}
-
-
-(*
-function TdhOleContainer.PrepareOleImage:boolean;
-var
-    NeedSave:boolean;
-    bmp32:TBitmap32;
-//    gif:TGifImage;
-    png:TPNGObject;
-begin
- result:=false;
- if Ole.State=osEmpty then
-  exit;
- //gif:=nil;
- png:=nil;
- bmp32:=nil;
- try
- bmp32:=TBitmap32.Create;
- bmp32.Width:=ole.Width;
- bmp32.Height:=ole.Height;
- Ole.PaintTo(bmp32.Canvas,0,0);
- //bmp32.Canvas.CopyRect(bmp32.BoundsRect,ole.Canvas,bmp32.BoundsRect);
- OleImageFile:=FinalID(Self)+'_OLE.png';
- result:=glSaveBin(GetCRCFromBitmap32(bmp32,bmp32.Width,bmp32.Height),OleImageFile,false,'',NeedSave,false);
- if NeedSave then
- try
-  ForceDirectories(ExtractFilePath(OleImageFile));
-  {gif:=GetGifImageFromBitmap32(bmp32,bmp32);
-  gif.SaveToFile(OleImageFile);}
-  png:=GetPNGObjectFromBitmap32(bmp32,false);
-  png.SaveToFile(OleImageFile);
-  glAfterSaveBin;
- except
-  result:=false;
- end;
- finally
-  FreeAndNil(bmp32);
-  //FreeAndNil(gif);
-  FreeAndNil(png);
- end;
-end;
-*)
-
 
 destructor TdhOleContainer.Destroy;
 begin

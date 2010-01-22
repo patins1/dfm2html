@@ -12,7 +12,7 @@ uses
   {$ELSE}
   Controls, Windows, Messages, Graphics, Forms,
   {$ENDIF}
-  SysUtils, Classes, dhPanel, math, types, BinList,GR32_Transforms,gr32,dhStrUtils,StrUtils,MyBitmap32;
+  SysUtils, Classes, dhPanel, math, types, BinList,GR32_Transforms,gr32,dhStrUtils,StrUtils,WideStrUtils,MyBitmap32;
 
 
 {$IFDEF VER160}
@@ -207,14 +207,9 @@ function getTag2(const s:HypeString; var vn,itag,itagbs:integer; var tag:HypeStr
 function WithoutComments(const s:HypeString; repl:HypeChar):HypeString;
 function ConvertWideStringToUnicode(const s:WideString; NoTrivial:boolean):WideString; overload;
 function ConvertUnicodeToWideString_(const s:WideString):WideString;
-function LE127(const s:WideString):AnsiString;
-function XMLconformant(const s:AnsiString):AnsiString;
 function HypeSubstText(const Substr,durch, S: HypeString): HypeString;
-function CharRef(i:integer):AnsiString;
-function CharRefDecimal(i:integer):AnsiString;
 function HasUnicodeName(i:integer; var CharacterName:AString):boolean;
 function AssertTags2:boolean;
-function ContainsPHPTag(const s:HypeString):boolean;
 
 var RenamedNames:TStringList;
 
@@ -549,12 +544,6 @@ begin
  end;
 end;
 
-function ContainsPHPTag(const s:HypeString):boolean;
-const PHP_TAG_PREFIX:HypeString='<?';
-begin
- result:=Pos(PHP_TAG_PREFIX,s)<>0;
-end;
-
 function IsPHPTag(const s:HypeString; var i:integer):boolean;
 var i2:integer;
 begin
@@ -832,17 +821,6 @@ begin
   end;
 end;
 
-
-function CharRef(i:integer):AnsiString;
-begin
- result:='&#x'+AnsiString(Format('%x', [i]))+';';
-end;
-
-function CharRefDecimal(i:integer):AnsiString;
-begin
- result:='&#'+AnsiString(Format('%d', [i]))+';';
-end;
-
 function ConvertWideStringToUnicode(const s:WideString; NoTrivial:boolean):WideString;
 var i:Integer;
 begin
@@ -859,30 +837,6 @@ begin
  if s[i]='>' then
   result:=result+'&gt;' else
   result:=result+s[i];
-end;
-
-function LE127(const s:WideString):AnsiString;
-var i:Integer;
-begin
- result:='';
- for i:=1 to length(s) do
- if (ord(s[i])>127) then
-  result:=result+CharRef(ord(s[i])) else
-  result:=result+AnsiChar(s[i]);
-end;
-
-function XMLconformant(const s:AnsiString):AnsiString;
-var i,o:Integer;
-    ch:WideChar;
-begin
- result:='';
- for i:=1 to length(s) do
- if (s[i]='&') and not(FindUniClose(s,i+1,o) and getUnicodeChar(abscopy(s,i+1,o-1),ch)) then
- begin
-  result:=result+'&amp;';
- end else
-  result:=result+s[i];
- //todo: check for < and >
 end;
 
 function ConvertUnicodeToWideStringExt(const s:HypeString; var TrackChar:TTrackChar; offs:integer; mislegit:HypeChar):WideString;
@@ -2356,8 +2310,6 @@ begin
     begin
      UseStyleTree:=StyleTree;
      _TextAlign:=TextAlign;
-     if (_TextAlign=ctaJustify) and CanAutoSizeX(Self) then
-      _TextAlign:=ctaLeft;
      UseStyleTree:=nil;
      break;
     end;

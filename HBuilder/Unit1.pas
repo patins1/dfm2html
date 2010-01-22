@@ -25,7 +25,7 @@ uses
   MySiz, Unit3, uConversion,
   dhRadioButton, dhMemo, dhFileField,  MyToolButton,
   dhColorPicker,IniFiles,gr32, uOptions, menuhelper,
-  pngimage, Contnrs,hEdit,hComboBox,hMemo, UIConstants,DKLang, OpenSave,AColorPickerAX_TLB,dhStrUtils;
+  pngimage, Contnrs,hEdit,hComboBox,hMemo, UIConstants,DKLang, OpenSave,AColorPickerAX_TLB,dhStrUtils,WideStrUtils,uMetaWriter;
 
 //const WM_PUSHUP=WM_USER+33;
 
@@ -349,7 +349,6 @@ type
 {$ENDIF}
     procedure UpdateCommands(SelChange,SiteChange:boolean);
     //function Act:TPageContainer;
-    procedure Paint; override;
     procedure ApplyNewSettings(FontToCurrent:boolean; FontToAll:boolean);
     function GeneratedHTML(View:Boolean):TPathName;
   end;
@@ -494,13 +493,13 @@ begin
     LastUpdateCheck:=StrToDate(sLastUpdateCheck,GetFormatSettings);
   except
   end;
-  FAutoUpdate:=ReadBool('Program','Monthly Check For Update',true);
+  FuncSettings.FAutoUpdate:=ReadBool('Program','Monthly Check For Update',true);
 
-  with FuncSettings do
+  with FuncSettings do with GridDefinition do
   begin
-  FGridX:=ReadInteger('Grid','GridX',8);
-  FGridY:=ReadInteger('Grid','GridY',8);
-  FGridDisplay:=TGridDisplay(ReadInteger('Grid','Display',0));
+  GridX:=ReadInteger('Grid','GridX',8);
+  GridY:=ReadInteger('Grid','GridY',8);
+  GridDisplay:=TGridDisplay(ReadInteger('Grid','Display',0));
   FViewer:=ReadString('General','Viewer',EmptyStr);
   FSmartPublishing:=ReadBool('General','Smart Publishing',true);
   FPassiveFTP:=ReadBool('General','Passive FTP',true);
@@ -591,7 +590,7 @@ begin
  sl:=TStringList.Create;
  try
  try
-  if FSmartPublishing then
+  if FuncSettings.FSmartPublishing then
    sl.LoadFromFile(RootDir(crcFile));
   for i:=0 to sl.Count-1 do
   begin
@@ -664,15 +663,15 @@ begin
 
   if LastUpdateCheck<>NeverCheckedForUpdate then
    WriteString('Program','Last Update Check',DateToStr(LastUpdateCheck,GetFormatSettings));
-  WriteBool('Program','Monthly Check For Update',FAutoUpdate);
+  WriteBool('Program','Monthly Check For Update',FuncSettings.FAutoUpdate);
 
 
 
-  with FuncSettings do
+  with FuncSettings do with GridDefinition do
   begin
-  WriteInteger('Grid','GridX',FGridX);
-  WriteInteger('Grid','GridY',FGridY);
-  WriteInteger('Grid','Display',Integer(FGridDisplay));
+  WriteInteger('Grid','GridX',GridX);
+  WriteInteger('Grid','GridY',GridY);
+  WriteInteger('Grid','Display',Integer(GridDisplay));
   WriteString('General','Viewer',FViewer);
   WriteBool('General','Smart Publishing',FSmartPublishing);
   WriteBool('General','Passive FTP',FPassiveFTP);
@@ -1202,7 +1201,6 @@ end;
 
 procedure TdhMainForm.FormDestroy(Sender: TObject);
 begin
- OuterControl:=nil; 
  {$IFNDEF CLX}
 {    if HttpCli1<>nil then
     begin
@@ -1710,22 +1708,13 @@ begin
  end;
  pa:=RasteringSaveDir+PureFileName;
  if View then
-  Browse(pa,FViewer,true);
+  Browse(pa,FuncSettings.FViewer,true);
  except
  on A:Exception do
   showmessage(A.Message);
  end;
  Result:=RasteringSaveDir;
 end;
-
-procedure TdhMainForm.Paint;
-begin
-  inherited;
-{ Canvas.Brush.Color:=clBlack;
-    Canvas.FillRect(Rect(20,20,1300,1300));
- }
-end;
-
 
 procedure TdhMainForm.mExitClick(Sender: TObject);
 begin
@@ -1785,7 +1774,7 @@ begin
        if pn.StyleArr[state]<>nil then with pn.StyleArr[state] do
        if BackgroundImage.HasPicture then
        begin
-        FileName:=sw+PureFileName(ProposedBackgroundFilename);
+        FileName:=sw+PureFileName(ProposedBackgroundFilename(pn.StyleArr[state]));
         if BackgroundImage.HasPath and (LowerCase(BackgroundImage.GetAbsolutePath)<>LowerCase(FileName)) then
         begin
          anyFilesToShift:=true;
@@ -1812,7 +1801,7 @@ begin
        if pn.StyleArr[state]<>nil then with pn.StyleArr[state] do
        if BackgroundImage.HasPicture then
        begin
-        FileName:=sw+PureFileName(ProposedBackgroundFilename);
+        FileName:=sw+PureFileName(ProposedBackgroundFilename(pn.StyleArr[state]));
         if not BackgroundImage.HasPath and FileExists(FileName) and (StringFromFile(FileName)<>AsString(BackgroundImage.RequestGraphic)) or anyFilesToShift and BackgroundImage.HasPath and (LowerCase(BackgroundImage.GetAbsolutePath)<>LowerCase(FileName)) and FileExists(FileName) and (StringFromFile(FileName)<>StringFromFile(BackgroundImage.GetAbsolutePath)) then
         begin
           if MessageDlg(DKFormat(EXTERNALIZEDIMAGEALREADYEXISTS,FileName),mtConfirmation,[mbYes, mbNo], 0)<>mrYes then exit;
@@ -1830,7 +1819,7 @@ begin
        if pn.StyleArr[state]<>nil then with pn.StyleArr[state] do
        if BackgroundImage.HasPicture then
        begin
-        FileName:=sw+PureFileName(ProposedBackgroundFilename);
+        FileName:=sw+PureFileName(ProposedBackgroundFilename(pn.StyleArr[state]));
         if not BackgroundImage.HasPath then
         begin
          SaveGraphic(BackgroundImage.RequestGraphic,FileName);
@@ -2266,7 +2255,7 @@ end;
 
 procedure TdhMainForm.mHomepageClick(Sender: TObject);
 begin
-  Browse('http://www.dfm2html.'+GetTopLevelDomain+'/launch/',{'iexplore'}FViewer,false);
+  Browse('http://www.dfm2html.'+GetTopLevelDomain+'/launch/',{'iexplore'}FuncSettings.FViewer,false);
 end;
 
 procedure OnHistory(Sender:TControl){(Page:TdhPage; Anchor:TControl)};
@@ -2441,7 +2430,7 @@ begin
  end;
  if Act.MySiz.FindBody.HTTPURL<>EmptyStr then
  begin
-  Browse(Act.MySiz.FindBody.HTTPURL,FViewer,true);
+  Browse(Act.MySiz.FindBody.HTTPURL,FuncSettings.FViewer,true);
  end;
 end;
 
@@ -2697,7 +2686,7 @@ begin
  begin
   if MessageDlg(DKFormat(NEWVERSIONAVAILABLE),mtConfirmation,[mbYes, mbNo], 0)=mrYes then
   begin
-   Browse('http://www.dfm2html.'+GetTopLevelDomain+'/update.html',{'iexplore'}FViewer,false);
+   Browse('http://www.dfm2html.'+GetTopLevelDomain+'/update.html',{'iexplore'}FuncSettings.FViewer,false);
   end;
  end else
  begin
@@ -2773,7 +2762,7 @@ begin
   glLockWindowUpdate(false,lLock);
  end;
 
- if FAutoUpdate and ((LastUpdateCheck=NeverCheckedForUpdate) or (Now-LastUpdateCheck-UpdateCheckInterval>=0)) then
+ if FuncSettings.FAutoUpdate and ((LastUpdateCheck=NeverCheckedForUpdate) or (Now-LastUpdateCheck-UpdateCheckInterval>=0)) then
  begin
   mCheckForUpdateClick(nil);
  end;
@@ -2854,7 +2843,7 @@ end;
 
 procedure TdhMainForm.mVisitForumClick(Sender: TObject);
 begin
- Browse('http://www.dfm2html.com/launch/forum.html',FViewer,false);
+ Browse('http://www.dfm2html.com/launch/forum.html',FuncSettings.FViewer,false);
 end;
 
 procedure TdhMainForm.DEBUG_mUnregisterClick(Sender: TObject);

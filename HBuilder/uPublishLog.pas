@@ -11,7 +11,7 @@ uses
   ShellAPI, Mask, ExtCtrls, StdCtrls,  Variants, clipbrd, Spin, Buttons, UnicodeCtrls,
 {$ENDIF}
   UseFastStrings,SysUtils, Classes, {$IFDEF MSWINDOWS}OverbyteIcsFtpCli,OverbyteIcsUrl,{$ELSE}{IcsUrl,}{$ENDIF} dhPageControl,
-  DKLang, UIConstants, MyForm,dhStrUtils;
+  DKLang, UIConstants, MyForm,dhStrUtils, uOptions, uMetaWriter;
 
 type
   TPublishLog = class(TMyForm)
@@ -46,6 +46,8 @@ var
 
 var GeneratedFiles:TStringList;
 function GetFTPShortcut(page:TdhPage):TPathName;
+function Find(FTP,FileName:TPathName; CRC:DWORD; AddOrReplace:boolean):boolean;
+var Uploaded:array of record FTP:TPathName; Files:array of record FileName:TPathName; CRC:DWORD; end; end;
 
 implementation
 
@@ -87,6 +89,64 @@ begin
  result:=Lowercase(Host)+Path;
 end;
 
+function Find(FTP,FileName:TPathName; CRC:DWORD; AddOrReplace:boolean):boolean;
+var
+    i,w:integer;
+begin
+ result:=false;
+ for i:=Low(Uploaded) to High(Uploaded) do
+ if Uploaded[i].FTP=FTP then
+ with Uploaded[i] do
+ begin
+  for w:=Low(Files) to High(Files) do
+  if Files[w].FileName=FileName then
+  begin
+   if AddOrReplace then
+   begin
+    Files[w].CRC:=CRC;
+    exit;
+   end else
+   begin
+    result:=Files[w].CRC=CRC;
+    exit;
+   end;
+  end;
+  if AddOrReplace then
+  begin
+   if FileName='*' then
+   begin
+    SetLength(Files,0);
+   end else
+   begin
+    SetLength(Files,Length(Files)+1);
+    Files[High(Files)].FileName:=FileName;
+    Files[High(Files)].CRC:=CRC;
+   end;
+   exit;
+  end else
+  begin
+   result:=(FileName='*') and (Length(Files)<>0);
+   exit;
+  end;
+ end;
+ if AddOrReplace then
+ begin
+  SetLength(Uploaded,Length(Uploaded)+1);
+  Uploaded[High(Uploaded)].FTP:=FTP;
+  with Uploaded[High(Uploaded)] do
+  begin
+   SetLength(Files,Length(Files)+1);
+   Files[High(Files)].FileName:=FileName;
+   Files[High(Files)].CRC:=CRC;
+  end;
+  exit;
+ end else
+ begin
+  result:=false;
+  exit;
+ end;
+end;
+
 procedure TPublishLog.DoUpload(const URL: TPathName);
 var Proto, Username, Password, Host, Port, Path : String;
     i:integer;
@@ -112,7 +172,7 @@ begin
 
  ToUpload.Clear;
  for i:=0 to GeneratedFiles.Count-1 do
- if not FSmartPublishing or not dhMainForm.Act.MySiz.FindBody.Find(GetFTPShortcut(dhMainForm.Act.MySiz.FindBody),ExtractFileName(GeneratedFiles[i]),DWORD(GeneratedFiles.Objects[i]),false) then
+ if not FuncSettings.FSmartPublishing or not Find(GetFTPShortcut(dhMainForm.Act.MySiz.FindBody),ExtractFileName(GeneratedFiles[i]),DWORD(GeneratedFiles.Objects[i]),false) then
    ToUpload.AddObject(GeneratedFiles[i],GeneratedFiles.Objects[i]);
 
  if GeneratedFiles.Count>ToUpload.Count then
@@ -134,7 +194,7 @@ begin
  bStopTransfer.Click;
 {$ELSE}
  ParseURL(URL,Proto, Username, Password, Host, Port, Path);
- FtpClient1.Passive:=FPassiveFTP;
+ FtpClient1.Passive:=FuncSettings.FPassiveFTP;
  FtpClient1.HostName:=Host;
  FtpClient1.Port:=DefaultS(Port,'21');
  FtpClient1.Username:=DefaultS(Username,'anonymous');
@@ -216,8 +276,8 @@ begin
  end;
  ftpPutAsync:
  begin
-  if FSmartPublishing and (dhMainForm.Act<>nil) then
-   dhMainForm.Act.MySiz.FindBody.Find(GetFTPShortcut(dhMainForm.Act.MySiz.FindBody),ExtractFileName(ToUpload[0]),DWORD(ToUpload.Objects[0]),true);
+  if FuncSettings.FSmartPublishing and (dhMainForm.Act<>nil) then
+   Find(GetFTPShortcut(dhMainForm.Act.MySiz.FindBody),ExtractFileName(ToUpload[0]),DWORD(ToUpload.Objects[0]),true);
   ToUpload.Delete(0);
  end;
  end;

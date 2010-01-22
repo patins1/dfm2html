@@ -18,7 +18,7 @@ uses
 
   dhHTMLForm,MySiz, dhPanel,dhPageControl, funcutils, UseFastStrings, math, Contnrs, MySpinEdit, MyTrackBar,
   hEdit,hComboBox,hMemo,dhMenu,dhStyleSheet,MySpeedButton,BinTree,uTemplates,
-  dhLabel, dhCheckBox, dhRadioButton,UIConstants, MyForm, dhStrUtils;
+  dhLabel, dhCheckBox, dhRadioButton,UIConstants, MyForm, dhStrUtils, uMetaWriter;
 
 
 type
@@ -260,8 +260,8 @@ begin
  begin
   MySiz.Visible:=Designing;
   if Designing then
-   ResetFields(Self) else
-   MemorizeFields(Self);
+   TdhHTMLForm.ResetFields(Self) else
+   TdhHTMLForm.MemorizeFields(Self);
  end;
  for i:=0 to ControlCount-1 do
  if not(Controls[i] is TMySiz) and not(Controls[i] is TForm) then
@@ -458,14 +458,14 @@ end;
 function GetUniqueName(Component:TComponent): TComponentName;
 begin
  if Component is TdhCustomPanel then
-  result:=_GetUniqueName(Component,Copy(Component.ClassName,4,maxint)) else
-  result:=_GetUniqueName(Component,Copy(Component.ClassName,2,maxint));
+  result:=TdhCustomPanel._GetUniqueName(Component,Copy(Component.ClassName,4,maxint)) else
+  result:=TdhCustomPanel._GetUniqueName(Component,Copy(Component.ClassName,2,maxint));
 end;
 
 procedure TPageContainer.CreateBody;
 var body:TdhPage;
 begin
- Name:=_GetUniqueName(Self,'PageContainer');
+ Name:=TdhCustomPanel._GetUniqueName(Self,'PageContainer');
  Caption:=DKFormat(UNTITLED);
  FormStyle := fsMDIChild;
  WindowState:=wsMaximized;
@@ -487,7 +487,6 @@ begin
  InitializeRedoUndo;
  ActDFM;
 end;
-
 
 procedure TMyReader.ReaderSetName(Reader: TReader; Component: TComponent; var Name: string);
 begin
@@ -668,6 +667,39 @@ end;
 
 type TFakeMemoryStream=class(TMemoryStream);
 
+
+procedure TStream_WriteDescendent(Self:TStream; Instance, Ancestor: TComponent);
+var
+  Writer: TWriter;
+begin
+  if WithMeta then
+  begin
+   Writer := TMyWriter.Create(Self, 4096);
+   glOnDefineProperties:=TMyWriter(Writer).OnDefineProperties;
+  end else
+  begin
+   Writer := TWriter.Create(Self, 4096);
+  end;
+  try
+    Writer.WriteDescendent(Instance, Ancestor);
+  finally
+    glOnDefineProperties:=nil;
+    Writer.Free;
+  end;
+end;
+
+
+procedure TStream_WriteDescendentRes(Self:TStream; const ResName: string; Instance,
+  Ancestor: TComponent);
+var
+  FixupInfo: Integer;
+begin
+  Self.WriteResourceHeader(ResName, FixupInfo);
+  TStream_WriteDescendent(Self,Instance, Ancestor);
+  Self.FixupResourceHeader(FixupInfo);
+end;
+
+
 function TPageContainer.GetDFMStr(AsText:boolean; _WithMeta:boolean):TFileContents;
 var S : TMemoryStream;
     i:integer;
@@ -710,7 +742,7 @@ begin
        TdhCustomPanel(Controls[i]).CalcVariableSizes(false);
     end;
     try
-     S.WriteComponentRes(Self.ClassName,Self);
+     TStream_WriteDescendentRes(s,Self.ClassName,Self,nil);
     finally;
      if WithMeta then
       SetDesigning(not _RuntimeMode,true);
@@ -1443,7 +1475,7 @@ end;
 
 procedure TPageContainer.SkipValue(Reader: TReader);
 begin
- _SkipValue(Reader);
+ Reader.SkipValue;
 end;
 
 
@@ -2161,7 +2193,7 @@ begin
   i:=Pos('_',NewName);
   if (i<>-1) and TryStrToInt(Copy(NewName,i+1,maxint),n) then
   begin
-   inherited SetName(_GetUniqueName(Self,'PageContainer'));
+   inherited SetName(TdhCustomPanel._GetUniqueName(Self,'PageContainer'));
    exit;
   end;
  end;

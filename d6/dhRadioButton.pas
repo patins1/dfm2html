@@ -46,7 +46,6 @@ var i:integer;
 begin
   inherited;
   if csLoading in ComponentState then exit;
-
   if Checked then
   for i:=0 to Parent.ControlCount-1 do
   if (Parent.Controls[i] is TdhRadioButton) and TdhRadioButton(Parent.Controls[i]).Checked and (Parent.Controls[i]<>Self) then

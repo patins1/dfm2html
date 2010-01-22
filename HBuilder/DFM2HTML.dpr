@@ -33,7 +33,8 @@ uses
   BasicHTMLElements in '..\d6\BasicHTMLElements.pas',
   uChooseWide in 'uChooseWide.pas' {ChooseUnicode},
   uObjectExplorer in 'uObjectExplorer.pas' {ObjectExplorer},
-  uResourceExplorer in 'uResourceExplorer.pas' {ResourceExplorer};
+  uResourceExplorer in 'uResourceExplorer.pas' {ResourceExplorer},
+  uMetaWriter in 'uMetaWriter.pas';
 
 {$ELSE}
 

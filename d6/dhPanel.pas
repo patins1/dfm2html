@@ -350,8 +350,6 @@ type
   end;
 
   TCSSBorder=class(TPersistent)
-  private
-    procedure AssignComputed(pn: TdhCustomPanel; Align:TEdgeAlign);
   protected
    Owner:TStyle;
    FColor:TCSSColor;
@@ -462,7 +460,6 @@ type
     FontSize:TCSSFontSize;
   end;
 
-  THasCommon=function(Control:TPersistent; var Common:TdhCustomPanel):boolean;
   TSpecialBorderType=(sbtNormal,sbtButton,sbtEdit);
 
   ICon=interface
@@ -487,7 +484,10 @@ type
     function RequiresRastering:boolean;
   end;
 
-  IChangeReceiver=TdhCustomPanel;
+  IChangeReceiver=TdhCustomPanel;{interface
+    function GetName:TComponentName;
+    function GetImageFormat: TImageFormat;
+  end;           }
 
   TStyle = class(TPersistent)
   protected
@@ -592,7 +592,6 @@ type
     function IsMarginCleared(Align:TEdgeAlign):boolean;
     function IsBGImageCleared: boolean;
     function IsEdgeCleared(Align: TEdgeAlign): boolean;
-    procedure AssignComputedEdge(Align: TEdgeAlign; pn: TdhCustomPanel);
     function CopyBlurEffectsByInherited: boolean;
     function HasInheritedTransformations(var tt: TTransformations):boolean;
     procedure LoadImage(const filename: TPathName);
@@ -607,7 +606,6 @@ type
     procedure Clear;
     constructor Create(AOwner:IChangeReceiver; OwnState:TState);
     destructor Destroy; override;
-    procedure GetFontDifferences({const Font:TFont}FontStyle:TFontStyles; FontColor:TCSSColor; FontName:TFontName; FontHeight:Integer);
     function GetInfo:AString;
     function IsStyleStored:boolean;
     function GetBorderByName(const name:TPropertyName; var r:TCSSBorder):boolean;
@@ -745,6 +743,9 @@ type
     LastActStyle:TState;
     FAutoSize:TASXY;
     FIsOver:boolean;
+    procedure AssignComputed(Border:TCSSBorder; Align:TEdgeAlign);
+    procedure AssignComputedEdge(Align:TEdgeAlign; Style: TStyle);
+    procedure GetFontDifferences(FontStyle:TFontStyles; FontColor:TCSSColor; FontName:TFontName; FontHeight:Integer);
     procedure CopyStyles(fromState,toState:TState);
     function BoundNextSibling:TdhCustomPanel; virtual;
     function BoundTop:Integer; virtual;
@@ -1575,7 +1576,7 @@ begin
 
    if LocationImage.FPictureID.Graphic=nil then
    if Assigned(OriReader.OnError) then
-    OriReader.OnError(OriReader,LocationImage.Owner.Owner.Name+': Unknown graphics format', DummyResult);
+    OriReader.OnError(OriReader,LocationImage.Owner.Owner.GetName+': Unknown graphics format', DummyResult);
  end else
   Assert(false);
 end;
@@ -2639,7 +2640,7 @@ begin
  if not InCSSToWinControl then
  begin
   with Font do
-   ActStyle.GetFontDifferences(Style,ColorToCSSColor(Color),Name,Height);
+   GetFontDifferences(Style,ColorToCSSColor(Color),Name,Height);
   NotifyCSSChanged([wcFont]);
  end;
 end;
@@ -3238,15 +3239,15 @@ end;
 
 
 
-procedure TStyle.GetFontDifferences({const Font:TFont}FontStyle:TFontStyles; FontColor:TCSSColor; FontName:TFontName; FontHeight:Integer );
+procedure TdhCustomPanel.GetFontDifferences(FontStyle:TFontStyles; FontColor:TCSSColor; FontName:TFontName; FontHeight:Integer );
 begin
- Owner.Bold:=fsBold in FontStyle;
- Owner.Italic:=fsItalic in FontStyle;
- Owner.Underline:=fsUnderline in FontStyle;
- Owner.LineThrough:=fsStrikeOut in FontStyle;
- Owner.FontColor:=FontColor;
- Owner.NearestFontFamily:=FontName;
- Owner.FontSize:=IntToStr(Abs(FontHeight));
+ Self.Bold:=fsBold in FontStyle;
+ Self.Italic:=fsItalic in FontStyle;
+ Self.Underline:=fsUnderline in FontStyle;
+ Self.LineThrough:=fsStrikeOut in FontStyle;
+ Self.FontColor:=FontColor;
+ Self.NearestFontFamily:=FontName;
+ Self.FontSize:=IntToStr(Abs(FontHeight));
 end;
 
 procedure TdhCustomPanel.InvDesigner;
@@ -5766,16 +5767,22 @@ end;
 
 procedure TCSSBorder.SetWidth(Value:TCSSCardinal);
 begin
- FWidth:=Value;
- if (Value>0) and (FStyle=cbsNone) then
-  FStyle:=cbsSolid;
- Owner.pc(pcBorderWidth);
+ if FWidth<>Value then
+ begin
+  FWidth:=Value;
+  if (Value>0) and (FStyle=cbsNone) then
+   FStyle:=cbsSolid;
+  Owner.pc(pcBorderWidth);
+ end;
 end;
 
 procedure TCSSBorder.SetColor(Value:TCSSColor);
 begin
- FColor:=Value;
- Owner.pc(pcBorderColor);
+ if FColor<>Value then
+ begin
+  FColor:=Value;
+  Owner.pc(pcBorderColor);
+ end;
 end;
 
 function TCSSBorder.IsStored:boolean;
@@ -5793,8 +5800,11 @@ end;
 
 procedure TCSSBorder.SetStyle(Value:TCSSBorderStyle);
 begin
- FStyle:=Value;
- Owner.pc(pcBorderStyle);
+ if FStyle<>Value then
+ begin
+  FStyle:=Value;
+  Owner.pc(pcBorderStyle);
+ end;
 end;
 
 procedure TCSSBorder.SetAll(Width:Integer;Color:TCSSColor;Style:TCSSBorderStyle);
@@ -5974,8 +5984,11 @@ end;
 
 procedure TStyle.SetPadding(Align:TEdgeAlign; Value:TCSSCardinal=vsrInherit);
 begin
- FPaddings[Align]:=Value;
- pc(pcPadding);
+ if FPaddings[Align]<>Value then
+ begin
+  FPaddings[Align]:=Value;
+  pc(pcPadding);
+ end;
 end;
 
 
@@ -6770,6 +6783,7 @@ end;
 
 procedure TStyle.SetMargin(Align:TEdgeAlign; Value:TCSSMargin);
 begin
+ if FMargins[Align]<>Value then
  try
   if Value<>EmptyStr then
    GetMarginPixels(Value,0);
@@ -6919,11 +6933,11 @@ begin
   inherited Assign(Source);
 end;
 
-procedure TCSSBorder.AssignComputed(pn:TdhCustomPanel; Align:TEdgeAlign);
+procedure TdhCustomPanel.AssignComputed(Border:TCSSBorder; Align:TEdgeAlign);
 begin
-    FWidth:=pn.BorderWidth(Align);
-    FColor:=pn.BorderColor(Align);
-    FStyle:=pn.BorderStyle(Align);
+    Border.Width:=BorderWidth(Align);
+    Border.Color:=BorderColor(Align);
+    Border.Style:=BorderStyle(Align);
 end;
 
 
@@ -13278,12 +13292,11 @@ begin
  result:=not FBorders[Align].IsStored and (FMargins[Align]=MarginDefault) and (FPaddings[Align]=vsrInherit);
 end;
 
-procedure TStyle.AssignComputedEdge(Align:TEdgeAlign; pn: TdhCustomPanel);
+procedure TdhCustomPanel.AssignComputedEdge(Align:TEdgeAlign; Style: TStyle);
 begin
-  FMargins[Align]:=inttostr(pn.MarginWidth(Align));
-  FPaddings[Align]:=pn.PaddingWidth(Align);
-  FBorders[Align].AssignComputed(pn,Align);
-  pcs(pcChanges[pcMargin]+pcChanges[pcPadding]+(pcChanges[pcBorderWidth]+pcChanges[pcBorderColor]+pcChanges[pcBorderStyle]));
+  Style.SetMargin(Align,inttostr(MarginWidth(Align)));
+  Style.SetPadding(Align,PaddingWidth(Align));
+  AssignComputed(Style.Borders[Align],Align);
 end;
 
 procedure TdhCustomPanel.Invalidate;

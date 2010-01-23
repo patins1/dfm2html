@@ -1192,10 +1192,10 @@ begin
  spPadding.SetDetailedStoredValue(ActStyle.IsPaddingCleared(EdgeAlign),ActPn.PaddingWidth(EdgeAlign));
  dhComboBox1.SetDetailedStoredItemIndex(ActStyle.GetBorder(EdgeAlign).Style=Low(TCSSBorderStyle),max(0,Integer(ActPn.BorderStyle(EdgeAlign))-1));
  cpBorderColor.CSSColor:=ActPn.BorderColor(EdgeAlign);
- SampleBorder.Style.AssignComputedEdge(ealRight,ActPn);
- SampleBorder.Style.AssignComputedEdge(ealTop,ActPn);
- SampleBorder.Style.AssignComputedEdge(ealBottom,ActPn);
- SampleBorder.Style.AssignComputedEdge(ealLeft,ActPn);
+ ActPn.AssignComputedEdge(ealRight,SampleBorder.Style);
+ ActPn.AssignComputedEdge(ealTop,SampleBorder.Style);
+ ActPn.AssignComputedEdge(ealBottom,SampleBorder.Style);
+ ActPn.AssignComputedEdge(ealLeft,SampleBorder.Style);
  SampleBorder.Update;
 
 { cBorAll.Font.Color:=ClearColor[IsEdgeCleared(ealNone)];
@@ -1357,7 +1357,7 @@ begin
  cpFontColor.CSSColor:=GetSingleFontColor(TControl(Selection[0]));
  SetClearState(bClearFont,IsFontCleared);
 
- with Font do IGNORE_SampleFont.ActStyle.GetFontDifferences(Style,Color,Name,Height);
+ with Font do IGNORE_SampleFont.GetFontDifferences(Style,Color,Name,Height);
  IGNORE_SampleFont.ActStyle.BackgroundColor:=cpBackgroundColor.CSSColor;
  IGNORE_SampleFont.Overline:=cOverline.Checked;
  IGNORE_SampleFont.Update;

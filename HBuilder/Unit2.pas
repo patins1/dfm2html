@@ -3779,7 +3779,7 @@ end;
 procedure TTabs.mStyleInfoClick(Sender: TObject);
 begin
  LateCreateForm(TStyleInfo,StyleInfo);
- StyleInfo.Memo.Text:=(TObject(Selection[0]) as TdhCustomPanel).ActStyle.GetInfo;
+ StyleInfo.Memo.Text:=(TObject(Selection[0]) as TdhCustomPanel).GetInfo;
  StyleInfo.Show;
 end;
 

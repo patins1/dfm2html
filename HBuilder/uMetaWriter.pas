@@ -343,7 +343,7 @@ end;
 
 function ProposedBackgroundFilename(Self:TStyle): TPathName;
 begin
- result:=FinalImageID(Self.Owner)+sst[Self.RepresentingState]+Self.BackgroundImage.GraphicExtension
+ result:=FinalImageID(Self.Owner.GetControl)+sst[Self.RepresentingState]+Self.BackgroundImage.GraphicExtension
 end;
 
 function IsAbsolute(s:TPathName):boolean;
@@ -452,6 +452,26 @@ begin
   end;
 end;
 
+function BaseRasteringFile(Self:TFakeStyle):TPathName;
+var PreferDown:boolean;
+    Owner:TdhFakeCustomPanel;
+begin
+ Owner:=TdhFakeCustomPanel(Self.Owner.GetControl);
+ case Self.OwnState of
+  hsNormal: result:=EmptyStr;
+  hsOver,hsDown: result:=Owner.StyleArr[hsNormal].RasteringFile;
+  hsOverDown:
+   begin
+    PreferDown:=Owner.GetPreferDownStyles;
+    result:=Owner.StyleArr[NextStyle[PreferDown]].RasteringFile;
+    if result=Owner.StyleArr[hsNormal].RasteringFile then
+     result:=Owner.StyleArr[NextStyle[not PreferDown]].RasteringFile;
+   end;
+  end;
+ //result:=Owner.StyleArr[NextStyle[Owner.DownOverlayOver,OwnState]].RasteringFile;
+end;
+
+
 function PrepareRastering(Self:TFakeStyle; addheight:integer; const PostFix:TPathName):boolean;
 var pn:TdhFakeCustomPanel;
     graph:TGraphic;
@@ -476,7 +496,7 @@ var EqSizing:array[0..2,0..2] of TRect;
 const EqNaming:array[0..2,0..2] of TPathName=(('_topleft','_topmiddle','_topright'),('_middleleft','_middle','_middleright'),('_bottomleft','_bottommiddle','_bottomright'));
 begin
 
-  pn:=TdhFakeCustomPanel(Self.Owner);
+  pn:=TdhFakeCustomPanel(Self.Owner.GetControl);
 
   {TODO: SpeedupGeneration if RasteringFile<>'' then
   begin
@@ -512,7 +532,7 @@ begin
 
     Self.RasteringFile:=FinalImageID(pn)+PostFix+sst[Self.OwnState];
     Self.RasteringFile:=Self.RasteringFile+'.gif';
-    result:=glSaveBin(_crc,Self.RasteringFile,AbsoluteRasteringFile,Self.OwnState<>hsNormal,Self.BaseRasteringFile,NeedSave,false);
+    result:=glSaveBin(_crc,Self.RasteringFile,AbsoluteRasteringFile,Self.OwnState<>hsNormal,BaseRasteringFile(Self),NeedSave,false);
 
     if NeedSave then
     begin
@@ -613,7 +633,7 @@ begin
          if NeedOpaqueImage then pn.TopGraph.DrawTo(pnTopGraph,pnTopGraph.BoundsRect,EqSize);
          pn.TransparentTop.DrawTo(pnTransparentTop,pnTransparentTop.BoundsRect,EqSize);
          Self.RasteringFile:=FinalImageID(pn)+PostFix+EqNaming[EqY,EqX];
-         result:=SaveImg(pnTopGraph,pnTransparentTop,Self.RasteringFile,Self.OwnState<>hsNormal,Self.BaseRasteringFile,getPhysicalImageFormat(PhysicalImageFormat,pnTransparentTop),false);
+         result:=SaveImg(pnTopGraph,pnTransparentTop,Self.RasteringFile,Self.OwnState<>hsNormal,BaseRasteringFile(Self),getPhysicalImageFormat(PhysicalImageFormat,pnTransparentTop),false);
         end;
         RasteringFiles:=RasteringFiles+Self.RasteringFile+'|';
        end;
@@ -629,7 +649,7 @@ begin
      end;
     end;
     Self.RasteringFile:=FinalImageID(pn)+PostFix+sst[Self.OwnState];
-    result:=SaveImg(pn.TopGraph,pn.TransparentTop,Self.RasteringFile,Self.OwnState<>hsNormal,Self.BaseRasteringFile,getPhysicalImageFormat(PhysicalImageFormat,pn.TransparentTop),true);
+    result:=SaveImg(pn.TopGraph,pn.TransparentTop,Self.RasteringFile,Self.OwnState<>hsNormal,BaseRasteringFile(Self),getPhysicalImageFormat(PhysicalImageFormat,pn.TransparentTop),true);
    end else
     result:=false;
   end;
@@ -1001,6 +1021,249 @@ begin
   result:='';
 end;
 
+function UndefFilter(Self:TStyle; IsRastered:boolean):boolean;
+var _FPictureID:TPictureID;
+    _FPath:TPathName;
+    FPicture:TLocationImage;
+    Owner:TdhFakeCustomPanel;
+begin
+  Owner:=TdhFakeCustomPanel(Self.Owner.GetControl);
+  if Self.BackgroundImage.HasPicture or IsRastered then
+  begin
+   _FPictureID:=Self.BackgroundImage.FPictureID;
+   _FPath:=Self.BackgroundImage.FPath;
+   try
+    Self.BackgroundImage.FPictureID:=nil;
+    Self.BackgroundImage.FPath:='';
+    result:=Owner.HasBackgroundImage(FPicture) and FPicture.ImgIsT1X1;
+   finally
+    Self.BackgroundImage.FPictureID:=_FPictureID;
+    Self.BackgroundImage.FPath:=_FPath;
+   end;
+  end else
+   result:=false;
+end;
+
+function BaseBorderColors(Self:TFakeStyle):TColorName;
+var PreferDown:boolean;
+    Owner:TdhFakeCustomPanel;
+begin
+  Owner:=TdhFakeCustomPanel(Self.Owner.GetControl);
+{ if OwnState=hsNormal then
+  result:=EmptyStr else
+  result:=Owner.StyleArr[NextStyleOld[Owner.DownOverlayOver,OwnState]].FBorderColors;
+} case Self.OwnState of
+  hsNormal: result:=EmptyStr;
+  hsOver,hsDown: result:=TFakeStyle(Owner.StyleArr[hsNormal]).FBorderColors;
+  hsOverDown:
+   begin
+    PreferDown:=Owner.GetPreferDownStyles;
+    result:=TFakeStyle(Owner.StyleArr[NextStyle[PreferDown]]).FBorderColors;
+    if result=EmptyStr then
+     result:=TFakeStyle(Owner.StyleArr[NextStyle[not PreferDown]]).FBorderColors;
+    if result=EmptyStr then
+     result:=TFakeStyle(Owner.StyleArr[hsNormal]).FBorderColors;
+   end;
+  end;
+end;
+
+
+function BaseWH(Self:TFakeStyle):TPoint;
+var PreferDown:boolean;
+    Owner:TdhFakeCustomPanel;
+begin
+  Owner:=TdhFakeCustomPanel(Self.Owner.GetControl);
+{
+ if OwnState=hsNormal then
+  result:=Point(Owner.Control.Width,Owner.Control.Height) else
+  result:=Owner.StyleArr[NextStyleOld[Owner.DownOverlayOver,OwnState]]._ContentWidthHeight; }
+ case Self.OwnState of
+  hsNormal: result:=Point(Owner.Width,Owner.Height);
+  hsOver,hsDown: result:=TFakeStyle(Owner.StyleArr[hsNormal])._ContentWidthHeight;
+  hsOverDown:
+  begin
+   PreferDown:=Owner.GetPreferDownStyles;
+   if TFakeStyle(Owner.StyleArr[NextStyle[PreferDown]]).IsWidthStored then
+    result.X:=TFakeStyle(Owner.StyleArr[NextStyle[PreferDown]])._ContentWidthHeight.X else
+    result.X:=TFakeStyle(Owner.StyleArr[NextStyle[not PreferDown]])._ContentWidthHeight.X;
+   if TFakeStyle(Owner.StyleArr[NextStyle[PreferDown]]).IsHeightStored then
+    result.Y:=TFakeStyle(Owner.StyleArr[NextStyle[PreferDown]])._ContentWidthHeight.Y else
+    result.Y:=TFakeStyle(Owner.StyleArr[NextStyle[not PreferDown]])._ContentWidthHeight.Y;
+  end;
+ end;
+end;
+
+
+function BasePadding(Self:TFakeStyle; IgnoreCSS:TRasterType):TRect;
+var PreferDown:boolean;
+var sStyleArr:TStyleArray;
+    Owner:TdhFakeCustomPanel;
+begin
+  Owner:=TdhFakeCustomPanel(Self.Owner.GetControl);
+ {if OwnState=hsNormal then
+  result:=Owner.PaddingPure else
+  result:=Owner.StyleArr[NextStyle[Owner.DownOverlayOver,OwnState]]._BasePadding;   }
+ case Self.OwnState of
+  hsNormal: ;
+  hsOver,hsDown:
+  if TFakeStyle(Owner.StyleArr[hsNormal]).IsNewPaddingStored then
+  begin
+   result:=TFakeStyle(Owner.StyleArr[hsNormal])._BasePadding;
+   exit;
+  end;
+  hsOverDown:
+   begin
+    PreferDown:=Owner.GetPreferDownStyles;
+    if TFakeStyle(Owner.StyleArr[NextStyle[PreferDown]]).IsNewPaddingStored then
+    begin
+     result:=TFakeStyle(Owner.StyleArr[NextStyle[PreferDown]])._BasePadding;
+     exit;
+    end else
+    if TFakeStyle(Owner.StyleArr[NextStyle[not PreferDown]]).IsNewPaddingStored then
+    begin
+     result:=TFakeStyle(Owner.StyleArr[NextStyle[not PreferDown]])._BasePadding;
+     exit;
+    end else
+    if TFakeStyle(Owner.StyleArr[hsNormal]).IsNewPaddingStored then
+    begin
+     result:=TFakeStyle(Owner.StyleArr[hsNormal])._BasePadding;
+     exit;
+    end;
+   end;
+  end;
+
+  if EnableIgnoreCSS and (IgnoreCSS=rsFull) then
+  begin
+   Owner.LockDefinedCSS(sStyleArr);
+   result:=Owner.PaddingPure;
+   Owner.UnlockDefinedCSS(sStyleArr);
+  end else
+   result:=Owner.PaddingPure
+end;
+
+function BaseMargin(Self:TFakeStyle; IgnoreCSS:TRasterType):TRect;
+var PreferDown:boolean;
+var sStyleArr:TStyleArray;
+    Owner:TdhFakeCustomPanel;
+begin
+  Owner:=TdhFakeCustomPanel(Self.Owner.GetControl);
+ {if OwnState=hsNormal then
+  result:=Owner.MarginPure else
+  result:=Owner.StyleArr[NextStyle[Owner.DownOverlayOver,OwnState]]._BaseMargin;   }
+ case Self.OwnState of
+  hsNormal: ;
+  hsOver,hsDown:
+  if TFakeStyle(Owner.StyleArr[hsNormal]).IsNewMarginStored then
+  begin
+   result:=TFakeStyle(Owner.StyleArr[hsNormal])._BaseMargin;
+   exit;
+  end;
+  hsOverDown:
+   begin
+    PreferDown:=Owner.GetPreferDownStyles;
+    if TFakeStyle(Owner.StyleArr[NextStyle[PreferDown]]).IsNewMarginStored then
+    begin
+     result:=TFakeStyle(Owner.StyleArr[NextStyle[PreferDown]])._BaseMargin;
+     exit;
+    end else
+    if TFakeStyle(Owner.StyleArr[NextStyle[not PreferDown]]).IsNewMarginStored then
+    begin
+     result:=TFakeStyle(Owner.StyleArr[NextStyle[not PreferDown]])._BaseMargin;
+     exit;
+    end else
+    if TFakeStyle(Owner.StyleArr[hsNormal]).IsNewMarginStored then
+    begin
+     result:=TFakeStyle(Owner.StyleArr[hsNormal])._BaseMargin;
+     exit;
+    end;
+   end;
+  end;
+
+  if EnableIgnoreCSS and (IgnoreCSS=rsFull) then
+  begin
+   Owner.LockDefinedCSS(sStyleArr);
+   result:=Owner.MarginPure;
+   Owner.UnlockDefinedCSS(sStyleArr);
+  end else
+   result:=Owner.MarginPure;
+end;
+
+function BaseBorder(Self:TFakeStyle; IgnoreCSS:TRasterType):TRect;
+var PreferDown:boolean;
+var sStyleArr:TStyleArray;
+    Owner:TdhFakeCustomPanel;
+begin
+  Owner:=TdhFakeCustomPanel(Self.Owner.GetControl);
+ {if OwnState=hsNormal then
+  result:=Owner.BorderPure else
+  result:=Owner.StyleArr[NextStyle[Owner.DownOverlayOver,OwnState]]._BaseBorder;   }
+ case Self.OwnState of
+  hsNormal: ;
+  hsOver,hsDown:
+  if TFakeStyle(Owner.StyleArr[hsNormal]).IsNewBorderStored then
+  begin
+   result:=TFakeStyle(Owner.StyleArr[hsNormal])._BaseBorder;
+   exit;
+  end;
+  hsOverDown:
+   begin
+    PreferDown:=Owner.GetPreferDownStyles;
+    if TFakeStyle(Owner.StyleArr[NextStyle[PreferDown]]).IsNewBorderStored then
+    begin
+     result:=TFakeStyle(Owner.StyleArr[NextStyle[PreferDown]])._BaseBorder;
+     exit;
+    end else
+    if TFakeStyle(Owner.StyleArr[NextStyle[not PreferDown]]).IsNewBorderStored then
+    begin
+     result:=TFakeStyle(Owner.StyleArr[NextStyle[not PreferDown]])._BaseBorder;
+     exit;
+    end else
+    if TFakeStyle(Owner.StyleArr[hsNormal]).IsNewBorderStored then
+    begin
+     result:=TFakeStyle(Owner.StyleArr[hsNormal])._BaseBorder;
+     exit;
+    end;
+   end;
+  end;
+
+  if EnableIgnoreCSS and (IgnoreCSS=rsFull) then
+  begin
+   Owner.LockDefinedCSS(sStyleArr);
+   result:=Owner.BorderPure;
+   Owner.UnlockDefinedCSS(sStyleArr);
+  end else
+   result:=Owner.BorderPure;
+end;
+
+function CalculateBorderColors(Self:TFakeStyle):TColorName;
+var Align:TEdgeAlign;
+    NeedCompact,NeedColor:boolean;
+    BorderColors:array[TEdgeAlign] of TColorName;
+    Owner:TdhFakeCustomPanel;
+begin
+  Owner:=TdhFakeCustomPanel(Self.Owner.GetControl);
+ NeedColor:=false;
+ for Align:=ealTop to ealRight do
+ if not NeedColor and not Owner.HasVal(pcBorderColor,Align) then
+ if Owner.GetSpecialBorderType in [sbtEdit,sbtButton] then
+  NeedColor:=not (Owner.BorderStyle(Align) in [cbsGroove,cbsRidge,cbsInset,cbsOutSet]) else
+  {NeedColor:=Color32(Owner.FontColor)<>clBlack32};
+
+ if NeedColor then
+ for Align:=ealTop to ealRight do
+ begin
+  BorderColors[Align]:=dhPanel.ColorToIntString(Owner.BorderColor(Align));
+ end;
+ Self.FBorderColors:=GetShorter(BorderColors[ealTop],BorderColors[ealRight],BorderColors[ealBottom],BorderColors[ealLeft]);
+ if (Self.FBorderColors<>EmptyStr) and (Self.FBorderColors=BaseBorderColors(Self)) then
+  Self.FBorderColors:=EmptyStr;
+ result:=Self.FBorderColors;
+end;
+
+
+
+
+
 procedure DoDefineProperties(Filer: TMyWriter; Self:TdhFakePage); overload;
 var P:TControl;
     pn:TdhCustomPanel;
@@ -1292,7 +1555,7 @@ end;
 
 
 begin
-  Owner:=TdhFakeCustomPanel(Self.Owner);
+  Owner:=TdhFakeCustomPanel(Self.Owner.GetControl);
 
   HasRastering:=Owner.IsRastered(false);
   glPaintOnlyBg:=not (HasRastering in [rsNo{needed for TdhLabel.FocusPreferStyle},rsFull]);
@@ -1304,9 +1567,9 @@ begin
    HasRastering:=rsNo;
   _NeedNewPadding:=Owner.NeedPadding(HasRastering);
   _NeedNewMargin:=(HasRastering<>rsNo) and (Owner.Align=alTop);
-  Filer.DefineBooleanProperty('UndefFilter', Self.UndefFilter(HasRastering<>rsNo));
+  Filer.DefineBooleanProperty('UndefFilter', UndefFilter(Self,HasRastering<>rsNo));
 
-  Filer.DefineStringProperty('BorderColors', Self.CalculateBorderColors,EmptyStr);
+  Filer.DefineStringProperty('BorderColors', CalculateBorderColors(Self),EmptyStr);
 
   if HasRastering<>rsNo then
   with Owner do
@@ -1356,8 +1619,8 @@ begin
   end;
 
 
-  Self.IsWidthStored:=(Self._ContentWidthHeight.X<>NoWH) and (Self._ContentWidthHeight.X<>Self.BaseWH.X);
-  Self.IsHeightStored:=(Self._ContentWidthHeight.Y<>NoWH) and (Self._ContentWidthHeight.Y<>Self.BaseWH.Y);
+  Self.IsWidthStored:=(Self._ContentWidthHeight.X<>NoWH) and (Self._ContentWidthHeight.X<>BaseWH(Self).X);
+  Self.IsHeightStored:=(Self._ContentWidthHeight.Y<>NoWH) and (Self._ContentWidthHeight.Y<>BaseWH(Self).Y);
 
   Filer.DefineIntegerProperty('Width', Self._ContentWidthHeight.X, Self.IsWidthStored);
   Filer.DefineIntegerProperty('Height', Self._ContentWidthHeight.Y, Self.IsHeightStored);
@@ -1386,7 +1649,7 @@ begin
    Self._BasePadding:=Rect(0,0,0,0);
    Self.IsNewPaddingStored:=true;
   end;
-  Self.IsNewPaddingStored:=Self.IsNewPaddingStored and not EqualRect(Self._BasePadding,Self.BasePadding(HasRastering));
+  Self.IsNewPaddingStored:=Self.IsNewPaddingStored and not EqualRect(Self._BasePadding,BasePadding(Self,HasRastering));
   Filer.DefineProperty('NewPadding', nil, Self.WriteNewPadding, Self.IsNewPaddingStored);
 
   Self.IsNewMarginStored:=false;
@@ -1409,7 +1672,7 @@ begin
    Self._BaseMargin:=Rect(0,0,0,0);
    Self.IsNewMarginStored:=true;
   end;
-  Self.IsNewMarginStored:=Self.IsNewMarginStored and not EqualRect(Self._BaseMargin,Self.BaseMargin(HasRastering));
+  Self.IsNewMarginStored:=Self.IsNewMarginStored and not EqualRect(Self._BaseMargin,BaseMargin(Self,HasRastering));
   Filer.DefineProperty('NewMargin', nil, Self.WriteNewMargin, Self.IsNewMarginStored);
 
   Self.IsNewBorderStored:=false;
@@ -1418,7 +1681,7 @@ begin
    Self._BaseBorder:=Rect(0,0,0,0);
    Self.IsNewBorderStored:=true;
   end;
-  Self.IsNewBorderStored:=Self.IsNewBorderStored and not EqualRect(Self._BaseBorder,Self.BaseBorder(HasRastering));
+  Self.IsNewBorderStored:=Self.IsNewBorderStored and not EqualRect(Self._BaseBorder,BaseBorder(Self,HasRastering));
   Filer.DefineStringProperty('NewBorder', '0px', Self.IsNewBorderStored);
   finally
    Owner.SetPreferStyle(nil,false,true);

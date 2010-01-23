@@ -180,6 +180,7 @@ end;
 procedure TGradientWizard.BGChanged;
 var I:integer;
     ActStyle:TStyle;
+    pn:TdhCustomPanel;
 begin
  GetBG(SampleGradient.Style.BackgroundImage,SampleGradient.Width,SampleGradient.Height);
  SampleGradient.DesignPaintingChanged;
@@ -187,7 +188,8 @@ begin
  for I := 0 to LivePreview.Count - 1 do
  begin
   ActStyle:=TStyle(LivePreview[i]);
-  ActStyle.Owner.ImageType:=bitTile;
+  pn:=ActStyle.Owner.GetControl as TdhCustomPanel;
+  pn.ImageType:=bitTile;
   GetBG(ActStyle.BackgroundImage,sw,sh);
   ActStyle.BackgroundRepeat:=SampleGradient.Style.BackgroundRepeat;
   ActStyle.BackgroundPosition:=SampleGradient.Style.BackgroundPosition;

@@ -484,23 +484,28 @@ type
     function RequiresRastering:boolean;
   end;
 
-  IChangeReceiver=TdhCustomPanel;{interface
-    function GetName:TComponentName;
+  IRelativePathProvider=interface ['{F26D0C91-801B-44A4-86CC-0D265F94F7C6}']
+    function GetRelativePath(const Path:TPathName):TPathName;
+    function GetAbsolutePath(const Path:TPathName):TPathName;
+  end;
+
+  IChangeReceiver=interface
+    function GetElementName:TComponentName;
     function GetImageFormat: TImageFormat;
-  end;           }
+    procedure NotifyCSSChanged(WhatChanged:TWhatChanged);
+    function IsDesigning:boolean;
+    function RecursiveShowing:Boolean;
+    function GetRelativePathProvider:IRelativePathProvider;
+    function HasTransformations(var tt: TTransformations): boolean;
+    function GetControl:TControl;
+  end;
 
   TStyle = class(TPersistent)
   protected
     procedure ReadBool(Reader: TReader);
     procedure SkipValue(Reader: TReader);
-    function BaseWH: TPoint;
-    function BasePadding(IgnoreCSS:TRasterType):TRect;
-    function BaseMargin(IgnoreCSS:TRasterType):TRect;
-    function BaseBorder(IgnoreCSS:TRasterType):TRect;
-    function BaseBorderColors:TColorName;
     procedure WriteNewPadding(Writer: TWriter);
     procedure WriteNewMargin(Writer: TWriter);
-    function BaseRasteringFile:TPathName;
     procedure CopyFrom(s: TStyle; sub:boolean);
     procedure SetFontVariant(const Value: TCSSFontVariant);
     procedure SetBackgroundAttachment(const Value: TCSSBackgroundAttachment);
@@ -552,7 +557,6 @@ type
     FTextIndent:TCSSTextIndent;
     FTransformations:TTransformations;
     FBorderRadius:TCSSBorderRadius;
-    function CalculateBorderColors:TColorName;
     function GetStyleVal(PropChoose:TPropChoose; {var Value:TCSSProp; }const Align:TEdgeAlign):boolean;
     function GetNameByStyle:TPropertyName;
     procedure InitMisc;
@@ -584,7 +588,6 @@ type
     procedure pcs(WhatChanged:TWhatChanged);
     procedure pc(PropChoose:TPropChoose);
     procedure DefineProperties(Filer: TFiler); override;
-    function UndefFilter(IsRastered:boolean):boolean;
     procedure PictureChange(Sender: TObject);
   public
     Owner:IChangeReceiver;
@@ -606,7 +609,6 @@ type
     procedure Clear;
     constructor Create(AOwner:IChangeReceiver; OwnState:TState);
     destructor Destroy; override;
-    function GetInfo:AString;
     function IsStyleStored:boolean;
     function GetBorderByName(const name:TPropertyName; var r:TCSSBorder):boolean;
     procedure ClearEdge(Align:TEdgeAlign);
@@ -670,9 +672,9 @@ type
   end;
 
 {$IFDEF CLX}
-  TdhCustomPanel = class(TCustomControl,ICon)
+  TdhCustomPanel = class(TCustomControl,IChangeReceiver,ICon)
 {$ELSE}
-  TdhCustomPanel = class(TWinControl,ICon)
+  TdhCustomPanel = class(TWinControl,IChangeReceiver,ICon)
 {$ENDIF}
   protected
     FNoSiblingsBackground:boolean;
@@ -1118,6 +1120,7 @@ type
     function GetHTMLState:TState; virtual;
     function GetCanvas:TCanvas;
     function GetName:TComponentName;
+    function GetElementName:TComponentName;
     procedure UpdateNames(InlineUse,NewInlineUse:ICon; PropagateChange:boolean); virtual;
     procedure GetAutoRect(AllowModifyX,AllowModifyY:boolean; var NewWidth, NewHeight: Integer); virtual;
     function GetSuperiorAutoRect(AllowModifyX,AllowModifyY:boolean; var NewWidth, NewHeight: Integer):boolean;
@@ -1173,6 +1176,11 @@ type
     function TransitionInvalidates: boolean; virtual;
     function GetImageType: TImageType; //virtual;
     function GetImageFormat: TImageFormat;
+    function IsDesigning:boolean;
+    function RecursiveShowing:Boolean;
+    function GetInfo:AString;
+    function GetControl:TControl;
+    function GetRelativePathProvider:IRelativePathProvider;
     function TotalInlineBox: boolean; virtual;
     function Referer:TdhCustomPanel; virtual;
     function GetClientAdjusting:TRect;
@@ -1251,11 +1259,6 @@ type
     property OnStartDrag;
   end;
 
-  IRelativePathProvider=interface ['{F26D0C91-801B-44A4-86CC-0D265F94F7C6}']
-    function GetRelativePath(const Path:TPathName):TPathName;
-    function GetAbsolutePath(const Path:TPathName):TPathName;
-  end;
-
   WException=class (Exception)
   public
     WMessage:WideString;
@@ -1268,6 +1271,7 @@ type
   TPostAddCompo=procedure(Page:TdhCustomPanel);
 
 function IdentToColor(const Ident: TColorName; var Color: Longint): Boolean;
+function ColorToIntString(Color: TCSSColor): TColorName;
 function ColorToString(Color: TCSSColor): TColorName; overload;
 function ColorToString(Color: Longint): TColorName; overload;
 function CSSColorToColor(const Color:TCSSColor):TColor;
@@ -1299,6 +1303,7 @@ function GetBorderRadiusPixels(Value:TCSSRadius; var res:TPoint):boolean;overloa
 function GetBorderRadiusString(al:TEdgeAlign):TEnumName;
 function GetBorderRadiusStringSafari(al:TEdgeAlign):TEnumName;
 function GetBorderRadiusStringMoz(al:TEdgeAlign):TEnumName;
+function GetShorter(const Top,Right,Bottom,Left:AString):AString;
 
 procedure AddRect(var Rect:TRect; a:TRect);
 function GetAddRect(Rect:TRect; a:TRect):TRect;
@@ -1327,7 +1332,6 @@ function MyFindControl(Handle: HWnd): TControl; overload;
 function MyFindControl(c:TControl): TControl; overload;
 function MyFindDragTarget(const Pos: TPoint; AllowDisabled: Boolean): TControl;
 function FinalVisible(c:TControl):boolean;
-function findIRelativePathProvider(C:TControl):IRelativePathProvider;
 
 function GetCBound(c:TControl):TRect;
 function GetScreenClientBound(c:TControl):TRect;
@@ -1576,7 +1580,7 @@ begin
 
    if LocationImage.FPictureID.Graphic=nil then
    if Assigned(OriReader.OnError) then
-    OriReader.OnError(OriReader,LocationImage.Owner.Owner.GetName+': Unknown graphics format', DummyResult);
+    OriReader.OnError(OriReader,LocationImage.Owner.Owner.GetElementName+': Unknown graphics format', DummyResult);
  end else
   Assert(false);
 end;
@@ -2723,7 +2727,7 @@ function GetShorter(const Top,Right,Bottom,Left:AString):AString;
 begin
  if (Top=Right) and (Right=Bottom) and (Bottom=Left) then
   result:=Top else
-  result:=Top+' '+Right+' '+Bottom+' '+Left;                  
+  result:=Top+' '+Right+' '+Bottom+' '+Left;
 end;
 
 
@@ -2991,28 +2995,6 @@ end;
 function TLocationImage.CalculateAnimatedGIF:boolean;
 begin
  result:=(GetGraphic is TGIFImage) and (TGIFImage(GetGraphic).Images.Count>=2);
-end;
-
-
-function TStyle.UndefFilter(IsRastered:boolean):boolean;
-var _FPictureID:TPictureID;
-    _FPath:TPathName;
-    FPicture:TLocationImage;
-begin
-  if BackgroundImage.HasPicture or IsRastered then
-  begin
-   _FPictureID:=BackgroundImage.FPictureID;
-   _FPath:=BackgroundImage.FPath;
-   try
-    BackgroundImage.FPictureID:=nil;
-    BackgroundImage.FPath:='';
-    result:=Owner.HasBackgroundImage(FPicture) and FPicture.ImgIsT1X1;
-   finally
-    BackgroundImage.FPictureID:=_FPictureID;
-    BackgroundImage.FPath:=_FPath;
-   end;
-  end else
-   result:=false;
 end;
 
 procedure TdhCustomPanel.FocusPreferStyle(IsMain,RealChange:boolean);
@@ -3333,6 +3315,11 @@ begin
 end;
 
 function TdhCustomPanel.GetName:TComponentName;
+begin
+ result:=Name;
+end;
+
+function TdhCustomPanel.GetElementName:TComponentName;
 begin
  result:=Name;
 end;
@@ -3740,7 +3727,7 @@ end;
 procedure TLocationImage.UpdateAnimationState;
 begin                     
  if (Owner<>nil) and (Owner.Owner<>nil) and (GetGraphic is TGIFImage) then
- if csDesigning in Owner.Owner.ComponentState then
+ if Owner.Owner.IsDesigning then
  begin
   TGIFImage(GetGraphic).Animate:=false;
 {$IFNDEF VER210}
@@ -3750,6 +3737,11 @@ begin
  begin 
   TGIFImage(GetGraphic).Animate:=true;
  end;
+end;
+
+function TdhCustomPanel.IsDesigning:boolean;
+begin
+ result:=csDesigning in ComponentState;
 end;
 
 procedure TLocationImage.UpdateCalculations;
@@ -3834,6 +3826,18 @@ end;
 
 
 function TLocationImage.CachingIsUseful:Boolean;
+begin
+ result:=self.Owner.Owner.RecursiveShowing;
+end;
+
+function TdhCustomPanel.GetControl:TControl;
+begin
+  result:=Self;
+end;
+
+function TdhCustomPanel.RecursiveShowing:Boolean;
+var pn:TdhCustomPanel;
+    i:integer;
 
 function ParentsVisible(control:TWinControl):boolean;
 begin
@@ -3849,27 +3853,24 @@ begin
  result:=true;
 end;
 
-function RecursiveShowing(panel:TdhCustomPanel):Boolean;
-var pn:TdhCustomPanel;
-    i:integer;
 begin
- if ParentsVisible(panel) then
+ if ParentsVisible(Self) then
  begin
   result:=true;
   exit;
  end;
- for i:=panel.UsedByList.Count-1 downto 0 do
+ for i:=Self.UsedByList.Count-1 downto 0 do
  begin
-  pn:=TdhCustomPanel(panel.UsedByList[i]);
-  if RecursiveShowing(pn) then
+  pn:=TdhCustomPanel(Self.UsedByList[i]);
+  if pn.RecursiveShowing then
   begin
    result:=true;
    exit;
   end;
  end;
- for i:=panel.InlineUsedByList.Count-1 downto 0 do
+ for i:=Self.InlineUsedByList.Count-1 downto 0 do
  begin
-  pn:=TdhCustomPanel(panel.InlineUsedByList[i]);
+  pn:=TdhCustomPanel(Self.InlineUsedByList[i]);
   if ParentsVisible(pn) then
   begin
    result:=true;
@@ -3877,10 +3878,6 @@ begin
   end;
  end;
  result:=false;
-end;
-
-begin
- result:=RecursiveShowing(self.Owner.Owner);
 end;
 
 function findIRelativePathProvider(C:TControl):IRelativePathProvider;
@@ -3894,10 +3891,15 @@ begin
  Result:=nil;
 end;
 
+function TdhCustomPanel.GetRelativePathProvider:IRelativePathProvider;
+begin
+ result:=findIRelativePathProvider(Self);
+end;
+
 procedure TLocationImage.SetPath(const Path:TPathName);
 var RelativePathProvider:IRelativePathProvider;
 begin
-  RelativePathProvider:=findIRelativePathProvider(self.Owner.Owner);
+  RelativePathProvider:=self.Owner.Owner.GetRelativePathProvider;
   if RelativePathProvider<>nil then
   begin
    FPath:=RelativePathProvider.GetAbsolutePath(Path);
@@ -3909,7 +3911,7 @@ end;
 function TLocationImage.GetRelativePath:TPathName;
 var RelativePathProvider:IRelativePathProvider;
 begin
-  RelativePathProvider:=findIRelativePathProvider(self.Owner.Owner);
+  RelativePathProvider:=self.Owner.Owner.GetRelativePathProvider;
   if RelativePathProvider<>nil then
   begin
    Result:=RelativePathProvider.GetRelativePath(FPath);
@@ -3921,7 +3923,7 @@ end;
 function TLocationImage.GetAbsolutePath:TPathName;
 var RelativePathProvider:IRelativePathProvider;
 begin
-  RelativePathProvider:=findIRelativePathProvider(self.Owner.Owner);
+  RelativePathProvider:=self.Owner.Owner.GetRelativePathProvider;
   if RelativePathProvider<>nil then
   begin
    Result:=RelativePathProvider.GetAbsolutePath(FPath);
@@ -5991,54 +5993,6 @@ begin
  end;
 end;
 
-
-
-
-
-function TStyle.BaseBorderColors:TColorName;
-var PreferDown:boolean;
-begin
-{ if OwnState=hsNormal then
-  result:=EmptyStr else
-  result:=Owner.StyleArr[NextStyleOld[Owner.DownOverlayOver,OwnState]].FBorderColors;
-} case OwnState of
-  hsNormal: result:=EmptyStr;
-  hsOver,hsDown: result:=Owner.StyleArr[hsNormal].FBorderColors;
-  hsOverDown:
-   begin
-    PreferDown:=Owner.GetPreferDownStyles;
-    result:=Owner.StyleArr[NextStyle[PreferDown]].FBorderColors;
-    if result=EmptyStr then
-     result:=Owner.StyleArr[NextStyle[not PreferDown]].FBorderColors;
-    if result=EmptyStr then
-     result:=Owner.StyleArr[hsNormal].FBorderColors;
-   end;
-  end;
-end;
-
-function TStyle.BaseWH:TPoint;
-var PreferDown:boolean;
-begin
-{
- if OwnState=hsNormal then
-  result:=Point(Owner.Control.Width,Owner.Control.Height) else
-  result:=Owner.StyleArr[NextStyleOld[Owner.DownOverlayOver,OwnState]]._ContentWidthHeight; }
- case OwnState of
-  hsNormal: result:=Point(Owner.Width,Owner.Height);
-  hsOver,hsDown: result:=Owner.StyleArr[hsNormal]._ContentWidthHeight;
-  hsOverDown:
-  begin
-   PreferDown:=Owner.GetPreferDownStyles;
-   if Owner.StyleArr[NextStyle[PreferDown]].IsWidthStored then
-    result.X:=Owner.StyleArr[NextStyle[PreferDown]]._ContentWidthHeight.X else
-    result.X:=Owner.StyleArr[NextStyle[not PreferDown]]._ContentWidthHeight.X;
-   if Owner.StyleArr[NextStyle[PreferDown]].IsHeightStored then
-    result.Y:=Owner.StyleArr[NextStyle[PreferDown]]._ContentWidthHeight.Y else
-    result.Y:=Owner.StyleArr[NextStyle[not PreferDown]]._ContentWidthHeight.Y;
-  end;
- end;
-end;
-
 procedure TdhCustomPanel.LockDefinedCSS(var sStyleArr:TStyleArray);
 var st:TState;
 begin
@@ -6057,161 +6011,6 @@ begin
     StyleArr[st]:=sStyleArr[st];
    end;
 end;
-
-
-function TStyle.BasePadding(IgnoreCSS:TRasterType):TRect;
-var PreferDown:boolean;
-var sStyleArr:TStyleArray;
-begin
- {if OwnState=hsNormal then
-  result:=Owner.PaddingPure else
-  result:=Owner.StyleArr[NextStyle[Owner.DownOverlayOver,OwnState]]._BasePadding;   }
- case OwnState of
-  hsNormal: ;
-  hsOver,hsDown:
-  if Owner.StyleArr[hsNormal].IsNewPaddingStored then
-  begin
-   result:=Owner.StyleArr[hsNormal]._BasePadding;
-   exit;
-  end;
-  hsOverDown:
-   begin
-    PreferDown:=Owner.GetPreferDownStyles;
-    if Owner.StyleArr[NextStyle[PreferDown]].IsNewPaddingStored then
-    begin
-     result:=Owner.StyleArr[NextStyle[PreferDown]]._BasePadding;
-     exit;
-    end else
-    if Owner.StyleArr[NextStyle[not PreferDown]].IsNewPaddingStored then
-    begin
-     result:=Owner.StyleArr[NextStyle[not PreferDown]]._BasePadding;
-     exit;
-    end else
-    if Owner.StyleArr[hsNormal].IsNewPaddingStored then
-    begin
-     result:=Owner.StyleArr[hsNormal]._BasePadding;
-     exit;
-    end;
-   end;
-  end;
-
-  if EnableIgnoreCSS and (IgnoreCSS=rsFull) then
-  begin
-   Owner.LockDefinedCSS(sStyleArr);
-   result:=Owner.PaddingPure;
-   Owner.UnlockDefinedCSS(sStyleArr);
-  end else
-   result:=Owner.PaddingPure
-end;
-
-function TStyle.BaseMargin(IgnoreCSS:TRasterType):TRect;
-var PreferDown:boolean;
-var sStyleArr:TStyleArray;
-begin
- {if OwnState=hsNormal then
-  result:=Owner.MarginPure else
-  result:=Owner.StyleArr[NextStyle[Owner.DownOverlayOver,OwnState]]._BaseMargin;   }
- case OwnState of
-  hsNormal: ;
-  hsOver,hsDown:
-  if Owner.StyleArr[hsNormal].IsNewMarginStored then
-  begin
-   result:=Owner.StyleArr[hsNormal]._BaseMargin;
-   exit;
-  end;
-  hsOverDown:
-   begin
-    PreferDown:=Owner.GetPreferDownStyles;
-    if Owner.StyleArr[NextStyle[PreferDown]].IsNewMarginStored then
-    begin
-     result:=Owner.StyleArr[NextStyle[PreferDown]]._BaseMargin;
-     exit;
-    end else
-    if Owner.StyleArr[NextStyle[not PreferDown]].IsNewMarginStored then
-    begin
-     result:=Owner.StyleArr[NextStyle[not PreferDown]]._BaseMargin;
-     exit;
-    end else
-    if Owner.StyleArr[hsNormal].IsNewMarginStored then
-    begin
-     result:=Owner.StyleArr[hsNormal]._BaseMargin;
-     exit;
-    end;
-   end;
-  end;
-
-  if EnableIgnoreCSS and (IgnoreCSS=rsFull) then
-  begin
-   Owner.LockDefinedCSS(sStyleArr);
-   result:=Owner.MarginPure;
-   Owner.UnlockDefinedCSS(sStyleArr);
-  end else
-   result:=Owner.MarginPure;
-end;
-
-function TStyle.BaseBorder(IgnoreCSS:TRasterType):TRect;
-var PreferDown:boolean;
-var sStyleArr:TStyleArray;
-begin
- {if OwnState=hsNormal then
-  result:=Owner.BorderPure else
-  result:=Owner.StyleArr[NextStyle[Owner.DownOverlayOver,OwnState]]._BaseBorder;   }
- case OwnState of
-  hsNormal: ;
-  hsOver,hsDown:
-  if Owner.StyleArr[hsNormal].IsNewBorderStored then
-  begin
-   result:=Owner.StyleArr[hsNormal]._BaseBorder;
-   exit;
-  end;
-  hsOverDown:
-   begin
-    PreferDown:=Owner.GetPreferDownStyles;
-    if Owner.StyleArr[NextStyle[PreferDown]].IsNewBorderStored then
-    begin
-     result:=Owner.StyleArr[NextStyle[PreferDown]]._BaseBorder;
-     exit;
-    end else
-    if Owner.StyleArr[NextStyle[not PreferDown]].IsNewBorderStored then
-    begin
-     result:=Owner.StyleArr[NextStyle[not PreferDown]]._BaseBorder;
-     exit;
-    end else
-    if Owner.StyleArr[hsNormal].IsNewBorderStored then
-    begin
-     result:=Owner.StyleArr[hsNormal]._BaseBorder;
-     exit;
-    end;
-   end;
-  end;
-
-  if EnableIgnoreCSS and (IgnoreCSS=rsFull) then
-  begin
-   Owner.LockDefinedCSS(sStyleArr);
-   result:=Owner.BorderPure;
-   Owner.UnlockDefinedCSS(sStyleArr);
-  end else
-   result:=Owner.BorderPure;
-end;
-
-function TStyle.BaseRasteringFile:TPathName;
-var PreferDown:boolean;
-begin
- case OwnState of
-  hsNormal: result:=EmptyStr;
-  hsOver,hsDown: result:=Owner.StyleArr[hsNormal].RasteringFile;
-  hsOverDown:
-   begin
-    PreferDown:=Owner.GetPreferDownStyles;
-    result:=Owner.StyleArr[NextStyle[PreferDown]].RasteringFile;
-    if result=Owner.StyleArr[hsNormal].RasteringFile then
-     result:=Owner.StyleArr[NextStyle[not PreferDown]].RasteringFile;
-   end;
-  end;
- //result:=Owner.StyleArr[NextStyle[Owner.DownOverlayOver,OwnState]].RasteringFile;
-end;
-
-
 
 function TStyle.CopyBlurEffectsByInherited:boolean;
 var P:TPoint;
@@ -6477,43 +6276,16 @@ begin
 end;
                        *)
 
-
-function TStyle.CalculateBorderColors:TColorName;
-var Align:TEdgeAlign;
-    NeedCompact,NeedColor:boolean;
-    BorderColors:array[TEdgeAlign] of TColorName;
-begin
- NeedColor:=false;
- for Align:=ealTop to ealRight do
- if not NeedColor and not Owner.HasVal(pcBorderColor,Align) then
- if Owner.GetSpecialBorderType in [sbtEdit,sbtButton] then
-  NeedColor:=not (Owner.BorderStyle(Align) in [cbsGroove,cbsRidge,cbsInset,cbsOutSet]) else
-  {NeedColor:=Color32(Owner.FontColor)<>clBlack32};
-
- if NeedColor then
- for Align:=ealTop to ealRight do
- begin
-  BorderColors[Align]:=dhPanel.ColorToIntString(Owner.BorderColor(Align));
- end;
- FBorderColors:=GetShorter(BorderColors[ealTop],BorderColors[ealRight],BorderColors[ealBottom],BorderColors[ealLeft]);
- if (FBorderColors<>EmptyStr) and (FBorderColors=BaseBorderColors) then
-  FBorderColors:=EmptyStr;
- result:=FBorderColors;
-end;
-
-
-
-
 function TdhCustomPanel.IsInUseList(ob:TObject):boolean;
 begin
  if ob is TStyle then
-  ob:=TStyle(ob).Owner;
+  ob:=TStyle(ob).Owner.GetControl;
  result:=(ob is TdhCustomPanel) and InUseList(Self,ob as TdhCustomPanel);
 end;
 
 function TdhCustomPanel.IsDefinedOuter(ob:TObject):boolean;
 begin
- result:=(ob is TStyle) and (GetParentForm(TStyle(ob).Owner)<>GetParentForm(Self));
+ result:=(ob is TStyle) and (GetParentForm(TStyle(ob).Owner.GetControl)<>GetParentForm(Self));
 end;
 
 
@@ -6537,7 +6309,7 @@ end;
 
 
 
-function TStyle.GetInfo:AString;
+function TdhCustomPanel.GetInfo:AString;
 var PropChoose:TPropChoose;
     al:TEdgeAlign;
     s:AString;
@@ -6551,12 +6323,12 @@ var PropChoose:TPropChoose;
 
 begin
  sl:=TStringList.Create;
- Owner.SetPreferStyle(Self,true,true);
+ Self.SetPreferStyle(ActStyle,true,true);
  try
  for PropChoose:=Low(TPropChoose) to High(TPropChoose) do
  for al:=Low(TEdgeAlign) to High(TEdgeAlign) do
  if (PropChoose in [pcBorderColor,pcBorderWidth,pcBorderStyle,pcMargin,pcPadding,pcBorderRadius])=(al<>ealNone) then
- if Owner.GetVal(PropChoose,al) or (ValStyle<>nil) then
+ if Self.GetVal(PropChoose,al) or (ValStyle<>nil) then
  begin
   s:=GetCSSPropName(PropChoose);
   if al<>ealNone then
@@ -6566,7 +6338,7 @@ begin
   s:=s+':'+GetCSSPropValue(PropChoose);
   if ValStyle<>nil then
   if ValStyle is TStyle then
-   s:=FilledTo(s,30)+'  (by '+TStyle(ValStyle).Owner.GetName+'.'+TStyle(ValStyle).GetNameByStyle+')' else
+   s:=FilledTo(s,30)+'  (by '+TStyle(ValStyle).Owner.GetElementName+'.'+TStyle(ValStyle).GetNameByStyle+')' else
   if (PropChoose=pcCursor) and (Cascaded.Cursor=ccuInherit) then
    continue else
   if (ValStyle is TControl) and (TControl(ValStyle).Parent=nil) then
@@ -6579,7 +6351,7 @@ begin
  end;
  end;
  finally
-  Owner.SetPreferStyle(nil,true,true);
+  Self.SetPreferStyle(nil,true,true);
  end;
 
  sl_byself:=TStringList.Create;
@@ -6590,19 +6362,16 @@ begin
  for i:=0 to sl.Count-1 do
  begin
   ob:=sl.Objects[i];
-  if (ob is TStyle) and (TStyle(ob).Owner=Owner) then
+  if (ob is TStyle) and (TStyle(ob).Owner.GetControl=Self) then
    sl_byself.Add(sl[i]) else
-  //if (ob is TdhCustomPanel) and InUseList(Owner.Con,ob as TdhCustomPanel) then
-  if Owner.IsInUseList(ob) then
+  if Self.IsInUseList(ob) then
    sl_byselfuse.Add(sl[i]) else
-  if Owner.IsDefinedOuter(ob) then
+  if Self.IsDefinedOuter(ob) then
    sl_byouter.Add(sl[i]) else
    sl_byparent.Add(sl[i]);
-
  end;
 
  sl.Clear;
-// sl.Add(inttostr(GetZOrder2(Owner.Control)));
  sl.Add('Defined styles:');
  sl.AddStrings(sl_byself);
  if sl_byself.Count=0 then
@@ -6626,30 +6395,19 @@ begin
  sl.AddStrings(sl_byouter);
  sl.Add(EmptyStr);
  end;
- if RasteringFile<>'' then
+ if ActStyle.RasteringFile<>'' then
  begin
- sl.Add('Generated image: '+RasteringFile);
+ sl.Add('Generated image: '+ActStyle.RasteringFile);
  sl.Add(EmptyStr);
  end;
-
-(* sl.Add('Inner width/height:');
- sl.Add('width='+inttostr(GetContentWidthHeight.X));
- sl.Add('height='+inttostr(GetContentWidthHeight.Y));
-{ if not Owner.ConstantWidthHeight then
-  sl.Add('WARNING: inner width/height is not the same for all styles');}
- sl.Add(EmptyStr);
-
-*)
- Owner.AddOwnInfo(sl);
- Owner.AddInfo(sl);
-
+ Self.AddOwnInfo(sl);
+ Self.AddInfo(sl);
  result:=sl.Text;
  sl.Free;
  sl_byself.Free;
  sl_byselfuse.Free;
  sl_byparent.Free;
  sl_byouter.Free;
-
 end;
 
 procedure TdhCustomPanel.AddInfo(sl:TStringList);
@@ -7377,11 +7135,11 @@ begin
     if ValStyle=nil then
     begin
      ListStyleType:=FListStyleType;
-     if Owner.Name<>'ul' then
+     if Owner.GetElementName<>'ul' then
       result:=true;
     end else
     begin
-     if (Owner.Name='ul') or (Owner.Name='ol') then
+     if (Owner.GetElementName='ul') or (Owner.GetElementName='ol') then
      begin
       case ListStyleType of
       clsDisk:   ListStyleType:=clsCircle;

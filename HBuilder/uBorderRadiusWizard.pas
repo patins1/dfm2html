@@ -140,6 +140,7 @@ end;
 
 
 procedure TBorderRadiusWizard.UpdateRadiusDisplay;
+var pn:TdhCustomPanel;
 
 {procedure SetCleared(pn:TdhLink; IsCleared:boolean);
 begin
@@ -152,7 +153,8 @@ const OnlyOneRadius=not true;
 
 begin
  Adjusting:=true;
- cBoth.Checked:=ActStyle.Owner.IsBorderRadiusTwoValued(al);
+ pn:=ActStyle.Owner.GetControl as TdhCustomPanel;
+ cBoth.Checked:=pn.IsBorderRadiusTwoValued(al);
  Label1.Visible:=cBoth.Checked;
  dhLabel1.Visible:=not cBoth.Checked;
  {if not cBoth.Checked then
@@ -166,8 +168,8 @@ begin
  cVert.Visible:=cBoth.Checked;
  tbVert.Visible:=cBoth.Checked;
  Label2.Visible:=cBoth.Checked;
- cHorz.StoredValue:=ActStyle.Owner.GetBorderRadius(al).X;
- cVert.StoredValue:=ActStyle.Owner.GetBorderRadius(al).Y;
+ cHorz.StoredValue:=pn.GetBorderRadius(al).X;
+ cVert.StoredValue:=pn.GetBorderRadius(al).Y;
  bClear.Enabled:=not ActStyle.BorderRadius.IsCleared;
  bClearAct.Enabled:=not ActStyle.BorderRadius.IsCleared(al);
  //bClearAct.Caption:='Reset '+sBorderCorner[al];

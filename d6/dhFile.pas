@@ -258,7 +258,7 @@ end;
 procedure TdhFile.SetPath(const Path:TPathName);
 var RelativePathProvider:IRelativePathProvider;
 begin
-  RelativePathProvider:=findIRelativePathProvider(self);
+  RelativePathProvider:=GetRelativePathProvider;
   if RelativePathProvider<>nil then
   begin
    FFileName:=RelativePathProvider.GetAbsolutePath(Path);
@@ -270,7 +270,7 @@ end;
 function TdhFile.GetRelativePath:TPathName;
 var RelativePathProvider:IRelativePathProvider;
 begin
-  RelativePathProvider:=findIRelativePathProvider(self);
+  RelativePathProvider:=GetRelativePathProvider;
   if RelativePathProvider<>nil then
   begin
    Result:=RelativePathProvider.GetRelativePath(FFileName);
@@ -282,7 +282,7 @@ end;
 function TdhFile.GetAbsolutePath:TPathName;
 var RelativePathProvider:IRelativePathProvider;
 begin
-  RelativePathProvider:=findIRelativePathProvider(self);
+  RelativePathProvider:=GetRelativePathProvider;
   if RelativePathProvider<>nil then
   begin
    Result:=RelativePathProvider.GetAbsolutePath(FFileName);

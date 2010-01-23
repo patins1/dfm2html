@@ -9,7 +9,7 @@ uses
   Controls, Windows, Messages, Graphics, Forms, Dialogs, ExtCtrls,
   {$ENDIF}
   SysUtils, Classes, math, typinfo,
-  dhPanel, dhLabel, dhPageControl, dhStyleSheet, dhStrUtils;
+  dhPanel, dhLabel, dhPageControl, dhStyleSheet, dhStrUtils, dhStyles;
 
 type TMenuOption=(moNoAuto,moHorizontalLayout,moInline,moSlide,moClickToOpen,moResumeOpen,moStatic);
      TMenuOptions=set of TMenuOption;

@@ -7,7 +7,7 @@ uses
   {$ELSE}
   Dialogs,Windows,Forms,
   {$ENDIF}
-  SysUtils,DKLang,dhLabel,dhPanel;
+  SysUtils,DKLang,dhLabel,dhPanel,dhStrUtils;
 
 const CONFIRMDELETE='CONFIRMDELETE';
 const COPYEXISTINGFILES='COPYEXISTINGFILES';

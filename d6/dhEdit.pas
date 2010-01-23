@@ -3,7 +3,7 @@ unit dhEdit;
 interface
 
 uses
-   Types, SysUtils, Classes, dhPanel, dhLabel, dhStrUtils;
+   Types, SysUtils, Classes, dhPanel, dhLabel, dhStrUtils, dhStyles;
 
 type
   TdhCustomEdit = class(TdhCustomLabel)

@@ -12,7 +12,7 @@ uses
   {$ELSE}
   Controls, Windows, Messages, Graphics, Forms,
   {$ENDIF}
-  SysUtils, Classes, dhPanel, math, types, BinList,GR32_Transforms,gr32,dhStrUtils,StrUtils,WideStrUtils,MyBitmap32;
+  SysUtils, Classes, dhPanel, math, types, BinList,GR32_Transforms,gr32,dhStrUtils,StrUtils,WideStrUtils,MyBitmap32,dhStyles;
 
 
 {$IFDEF VER160}

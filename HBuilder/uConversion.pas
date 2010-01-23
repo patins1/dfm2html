@@ -16,7 +16,7 @@ uses
   dhFile,dhHTMLForm, dhPanel, dhPageControl, dhMultilineCaptionEdit, dhStyleSheet, dhOleContainer,dhHiddenField,
   dhDirectHTML, dhMenu, dhLabel, dhCheckBox, dhRadioButton, dhEdit, dhMemo, dhFileField,dhSelect,
   UseFastStrings,
-  math,binlist,bintree,dhStrUtils, uMetaWriter;
+  math,binlist,bintree,dhStrUtils, uMetaWriter, dhStyles;
 
 const directIE=false;
 type TBounds=record Left, Top, Width, Height: Longint; end;

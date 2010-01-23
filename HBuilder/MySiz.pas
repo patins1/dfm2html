@@ -21,7 +21,7 @@ uses
   dhMenu,dhLabel,dhPanel,dhHTMLForm,dhPageControl,
   dhStyleSheet, dhFile,
   dhRadioButton,dhCheckBox, dhMemo,dhEdit,
-  dhFileField,dhOleContainer,dhHiddenField,dhDirectHTML,bintree,binlist,uFind,gr32,UIConstants;
+  dhFileField,dhOleContainer,dhHiddenField,dhDirectHTML,bintree,binlist,uFind,gr32,UIConstants,dhStyles;
 
 type
   TDragStyle = (dsMove, dsSizeTopLeft, dsSizeTopRight, dsSizeBottomLeft, dsSizeBottomRight,

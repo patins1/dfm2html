@@ -18,7 +18,7 @@ uses
   dhHTMLForm,MySiz, dhPanel,dhPageControl, funcutils, UseFastStrings, math, Contnrs, MySpinEdit, MyTrackBar,
   hEdit,hComboBox,hMemo,dhMenu,dhStyleSheet,MySpeedButton,BinTree,uTemplates,
   dhLabel, dhCheckBox, dhRadioButton, dhEdit, dhFile, dhFileField, dhSelect, UIConstants, MyForm,
-  dhStrUtils, MyBitmap32, crc, gr32;
+  dhStrUtils, MyBitmap32, crc, gr32, dhStyles;
 
 type TMyWriter=class(TWriter)
     FIntegerValue:Integer;

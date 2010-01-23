@@ -8,7 +8,7 @@ uses
   {$ELSE}
   Forms, Controls, Windows, Messages, Graphics, StdCtrls, Buttons, ExtCtrls, Menus, clipbrd, Dialogs, UnicodeCtrls,
   {$ENDIF}
-  SysUtils, Classes, types, dhPanel, dhLabel, uSearchStr, DKLang, Gr32, MyForm{$IFDEF LINUX},libc{$ENDIF}, dhStrUtils;
+  SysUtils, Classes, types, dhPanel, dhLabel, uSearchStr, DKLang, Gr32, MyForm{$IFDEF LINUX},libc{$ENDIF}, dhStrUtils, dhStyles;
 
 type
   TColorPicker = class(TMyForm)

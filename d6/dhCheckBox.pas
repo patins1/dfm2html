@@ -9,7 +9,7 @@ uses
   {$ELSE}
   Controls, Windows, Messages, Graphics, StdCtrls,
   {$ENDIF}
-  SysUtils, Classes, dhPanel, dhLabel, dhStrUtils;
+  SysUtils, Classes, dhPanel, dhLabel, dhStrUtils, dhStyles;
 
 type
   TdhCheckBox = class(TdhLabel)

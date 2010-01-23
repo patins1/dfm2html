@@ -9,7 +9,7 @@ uses
   {$ELSE}
   Controls, Windows, Messages, Graphics, Dialogs,
   {$ENDIF}
-  SysUtils, Classes, dhPanel, dhLabel, GR32;
+  SysUtils, Classes, dhPanel, dhLabel, GR32, dhStyles;
 
 {$R 'dhStyleSheet.dcr'}
 

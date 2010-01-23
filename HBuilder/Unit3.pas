@@ -18,7 +18,7 @@ uses
 
   dhHTMLForm,MySiz, dhPanel,dhPageControl, funcutils, UseFastStrings, math, Contnrs, MySpinEdit, MyTrackBar,
   hEdit,hComboBox,hMemo,dhMenu,dhStyleSheet,MySpeedButton,BinTree,uTemplates,
-  dhLabel, dhCheckBox, dhRadioButton,UIConstants, MyForm, dhStrUtils, uMetaWriter;
+  dhLabel, dhCheckBox, dhRadioButton,UIConstants, MyForm, dhStrUtils, uMetaWriter, dhStyles;
 
 
 type

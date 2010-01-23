@@ -9,7 +9,7 @@ uses
   {$ELSE}
   Controls, Windows, Messages, Graphics,
   {$ENDIF}
-  SysUtils, Classes, dhPanel, dhLabel, dhEdit, dhStrUtils;
+  SysUtils, Classes, dhPanel, dhLabel, dhEdit, dhStrUtils, dhStyles;
 
 type
   TdhMemo = class(TdhCustomEdit)

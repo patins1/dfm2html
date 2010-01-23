@@ -9,7 +9,7 @@ uses
   {$ELSE}
   Controls, Windows,Messages,Dialogs,
   {$ENDIF}
-  SysUtils, Classes, dhPanel, dhLabel,dhEdit,dhMenu;
+  SysUtils, Classes, dhPanel, dhLabel,dhEdit,dhMenu,dhStyles;
 
 type
   TdhFileField = class(TdhCustomEdit)

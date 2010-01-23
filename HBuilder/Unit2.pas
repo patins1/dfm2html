@@ -26,7 +26,7 @@ uses
   dhOleContainer,dhFile,dhHiddenField,GR32,
   MyPageControl, MyFontDialog,
   MySpinEdit, MyTrackBar, hCheckBox, dhSelect, UseFastStrings, DKLang,UIConstants,uWException,
-  MyGroupBox, MyPanel, MyForm, Contnrs, dhStrUtils, uMetaWriter;
+  MyGroupBox, MyPanel, MyForm, Contnrs, dhStrUtils, uMetaWriter, dhStyles;
 
 
 var PropsAlign:TAlign=alBottom;

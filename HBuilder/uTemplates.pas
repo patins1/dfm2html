@@ -12,7 +12,7 @@ uses
   Controls, Windows, Messages, Graphics, Forms, ComCtrls, ExtCtrls, StdCtrls, Dialogs,Buttons,UnicodeCtrls,
 {$ENDIF}
   GR32, math, pngimage,dhPanel,Contnrs, dhPageControl,dhMenu, dhLabel,
-  dhStyleSheet, DKLang, MyForm, dhStrUtils{$IFDEF COMPILER2009}, GR32_Resamplers{$ENDIF};
+  dhStyleSheet, DKLang, MyForm, dhStrUtils, dhStyles{$IFDEF COMPILER2009}, GR32_Resamplers{$ENDIF};
 
 type
   TTemplatesWizard = class(TMyForm)

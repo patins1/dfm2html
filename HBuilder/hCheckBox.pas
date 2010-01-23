@@ -8,7 +8,7 @@ uses
   {$ELSE}
   Controls, Windows, Messages, Graphics, StdCtrls, ShellAPI, Dialogs, Mask, UnicodeCtrls,
   {$ENDIF}
-  SysUtils, Classes, hComboBox,uWException, dhPanel;
+  SysUtils, Classes, hComboBox,uWException, dhPanel, dhStrUtils;
 
 type
   ThCheckBox = class(TTntCheckBox,IhCommitable)

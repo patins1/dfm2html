@@ -12,7 +12,7 @@ uses
   ShellAPI, Mask, ExtCtrls, StdCtrls,  Variants, clipbrd, Buttons,ComCtrls,Spin,UnicodeCtrls,
 {$ENDIF}
   dhLabel, dhMenu, dhPanel, Classes,
-  dhColorPicker,gr32,  MySpinEdit,  MyTrackBar, DKLang;
+  dhColorPicker,gr32,  MySpinEdit,  MyTrackBar, DKLang, dhStyles;
 
 type
   TTransparencyWizard = class(TTntForm)

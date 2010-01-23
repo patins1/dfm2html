@@ -11,7 +11,7 @@ uses
 CommCtrl, OleDlg, ComObj,
 
   {$ENDIF}
-   SysUtils, Classes,  dhPanel,GR32,dhLabel,dhStrUtils;
+   SysUtils, Classes,  dhPanel,GR32,dhLabel,dhStrUtils,dhStyles;
 
 type
 

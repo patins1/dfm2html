@@ -9,7 +9,7 @@ uses
   Controls, Windows, Messages, Graphics,
   {$ENDIF}
    SysUtils, Classes,
-  dhPanel,math,dhStrUtils;
+  dhPanel,math,dhStrUtils,dhStyles;
 
 type
   TdhDirectHTML = class(TdhPanel)

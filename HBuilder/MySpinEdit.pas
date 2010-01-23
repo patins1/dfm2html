@@ -8,7 +8,7 @@ uses
   {$ELSE}
   Controls, Windows, Messages, StdCtrls, Spin,
   {$ENDIF}
-  SysUtils, Classes,hComboBox,MyTrackBar,uWException, dhPanel;
+  SysUtils, Classes,hComboBox,MyTrackBar,uWException, dhPanel,dhStrUtils;
 
 type
   TMySpinEdit = class(TSpinEdit,IhCommitable)

@@ -9,7 +9,7 @@ uses
   {$ELSE}
   Controls, Windows, Messages, Graphics, StdCtrls, dialogs, Forms, clipbrd,
   {$ENDIF}
-  dhLabel,dhEdit, SysUtils, Classes, math, dhPanel,BasicHTMLElements,dhStrUtils;
+  dhLabel,dhEdit, SysUtils, Classes, math, dhPanel,BasicHTMLElements,dhStrUtils,dhStyles;
 
 type
   TSelectType=(stDropDown,stList);

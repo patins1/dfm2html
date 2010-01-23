@@ -10,7 +10,7 @@ uses
   Controls, Windows, Messages, Graphics, Forms, ComCtrls, ExtCtrls, StdCtrls, Dialogs, Menus, UnicodeCtrls,
 {$ENDIF}
   Unit3, Unit2, dhLabel, dhMenu, dhPanel, dhPageControl, dhStyleSheet, UseFastStrings,
-  DKLang, MyForm, dhStrUtils;
+  DKLang, MyForm, dhStrUtils, dhStyles;
 
 type
   TPresets = class(TRelativePathProvider)

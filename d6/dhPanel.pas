@@ -34,7 +34,6 @@ uses
   GR32,GR32_Transforms,gauss,GR32_Blend,GR32_LowLevel,BinList,MyBitmap32,dhStrUtils,WideStrUtils;
 
 {$IFDEF VER210}
-const GIFPaintPerHand=false;
 type TPatchedGIFRenderer=class(TGIFRenderer)
   public
     procedure Draw(ACanvas: TCanvas; const Rect: TRect); override;
@@ -50,20 +49,8 @@ type TPatchedGifImage=class(TGifImage)
 end;
 {$ENDIF}
 
-const EmptyStr='';
-
-var QUOTEINVALIDVALUE_STR:WideString='"%" is not a valid value';
-var REFOBJECT_STR:WideString= '% is referenced by %';
 
 type TASXY=(asNone,asX,asY,asXY);
-
-const asar:array[boolean,boolean] of TASXY=((asNone,asY),(asX,asXY));
-
-const default_borderwidth=1;
-
-{$IFDEF CLX}
-type HWND=QWidgetH;
-{$ENDIF}
 
 type TFrameEventType=(feMouseUp,feMouseDown,feMouseMove);
 type
@@ -77,11 +64,13 @@ const atTop=-maxint;
       atBottom=maxint;
 const InvalidCSSPos=maxint;
       InvalidEqArea=maxint;
+const EmptyStr='';
 
 
 
 {$IFDEF CLX}
 const VK_ESCAPE=Key_Escape;
+type HWND=QWidgetH;
 {$ENDIF}
 
 type TEdgeAlign= (ealNone, ealTop, ealBottom, ealLeft, ealRight);
@@ -121,8 +110,6 @@ const
   ActStyleLoaded=    [wcFont,wcColor,wcCursor,wcText,wcText2,wcSize,wcChild,wcZIndex,wcState,wcNoOwnCSS,wcNoComputedCSS];
   ReqInvals=         [wcFont,wcText,wcText2,wcName,wcState,wcNoOwnCSS];
 
-  MarginDefault=EmptyStr;
-
 const
   CSSAlphaInverter=$FF000000;
   clBlackCSS=clBlack32 xor CSSAlphaInverter;
@@ -139,19 +126,10 @@ type
   TCSSCursor=(ccuInherit,ccuAuto,ccuCrosshair, ccuDefault, ccuPointer, ccuMove,
     ccuEResize, ccuNeResize, ccuNwResize, ccuNResize, ccuSeResize, ccuSwResize, ccuSResize, ccuWResize,
     ccuText, ccuWait, ccuHelp);
-const CSSCursorMap:array[TCSSCursor] of TCursor=
-  (crDefault,crDefault,crCross,crArrow,crHandPoint,crSizeAll,
-   crSizeWE,crSizeNESW,crSizeNWSE,crSizeNS,           crSizeNWSE,crSizeNESW,crSizeNS,crSizeWE,
-   crIBeam,crHourGlass,crHelp);
-
-
-type TRasterType=(rsNo,rsFull,rsRounded,rsRGBA,rsSemi,rsStretch,rsSplit,rsFullWithoutText);
-
-type
+  TRasterType=(rsNo,rsFull,rsRounded,rsRGBA,rsSemi,rsStretch,rsSplit,rsFullWithoutText);
   TCSSTextDecoration=(ctdNone,ctdUnderline,ctdOverline,ctdLineThrough,ctdBlink);
   TCSSTextDecorations=set of TCSSTextDecoration;
-  TState=(   hsNormal,hsOver,hsDown,hsOverDown);
-
+  TState=(hsNormal,hsOver,hsDown,hsOverDown);
   TStates=set of TState;
   TCSSStringValue=AString;
   TCSSBackgroundPosition=type TCSSStringValue;
@@ -189,9 +167,6 @@ type
 
 type  TPropChoose=(pcAntiAliasing,pcBackgroundAttachment,pcBackgroundColor,pcBackgroundImage,pcBackgroundPosition,pcBackgroundRepeat,pcBorderColor,pcBorderRadius, pcBorderWidth,pcBorderStyle,pcColor,pcContentAfter,pcContentBefore,pcCursor,pcDirection,pcDisplay,pcEffects,pcFontFamily,pcFontSize,pcFontStyle,pcFontVariant,pcFontWeight,pcLetterSpacing,pcLineHeight,pcListStyleType,
                    pcMargin,pcMinHeight,pcMinWidth,pcPadding,pcTextAlign,pcTextDecoration,pcTextIndent,pcTextTransform,pcTransformationsMatrix,pcVerticalAlign,pcVisibility,pcWhiteSpace,pcWordSpacing,pcZIndex,pcOther);
-var pcChanges:array[TPropChoose] of TWhatChanged=({pcAntiAliasing}[{empty}],{pcBackgroundAttachment}[],{pcBackgroundColor}[wcColor],{pcBackgroundImage}[wcSize,wcText],{pcBackgroundPosition}[],{pcBackgroundRepeat}[],{pcBorderColor}[],{pcBorderRadius}[],{pcBorderWidth}[wcSize,wcText2],{pcBorderStyle}[wcSize,wcText2],{pcColor}[wcFont],{pcContentAfter}[wcText,wcSize],{pcContentBefore}[wcText,wcSize],{pcCursor}[wcCursor],{pcDirection}[wcText2,wcSize],{pcDisplay}[wcText,wcSize],{pcEffects}[wcSize],{pcFontFamily}[wcFont,wcText2,wcSize],{pcFontSize}[wcFont,wcText2,wcSize],{pcFontStyle}[wcSize,wcFont,wcText2],{pcFontVariant}[wcText,wcSize],{pcFontWeight}[wcFont,wcText2,wcSize],{pcLetterSpacing}[wcText2,wcSize],{pcLineHeight}[wcText2,wcSize],{pcListStyleType}[],
-                   {pcMargin}[wcSize,wcText2],{pcMinHeight}[wcSize],{pcMinWidth}[wcSize],{pcPadding}[wcSize,wcText2],{pcTextAlign}[wcText2],{pcTextDecoration}[wcFont],{pcTextIndent}[wcText2,wcSize],{pcTextTransform}[wcText,wcSize],{pcTransformationsMatrix}[{empty}],{pcVerticalAlign}[wcText2,wcSize],{pcVisibility}[],{pcWhiteSpace}[wcText,wcSize],{pcWordSpacing}[wcText2,wcSize],{pcZIndex}[wcZIndex],{pcOther}[]);
-
 
 type
 
@@ -528,8 +503,7 @@ type
     function BaseRasteringFile:TPathName;
     procedure CopyFrom(s: TStyle; sub:boolean);
     procedure SetFontVariant(const Value: TCSSFontVariant);
-    procedure SetBackgroundAttachment(
-      const Value: TCSSBackgroundAttachment);
+    procedure SetBackgroundAttachment(const Value: TCSSBackgroundAttachment);
     procedure SetDirection(const Value: TCSSDirection);
     procedure SetBefore(const Value: HypeString);
     procedure SetAfter(const Value: HypeString);
@@ -613,7 +587,7 @@ type
     function UndefFilter(IsRastered:boolean):boolean;
     procedure PictureChange(Sender: TObject);
   public
-Owner:IChangeReceiver;
+    Owner:IChangeReceiver;
     RasteringFile:TPathName;
     function IsMarginCleared(Align:TEdgeAlign):boolean;
     function IsBGImageCleared: boolean;
@@ -691,10 +665,6 @@ Owner:IChangeReceiver;
     property BorderRadius:TCSSBorderRadius read FBorderRadius write FBorderRadius;
     //TODO: SpeedupGeneration property Generated:TPathName read RasteringFile write RasteringFile;
   end;
-//  (n:'filter';b:bbFilter;v:'"Alpha(opacity=100, finishopacity=0, style=2)","Blur(direction=235, strength=6)",Chroma(color=#DDBB99),"DropShadow(color=#C0C0C0, offx=3, offy=3)",FlipH(),FlipV(),"Glow(color=#000000, strength=12)",Gray(),Invert(),'+'Mask(color=#000066),"Shadow(color=#000000, direction=45)","Wave(freq=5, light=20, phase=50, strength=6)",XRay()';m:[MGvisual]),
-
-
-
 
   TMyScrollInfo = record
     nMax: Integer;
@@ -746,20 +716,16 @@ Owner:IChangeReceiver;
     procedure LockDefinedCSS(var sStyleArr:TStyleArray);
     procedure UnlockDefinedCSS(var sStyleArr:TStyleArray);
     function HasImage(var FPicture: TGraphic): boolean; overload;
-
-
   protected
     function HasBackgroundImage:boolean; overload;
     function HasImage: boolean; overload;
     function HasImage(var PicWidth, PicHeight: integer): boolean; overload;
     procedure SetChildOrder(Child: TComponent; Order: Integer); override;
-
   public
     function HasBackgroundImage(var FPicture: TGraphic): boolean; overload;
     function HasBackgroundImage(var FPicture:TLocationImage):boolean; overload;
     procedure _SetUniqueName(const s:TComponentName);
     class function _GetUniqueName(_Self:TComponent; const s:TComponentName):TComponentName;
-
   public
     IsVertScrollBarVisible,IsHorzScrollBarVisible:boolean;
     FVertScrollbarAlwaysVisible,FHorzScrollbarAlwaysVisible:boolean;
@@ -814,7 +780,7 @@ Owner:IChangeReceiver;
     procedure GetStylesFromElement(Use:ICon);
     function HasTransformations(var tt: TTransformations): boolean;
     procedure ReleaseResources;
-    procedure CheckDesignState(inv:boolean=true);
+    procedure CheckDesignState;
     procedure CSSToFont(Font:TFont=nil);
     function GetCharset:TFontCharset;
     procedure CSSToColor;
@@ -883,7 +849,6 @@ Owner:IChangeReceiver;
     procedure UpdateMousePressed(Down:boolean; DownIfDown:boolean);
     function IsVirtualParentOf(pn:TControl):boolean;
     function GetLev:integer;
-
   protected
     FTooltip:HypeString;
     EqArea:TRect;
@@ -1169,7 +1134,6 @@ Owner:IChangeReceiver;
     function RequiresRastering:boolean; virtual;
     property OnStateTransition:TOnStateTransition read FOnStateTransition write FOnStateTransition;
     function GetPreferDownStyles:boolean; virtual;
-
   public
     VariableHeight:boolean;
     SUse:TComponentName;
@@ -1232,7 +1196,7 @@ Owner:IChangeReceiver;
     property Color stored false;
     property Font stored false;
     property Cursor stored false;
-    property AutoSizeXY:TASXY read FAutoSize write SetASXY{ default asNone};
+    property AutoSizeXY:TASXY read FAutoSize write SetASXY;
     property ImageType:TImageType read FImageType write SetImageType default bitInherit;
     property ImageFormat:TImageFormat read FImageFormat write FImageFormat default ifInherit;
     property VertPosition:integer read VPos write SetVPos default 0;
@@ -1258,47 +1222,18 @@ Owner:IChangeReceiver;
     property Use;
     property Transparent;
     property AutoSizeXY;
-
     property Color;
     property Font;
     property Visible;
-
-    {not interpreted:}
     property Align;
     property Anchors;
     property Constraints;
     property Cursor;
-{    property Ctl3D;
-    property UseDockManager default True;
-    property DockSite;
-    property DragCursor;
-    property DragKind;
-    property DragMode;
-}
     property Enabled;
-//    property FullRepaint;
-//    property Locked;
-//    property ParentBiDiMode;
-//    property ParentColor;
-//    property ParentCtl3D;
-//    property ParentFont;
     property ParentShowHint;
-//    property PopupMenu;
     property ShowHint;
-//    property TabStop;
-
-
     property Right;
     property Bottom;
-
-    {property OnCanResize;
-    property OnDockDrop;
-    property OnDockOver;
-    property OnEndDock;
-    property OnGetSiteInfo;
-    property OnStartDock;
-    property OnUnDock; }
-
     property OnClick;
     property OnConstrainedResize;
     property OnContextPopup;
@@ -1355,7 +1290,7 @@ function GetBackgroundPixels(Value:TCSSBackgroundPosition; const rct:TRect; imgW
 procedure SplitBackgroundPixels(Value:TCSSBackgroundPosition; var v1,v2:TCSSBackgroundPosition);
 function GetHyphens(const s:TEnumName; from:integer=4):TEnumName;
 function GetCSSPropName(PropChoose:TPropChoose):TEnumName;
-function GetCSSPropValue(PropChoose:TPropChoose{; var Value:TCSSProp}):TEnumName;
+function GetCSSPropValue(PropChoose:TPropChoose):TEnumName;
 function WithPX(const s:AString):AString;
 function GetNearestFont(const s:TFontName):TFontName;
 function GetFontList(const s:TFontName):TStringList;
@@ -1364,7 +1299,7 @@ function GetBorderRadiusString(al:TEdgeAlign):TEnumName;
 function GetBorderRadiusStringSafari(al:TEdgeAlign):TEnumName;
 function GetBorderRadiusStringMoz(al:TEdgeAlign):TEnumName;
 
-procedure AddRect(var Rect:TRect; a:TRect); //Rect:=Rect+a-b
+procedure AddRect(var Rect:TRect; a:TRect);
 function GetAddRect(Rect:TRect; a:TRect):TRect;
 function ShrinkRect(const a,b:TRect):TRect;
 function InflRect(const a,b:TRect):TRect;
@@ -1440,31 +1375,52 @@ const VertScrollbar=16;
       HorzScrollbarButtonWidth=16;
 const sStyle:array[TState] of TPropertyName=('Style','StyleOver','StyleDown','StyleOverDown');
 const EnableIgnoreCSS=True;
+const asar:array[boolean,boolean] of TASXY=((asNone,asY),(asX,asXY));
+const CSSCursorMap:array[TCSSCursor] of TCursor=
+  (crDefault,crDefault,crCross,crArrow,crHandPoint,crSizeAll,
+   crSizeWE,crSizeNESW,crSizeNWSE,crSizeNS,           crSizeNWSE,crSizeNESW,crSizeNS,crSizeWE,
+   crIBeam,crHourGlass,crHelp);
+const MarginDefault=EmptyStr;
+const default_borderwidth=1;
 
+{set by designer}
 var
     glPreAddCompo:TPreAddCompo;
     glPostAddCompo:TPostAddCompo;
     glIsDesignerSelected:function (Control:TControl):boolean;
     _RuntimeMode:boolean=false;
     DesignStyle:TState=hsNormal;
-    glPaintOnlyBg:boolean;
-    CancelCheckDesignState:boolean;
-    glSelCompo,glEventObj:TControl;
+    NotifyDebug:procedure(s:AString);
+
+{set by the HTML generator}
+var
+    glOnDefineProperties:TNotifyEvent=nil;
+    WithMeta:boolean=false;
+    PreventGraphicOnChange:boolean=false; {esp. prevent animated GIF graphics to change while generating images}
+    UseCSS3:boolean=false; {whether CSS3 constructs may be used}
+    ForcedGIFRenderer:TGIFRenderer32=nil;
+    PreventAdjustMargin:boolean=false; {prevents calling AdjustMarginWidth to get the unmodified margin width}
+
+{used internally when (cascaded) styles are queried}
+var
     Cascaded:TCascaded;
-    StoredChecking:boolean=false;
-    PreventAdjustMargin:boolean=false;
     ValStyle:TPersistent=nil;
     TopTextDecoration,ParentTextDecoration:TCSSTextDecorations;
     IsFromParent:boolean;
     SelfHit:boolean;
+
+{message strings which may be localized}
+var
+    QUOTEINVALIDVALUE_STR:WideString='"%" is not a valid value';
+    REFOBJECT_STR:WideString= '% is referenced by %';
+
+{misc}
+var
+    glPaintOnlyBg:boolean;
+    glSelCompo,glEventObj:TControl;
     CancelInvDesigner:boolean;
-    NotifyDebug:procedure(s:AString);
-    UseCSS3:boolean=false;
-    PreventGraphicOnChange:boolean=false;
-    WithMeta:boolean=false;
-    glOnDefineProperties:TNotifyEvent=nil;
     glUpdateOver:TUpdateOver;
-    ForcedGIFRenderer:TGIFRenderer32=nil;
+
 
 implementation
 
@@ -1477,6 +1433,11 @@ const
   cl3DFace = clBtnFace;
   cl3DHighlight=clBtnHighlight;
   cl3DShadow=clBtnShadow;
+
+var pcChanges:array[TPropChoose] of TWhatChanged=({pcAntiAliasing}[{empty}],{pcBackgroundAttachment}[],{pcBackgroundColor}[wcColor],{pcBackgroundImage}[wcSize,wcText],{pcBackgroundPosition}[],{pcBackgroundRepeat}[],{pcBorderColor}[],{pcBorderRadius}[],{pcBorderWidth}[wcSize,wcText2],{pcBorderStyle}[wcSize,wcText2],{pcColor}[wcFont],{pcContentAfter}[wcText,wcSize],{pcContentBefore}[wcText,wcSize],{pcCursor}[wcCursor],{pcDirection}[wcText2,wcSize],{pcDisplay}[wcText,wcSize],{pcEffects}[wcSize],{pcFontFamily}[wcFont,wcText2,wcSize],{pcFontSize}[wcFont,wcText2,wcSize],{pcFontStyle}[wcSize,wcFont,wcText2],{pcFontVariant}[wcText,wcSize],{pcFontWeight}[wcFont,wcText2,wcSize],{pcLetterSpacing}[wcText2,wcSize],{pcLineHeight}[wcText2,wcSize],{pcListStyleType}[],
+                   {pcMargin}[wcSize,wcText2],{pcMinHeight}[wcSize],{pcMinWidth}[wcSize],{pcPadding}[wcSize,wcText2],{pcTextAlign}[wcText2],{pcTextDecoration}[wcFont],{pcTextIndent}[wcText2,wcSize],{pcTextTransform}[wcText,wcSize],{pcTransformationsMatrix}[{empty}],{pcVerticalAlign}[wcText2,wcSize],{pcVisibility}[],{pcWhiteSpace}[wcText,wcSize],{pcWordSpacing}[wcText2,wcSize],{pcZIndex}[wcZIndex],{pcOther}[]);
+
+var StoredChecking:boolean=false;
 
 var
   TrueColors: array[0..17] of TIdentMapEntry = (
@@ -3315,29 +3276,21 @@ begin
  result:=_RuntimeMode or not (csDesigning in ComponentState);
 end;
 
-procedure TdhCustomPanel.CheckDesignState(inv:boolean);
-var _LastActStyle:TState;
+procedure TdhCustomPanel.CheckDesignState;
+var OldState:TState;
 begin
-// if InNotifyCSSChanged and not InCollectChanges {or CancelCheckDesignState} then exit;
- _LastActStyle:=LastActStyle;
-
+ OldState:=LastActStyle;
  if RuntimeMode or not glIsDesignerSelected(Self) then
   LastActStyle:=GetHTMLState else
   LastActStyle:=DesignStyle;
-
- if _LastActStyle<>LastActStyle then
+ if OldState<>LastActStyle then
  begin
   if not (csDestroying in ComponentState) and not (csLoading in  ComponentState) then
   begin
     InvDesigner;
-    if not inv and not CancelCheckDesignState then
-    begin
-     showmessage('Transition undetected from '+GetEnumName(TypeInfo(TState),integer(_LastActStyle))+' to '+GetEnumName(TypeInfo(TState),integer(LastActStyle))+' name:'+GetName);
-    end;
-    DoStateTransition(_LastActStyle);
+    DoStateTransition(OldState);
   end;
  end;
-
 end;
 
 procedure TdhCustomPanel.DoStateTransition(OldState:TState);
@@ -3355,7 +3308,7 @@ end;
 
 function TdhCustomPanel.ActStyle:TStyle;
 begin
- CheckDesignState(false);
+ CheckDesignState; // state should normally not change by this call
  result:=StyleArr[LastActStyle];
  if result=nil then
   result:=StyleArr[hsNormal];
@@ -3363,7 +3316,6 @@ end;
 
 function TdhCustomPanel.State:TState;
 begin
- //CheckDesignState(false);
  result:=LastActStyle;
 end;
 
@@ -9024,11 +8976,9 @@ begin
   result:=TMyBitmap32.Create;
 
   Source:=gif;
-  begin //siehe result.Assign(TGraphic);
+  begin //see result.Assign(TGraphic);
       result.SetSize(TGraphic(Source).Width, TGraphic(Source).Height);
-      if GIFPaintPerHand then
-       result.Clear($00000000) else
-       result.Clear($AA000000);
+      result.Clear($AA000000);
       if result.Empty then Exit;
         Canvas:=result.Canvas;
         if (ForcedGIFRenderer<>nil) and (ForcedGIFRenderer.Image=gif) then
@@ -9036,7 +8986,6 @@ begin
          TGraphicAccess(Source).Draw(Canvas, MakeRect(0, 0, result.Width, result.Height));
   end;
 
-  if not GIFPaintPerHand then
   //{can be false negative}if gif.Transparent then
   begin
    P:=result.PixelPtr[0,0];

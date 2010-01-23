@@ -341,7 +341,6 @@ begin
    exit;
   end;
   end;
-  CancelCheckDesignState:=true;
   p.Visible:=false;
   if p<>TailSubMenu then break;
   if IsSliding then
@@ -734,7 +733,6 @@ begin
    ToOpen:=nil;
    if Visible then exit;
    TailSubMenu:=Self;
-   CancelCheckDesignState:=true;
    Visible:=true;
    AdjustSize;
    if (moSlide in ComputedMenu.FMenuOptions) and RuntimeMode then
@@ -754,7 +752,6 @@ begin
     SetTimer(SlideNotify,10,SlideTimer);
    end;
    FParentMenuItem.CheckDesignState;
-   CancelCheckDesignState:=false;
 end;
 
 function TdhMenu.LeaveY:boolean;

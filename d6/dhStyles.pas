@@ -131,6 +131,7 @@ type
   TImageFormat=(ifInherit,ifSimple,ifSemiTransparent,ifJPEG);
   TPhysicalImageFormat=(pifSaveAsGIF,pifSaveAsPNG,pifSaveAsJPEG);
   TEffectsOnText=(etInclude,etExclude,etOnly);
+  TImageState=(isUninitialized,isAnalyzed,isOnePixel,isSemiTransparent,isAnimatedGIF);
 
   TStyle=class;
   TTransformations=class;
@@ -330,17 +331,10 @@ type
    property Style:TCSSBorderStyle read FStyle write SetStyle default Low(TCSSBorderStyle);
   end;
 
-  TPictureID=class(TPicture)
-  private
-  public
-  end;
-
-  TImageState=(isUninitialized,isAnalyzed,isOnePixel,isSemiTransparent,isAnimatedGIF);
-
   TLocationImage=class(TPersistent)
   public
     FOnChange:TNotifyEvent;
-    FPictureID:TPictureID;
+    FPicture:TPicture;
     FPath:TPathName;
     FImageState:TImageState;
     FWidth,FHeight:Integer;
@@ -361,7 +355,7 @@ type
     function CachingIsUseful:Boolean;
     procedure Clear;
   public
-    property PictureID:TPictureID read FPictureID;
+    property Picture:TPicture read FPicture;
     function HasPath: Boolean;
     function GraphicExtension:TPathName;
     function GetGraphic:TGraphic;
@@ -649,21 +643,6 @@ var pcChanges:array[TPropChoose] of TWhatChanged=({pcAntiAliasing}[{empty}],{pcB
                    {pcMargin}[wcSize,wcText2],{pcMinHeight}[wcSize],{pcMinWidth}[wcSize],{pcPadding}[wcSize,wcText2],{pcTextAlign}[wcText2],{pcTextDecoration}[wcFont],{pcTextIndent}[wcText2,wcSize],{pcTextTransform}[wcText,wcSize],{pcTransformationsMatrix}[{empty}],{pcVerticalAlign}[wcText2,wcSize],{pcVisibility}[],{pcWhiteSpace}[wcText,wcSize],{pcWordSpacing}[wcText2,wcSize],{pcZIndex}[wcZIndex],{pcOther}[]);
 var ImageBitmap:TBitmap=nil;
 var StoredChecking:boolean=false;
-
-type TProxyReader=class(TFiler)
-  protected
-    OriReader:TReader;
-    OriReadData: TStreamProc;
-    LocationImage:TLocationImage;
-    procedure MyReadData(Stream: TStream);
-    procedure FlushBuffer; override;
-    procedure DefineProperty(const Name: AString;
-      ReadData: TReaderProc; WriteData: TWriterProc;
-      HasData: Boolean); override;
-  public
-    procedure DefineBinaryProperty(const Name: AString;
-  ReadData, WriteData: TStreamProc; HasData: Boolean); override;
-end;
 
 function GetImageBitmap:TGraphic;
 begin
@@ -1501,58 +1480,45 @@ begin
   inherited Assign(Source);
 end;
 
+type TFakePicture=class(TPicture);
+
 procedure TLocationImage.DefineProperties(Filer: TFiler);
-var ProxyReader:TProxyReader;
 
   function DoWrite: Boolean;
   begin
-    result:=not ((Filer.Ancestor is TLocationImage) and (TLocationImage(Filer.Ancestor).FPictureID=FPictureID));
+    result:=not ((Filer.Ancestor is TLocationImage) and (TLocationImage(Filer.Ancestor).FPicture=FPicture));
   end;
 
 begin
  if (Filer is TWriter) then
  begin
-  if FPictureID<>nil then
+  if FPicture<>nil then
   begin
    if DoWrite and not HasPath then
-    FPictureID.DefineProperties(Filer);
+    TFakePicture(FPicture).DefineProperties(Filer);
   end;
  end else
  if (Filer is TReader) then
  begin
-  if FPictureID<>nil then //see DoWrite
+  if FPicture<>nil then
    Assign(Nil);
-{  begin
-  FPictureID.savetofile('c:\a.bmp');
-    Filer.DefineProperty('Data', Owner.SkipValue, nil, false);
-  //assert(FPictureID=nil);
-//  FreeAndNil(FPictureID);
-  end;}
-  //Filer.DefineProperty('Path', ReadCRC, WriteCRC, true);
-  if FPictureID=nil then
+  if FPicture=nil then
   begin
-   ProxyReader:=TProxyReader.Create(nil,0);
-   try
-    ProxyReader.OriReader:=TReader(Filer);
-    ProxyReader.LocationImage:=Self;
-    FPictureID:=TPictureID.Create;
+    FPicture:=TPicture.Create;
     try
-     FPictureID.DefineProperties(ProxyReader);
+     TFakePicture(FPicture).DefineProperties(Filer);
     except
-     FreeAndNil(FPictureID);
+     FreeAndNil(FPicture);
     end;
     UpdateCalculations(true);
-   finally
-    ProxyReader.Free;
-   end;
   end;
  end;
 end;
 
 function TLocationImage.GetGraphic:TGraphic;
 begin
- if FPictureID<>nil then
-  result:=FPictureID.Graphic else
+ if FPicture<>nil then
+  result:=FPicture.Graphic else
   result:=nil;
 end;
 
@@ -1566,8 +1532,8 @@ begin
  end else
  if HasPath then
  begin
-  FreeAndNil(FPictureID);
-  FPictureID:=TPictureID.Create;
+  FreeAndNil(FPicture);
+  FPicture:=TPicture.Create;
   try
     Filename:=GetAbsolutePath;
     if LowerCase(ExtractFileExt(Filename))='.gif' then
@@ -1575,15 +1541,15 @@ begin
      NewGraphic := TPatchedGifImage.Create;
      try
        NewGraphic.LoadFromFile(Filename);
-       FPictureID.Assign(NewGraphic);
+       FPicture.Assign(NewGraphic);
      finally
        NewGraphic.Free;
      end;
     end else
-     FPictureID.LoadFromFile(Filename);
-    FPictureID.OnChange:=Changed;
+     FPicture.LoadFromFile(Filename);
+    FPicture.OnChange:=Changed;
   except
-    FreeAndNil(FPictureID);
+    FreeAndNil(FPicture);
   end;
   result:=GetGraphic;
   if result=nil then
@@ -1611,7 +1577,7 @@ end;
 
 procedure TLocationImage.Clear;
 begin
- FreeAndNil(FPictureID);
+ FreeAndNil(FPicture);
  FPath:='';
  FImageState:=isUninitialized;
 end;
@@ -1624,12 +1590,10 @@ begin
 end;
 
 procedure TLocationImage.Assign(Source: TPersistent);
-var GraphicsImage : TMemoryStream;
-var GraphicsID2:TPictureID;
 begin
-  if (Source=FPictureID) or (Source<>nil{FPictureID.Source can be nil}) and (Source=GetGraphic) then exit;
+  if (Source=FPicture) or (Source<>nil{FPicture.Source can be nil}) and (Source=GetGraphic) then exit;
 
-  if FPictureID<>nil then
+  if FPicture<>nil then
   begin
    Clear;
   end;
@@ -1642,7 +1606,7 @@ begin
    begin
     Path:=TLocationImage(Source).GetAbsolutePath;
    end;
-   Source:=TLocationImage(Source).FPictureID;
+   Source:=TLocationImage(Source).FPicture;
   end;
 
   if (Source is TPicture) then
@@ -1653,15 +1617,14 @@ begin
   if Source <> nil then
   if Source is TGraphic then
   begin
-    FPictureID:=TPictureID.Create;
-    FPictureID.Graphic:=TGraphic(Source);
+    FPicture:=TPicture.Create;
+    FPicture.Graphic:=TGraphic(Source);
   end else
     inherited Assign(Source);
 
   UpdateCalculations(true);
 
   Changed(Self);
-
 end;
 
 procedure TLocationImage.Changed(Sender: TObject);
@@ -1735,7 +1698,7 @@ begin
   FImageState:=isUninitialized;
  end else
  begin
-  FPictureID.OnChange:=Changed;
+  FPicture.OnChange:=Changed;
   FWidth:=GetGraphic.Width;
   FHeight:=GetGraphic.Height;
   if CalculateImgCanT1X1 then
@@ -1781,9 +1744,9 @@ end;
 
 procedure TLocationImage.ReleaseResources;
 begin
- if (FPictureID<>nil) and HasPath and not CachingIsUseful then
+ if (FPicture<>nil) and HasPath and not CachingIsUseful then
  begin
-  FreeAndNil(FPictureID);
+  FreeAndNil(FPicture);
  end;
 end;
 
@@ -2754,12 +2717,6 @@ begin
   AntiAliasing:=FTransformations.AntiAliasing;
   Result:=true;
  end;
-  {
- if FAntiAliasing<>caaInherit then
- begin
-  AntiAliasing:=FAntiAliasing;
-  Result:=True;
- end;        }
  else
   showmessage('TStyle.GetVal errornoues')
  end;
@@ -2840,40 +2797,6 @@ procedure TStyle.SetAfter(const Value: HypeString);
 begin
   FAfter := Value;
   pc(pcContentAfter);
-end;
-
-procedure TProxyReader.DefineBinaryProperty(const Name: AString;
-  ReadData, WriteData: TStreamProc; HasData: Boolean);
-begin
- OriReadData:=ReadData;
- OriReader.DefineBinaryProperty(Name,MyReadData,WriteData,HasData);
-end;
-
-procedure TProxyReader.MyReadData(Stream: TStream);
-var GraphicsID2:TPictureID;
-    DummyResult:boolean;
-begin
- if Stream is TMemoryStream then
- begin
-   OriReadData(Stream);
-
-   if LocationImage.FPictureID.Graphic=nil then
-   if Assigned(OriReader.OnError) then
-    OriReader.OnError(OriReader,LocationImage.Owner.Owner.GetElementName+': Unknown graphics format', DummyResult);
- end else
-  Assert(false);
-end;
-
-procedure TProxyReader.DefineProperty(const Name: AString;
-      ReadData: TReaderProc; WriteData: TWriterProc;
-      HasData: Boolean);
-begin
- //supress compiler warning
-end;
-
-procedure TProxyReader.FlushBuffer;
-begin
- //supress compiler warning
 end;
 
 var PropChoose:TPropChoose;

@@ -1022,7 +1022,7 @@ begin
 end;
 
 function UndefFilter(Self:TStyle; IsRastered:boolean):boolean;
-var _FPictureID:TPictureID;
+var _FPicture:TPicture;
     _FPath:TPathName;
     FPicture:TLocationImage;
     Owner:TdhFakeCustomPanel;
@@ -1030,14 +1030,14 @@ begin
   Owner:=TdhFakeCustomPanel(Self.Owner.GetControl);
   if Self.BackgroundImage.HasPicture or IsRastered then
   begin
-   _FPictureID:=Self.BackgroundImage.FPictureID;
+   _FPicture:=Self.BackgroundImage.FPicture;
    _FPath:=Self.BackgroundImage.FPath;
    try
-    Self.BackgroundImage.FPictureID:=nil;
+    Self.BackgroundImage.FPicture:=nil;
     Self.BackgroundImage.FPath:='';
     result:=Owner.HasBackgroundImage(FPicture) and FPicture.ImgIsT1X1;
    finally
-    Self.BackgroundImage.FPictureID:=_FPictureID;
+    Self.BackgroundImage.FPicture:=_FPicture;
     Self.BackgroundImage.FPath:=_FPath;
    end;
   end else

@@ -3862,8 +3862,8 @@ begin
   result:='(defined)';
  pcBackgroundImage{,pcImage,pcEdgeImage,pcStretchImage}:
  if Cascaded.Picture.HasPath then
-  result:='('+Cascaded.Picture.GetAbsolutePath+')'{+_if(Cascaded.Picture.PictureID.ReferenceCount>0,'['+inttostr(Cascaded.Picture.PictureID.ReferenceCount)+' occurences]',EmptyStr)} else
-  result:='('+UpperCase(Copy(Cascaded.Picture.GraphicExtension,2,maxint))+' image)'{+_if(Cascaded.Picture.PictureID.ReferenceCount>0,'['+inttostr(Cascaded.Picture.PictureID.ReferenceCount)+' occurences]',EmptyStr)};
+  result:='('+Cascaded.Picture.GetAbsolutePath+')' else
+  result:='('+UpperCase(Copy(Cascaded.Picture.GraphicExtension,2,maxint))+' image)';
   //result:='('+Cascaded.Picture.Graphic.ClassName+')';
  pcBorderColor,pcBackgroundColor,pcColor:
   result:=dhPanel.ColorToIntString(Cascaded.Color);

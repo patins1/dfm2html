@@ -28,7 +28,7 @@ uses
   ComCtrls, CommCtrl, StdCtrls, clipbrd,
 {$ENDIF}
   math{$IFDEF DEB},funcutils,jclDebug{$ENDIF},
-  GR32,GR32_Transforms,gauss,GR32_Blend,GR32_LowLevel,BinList,MyBitmap32,dhStrUtils,WideStrUtils, dhStyles;
+  GR32,GR32_Transforms,gauss,GR32_Blend,GR32_LowLevel,BinList,dhBitmap32,dhStrUtils,WideStrUtils, dhStyles;
 
 type TASXY=(asNone,asX,asY,asXY);
 

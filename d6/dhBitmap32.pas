@@ -1,4 +1,4 @@
-unit MyBitmap32;
+unit dhBitmap32;
 
 interface
 

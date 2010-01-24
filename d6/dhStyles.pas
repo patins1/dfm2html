@@ -13,7 +13,7 @@ uses
  {$IFDEF VER210}GIFImg{$ELSE}GIFImage{$ENDIF},Controls, Graphics, Dialogs,
 {$ENDIF}
   math{$IFDEF DEB},funcutils,jclDebug{$ENDIF},
-  GR32,BinList,MyBitmap32,dhStrUtils,WideStrUtils;
+  GR32,BinList,dhBitmap32,dhStrUtils,WideStrUtils;
 
 {$IFDEF VER210}
 type TPatchedGIFRenderer=class(TGIFRenderer)

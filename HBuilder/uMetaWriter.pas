@@ -72,7 +72,7 @@ type TdhFakeLink=class(TdhLink);
 type TdhFakeMenu=class(TdhMenu);
 type TdhFakePage=class(TdhPage);
 
-procedure TrimBottom(b:TMyBitmap32; var w,h:integer);
+procedure TrimBottom(b:TdhBitmap32; var w,h:integer);
 var x,y:integer;
 begin
    for y:=h-1 downto 0 do
@@ -84,7 +84,7 @@ begin
    end;
 end;
 
-procedure TrimRight(b:TMyBitmap32; var w,h:integer);
+procedure TrimRight(b:TdhBitmap32; var w,h:integer);
 var x,y:integer;
 begin
    for x:=w-1 downto 0 do
@@ -96,7 +96,7 @@ begin
    end;
 end;
 
-procedure TrimRightBottom(b:TMyBitmap32; var w,h:integer);
+procedure TrimRightBottom(b:TdhBitmap32; var w,h:integer);
 begin
    w:=b.Width;
    h:=b.Height;
@@ -109,7 +109,7 @@ begin
    end;
 end;
 
-function HasSemiTransparence(Transparent:TMyBitmap32):boolean;
+function HasSemiTransparence(Transparent:TdhBitmap32):boolean;
 var P: PColor32;
     i:integer;
 begin
@@ -126,7 +126,7 @@ begin
    result:=false;
 end;
 
-procedure NormalizeSemiTransparence(Transparent:TMyBitmap32);
+procedure NormalizeSemiTransparence(Transparent:TdhBitmap32);
 var P: PColor32;
     i:integer;
 begin
@@ -139,7 +139,7 @@ begin
    end;
 end;
 
-procedure NormalizeBitTransparence(Transparent:TMyBitmap32; Opaque:TMyBitmap32);
+procedure NormalizeBitTransparence(Transparent:TdhBitmap32; Opaque:TdhBitmap32);
 var P,P2: PColor32;
     i:integer;
 begin
@@ -156,7 +156,7 @@ begin
    end;
 end;
 
-function GetEqArea(bmp:TMyBitmap32;TryX,TryY:integer):TRect;
+function GetEqArea(bmp:TdhBitmap32;TryX,TryY:integer):TRect;
 var x,y,w,h:integer;
     bbase,base,compareTo:PColor32;
     Eq:boolean;
@@ -265,7 +265,7 @@ begin
 
 end;
 
-function GetCRCFromBitmap32(b:TMyBitmap32; w,h:integer; ResumeCrc:DWORD=0):DWORD; overload;
+function GetCRCFromBitmap32(b:TdhBitmap32; w,h:integer; ResumeCrc:DWORD=0):DWORD; overload;
 var y:integer;
 begin
    result:=w;
@@ -275,10 +275,10 @@ begin
     result:=calc_crc32(w*sizeof(TColor32),PByte(b.PixelPtr[0,y]),result);
 end;
 
-function GetCRCFromBitmap32(Transparent,Opaque:TMyBitmap32; w,h:integer; ResumeCrc:DWORD=0):DWORD; overload;
-var Opaque2:TMyBitmap32;
+function GetCRCFromBitmap32(Transparent,Opaque:TdhBitmap32; w,h:integer; ResumeCrc:DWORD=0):DWORD; overload;
+var Opaque2:TdhBitmap32;
 begin
- Opaque2:=TMyBitmap32.Create;
+ Opaque2:=TdhBitmap32.Create;
  Opaque2.Assign(Opaque);
  NormalizeBitTransparence(Transparent,Opaque2);
  result:=GetCRCFromBitmap32(Opaque2,w,h,ResumeCrc);
@@ -361,7 +361,7 @@ begin
  result:=false;
 end;
 
-function getPhysicalImageFormat(requested:TPhysicalImageFormat;TransparentTop:TMyBitmap32):TPhysicalImageFormat;
+function getPhysicalImageFormat(requested:TPhysicalImageFormat;TransparentTop:TdhBitmap32):TPhysicalImageFormat;
 begin
   result:=requested;
   if (result=pifSaveAsJPEG) and ((TransparentTop.Height<=1) or (TransparentTop.Width<=1)) then
@@ -404,8 +404,8 @@ end;
 
 
 
-function SaveImg(Opaque:TMyBitmap32; Transparent:TMyBitmap32; var RasteringFile:TPathName; CheckBaseRasteringFile:boolean; BaseRasteringFile:TPathName; PhysicalImageFormat:TPhysicalImageFormat; AllowCutWhiteSpace:boolean):boolean;
-var gif_pre:TMyBitmap32;
+function SaveImg(Opaque:TdhBitmap32; Transparent:TdhBitmap32; var RasteringFile:TPathName; CheckBaseRasteringFile:boolean; BaseRasteringFile:TPathName; PhysicalImageFormat:TPhysicalImageFormat; AllowCutWhiteSpace:boolean):boolean;
+var gif_pre:TdhBitmap32;
     i,w,h:integer;
     _crc:DWORD;
     graph:TGraphic;
@@ -483,7 +483,7 @@ var pn:TdhFakeCustomPanel;
     fingif,Sub:TGIFImage;
     GCE:TGIFGraphicControlExtension;
     PrevSubImage:TGIFFrame;
-    pnTopGraph,pnTransparentTop,GraphToSplit:TMyBitmap32;
+    pnTopGraph,pnTransparentTop,GraphToSplit:TdhBitmap32;
     EqArea:TRect;
     EqX,EqY:integer;
     EqSize:TRect;
@@ -599,9 +599,9 @@ begin
      if (EqArea.Right<>EqArea.Left) and (EqArea.Bottom<>EqArea.Top) or (pn.VariableWidthSize and (EqArea.Right<>EqArea.Left)) or (pn.VariableHeightSize and (EqArea.Top<>EqArea.Bottom)){ or (EqArea.Right-EqArea.Left>=1) and (EqArea.Bottom-EqArea.Top>=1) and pn.VariableSize} then
      begin
       if NeedOpaqueImage then
-       pnTopGraph:=TMyBitmap32.Create else
+       pnTopGraph:=TdhBitmap32.Create else
        pnTopGraph:=nil;
-      pnTransparentTop:=TMyBitmap32.Create;
+      pnTransparentTop:=TdhBitmap32.Create;
       pnTransparentTop.DrawMode:=pn.TransparentTop.DrawMode;
       pn.TransparentTop.DrawMode:=dmOpaque;
       try

@@ -112,7 +112,7 @@ type
     procedure SetZOrder(TopMost: Boolean); override;
     function AdjustZIndex(ChildPos,ParentControlCount:integer):integer; override;
     function NeedPadding(HasRastering:TRasterType): boolean; override;
-    procedure PaintWhiteBackground(ref_brct: TRect; Src: TMyBitmap32; const brct: TRect); override;
+    procedure PaintWhiteBackground(ref_brct: TRect; Src: TdhBitmap32; const brct: TRect); override;
     function SomethingIsScrolled: boolean; override;
     function HeightDiff: integer; override;
     procedure WriteState(Writer: TWriter); override;
@@ -439,7 +439,7 @@ begin
  end;
 end;
 
-procedure TdhPage.PaintWhiteBackground(ref_brct:TRect; Src:TMyBitmap32; const brct: TRect);
+procedure TdhPage.PaintWhiteBackground(ref_brct:TRect; Src:TdhBitmap32; const brct: TRect);
 var BPos:TPoint;
 var num_across,num_down:integer;
     W,H,x,y,x_coord,y_coord:integer;

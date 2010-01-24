@@ -1458,7 +1458,7 @@ var
   FPicture: TPicture;
   PicHeight,PicWidth:integer;
   Transformations:TTransformations;
-  T: TMyAffineTransformation;
+  T: TdhAffineTransformation;
   HorzRotated,VertRotated:boolean;
 begin
     if (csLoading in ComponentState) then exit;

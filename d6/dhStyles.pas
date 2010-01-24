@@ -411,7 +411,7 @@ type
     FontFamily:TCSSFontFamily;
     Other:HypeString;
     FontSize:TCSSFontSize;
-    glAT:TMyAffineTransformation;
+    glAT:TdhAffineTransformation;
     glATAlpha,glATShiftX,glATShiftY:single;
     ValStyle:TPersistent;
     TopTextDecoration,ParentTextDecoration:TCSSTextDecorations;
@@ -424,7 +424,7 @@ type
     function GetAbsolutePath(const Path:TPathName):TPathName;
   end;
 
-  IChangeReceiver=interface
+  IStyleOwner=interface
     function GetElementName:TComponentName;
     function GetImageFormat: TImageFormat;
     procedure NotifyCSSChanged(WhatChanged:TWhatChanged);
@@ -520,7 +520,7 @@ type
     procedure DefineProperties(Filer: TFiler); override;
     procedure PictureChange(Sender: TObject);
   public
-    Owner:IChangeReceiver;
+    Owner:IStyleOwner;
     RasteringFile:TPathName;
     OwnState:TState;
     FTextDecoration:TCSSTextDecorations;
@@ -542,7 +542,7 @@ type
     procedure AssignBackground(s: TStyle);
     procedure Assign(Source: TPersistent); override;
     procedure Clear;
-    constructor Create(AOwner:IChangeReceiver; OwnState:TState);
+    constructor Create(AOwner:IStyleOwner; OwnState:TState);
     destructor Destroy; override;
     function IsStyleStored:boolean;
     function GetBorderByName(const name:TPropertyName; var r:TCSSBorder):boolean;
@@ -1937,7 +1937,7 @@ begin
   pc(pcBackgroundImage);
 end;
 
-constructor TStyle.Create(AOwner:IChangeReceiver; OwnState:TState);
+constructor TStyle.Create(AOwner:IStyleOwner; OwnState:TState);
 var Align:TEdgeAlign;
 begin
   inherited Create;

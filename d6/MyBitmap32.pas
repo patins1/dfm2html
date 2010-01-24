@@ -22,7 +22,7 @@ uses
 
 
 type
-  TMyAffineTransformation = class(TAffineTransformation)
+  TdhAffineTransformation = class(TAffineTransformation)
   protected
 {$IFDEF COMPILER2009}
     procedure PrepareTransform; override;
@@ -32,7 +32,7 @@ type
     function GetTransformedBoundsF(const ASrcRect: TFloatRect): TFloatRect; overload;
   end;
 
-  TMyBitmap32 = class (TBitmap32)
+  TdhBitmap32 = class (TBitmap32)
   protected
     procedure TextBlueToAlpha(const B: TBitmap32; const Color: TColor32); {$IFDEF USEINLINING} inline; {$ENDIF}
 
@@ -81,9 +81,9 @@ type TMyCustomKernel=class(TCustomKernel);
 var
   StockBitmap: TBitmap;
 
-procedure TMyBitmap32.RenderTextExtended(X, Y: Integer; const Text: Widestring; AALevel: Integer; Color: TColor32; const SzOri:TPoint; XPadding:integer; LetterSpacing:Integer; WordSpacing:Integer);
+procedure TdhBitmap32.RenderTextExtended(X, Y: Integer; const Text: Widestring; AALevel: Integer; Color: TColor32; const SzOri:TPoint; XPadding:integer; LetterSpacing:Integer; WordSpacing:Integer);
 var
-  B, B2: TMyBitmap32;
+  B, B2: TdhBitmap32;
   Sz: TSize;
   Alpha: TColor32;
   StockCanvas: TCanvas;
@@ -100,7 +100,7 @@ begin
   PaddedText := Text{ + ' '};
 
   { TODO : Optimize Clipping here }
-  B := TMyBitmap32.Create;
+  B := TdhBitmap32.Create;
   try
     if AALevel = 0 then
     begin
@@ -134,7 +134,7 @@ begin
         if SzOri.X<>0 then
          inc(Sz.cx,Round(XPadding*(Sz.cx/SzOri.X)));
         //GetTextMetrics(StockCanvas.Handle,tm_big);
-        B2 := TMyBitmap32.Create;
+        B2 := TdhBitmap32.Create;
         try
           B2.SetSize(Sz.Cx, Sz.Cy);
           B2.Clear(0);
@@ -166,12 +166,12 @@ begin
   end;
 end;
 
-procedure TMyBitmap32.RenderTextExtended(X, Y: Integer; const Text: Widestring; AALevel: Integer; Color: TColor32; const SzOri:TPoint; XPadding:Integer);
+procedure TdhBitmap32.RenderTextExtended(X, Y: Integer; const Text: Widestring; AALevel: Integer; Color: TColor32; const SzOri:TPoint; XPadding:Integer);
 begin
  RenderTextExtended(X,Y,Text,AALevel,Color,SzOri,XPadding,0,0);
 end;
 
-procedure TMyBitmap32.TextScaleDownExtended(const B, B2: TBitmap32;
+procedure TdhBitmap32.TextScaleDownExtended(const B, B2: TBitmap32;
   const Color: TColor32; AlignTo:integer);
 
 (*
@@ -342,13 +342,13 @@ begin
   end;
 end;
 
-function TMyBitmap32.GetPixelFDS(X, Y: Double): TColor32;
+function TdhBitmap32.GetPixelFDS(X, Y: Double): TColor32;
 begin
   Result := GET_FDS256(Round(X * 256), Round(Y * 256));
   EMMS;
 end;
 
-procedure TMyBitmap32.TextoutW(X, Y: Integer; const Text: Widestring; LetterSpacing:Integer; WordSpacing:Integer);
+procedure TdhBitmap32.TextoutW(X, Y: Integer; const Text: Widestring; LetterSpacing:Integer; WordSpacing:Integer);
 {$IFDEF CLX}
 var
   R: TRect;
@@ -388,7 +388,7 @@ end;
 
 
 {$IFDEF CLX}
-procedure TMyBitmap32.Changed;
+procedure TdhBitmap32.Changed;
 begin
  if not FPixmapChanged then //not called by CanvasChanged, e.g. bei a Canvas operation
   FPixmapActive:=False;
@@ -396,7 +396,7 @@ begin
 end;
 {$ENDIF}
 
-procedure TMyBitmap32.TextBlueToAlpha(const B: TBitmap32; const Color: TColor32);
+procedure TdhBitmap32.TextBlueToAlpha(const B: TBitmap32; const Color: TColor32);
 var
   I: Integer;
   P: PColor32;
@@ -417,7 +417,7 @@ begin
   end;
 end;
 
-function TMyBitmap32.GET_FDS256(X, Y: Integer): TColor32;
+function TdhBitmap32.GET_FDS256(X, Y: Integer): TColor32;
 var
     flrx, flry, celx, cely: Longword;
     C1, C2, C3, C4: TColor32;
@@ -442,7 +442,7 @@ begin
     end;
 end;
 
-procedure TMyBitmap32.DrawTo(Dst: TBitmap32; const DstRect, DstClip, SrcRect: TRect);
+procedure TdhBitmap32.DrawTo(Dst: TBitmap32; const DstRect, DstClip, SrcRect: TRect);
 begin
 {$IFDEF COMPILER2009}
   StretchTransfer(Dst, DstRect, DstClip, Self, SrcRect, Resampler, DrawMode, OnPixelCombine);
@@ -453,7 +453,7 @@ begin
 {$ENDIF}
 end;
 
-procedure TMyBitmap32.ApplyGoodStrechFilter;
+procedure TdhBitmap32.ApplyGoodStrechFilter;
 begin
 {$IFDEF COMPILER2009}
   TMyKernelResampler.Create(Self);
@@ -464,12 +464,12 @@ begin
 {$ENDIF}
 end;
 
-function TMyAffineTransformation.GetTransformedBoundsF: TFloatRect;
+function TdhAffineTransformation.GetTransformedBoundsF: TFloatRect;
 begin
   Result := GetTransformedBoundsF(SrcRect);
 end;
 
-function TMyAffineTransformation.GetTransformedBoundsF(const ASrcRect: TFloatRect): TFloatRect;
+function TdhAffineTransformation.GetTransformedBoundsF(const ASrcRect: TFloatRect): TFloatRect;
 var
   V1, V2, V3, V4: TVector3f;
 begin
@@ -493,7 +493,7 @@ end;
 
 
 {$IFDEF COMPILER2009}
-procedure TMyAffineTransformation.PrepareTransform;
+procedure TdhAffineTransformation.PrepareTransform;
 begin
   FInverseMatrix := Matrix;
   GR32_Transforms.Invert(FInverseMatrix);

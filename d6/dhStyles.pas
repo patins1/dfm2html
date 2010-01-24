@@ -50,14 +50,16 @@ const atTop=-maxint;
 type  TPropChoose=(pcAntiAliasing,pcBackgroundAttachment,pcBackgroundColor,pcBackgroundImage,pcBackgroundPosition,pcBackgroundRepeat,pcBorderColor,pcBorderRadius, pcBorderWidth,pcBorderStyle,pcColor,pcContentAfter,pcContentBefore,pcCursor,pcDirection,pcDisplay,pcEffects,pcFontFamily,pcFontSize,pcFontStyle,pcFontVariant,pcFontWeight,pcLetterSpacing,pcLineHeight,pcListStyleType,
                    pcMargin,pcMinHeight,pcMinWidth,pcPadding,pcTextAlign,pcTextDecoration,pcTextIndent,pcTextTransform,pcTransformationsMatrix,pcVerticalAlign,pcVisibility,pcWhiteSpace,pcWordSpacing,pcZIndex,pcOther);
 
+{enumeration for borders, ealNone being the default}
 type TEdgeAlign= (ealNone, ealTop, ealBottom, ealLeft, ealRight);
+
+{enumeration for corners, calNone being the default; identified with TEdgeAlign to work with query methods which use TEdgeAlign}
 type TCornerAlign=TEdgeAlign;
 const calNone=ealNone;
       calTopLeft=ealTop;
       calBottomRight=ealBottom;
       calBottomLeft=ealLeft;
       calTopRight=ealRight;
-//type TCornerAlign= (calNone, calTopLeft, calBottomRight, calBottomLeft, calTopRight);
 
 type
   TOneChanged=(
@@ -131,7 +133,6 @@ type
   TEffectsOnText=(etInclude,etExclude,etOnly);
 
   TStyle=class;
-  TStyleArray=array[TState] of TStyle;
   TTransformations=class;
 
   TBlurEffect=class(TPersistent)
@@ -223,11 +224,11 @@ type
     function IsCleared:boolean; overload;
     function IsCleared(align:TCornerAlign):boolean; overload;
   published
-    property All: TCSSRadius index ealNone  read Vals[calNone] write SetBorderRadius;
-    property TopLeft: TCSSRadius index ealTop read Vals[calTopLeft] write SetBorderRadius;
-    property BottomRight: TCSSRadius index ealBottom read Vals[calBottomRight] write SetBorderRadius;
-    property BottomLeft: TCSSRadius index ealLeft read Vals[calBottomLeft] write SetBorderRadius;
-    property TopRight: TCSSRadius index ealRight read Vals[calTopRight] write SetBorderRadius;
+    property All: TCSSRadius index calNone  read Vals[calNone] write SetBorderRadius;
+    property TopLeft: TCSSRadius index calTopLeft read Vals[calTopLeft] write SetBorderRadius;
+    property BottomRight: TCSSRadius index calBottomRight read Vals[calBottomRight] write SetBorderRadius;
+    property BottomLeft: TCSSRadius index calBottomLeft read Vals[calBottomLeft] write SetBorderRadius;
+    property TopRight: TCSSRadius index calTopRight read Vals[calTopRight] write SetBorderRadius;
   end;
 
   TTransformations=class(TPersistent)
@@ -418,6 +419,10 @@ type
     FontSize:TCSSFontSize;
     glAT:TMyAffineTransformation;
     glATAlpha,glATShiftX,glATShiftY:single;
+    ValStyle:TPersistent;
+    TopTextDecoration,ParentTextDecoration:TCSSTextDecorations;
+    IsFromParent:boolean;
+    SelfHit:boolean;
   end;
 
   IRelativePathProvider=interface ['{F26D0C91-801B-44A4-86CC-0D265F94F7C6}']
@@ -621,7 +626,7 @@ function GetImageBitmap:TGraphic;
 const sStyle:array[TState] of TPropertyName=('Style','StyleOver','StyleDown','StyleOverDown');
 const MarginDefault=EmptyStr;
 const DefaultNoncomputedFontSize=EmptyStr;//must be EmptyStr for SetFontSize
-const AutoInherit=[{pcDisplay,}{pcAntiAliasing,}pcDirection,pcTextAlign,{pcWhiteSpace (div, pre true),}pcTextIndent,pcTextTransform,     pcFontSize,pcFontFamily,pcColor,pcFontStyle,pcFontVariant,pcFontWeight,pcLetterSpacing,pcLineHeight,pcListStyleType,pcTextDecoration,   pcCursor,pcVisibility,pcWordSpacing];
+const AutoInherit=[pcDirection,pcTextAlign,pcTextIndent,pcTextTransform,pcFontSize,pcFontFamily,pcColor,pcFontStyle,pcFontVariant,pcFontWeight,pcLetterSpacing,pcLineHeight,pcListStyleType,pcTextDecoration,pcCursor,pcVisibility,pcWordSpacing];
 
 {set by the HTML generator}
 var
@@ -632,10 +637,6 @@ var
 {used internally when (cascaded) styles are queried}
 var
     Cascaded:TCascaded;
-    ValStyle:TPersistent=nil;
-    TopTextDecoration,ParentTextDecoration:TCSSTextDecorations;
-    IsFromParent:boolean;
-    SelfHit:boolean;
 
 {message strings which may be localized}
 var
@@ -2042,8 +2043,8 @@ begin
  try
  for PropChoose:=Low(TPropChoose) to High(PropChoose) do
  begin
- ValStyle:=nil;
- if GetStyleVal(PropChoose,ealNone) or (ValStyle<>nil) then
+ Cascaded.ValStyle:=nil;
+ if GetStyleVal(PropChoose,ealNone) or (Cascaded.ValStyle<>nil) then
  begin
   Result:=true;
   exit;
@@ -2524,25 +2525,6 @@ begin
   Picture:=FBackgroundImage;
   Result:=true;
  end;
-
-(* pcEdgeImage: result:=false; {
- if (Owner.FImageType in [bitSplit]) and IsPictureStored then
- begin
-  Picture:=FPicture;
-  Result:=true;
- end;  }*)
-(* pcStretchImage:
- if (Owner.FImageType in [bitStretch]) and IsPictureStored then
- begin
-  Picture:=FPicture;
-  Result:=true;
- end;*)
- {pcImage:
- if (Owner.FImageType in [bitImage]) and (IsPictureStored or NoImageNeeded) then
- begin
-  Picture:=FPicture;
-  Result:=true;
- end;   }
  pcBackgroundAttachment:
  if FBackgroundAttachment<>low(TCSSBackgroundAttachment) then
  begin
@@ -2669,13 +2651,6 @@ begin
   Visibility:=FVisibility;
   Result:=True;
  end;
- {
- pcListStyleType:
- if FListStyleType<>low(TCSSListStyleType) then
- begin
-  ListStyleType:=FListStyleType;
-  Result:=True;
- end;      }
  pcListStyleType:
  begin
   if not SelfHit then
@@ -2694,7 +2669,7 @@ begin
       case ListStyleType of
       clsDisk:   ListStyleType:=clsCircle;
       clsCircle: ListStyleType:=clsSquare;
-      clsSquare: {so belassen};
+      clsSquare: {don't modify};
       end;
      end;
     end;
@@ -2789,7 +2764,7 @@ begin
   showmessage('TStyle.GetVal errornoues')
  end;
  if Result then
-  ValStyle:=Self;
+  Cascaded.ValStyle:=Self;
 end;
 
 procedure TStyle.AssignBackground(s: TStyle);

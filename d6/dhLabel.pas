@@ -1360,7 +1360,7 @@ begin
   finally
    InlinePn.LastActStyle:=_LastActStyle;
   end;
-  IsFromParent:=true;
+  Cascaded.IsFromParent:=true;
   if (PropChoose in [pcFontSize{only the computed value is inherited }]) or  not (PropChoose in AutoInherit) and not (PropChoose in [pcWhiteSpace,pcAntiAliasing]) then
   begin
    result:=false;

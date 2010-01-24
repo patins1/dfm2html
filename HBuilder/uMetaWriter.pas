@@ -937,7 +937,7 @@ begin
  s:='';
  for PropChoose:=low(TPropChoose) to high(TPropChoose) do
  begin
- if not (Self.GetVal(PropChoose) and not Self.IsInUseList(ValStyle)) then
+ if not (Self.GetVal(PropChoose) and not Self.IsInUseList(Cascaded.ValStyle)) then
   continue;
  if not((PropChoose=pcColor) and (Cascaded.Color=clBlackCSS) or (PropChoose=pcBackgroundColor) or (PropChoose=pcFontStyle) and (Cascaded.FontStyle=cfsNormal) or (PropChoose=pcFontWeight) and (Cascaded.FontWeight=cfwNormal)) then
   s:=s+GetCSSPropName(PropChoose)+':'+GetCSSPropValue(PropChoose)+';';

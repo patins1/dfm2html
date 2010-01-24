@@ -51,6 +51,7 @@ type HWND=QWidgetH;
 {$ENDIF}
 
 type
+  TStyleArray=array[TState] of TStyle;
   TRasterType=(rsNo,rsFull,rsRounded,rsRGBA,rsSemi,rsStretch,rsSplit,rsFullWithoutText);
 
   TdhCustomPanel=class;
@@ -236,7 +237,7 @@ type
     function AllEdgesPure:TRect;
     function GetBorderRadii(var TopLeft,TopRight,BottomLeft,BottomRight:TPoint; var TopLeftDouble,TopRightDouble,BottomLeftDouble,BottomRightDouble:boolean):boolean;
     function HasBorderRadii:boolean;
-    function GetBorderRadius(EdgeAlign:TEdgeAlign):TPoint;
+    function GetBorderRadius(CornerAlign:TCornerAlign):TPoint;
     function IsBorderRadiusTwoValued(CornerAlign:TCornerAlign):boolean;
     function IsRasterized:boolean;
     function ClientEdgesPure: TRect;
@@ -3982,7 +3983,7 @@ begin
  for PropChoose:=Low(TPropChoose) to High(TPropChoose) do
  for al:=Low(TEdgeAlign) to High(TEdgeAlign) do
  if (PropChoose in [pcBorderColor,pcBorderWidth,pcBorderStyle,pcMargin,pcPadding,pcBorderRadius])=(al<>ealNone) then
- if Self.GetVal(PropChoose,al) or (ValStyle<>nil) then
+ if Self.GetVal(PropChoose,al) or (Cascaded.ValStyle<>nil) then
  begin
   s:=GetCSSPropName(PropChoose);
   if al<>ealNone then
@@ -3990,15 +3991,15 @@ begin
    s:=GetBorderRadiusString(al) else
    s:=s+'-'+lowercase(copy(GetEnumName( TypeInfo(TAlign), Integer(al)),3,maxint));
   s:=s+':'+GetCSSPropValue(PropChoose);
-  if ValStyle<>nil then
-  if ValStyle is TStyle then
-   s:=FilledTo(s,30)+'  (by '+TStyle(ValStyle).Owner.GetElementName+'.'+TStyle(ValStyle).GetNameByStyle+')' else
+  if Cascaded.ValStyle<>nil then
+  if Cascaded.ValStyle is TStyle then
+   s:=FilledTo(s,30)+'  (by '+TStyle(Cascaded.ValStyle).Owner.GetElementName+'.'+TStyle(Cascaded.ValStyle).GetNameByStyle+')' else
   if (PropChoose=pcCursor) and (Cascaded.Cursor=ccuInherit) then
    continue else
-  if (ValStyle is TControl) and (TControl(ValStyle).Parent=nil) then
+  if (Cascaded.ValStyle is TControl) and (TControl(Cascaded.ValStyle).Parent=nil) then
    s:=FilledTo(s,30)+'  (by default)' else
-   s:=FilledTo(s,30)+'  (by '+ValStyle.GetNamePath+')';
-  sl.AddObject(s,ValStyle);
+   s:=FilledTo(s,30)+'  (by '+Cascaded.ValStyle.GetNamePath+')';
+  sl.AddObject(s,Cascaded.ValStyle);
  if PropChoose in [pcBorderColor,pcBorderWidth,pcBorderStyle,pcMargin,pcPadding] then
  begin
 
@@ -4168,10 +4169,10 @@ begin
  try
  result:=false;
  if (csDestroying in ComponentState) then exit;
- if not IsFromParent then
-  ValStyle:=nil;
+ if not Cascaded.IsFromParent then
+  Cascaded.ValStyle:=nil;
  result:=DoGetVal(PropChoose,Align,DoExit);
- SelfHit:=false;
+ Cascaded.SelfHit:=false;
  if DoExit then exit;
 
  if PreferStyle<>nil then
@@ -4212,7 +4213,7 @@ begin
  if CanInherit and (PropChoose in AutoInherit) then
  while not Result and (P<>nil) and not (csDestroying in P.ComponentState) do
  begin
- IsFromParent:=true;
+ Cascaded.IsFromParent:=true;
  if P is TdhCustomPanel then
  begin
   Result:=TdhCustomPanel(P).GetVal(PropChoose,Align);
@@ -4244,7 +4245,7 @@ begin
   //AStyle.GetFontDifferences(TFakeControl(P).Font);
 
   Result:=AStyle.GetStyleVal(PropChoose,Align);
-  if Result then ValStyle:=P;
+  if Result then Cascaded.ValStyle:=P;
   finally
    FreeAndNil(AStyle);
   end;
@@ -4253,7 +4254,7 @@ begin
  pcCursor:
  begin
   Cascaded.Cursor:=GetCursorBack(P.Cursor);
-  ValStyle:=P;
+  Cascaded.ValStyle:=P;
   Result:=Cascaded.Cursor<>ccuInherit;
  end;
  end;
@@ -4262,7 +4263,7 @@ begin
  P:=P.Parent;
  end;
  finally
-  IsFromParent:=false;
+  Cascaded.IsFromParent:=false;
  end;
 end;
 
@@ -4287,21 +4288,21 @@ begin
  TopRight:=Point(0,0);
  BottomLeft:=Point(0,0);
  BottomRight:=Point(0,0);
- if GetVal(pcBorderRadius,ealTop) then
+ if GetVal(pcBorderRadius,calTopLeft) then
   GetBorderRadiusPixels(Cascaded.BorderRadius,TopLeft,TopLeftDouble);
- if GetVal(pcBorderRadius,ealRight) then
+ if GetVal(pcBorderRadius,calBottomRight) then
   GetBorderRadiusPixels(Cascaded.BorderRadius,TopRight,TopRightDouble);
- if GetVal(pcBorderRadius,ealLeft) then
+ if GetVal(pcBorderRadius,calBottomLeft) then
   GetBorderRadiusPixels(Cascaded.BorderRadius,BottomLeft,BottomLeftDouble);
- if GetVal(pcBorderRadius,ealBottom) then
+ if GetVal(pcBorderRadius,calBottomRight) then
   GetBorderRadiusPixels(Cascaded.BorderRadius,BottomRight,BottomRightDouble);
  result:=(TopLeft.X<>0) or (TopLeft.Y<>0) or (TopRight.X<>0) or (TopRight.Y<>0) or (BottomLeft.X<>0) or (BottomLeft.Y<>0) or (BottomRight.X<>0) or (BottomRight.Y<>0);
 end;
 
-function TdhCustomPanel.GetBorderRadius(EdgeAlign:TEdgeAlign):TPoint;
+function TdhCustomPanel.GetBorderRadius(CornerAlign:TCornerAlign):TPoint;
 begin
  result:=Point(0,0);
- if GetVal(pcBorderRadius,EdgeAlign) then
+ if GetVal(pcBorderRadius,CornerAlign) then
   GetBorderRadiusPixels(Cascaded.BorderRadius,result);
 end;
 
@@ -8801,7 +8802,7 @@ end;
 
 function TdhCustomPanel.TextDecoration:TCSSTextDecorations;
 begin
- TopTextDecoration:=[];
+ Cascaded.TopTextDecoration:=[];
  Cascaded.TextDecoration:=[ctdUnderline,ctdOverline,ctdLineThrough,ctdBlink];//need not be initialized..
  GetVal(pcTextDecoration);
  result:=Cascaded.TextDecoration;

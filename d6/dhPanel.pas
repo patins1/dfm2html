@@ -788,7 +788,7 @@ var
 {set by the HTML generator}
 var
     UseCSS3:boolean=false; {whether CSS3 constructs may be used}
-    ForcedGIFRenderer:TGIFRenderer32=nil;
+    ForcedGIFRenderer:TGIFRenderer32=nil; {if assigned, then this GIF renderer shall be used for the corresponding GIF image}
     PreventAdjustMargin:boolean=false; {prevents calling AdjustMarginWidth to get the unmodified margin width}
 
 {message strings which may be localized}
@@ -917,7 +917,7 @@ begin
  if Viewer<>EmptyStr then
   res:=ShellExecute(0,nil,PChar(Viewer),PChar(URL),nil,i) else
   res:=ShellExecute(0,nil,PChar(URL),nil,nil,i);
- success:=res>32; //http://www.tutorials.de/forum/c-c/142600-shellexecute.html
+ success:=res>32;
  if not success then
   showmessage('Failed to open browser window.'+#10+#10+'Command was:'+#10+Viewer+' '+URL+#10+#10+'Please choose a different browser application in the Options dialog.'+#10+#10+'Error message was:'+#10+SysErrorMessage(GetLastError));
 {$ELSE}
@@ -953,14 +953,7 @@ begin
   result:=C.Parent;
 end;
 
-
-
 var NoRotating:boolean=false;
-
-var NoImageNeeded:boolean;
-
-
-type PPoint=^TPoint;
 
 var FMouseControl:TControl;
 
@@ -983,12 +976,10 @@ type _TFakeControl=class(TControl)
     property ParentFont;
 end;
 
-
 function ColorToColor32(Color:TColor):TColor32;
 begin
  result:=ColorSwap(ColorToRGB(Color)) or $FF000000;
 end;
-
 
 function ColorToCSSColor(const Color:TColor):TCSSColor;
 begin
@@ -1015,8 +1006,6 @@ begin
  Result:=(Color xor CSSAlphaInverter) and $FF000000 = $FF000000;
 end;
 
-type PBoolean=^Boolean;
-
 function NameWithForm(c:TControl):TComponentName;
 begin
  result:=GetTopForm(c).Name+'.'+c.Name;
@@ -1041,7 +1030,6 @@ begin
   result:=false;
 end;
 
-
 function GetTopForm(P:TControl):TScrollingWinControl;
 begin
  while (P<>nil) and (P.Parent<>nil) do
@@ -1050,7 +1038,6 @@ begin
   result:=TScrollingWinControl(P) else
   result:=nil;
 end;
-
 
 function EqualPoint(const P1, P2: TPoint): Boolean;
 begin
@@ -1126,31 +1113,18 @@ end;
 
 function TdhCustomPanel.GetClientRect:TRect;
 begin
- result:=TotalRect; //vorallem nötig für CLX
- //result:=inherited GetClientRect;
- //result:=ClientBound;
+ result:=TotalRect; //esp. required by CLX
 end;
 
-const IgnoreBottomScrollbar=not true;
+const IgnoreBottomScrollbar=false;
 
 procedure TdhCustomPanel.AdjustScrolling(var R: TRect);
 begin
-
-
  if IgnoreBottomScrollbar and not (FAutoSize in [asY,asXY]) then
-  with ScrollEdgesPure do R:=ShrinkRect(R,Rect(Left,Top,Right,0)) else  //da unterer Scrollbalken zur client-area gehört, nur rechten ausschließen
+  with ScrollEdgesPure do R:=ShrinkRect(R,Rect(Left,Top,Right,0)) else  //since lower scroll bar belongs to client area, exclude only right scroll bar
   R:=ShrinkRect(R,ScrollEdgesPure);
-
- {with ScrollEdgesPure do
- begin
-  inc(R.Left,Left);
-  dec(R.Right,Right);
- end;}
-
  OffsetRect(R,-HPos, -VPos);
 end;
-
-
 
 procedure TdhCustomPanel.AdjustClientRect(var Rect: TRect);
 begin
@@ -1161,7 +1135,6 @@ begin
   Rect:=ShrinkRect(Rect,AllEdgesPure);
   with PhysicalClientBound do OffsetRect(Rect,-Left,-Top);
 end;
-
 
 function TFakeControl(c:TControl):_TFakeControl; {$IFDEF VER160}unsafe;{$ENDIF}
 type PFakeControl=^_TFakeControl;
@@ -1175,25 +1148,18 @@ begin
  result:=PWinFakeControl(@c)^;
 end;
 
-
 procedure TdhCustomPanel.CSSToColor;
 begin
  if Transparent then
-  Color:={TFakeControl(Control.Parent).Color}CSSColorToColor(GetVirtualBGColor) else
+  Color:=CSSColorToColor(GetVirtualBGColor) else
   Color:=CSSColorToColor(BackgroundColor);
 end;
-
-
-
 
 function AdjustedClientRect(c:TWinControl):TRect;
 begin
  result:=c.ClientRect;
  TFakeWinControl(c).AdjustClientRect(result);
 end;
-
-type PCursor=^TCursor;
-
 
 procedure TdhCustomPanel.CSSToCursor;
 begin
@@ -1206,16 +1172,12 @@ begin
  result:=false;
 end;
 
-
 function GetBaseZOrder(Child:TControl; ChildPos:integer):integer;
 begin
  if (Child.Align<>alTop) and (Child.Parent<>nil) then
   result:=ChildPos+1*Child.Parent.ControlCount else
   result:=ChildPos;
 end;
-
-
-
 
 var BehindAllOthers:TControl;
 
@@ -1257,7 +1219,6 @@ begin
  end;
 end;
 
-
 procedure UpdateZIndex(Self:TWinControl);
 var i,p,sp,bestp,besti,szi:integer;
     Pos: HWND;
@@ -1283,7 +1244,6 @@ begin
    bestp:=p;
   end;
  end;
-
 {$IFNDEF CLX}
  if besti=-1 then
   Pos:=HWND_TOP else
@@ -1297,9 +1257,7 @@ begin
   QWidget_stackUnder(Handle, (Parent.Controls[besti] as TWinControl).Handle);
 {$ENDIF}
  end;
-
 end;
-
 
 procedure TdhCustomPanel.ReadAutoSizeVerticalOnly(Reader:TReader);
 begin
@@ -1317,7 +1275,6 @@ begin
   AutoSizeXY:=asNone;
  end;
 end;
-
 
 procedure TdhCustomPanel.DoCSSToWinControl(WhatChanged:TWhatChanged);
 begin
@@ -1358,7 +1315,6 @@ begin
   NotifyCSSChanged(ActStyleChanged);
  end;
 end;
-
 
 procedure TdhCustomPanel.CSSToWinControl(WhatChanged:TWhatChanged=[]);
 var i:integer;
@@ -1465,7 +1421,6 @@ begin
  result:=EmptyStr;
 end;
 
-
 function TdhCustomPanel.GetCharset:TFontCharset;
 var c:TControl;
 begin
@@ -1479,7 +1434,6 @@ begin
   c:=c.Parent;
  result:=DEFAULT_CHARSET;
 end;
-
 
 procedure TdhCustomPanel.CSSToFont(Font:TFont=nil);
 var OldOnChange:TNotifyEvent;
@@ -1538,7 +1492,6 @@ begin
   NotifyCSSChanged([wcCursor]);
  end;
 end;
-
 
 procedure TdhCustomPanel.ParentFontHasChanged;
 begin
@@ -1651,7 +1604,6 @@ begin
   Inc(Result.Y,Right);
  end;
 end;
-
           
 function InStyleSheet(p:TControl):boolean;
 begin
@@ -1683,7 +1635,6 @@ begin
    result:=false;
 end;
 
-
 procedure TdhCustomPanel.ReleaseResources;
 var State:TState;
 begin
@@ -1691,7 +1642,6 @@ begin
   if StyleArr[state]<>nil then
    StyleArr[state].BackgroundImage.ReleaseResources;
 end;
-
 
 function TdhCustomPanel.VariableSize:boolean;
 begin
@@ -1707,7 +1657,6 @@ function TdhCustomPanel.VariableWidthSize:boolean;
 begin
  result:=(SimplifiedAnchors*[akLeft,akRight]=[akLeft,akRight]);
 end;
-
 
 function TdhCustomPanel.NeedPadding(HasRastering:TRasterType):boolean;
 begin
@@ -1798,7 +1747,6 @@ begin
  end;
 end;
 
-
 //require HandleAllocated
 procedure TdhCustomPanel.InitSelfCBound(var _ContentWidthHeight:TPoint);
 begin
@@ -1807,7 +1755,6 @@ begin
    with GetCBound(self).TopLeft do
     OffsetRect(_SelfCBound,X-Left,Y-Top);
 end;
-
 
 function TdhCustomPanel.BoundNextSibling:TdhCustomPanel;
 begin
@@ -1825,7 +1772,6 @@ begin
    result:=nil else
    result:=Use.GetCommon;
 end;
-
 
 function TdhCustomPanel.IsRastered(RespectStyleSheet:boolean):TRasterType;
 var pn:TdhCustomPanel;
@@ -1917,9 +1863,6 @@ begin
    end;
   end;
 end;
-                       
-
-
 
 procedure TdhCustomPanel.NotifyUsedByList(WhatChanged:TWhatChanged);
 var i:integer;
@@ -1932,8 +1875,6 @@ begin
   NotifyUsedByList(WhatChanged);
  end;
 end;
-
-
 
 procedure TdhCustomPanel.NotifyInlineUsedByList(WhatChanged:TWhatChanged);
 var i:integer;
@@ -1958,8 +1899,6 @@ begin
   TdhCustomPanel(InlineUsedByList[i]).CSSToWinControl(WhatChanged);
 end;
 
-
-
 procedure TdhCustomPanel.NotifyCSSChanged(WhatChanged:TWhatChanged);
 begin
  if InCollectChanges then
@@ -1983,8 +1922,6 @@ begin
   InNotifyCSSChanged:=false;
  end;
 end;
-
-
 
 procedure TdhCustomPanel.GetFontDifferences(FontStyle:TFontStyles; FontColor:TCSSColor; FontName:TFontName; FontHeight:Integer );
 begin
@@ -2047,12 +1984,10 @@ begin
   FOnStateTransition(Self,OldState);
 end;
 
-
 function TdhCustomPanel.TransitionInvalidates:boolean;
 begin
  result:=false;
 end;
-
 
 function TdhCustomPanel.ActStyle:TStyle;
 begin
@@ -2112,8 +2047,6 @@ begin
  result:=not ((Self<>glEventObj) and (Self is TWinControl) and TWinControl(Self).ContainsControl(glEventObj));
  glEventObj:=Self;
 end;
-
-
 
 procedure TdhCustomPanel.UpdateMousePressed(Down:boolean; DownIfDown:boolean);
 begin
@@ -2175,7 +2108,6 @@ begin
  Invalidate;//damit Windows Hintergrundkopie nicht an einer neuer Position zeichnet ohne uns zu fragen, sonst ruckelts
             //gilt auch für CLX unter Windows
 end;
-
 
 {$IFNDEF CLX}
 procedure TdhCustomPanel.SetBounds(ALeft, ATop, AWidth, AHeight: Integer);
@@ -2256,7 +2188,6 @@ begin
    
  end else
   inherited;
-
 end;
 
 procedure TdhCustomPanel.BorderChanged;
@@ -2290,8 +2221,6 @@ end;
 procedure TdhCustomPanel.CheckNC;
 var _NC: TRect;
 begin
-  {if csDestroying in ComponentState then
-  if csDestroying in ComponentState then exit;}
   _NC:=GetNotClippedOne(DeltaX,DeltaY);
   if not EqualRect(NC,_NC) then
   begin
@@ -2301,7 +2230,6 @@ begin
    DefDelta:=false;
   end;
 end;
-
 
 procedure TdhCustomPanel.CheckChildrenNC;
 var i:integer;
@@ -2393,7 +2321,6 @@ begin
 end;
 {$ENDIF}
 
-
 function verrechne(i1,i2:integer):integer;
 begin
    if (i1>=0) and (i2>=0) then
@@ -2402,7 +2329,6 @@ begin
     result:=-min(i1,i2) else
     result:=-i1-i2;
 end;
-
 
 procedure TdhCustomPanel.ChildrenAutoRect(AllowModifyX,AllowModifyY:boolean; var NewWidth, NewHeight: Integer);
 var
@@ -2519,9 +2445,7 @@ begin
     AddScrollbarPlace(IsHorzScrollBarVisible,IsVertScrollBarVisible,AllowModifyX,AllowModifyY,Avail,Req);
     NewWidth:=Avail.X;
     NewHeight:=Avail.Y;
-
 end;
-
 
 function TdhCustomPanel.GetSuperiorAutoRect(AllowModifyX,AllowModifyY:boolean; var NewWidth, NewHeight: Integer):boolean;
 var
@@ -2729,9 +2653,6 @@ begin
   H:=min(H,HorzScrollInfo.nMax-HorzScrollInfo.nPage);
  P:=Point(H,V);
  P:=Point(max(P.X,0),max(P.Y,0));
-{ if VertScrollInfo.nMax<>0 then
-  P:=Point(min(P.X,HorzScrollInfo.nMax-HorzScrollInfo.nPage),min(P.Y,VertScrollInfo.nMax-VertScrollInfo.nPage));
- }
  if EqualPoint(P,OldPos) then exit;
  HPos:=P.X;
  VPos:=P.Y;
@@ -3854,17 +3775,15 @@ begin
 end;
 
 begin
-
  case PropChoose of
  pcAntiAliasing:
   result:='(yes)';
  pcEffects:
   result:='(defined)';
- pcBackgroundImage{,pcImage,pcEdgeImage,pcStretchImage}:
+ pcBackgroundImage:
  if Cascaded.Picture.HasPath then
   result:='('+Cascaded.Picture.GetAbsolutePath+')' else
   result:='('+UpperCase(Copy(Cascaded.Picture.GraphicExtension,2,maxint))+' image)';
-  //result:='('+Cascaded.Picture.Graphic.ClassName+')';
  pcBorderColor,pcBackgroundColor,pcColor:
   result:=dhPanel.ColorToIntString(Cascaded.Color);
  pcOther:
@@ -4366,7 +4285,7 @@ end;
 
 function TdhCustomPanel.Opaque:boolean;
 begin
- result:=not SemiTransparent and {IsNullRect(ClientEdgesPure}{EqualRect(ScrollAreaWithScrollbars,Rect(0,0,Width,Height))}IsNullRect(TransparentEdges) and not IsRasterized and Visibility;
+ result:=not SemiTransparent and IsNullRect(TransparentEdges) and not IsRasterized and Visibility;
 end;
 
 function TdhCustomPanel.BorderWidth(const Align:TEdgeAlign):integer;
@@ -5233,7 +5152,6 @@ begin
   end;
 end;
 
-
 function GetPNGObjectFromBitmap32(Src:TBitmap32):TGraphic;
 var y,x,intFormCount:integer;
 var P,P2,P3: PColor32;
@@ -5575,10 +5493,6 @@ begin
   PreventGraphicOnChange:=OldPreventGraphicOnChange;
  end;
 end;
-
-
-
-
 
 function TdhCustomPanel.MarginTotalRect:TRect;
 begin
@@ -5979,7 +5893,6 @@ begin
   end;
 end;
 
-
 function TransFromBlackWhite(callback:TTransFromProc; w,h:integer):TdhBitmap32;
 var Src2:TdhBitmap32;
 begin
@@ -6039,7 +5952,6 @@ begin
  B2:=r shl 16 or g shl 8 or b;
  Result:=GetOriginalRGB(B2,alpha);
 end;
-
 
 function TdhCustomPanel.TransPainting(nWidth:integer=-1; nHeight:integer=-1):TdhBitmap32;
 var Src:TdhBitmap32;
@@ -6441,7 +6353,6 @@ var FirstQuarterClip,NonFirstQuarterClip,BorderClip,TryR:TRect;
     FirstQuarterRange,NonFirstQuarterRange:Double;
 begin
  if (HorzOuterRadius=0) or (VertOuterRadius=0) then exit;
-
 
  case Align of
  alTop:    P:=Point(OuterRect.Left+HorzOuterRadius-1,OuterRect.Top+VertOuterRadius-1);

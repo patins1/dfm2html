@@ -102,7 +102,7 @@ type
     procedure InvalTop(IncludeChildren,IncludeSelf:boolean);
     procedure InvalBack; overload;
     procedure InvalBack(const R2:TRect); overload;
-    function GetAffine(inv: boolean): TMyAffineTransformation;
+    function GetAffine: TMyAffineTransformation;
     function GetBold: boolean;
     procedure SetBold(const Value: boolean);
     function GetItalic: boolean;
@@ -251,7 +251,6 @@ type
     function UsePn:TdhCustomPanel;
     procedure TransformUse(P:ICon; DoSUse:boolean);
     destructor Destroy; override;
-    function FastDestroy:boolean;
     property Use:ICon read FUse write SetUse;
     function ItGetVal(state:TState; PropChoose:TPropChoose; {var Value:TCSSProp; }const Align:TEdgeAlign=ealNone):boolean;
     procedure InvDesigner;
@@ -517,9 +516,6 @@ type
     procedure SetStyle(Index:TState; Value:TStyle);
     procedure AdjustClientRect(var Rect: TRect); override;
     procedure DefineProperties(Filer: TFiler); override;
-{    procedure CustomAlignPosition(Control: TControl; var NewLeft, NewTop, NewWidth,
-      NewHeight: Integer; var AlignRect: TRect; AlignInfo: TAlignInfo); override;
- }
     procedure PaintBorder;
     function GetClientRect:TRect; override;
     function LeaveY:boolean; virtual;
@@ -709,14 +705,13 @@ function InflRect(const a,b:TRect):TRect;
 function EqualPoint(const P1, P2: TPoint): Boolean;
 procedure DecPt(var pt:TPoint; const decr:TPoint);
 procedure IncPt(var pt:TPoint; const decr:TPoint);
-function Between(i,_min,_max:integer):integer;
+function Between(i,_min,_max:integer):integer; inline;
 function AddPoint(const a:TPoint; const b:TPoint):TPoint;
 function rGetOffsetRect(R:TRect; P:TPoint):TRect;
 procedure rOffsetRect(var Rect: TRect; D:TPoint);
 function DoIntersectStrong(R1,R2:TRect):boolean;
 function IsNullRect(const R:TRect):boolean;
 
-function FindForm(Value:TComponentName; var f:TForm):boolean;
 function GetVirtualParent(C:TControl):TControl;
 function GetTopForm(P:TControl):TScrollingWinControl;
 function NameWithForm(c:TControl):TComponentName;
@@ -809,6 +804,9 @@ var
 
 implementation
 
+type TPixelCombineMode=(pcNormal,pcMult,pcNegMult);
+type TTransFromProc=procedure (bmp:TMyBitmap32) of object;
+
 const GetItalicFontStyle:array[boolean] of TCSSFontStyle=(cfsNormal,cfsItalic);
 const GetBoldFontWeight:array[boolean] of TCSSFontWeight=(cfwNormal,cfwBold);
 
@@ -819,9 +817,8 @@ const
   cl3DHighlight=clBtnHighlight;
   cl3DShadow=clBtnShadow;
 
-var
-    glBinList:TBinList;
-
+var glBinList:TBinList;
+var PreventAlignControls:boolean=false;
 var
   TrueColors: array[0..17] of TIdentMapEntry = (
     (Value: Integer(colInherit); Name: scolInherit),
@@ -1571,20 +1568,6 @@ begin
  end;
 end;
 
-
-function FindForm(Value:TComponentName; var f:TForm):boolean;
-var i:integer;
-begin
-    for i:=0 to Screen.FormCount-1 do
-    if SameText(Screen.Forms[i].Name,Value) then
-    begin
-     f:=Screen.Forms[i];
-     result:=true;
-     exit;
-    end;
-    result:=false;
-end;
-
 procedure TdhCustomPanel.SkipValue(Reader: TReader);
 begin
  Reader.SkipValue;
@@ -2105,7 +2088,6 @@ begin
  result:=Name;
 end;
 
-
 const InvalidFontSize=-1;
 
 function TdhCustomPanel.GetComputedFontSize:single;
@@ -2160,8 +2142,6 @@ function TdhCustomPanel.CanAutoY:boolean;
 begin
   result:=not(Align in [alLeft,alRight,alClient]) and (FAutoSize in [asY,asXY]);
 end;
-            
-
 
 //@require HandleAllocated
 function TdhCustomPanel.GetWantedSize:TPoint;
@@ -2278,7 +2258,6 @@ begin
 
 end;
 
-
 procedure TdhCustomPanel.BorderChanged;
 begin
 {$IFNDEF CLX}
@@ -2305,8 +2284,6 @@ begin
  result:=Rect;;
  OffsetRect(result,DX,DY);
 end;
-
-
 
 {$IFDEF CLX}
 procedure TdhCustomPanel.CheckNC;
@@ -2416,20 +2393,19 @@ end;
 {$ENDIF}
 
 
-  function verrechne(i1,i2:integer):integer;
-  begin
+function verrechne(i1,i2:integer):integer;
+begin
    if (i1>=0) and (i2>=0) then
     result:=min(i1,i2) else
    if (i1<=0) and (i2<=0) then
     result:=-min(i1,i2) else
     result:=-i1-i2;
-  end;
+end;
 
 
 procedure TdhCustomPanel.ChildrenAutoRect(AllowModifyX,AllowModifyY:boolean; var NewWidth, NewHeight: Integer);
 var
   I,rNewHeight,rNewWidth,NewHeight2,NewWidth2,MaxWidth,MaxHeight: Integer;
-//  RR:TRect;
   all:TAlign;
   c:TControl;
   RandX,RandY,AccWidth,AccHeight:integer;
@@ -2437,58 +2413,17 @@ var
   IsHorzScrollBarVisible,IsVertScrollBarVisible:boolean;
   PreNewWidth,PreNewHeight:integer;
   Avail,Req:TPoint;
-
-
-        {
-function XIsGiven(Self:TWinControl):boolean;
-var Common:TCommon;
-begin
- if Self.Parent=nil then
-  result:=true else
- if Self.Align in [alTop,alBottom,alClient] then
-  result:=XIsGiven(Self.Parent) else
-  result:=HasCommon(Self,Common) and not (Common.ASXY in [asX,asXY]))
-end;
-
-function YIsGiven(Self:TWinControl):boolean;
-var Common:TCommon;
-begin
- if Self.Parent=nil then
-  result:=true else
- if Self.Align in [alLeft,alRight,alClient] then
-  result:=YIsGiven(Self.Parent) else
-  result:=HasCommon(Self,Common) and not (Common.ASXY in [asY,asXY]))
-end;       }
-
-
 var pn:TdhCustomPanel;
     mar:TRect;
-    margintop:integer; 
+    margintop:integer;
 begin
    if not AllowModifyX and not AllowModifyY then exit; //for speed
 
-{   RR := Rect(0,0,0,0);
-   AdjustClientRect(RR);
-   RandX:=(-RR.Right)-(-RR.Left);
-   RandY:=(-RR.Bottom)-(-RR.Top);  }
    with AllEdgesPure do
    begin
     RandX:=Left+Right;
     RandY:=Top+Bottom;
    end;
-   {AllowModifyX:=AllowModifyX and (Common.ASXY in [asX,asXY]);
-   AllowModifyY:=AllowModifyY and (Common.ASXY in [asY,asXY]);  }
-   {if not AllowModifyX then
-    MaxWidth:=NewWidth-RandX else
-    MaxWidth:=maxint;
-   if not AllowModifyY then
-    MaxHeight:=NewHeight-RandY;  }
-
-   {if MaxWidth<>maxint then
-    MaxWidth:=MaxWidth-RandX;
-   if MaxHeight<>maxint then
-    MaxHeight:=MaxHeight-RandY;       }
-
 
   MaxWidth:=max(NewWidth-RandX,0);
   MaxHeight:=max(NewHeight-RandY,0);
@@ -2504,19 +2439,6 @@ begin
     c:=Controls[I];
     if (c.Align=all) and FinalVisible(c) then
     begin
-      { if not FinalVisible(Self.Controls[i]) then
-        Continue;
-       if not (Align in [alLeft,alRight,alTop,alBottom,alClient]) then
-        Continue;
-       if all=alNone then
-        all:=Align else
-       if all<>Align then
-       begin
-        rNewHeight:=-1;
-        rNewWidth:=-1;
-        break;
-       end;    }
-
        if c is TdhCustomPanel then
        begin
         pn:=TdhCustomPanel(c);
@@ -2569,7 +2491,6 @@ begin
     PreNewWidth:=NewWidth;
     PreNewHeight:=NewHeight;
 
-    //if AllowModifyX then
     if (all in [alTop,alBottom,alClient]) then
     begin
      if (rNewWidth<>-1) then
@@ -2580,28 +2501,17 @@ begin
      PreNewWidth:=AccWidth+RandX;
     end;
 
-    //if AllowModifyY then
     if (all in [alLeft,alRight,alClient]) then
     begin
      if (rNewHeight<>-1) then
      begin
       PreNewHeight:=rNewHeight+RandY;
-      {if not AllowModifyX then
-      if AccWidth+RandX>NewWidth then
-       Inc(NewHeight,HorzScrollBar);  }
      end;
     end else
     if (all in [alTop,alBottom,alClient]) then
     begin
      PreNewHeight:=AccHeight+RandY;
-     {if not AllowModifyX then
-     if AccWidth+RandX>NewWidth then
-      Inc(NewHeight,HorzScrollBar);  }
     end;
-    {if AllowModifyX then
-     NewWidth:=PreNewWidth; 
-    if AllowModifyY then        
-     NewHeight:=PreNewHeight; }
 
     Avail:=Point(NewWidth,NewHeight);
     Req:=Point(PreNewWidth,PreNewHeight);
@@ -2609,12 +2519,6 @@ begin
     NewWidth:=Avail.X;
     NewHeight:=Avail.Y;
 
-  {if XIsGiven(Self) then
-   NewWidth:=Width else
-   NewWidth:=rNewWidth+(-RR.Right)-(-RR.Left);
-  if YIsGiven(Self) or LeaveY then
-   NewHeight:=Height else
-   NewHeight:=rNewHeight+(-RR.Bottom)-(-RR.Top);  }
 end;
 
 
@@ -2653,36 +2557,22 @@ end;
 //NewWidth may be only written if AllowModifyX=true, except if Image
 //NewHeight accordingly
 procedure TdhCustomPanel.GetAutoRect(AllowModifyX,AllowModifyY:boolean; var NewWidth, NewHeight: Integer);
-//var NewWidth,NewHeight:integer;
 begin
- if GetSuperiorAutoRect(AllowModifyX,AllowModifyY,NewWidth, NewHeight) then exit;
-
- //if AutoSizeXY<>asNone then
- begin
+  if GetSuperiorAutoRect(AllowModifyX,AllowModifyY,NewWidth, NewHeight) then exit;
   if _AutoResizing then
    showmessage('_AutoResizing already active!');
  _AutoResizing:=true;
   try
-   {Extents:=GetControlExtents;
-   R := Rect(0,0,0,0);
-   AdjustClientRect(R);}
-   ChildrenAutoRect({MaxWidth,MaxHeight}AllowModifyX,AllowModifyY, NewWidth, NewHeight);
+   ChildrenAutoRect(AllowModifyX,AllowModifyY, NewWidth, NewHeight);
   finally
    _AutoResizing:=false;
   end;
- {NewWidth:=Extents.Right+(-R.Right);
- NewHeight:=Extents.Bottom+(-R.Bottom); }
- end;
 end;
-
-
 
 function FinalVisible(c:TControl):boolean;
 begin
- result:=c.Visible or (csDesigning in c.ComponentState) and
-        not (csNoDesignVisible in c.ControlStyle);
+ result:=c.Visible or (csDesigning in c.ComponentState) and not (csNoDesignVisible in c.ControlStyle);
 end;
-            
 
 function TdhCustomPanel.Display:TCSSDisplay;
 begin
@@ -2733,7 +2623,6 @@ begin
  end;
 end;
 
-
 procedure Register;
 begin
   RegisterComponents('DFM2HTML', [TdhPanel]);
@@ -2746,29 +2635,12 @@ begin
 end;
 {$ENDIF}
 
-
-
 procedure TdhCustomPanel.Loaded;
 begin
  Inherited;
-//UpdateBoundsRect(BoundsRect);
-// QWidget_setBackgroundMode(Handle, QWidgetBackgroundMode_NoBackground);
  TryBrokenReferences(nil);
-
- //WeakToStrong(true); //wurde in SetBounds nicht aufgerufen wegen csReading-Status, also tun wirs hier
-
-
-// Masked:=True;
-
-// transparent:=false;
-
-// if {(csLoading in Control.ComponentState) and }(Control.Owner<>nil) and not (Control.Owner.Name='dhStrEditDlg') and not(csDesigning in Control.ComponentState) then
-//  RuntimeMode:=true;
  CSSToWinControl(ActStyleLoaded);
-
 end;
-
-
 
 procedure TdhCustomPanel.NameChanged;
 begin
@@ -2778,47 +2650,12 @@ begin
   end;
 end;
 
-
-
-
-
-
 procedure TdhCustomPanel.UpdateMouse(MouseEnter:boolean);
 begin
  if ManageEventBubbling(Self) then
  if not (csDesigning in ComponentState) then
   SetIsOver(MouseEnter);
 end;
-
-
-
-
-{procedure TdhCustomPanel.CloseMenu;
-var _TailSubMenu:TdhCustomPanel;
-begin
- _TailSubMenu:=TailSubMenu;
- TailSubMenu:=nil;
- if _TailSubMenu<>nil then
-  _TailSubMenu.CheckClose;
-end;
-
- }
-
-                {
-function TdhCustomPanel.HasChild(States:TStates):boolean;
-var i:integer;
-begin
- for i:=0 to self.ControlCount-1 do
- if self.Controls[i] is TdhCustomPanel then
- if TdhCustomPanel(self.Controls[i]).HTMLState in States then
- begin
-  result:=true;
-  exit;
- end;
- result:=false;
-end;       }
-
-
 
 function TdhCustomPanel.SuitableKind:TDesignedFor;
 begin
@@ -2829,7 +2666,6 @@ function TdhCustomPanel.VirtualParent:TControl;
 begin
  result:=Parent;
 end;
-
 
 function TdhCustomPanel.GetLev:integer;
 var pn:TControl;
@@ -2853,80 +2689,6 @@ begin
   pn:=pn.Parent;
  result:=pn=Self;
 end;
-
-type PAlign=^TAlign;
-
-(*
-
-function OrderedControls(Self:TWinControl):boolean;
-var i:integer;
-var seIndex:TList;
-begin
- with Self do
- begin
-
- glSortComp:=self;
- seIndex:=DoSort(@AlignPosCompare,ControlCount);
-
- for i:=0 to ControlCount-1 do
- begin
-  if Controls[i] is TdhCustomPanel then
-   TdhCustomPanel(Controls[i]).SaveAlign:=Controls[i].Align;
-  if Controls[i].Align in [alTop,alLeft] then
-   PAlign(@Controls[i].Align)^:=alCustom;
- { if (Controls[i] is TdhCustomPanel) and not (Controls[i] is TdhLabel) then
-   Controls[i].ControlStyle:=Controls[i].ControlStyle-[csAcceptsControls];   }
- end;
- //HasTop:=false;
- result:=false;
- for i:=0 to seIndex.Count-1  do
- begin
-  seIndex[i]:=Controls[Integer(seIndex[i])];
-//  HasTop:=HasTop or TControl(seIndex[i]).Align in [alTop];
- end;
-
- for i:=0 to seIndex.Count-1  do
- while (TControl(seIndex[i]) is TdhCustomPanel) and TdhCustomPanel(seIndex[i]).AdjPosList(i,seIndex) do;
-
-
- for i:=0 to seIndex.Count-1  do
- begin
-  result:=result or (Controls[i]<>seIndex[i]);
-//  result:=result or (Integer(seIndex[i])<>i);
- end;
-
-
- if {HasTop and }result then
- begin
- for i:=0 to seIndex.Count-1  do
- //if (Controls[Integer(seIndex[i])].Align in [alTop,alLeft]) then
- if TControl(seIndex[i]) is TWinControl then
-  TControl(seIndex[i]).BringToFront;
-// OrderedControls(self);
- end;
-
- end;
-end;
-
-
-procedure StopOrderedControls(Self:TWinControl);
-var i:integer;
-begin
- with Self do
- for i:=0 to ControlCount-1  do
- begin
-  if Controls[i].Align=alCustom then
-  if Controls[i] is TdhCustomPanel then
-   PAlign(@Controls[i].Align)^:=TdhCustomPanel(Controls[i]).SaveAlign else
-   PAlign(@Controls[i].Align)^:=alTop;
-  {if (Controls[i] is TdhCustomPanel) and not (Controls[i] is TdhLabel) then
-   Controls[i].ControlStyle:=Controls[i].ControlStyle+[csAcceptsControls]; }
-  //TdhCustomPanel(Controls[i]).UpdateControlState;
- end;
-
-end;
-*)
-
 
 function TdhCustomPanel.LeaveY:boolean;
 begin
@@ -2955,8 +2717,6 @@ begin
   Invalidate;
  end;
 end;
-
-var PreventAlignControls:boolean=false;
 
 procedure TdhCustomPanel.SetVHPos(H,V:integer);
 var OldPos,P:TPoint;
@@ -2991,8 +2751,6 @@ begin
  result:=IsScrollArea and not SomethingIsFixed;
 end;
 
-
-
 function TdhCustomPanel.SomethingIsFixed:boolean;
 begin
  result:=IsScrollArea and (not NCScrollbars or not Opaque or (BackgroundAttachment=cbaFixed) and HasBackgroundImage);
@@ -3003,15 +2761,11 @@ begin
  result:=(BackgroundAttachment=cbaScroll) and HasBackgroundImage;
 end;
 
-
 function TdhCustomPanel.GetInnerClientArea:TRect;
 begin
   with self.ScrollArea do
   result:=Bounds(Left-HPos,Top-VPos,max(HorzScrollInfo.nMax,Right-Left),max(VertScrollInfo.nMax,Bottom-Top));
 end;
-
-
-
 
 //if AllowModifyX is enabled, the place for a vert. scrollbar is taken by increasing available width (=Avail.X)
 //if AllowModifyX is not enabled, the place for vert. scrollbar is added to the requested width (=Req.X) to keep the ratio to the available width
@@ -3020,7 +2774,6 @@ end;
 //AllowModifyY accordingly..
 procedure TdhCustomPanel.AddScrollbarPlace(var IsHorzScrollBarVisible,IsVertScrollBarVisible:boolean; AllowModifyX,AllowModifyY:boolean; var Avail,Req:TPoint);
 begin
-
   if AllowModifyX then
    Avail.X:=Req.X;
   if AllowModifyY then
@@ -3051,115 +2804,38 @@ begin
   end;
 end;
 
-
 procedure TdhCustomPanel.UpdateScrollBars(OnlyCalculateVisibility:boolean);
 var
   RC:TPoint;
   OldIsHorzScrollBarVisible,OldIsVertScrollBarVisible:boolean;
   OldVertMax,OldHorzMax:integer;
   MeasureArea:TPoint;
-
-  (*
-function MeasureArea:TRect;
 begin
- //result:=Rect(0,0,Width,Height);
- {result:=ScrollAreaWithScrollBars;
- if IsVertScrollBarVisible then
-  dec(result.Right,VertScrollbar);
- if IsHorzScrollBarVisible then
-  dec(result.Bottom,HorzScrollbar);  }
- result:=ScrollArea;
-end;
-    *)
-begin
-  //if not HasParent then exit;
   if csDestroying in ComponentState then exit;
-  //if csLoading in ComponentState then exit;
   OldVertMax:=VertScrollInfo.nMax;
   OldHorzMax:=HorzScrollInfo.nMax;
   if not OnlyCalculateVisibility then
   begin
-  VertScrollInfo.nMax:=0;
-  HorzScrollInfo.nMax:=0;
+   VertScrollInfo.nMax:=0;
+   HorzScrollInfo.nMax:=0;
   end;
   if not IsScrollArea then exit;
-
   OldIsVertScrollBarVisible:=IsVertScrollBarVisible;
   OldIsHorzScrollBarVisible:=IsHorzScrollBarVisible;
-
-  //RC.TopLeft:=Point(0,0);
   RC:=MyGetControlExtents(OnlyCalculateVisibility);
   MeasureArea:=Point(Width,Height);
- { RC.Right:=max(RC.Right,RC.Left+1);
-  RC.Bottom:=max(RC.Bottom,RC.Top+1);
-    }
-
-
   AddScrollbarPlace(IsHorzScrollBarVisible,IsVertScrollBarVisible,false,false,MeasureArea,RC);
-  {
-  IsVertScrollBarVisible:=FVertScrollbarAlwaysVisible and not FVertScrollbarNeverVisible;
-  IsHorzScrollBarVisible:=FHorzScrollbarAlwaysVisible and not FHorzScrollbarNeverVisible;
-
-  if IsHorzScrollBarVisible then Dec(MeasureArea.Y,HorzScrollbar);
-  if IsVertScrollBarVisible then Dec(MeasureArea.X,VertScrollbar);
-  if not IsHorzScrollBarVisible and not FHorzScrollbarNeverVisible and (RC.X>MeasureArea.X) then
-  begin
-   IsHorzScrollBarVisible:=true;
-   Dec(MeasureArea.Y,HorzScrollbar);
-  end;
-  if not IsVertScrollBarVisible and not FVertScrollbarNeverVisible and (RC.Y>MeasureArea.Y) then
-  begin
-   IsVertScrollBarVisible:=true;
-   Dec(MeasureArea.X,VertScrollbar);
-   if not IsHorzScrollBarVisible and not FHorzScrollbarNeverVisible and (RC.X>MeasureArea.X) then
-   begin
-    IsHorzScrollBarVisible:=true;
-    Dec(MeasureArea.Y,HorzScrollbar);
-   end;
-  end;    }
-
-       {
-  if not IsHorzScrollBarVisible and not FHorzScrollbarNeverVisible and DoIntersectStrong(RC,Rect(MeasureArea.Right,0,maxint,maxint)) then
-  begin
-   IsHorzScrollBarVisible:=true;
-   RC.BottomRight:=MyGetControlExtents.BottomRight;
-  end;
-  if not IsVertScrollBarVisible and not FVertScrollbarNeverVisible and DoIntersectStrong(RC,Rect(0,MeasureArea.Bottom,maxint,maxint)) then
-  begin
-   IsVertScrollBarVisible:=true;
-   RC.BottomRight:=MyGetControlExtents.BottomRight;
-   if not IsHorzScrollBarVisible and not FHorzScrollbarNeverVisible and DoIntersectStrong(RC,Rect(MeasureArea.Right,0,maxint,maxint)) then
-   begin
-    IsHorzScrollBarVisible:=true;
-    RC.BottomRight:=MyGetControlExtents.BottomRight;
-   end;
-  end;       }           
-//   BorderChanged;
-
   if OnlyCalculateVisibility then exit;
-
-  {if not EdgesInScrolledArea then
-  with ClientEdgesPure do
-   DecPt(RC.BottomRight,Point(Left+Right,Top+Bottom));}
-//  RC:=MyGetControlExtents ;
-
   with ScrollArea do
   begin
     VertScrollInfo.nPage := max(Bottom-Top,0);
     HorzScrollInfo.nPage := max(Right-Left,0);
     VertScrollInfo.nMax := VertScrollInfo.nPage+RC.Y-MeasureArea.Y;
     HorzScrollInfo.nMax := HorzScrollInfo.nPage+RC.X-MeasureArea.X;
-   { VertScrollInfo.nMax := RC.Bottom-Top;
-    HorzScrollInfo.nMax := RC.Right-Left;  }
   end;
-
-
   SetBoundedVHPos(HPos,VPos);
-
   ScrollPaintChanged((OldIsVertScrollBarVisible=IsVertScrollBarVisible) and (OldIsHorzScrollBarVisible=IsHorzScrollBarVisible)and
                      (OldVertMax=VertScrollInfo.nMax) and (OldHorzMax=HorzScrollInfo.nMax));
-
-  //SetVHPos(HPos,VPos);
 end;
 
 procedure TdhCustomPanel.InvalScrollbars;
@@ -3186,11 +2862,8 @@ begin
   R:=GetHorzWhole;
   if not IsRectEmpty(R) then
    InvalidateRect(Handle,@R,false);
-  //Invalidate;
 {$ENDIF}
 end;
-
-
 
 procedure TdhCustomPanel.ScrollPaintChanged(SameScrollbars:boolean=true);
 var AlreadyUpdated:boolean;
@@ -3219,8 +2892,6 @@ begin
    BorderChanged;
 end;
 
-
-
 {$IFNDEF VER160}
 procedure TdhCustomPanel_AlignControls2(const nname:TComponentName; Self:TdhCustomPanel; AControl: TControl; var Rect: TRect{;  FOriginalParentSize:TPoint});
 var
@@ -3236,67 +2907,22 @@ var
       alBottom: Result := (C1.Top + C1.Height) >= (C2.Top + C2.Height);
       alLeft: Result := C1.Left < C2.Left;
       alRight: Result := (C1.Left + C1.Width) >= (C2.Left + C2.Width);
-      //!alCustom: Result := CustomAlignInsertBefore(C1, C2);
+      alCustom: Result := Self.CustomAlignInsertBefore(C1, C2);
     end;
   end;
 
-  procedure DoPosition(Control: TControl; AAlign: TAlign{; AlignInfo: TAlignInfo!});
-
-  (*ffunction FAnchorRules:TPoint;
-  begin
-   with Control do
-   begin
-    if akRight in Anchors then
-      if akLeft in Anchors then
-        FAnchorRules.X := Width else
-        FAnchorRules.X := Left
-    else
-      FAnchorRules.X := Left + Width div 2;
-    if akBottom in Anchors then
-      if akTop in Anchors then
-        FAnchorRules.Y := Height else
-        FAnchorRules.Y := Top
-    else
-      FAnchorRules.Y := Top + Height div 2;
-   end;
-  end;
-
-  unction FOriginalParentSize:TPoint;
-  begin
-   result:=PPoint(PAnsiChar(@TFakeControl(Control).{$IFDEF CLX}HelpContext{$ELSE}ScalingFlags{$ENDIF})-SizeOf(TPoint))^;
-  end;
-
-  function FAnchorRules:TPoint;
-  begin
-   result:=PPoint(PAnsiChar(@TFakeControl(Control).{$IFDEF CLX}HelpContext{$ELSE}ScalingFlags{$ENDIF})-SizeOf(TPoint)*2)^;
-  end;
-
-  function FAnchorMove:PBoolean;
-  begin
-{$IFDEF CLX}
-   result:=PBoolean(PAnsiChar(@TFakeControl(Control).ShowHint)+SizeOf(Boolean));
-{$ELSE}
-   result:=PBoolean(PAnsiChar(@TFakeControl(Control).Anchors)+SizeOf(TAnchors));
-{$ENDIF}
-  end;
-  *)
-
-
+  procedure DoPosition(Control: TControl; AAlign: TAlign; AlignInfo: TAlignInfo);
   var
     NewLeft, NewTop, NewWidth, NewHeight: Integer;
     ParentSize: TPoint;
     mar,R:TRect;
     sLightBoundsChanging:boolean;
-//    FOriginalParentSize,FAnchorRules:TPoint;
-//    FAnchorMove:boolean;
   begin        
       if (AAlign = alNone) then
       begin
        if Control is TdhCustomPanel then
        begin
         TdhCustomPanel(Control).StrongToWeak;
-        //if not TdhCustomPanel(Control).LightBoundsChanging then
-        begin
         sLightBoundsChanging:=TdhCustomPanel(Control).LightBoundsChanging;
         TdhCustomPanel(Control).LightBoundsChanging:=true;
         if TdhCustomPanel(Control).HorizontalCenter then
@@ -3312,88 +2938,16 @@ var
          Control.SetBounds(Control.Left, NewTop, Control.Width, NewHeight);
         end;
         TdhCustomPanel(Control).LightBoundsChanging:=sLightBoundsChanging;
-        end;
        end;
        exit;
       end;
     with Rect do
     begin
-      (*if (AAlign = alNone) or (Control.Anchors <> AnchorAlign[AAlign]) then
-      begin
-        with Control do
-          if (FOriginalParentSize.X <> 0) and (FOriginalParentSize.Y <> 0) then
-          begin
-            NewLeft := Left;
-            NewTop := Top;
-            NewWidth := Width;
-            NewHeight := Height;
-            if Parent.HandleAllocated then
-{$IFDEF xCLX}
-            begin
-              if [akRight, akBottom] * Anchors <> [] then
-              begin
-                R := Parent.ClientRect;
-                TFakeWinControl(Parent).AdjustClientRect(R);
-                ParentSize := R.BottomRight;
-              end
-              else
-                ParentSize := Parent.ClientRect.BottomRight;
-            end
-{$ELSE}
-              ParentSize := Parent.ClientRect.BottomRight
-{$ENDIF}
-            else
-              ParentSize := Point(Parent.Width, Parent.Height);
-
-            //if not (csLoading in ComponentState) then
-            //IncPt(ParentSize,-ParentDeltaX,-ParentDeltaY);
-
-            if akRight in Anchors then
-              if akLeft in Anchors then
-                // The AnchorRules.X is the original width
-                NewWidth := ParentSize.X - (FOriginalParentSize.X - FAnchorRules.X)
-              else
-                // The AnchorRules.X is the original left
-                NewLeft := ParentSize.X - (FOriginalParentSize.X - FAnchorRules.X)
-            else if not (akLeft in Anchors) then
-              // The AnchorRules.X is the original middle of the control
-              NewLeft := MulDiv(FAnchorRules.X, ParentSize.X, FOriginalParentSize.X) -
-                NewWidth div 2;
-            if akBottom in Anchors then
-              if akTop in Anchors then
-                // The AnchorRules.Y is the original height
-                NewHeight := ParentSize.Y - (FOriginalParentSize.Y - FAnchorRules.Y)
-              else
-                // The AnchorRules.Y is the original top
-                NewTop := ParentSize.Y - (FOriginalParentSize.Y - FAnchorRules.Y)
-            else if not (akTop in Anchors) then
-              // The AnchorRules.Y is the original middle of the control
-              NewTop := MulDiv(FAnchorRules.Y, ParentSize.Y, FOriginalParentSize.Y) -
-                NewHeight div 2;
-
-            if Control is TdhCustomPanel and TdhCustomPanel(Control).Center then
-            begin
-             NewLeft:=Rect.Left+max(0,{Rect.Left + }((Rect.Right - Rect.Left)-Control.Width) div 2);
-             NewWidth:=Control.Width;
-            end;
-             //NewLeft:=max(0,Rect.Left + ((Rect.Right - Rect.Left)-Control.Width) div 2);
-
-            //FAnchorMove^ := True;
-            try
-              SetBounds(NewLeft, NewTop, NewWidth, NewHeight);
-            finally
-              //FAnchorMove^ := False;
-            end;
-          end;
-        if AAlign = alNone then Exit;
-      end;
-      *)
-
       NewWidth := Right - Left;
-      if (NewWidth < 0) or (AAlign in [alLeft, alRight{, alCustom!}]) then
+      if (NewWidth < 0) or (AAlign in [alLeft, alRight, alCustom]) then
         NewWidth := Control.Width;
       NewHeight := Bottom - Top;
-      if (NewHeight < 0) or (AAlign in [alTop, alBottom{, alCustom!}]) then
+      if (NewHeight < 0) or (AAlign in [alTop, alBottom, alCustom]) then
         NewHeight := Control.Height;
 
       if Control is TdhCustomPanel then
@@ -3441,21 +2995,15 @@ var
             Dec(Right, NewWidth);
             NewLeft := Right;
           end;
-        {
         alCustom:
           begin
             NewLeft := Control.Left;
             NewTop := Control.Top;
-            CustomAlignPosition(Control, NewLeft, NewTop, NewWidth, NewHeight, Rect, AlignInfo);
-          end;!}
+            Self.CustomAlignPosition(Control, NewLeft, NewTop, NewWidth, NewHeight, Rect, AlignInfo);
+          end;
       end;
     end;
-    //{Control.}FAnchorMove^ := True;
-    try
-      Control.SetBounds(NewLeft, NewTop, NewWidth, NewHeight);
-    finally
-      //{Control.}FAnchorMove^ := False;
-    end;
+    Control.SetBounds(NewLeft, NewTop, NewWidth, NewHeight);
     { Adjust client rect if control did not resize as we expected }
     if (Control.Width <> NewWidth) or (Control.Height <> NewHeight) then
       with Rect do
@@ -3489,9 +3037,9 @@ var
   var
     I, J: Integer;
     Control: TControl;
-    {AlignInfo: TAlignInfo;!}
-  begin               
-  marginTop:=0;
+    AlignInfo: TAlignInfo;
+  begin
+    marginTop:=0;
     AlignList.Clear;
     if (AControl <> nil) and ((AAlign = alNone) or AControl.Visible or
       (csDesigning in AControl.ComponentState) and
@@ -3517,11 +3065,11 @@ var
     end;
     for I := 0 to AlignList.Count - 1 do
     begin
-      {AlignInfo.AlignList := AlignList;
+      AlignInfo.AlignList := AlignList;
       AlignInfo.ControlIndex := I;
-      AlignInfo.Align := AAlign;!}
+      AlignInfo.Align := AAlign;
       Control:=TControl(AlignList[I]);
-      DoPosition(Control, AAlign{, AlignInfo!});
+      DoPosition(Control, AAlign, AlignInfo);
       if AAlign=alTop then
       begin
        if GetChildPosition(Control)<>I then
@@ -3564,14 +3112,13 @@ begin
       DoAlign(alLeft);
       DoAlign(alRight);
       DoAlign(alClient);
-      {DoAlign(alCustom);!}
+      DoAlign(alCustom);
       DoAlign(alNone);// Move anchored controls
-      {ControlsAligned;!}
+      ControlsAligned;
     finally
       AlignList.Free;
     end;
   end;
-  //Self.ChildrenWeakToStrong;
   { Apply any constraints }
   //if Showing then AdjustSize;
   end;
@@ -3597,112 +3144,58 @@ end;
 //child.Align in [alTop,alLeft] können eine 2te berechnung notwendig machen
 procedure TdhCustomPanel.AlignControls(AControl: TControl; var Rect: TRect);
 var //R,OldScrollEdgesPure,NewScrollEdgesPure:TRect;
-    //aWidth,aHeight:integer;
     i:integer;
-    //P:TWinControl;
     OldIsVertScrollBarVisible,OldIsHorzScrollBarVisible:boolean;
     OldIsVertScrollBarVisible2,OldIsHorzScrollBarVisible2:boolean;
     SRect:TRect;
 begin
-
- if PreventAlignControls then exit;
-// if csLoading in ComponentState then exit;
-
+   if PreventAlignControls then exit;
    if FinalShowing then
    begin
     AdjustSize;
     Rect:=GetClientRect;
    end;
-
-   //if csLoading in ComponentState then exit;
-   
    if ControlCount=0 then
    begin
     UpdateScrollBars(false);
     exit;
    end;
-
    OldIsVertScrollBarVisible:=IsVertScrollBarVisible;
    OldIsHorzScrollBarVisible:=IsHorzScrollBarVisible;
-   //OldScrollEdgesPure:=ScrollEdgesPure;
-                          
    UpdateScrollBars(true);
-   {NewScrollEdgesPure:=ScrollEdgesPure;
-   if csLoading in ComponentState then
-   begin
-    OldScrollEdgesPure:=NewScrollEdgesPure;
-   end;  }
-
-   //Rect:=GetClientRect; //needed since can be changed by UpdateScrollBars
-//   OrderedControls(Self);
-
    for i:=0 to ControlCount-1 do
    if Controls[i] is TdhCustomPanel then
     TdhCustomPanel(Controls[i]).PrepareAlign;
    SRect:=Rect;
    TdhCustomPanel_AlignControls2(Self.Name,Self,AControl,Rect);
 
-
- OldIsVertScrollBarVisible2:=IsVertScrollBarVisible;
- OldIsHorzScrollBarVisible2:=IsHorzScrollBarVisible;
- IsVertScrollBarVisible:=OldIsVertScrollBarVisible;
- IsHorzScrollBarVisible:=OldIsHorzScrollBarVisible;
- UpdateScrollBars(false);
- if (IsVertScrollBarVisible<>OldIsVertScrollBarVisible2) or
-    (IsHorzScrollBarVisible<>OldIsHorzScrollBarVisible2) then
- begin
-   Rect:=SRect;
-   TdhCustomPanel_AlignControls2(Self.Name,Self,AControl,Rect);
+   OldIsVertScrollBarVisible2:=IsVertScrollBarVisible;
+   OldIsHorzScrollBarVisible2:=IsHorzScrollBarVisible;
+   IsVertScrollBarVisible:=OldIsVertScrollBarVisible;
+   IsHorzScrollBarVisible:=OldIsHorzScrollBarVisible;
    UpdateScrollBars(false);
- end;
+   if (IsVertScrollBarVisible<>OldIsVertScrollBarVisible2) or
+      (IsHorzScrollBarVisible<>OldIsHorzScrollBarVisible2) then
+   begin
+     Rect:=SRect;
+     TdhCustomPanel_AlignControls2(Self.Name,Self,AControl,Rect);
+     UpdateScrollBars(false);
+   end;
 
    for i:=0 to ControlCount-1 do
    if Controls[i] is TdhCustomPanel then
     TdhCustomPanel(Controls[i]).AlignDone;
  
-//   StopOrderedControls(Self);
-//  if not Showing then AdjustSize; //da AdjustSize in 'inherited' nur wenn 'showing' aufgerufen
+//  if not Showing then AdjustSize; //since AdjustSize is called in 'inherited' only if 'Showing'
 end;
 
 procedure TdhCustomPanel.PrepareAlign;
 begin
-
 end;
 
 procedure TdhCustomPanel.AlignDone;
 begin
-
 end;
-
-
-
-(*
-procedure TdhCustomPanel.CustomAlignPosition(Control: TControl; var NewLeft, NewTop, NewWidth,
-      NewHeight: Integer; var AlignRect: TRect; AlignInfo: TAlignInfo);
-begin
- with AlignRect do
- if not(Control is TdhCustomPanel) or (TdhCustomPanel(Control).SaveAlign=alTop) then
- begin
-      NewLeft := Left;
-      NewTop := Top;
-      NewWidth := Right - Left;
-      if (Control.Visible or
-         (csDesigning in Control.ComponentState) and not (csNoDesignVisible in Control.ControlStyle)) then
-       Inc(Top, NewHeight);
- end else
- begin
-      NewLeft := Left;
-      NewTop := Top;
-      NewHeight := Bottom - Top;
-      if (Control.Visible or
-         (csDesigning in Control.ComponentState) and not (csNoDesignVisible in Control.ControlStyle)) then
-       Inc(Left, NewWidth);
- end;
- if Control is TdhCustomPanel then
-  PAlign(@Control.Align)^:=TdhCustomPanel(Control).SaveAlign else
-  PAlign(@Control.Align)^:=alTop;
-end;
-*)
 
 function GetCBound(c:TControl):TRect;
 begin
@@ -3828,19 +3321,6 @@ begin
     InvalTrans(C,GetCBound(C));
 end;
 
-function GetBitmapSize(bt:TBitmap; var len:integer; var data:pbyte):boolean;
-var height,linesize:integer;
-begin
- height:=bt.Height;
- result:=height>=2;
- if result then
- begin
-  linesize:=(PAnsiChar(bt.ScanLine[0])-PAnsiChar(bt.ScanLine[1]));
-  len:=linesize*height;
-  data:=bt.ScanLine[height-1];
- end;
-end;
-
 procedure TdhCustomPanel.InvalTop(IncludeChildren,IncludeSelf:boolean);
 begin
    if not TopIsValid then exit;
@@ -3902,7 +3382,6 @@ begin
  if FirstPass then
  begin
   VariableHeight:=false;
-  //StyleArr[hsNormal]._BaseMargin:=Rect(0,0,0,0);
  end else
  if (Parent is TdhCustomPanel) then
   SimplifiedAnchors:=GetSimplifiedAnchors(Anchors,TdhCustomPanel(Parent).SimplifiedAnchors,false,TdhCustomPanel(Parent).VariableHeight) else
@@ -3911,7 +3390,6 @@ begin
  if Controls[i] is TdhCustomPanel then
   TdhCustomPanel(Controls[i]).CalcVariableSizes(FirstPass);
 end;
-
 
 procedure TdhCustomPanel.SetIsOver(Value:boolean);
 begin
@@ -3928,23 +3406,6 @@ begin
  end;
 end;
 
-{procedure TdhAnchor.CMCursorChanged(var Message: TMessage);
-var
-  P: TPoint;
-begin
-  if GetCapture = 0 then
-  begin
-    GetCursorPos(P);
-    if FindDragTarget(P, False) = Self then
-      Perform(WM_SETCURSOR, Handle, HTCLIENT);
-  end;
-end;
-
- }
-
-
-
-
 constructor TdhCustomPanel.Create(AOwner: TComponent);
 begin
   inherited;
@@ -3955,24 +3416,18 @@ begin
 {$IFNDEF CLX}
   BevelOuter:=bvNone;
 {$ENDIF}
-
- UsedByList:=TList.Create;
+  UsedByList:=TList.Create;
   InlineUsedByList:=TList.Create;
   StyleArr[hsNormal]:=TStyle.Create(Self,hsNormal);
   FDownOverlayOver:=true;
-
   ParentFont:=false; //for speed
   ParentColor:=false; //for speed
-  //DragMode:=dmAutomatic;
   SetBounds(0,0,100,100);
 end;
-
-
 
 procedure TdhCustomPanel.UpdateNames(InlineUse,NewInlineUse:ICon; PropagateChange:boolean);
 begin
 end;
-
 
 procedure TdhCustomPanel.TransferStylesToUse;
 var State:TState;
@@ -4020,10 +3475,6 @@ begin
  if sub then
   NotifyCSSChanged(AllChanged) else
   Use.GetCommon.NotifyCSSChanged(AllChanged);
-
-//    if ((c.Owner.Control as TdhCustomPanel).FImageType<>bitInherit) xor sub then
-//     (Owner.Control as TdhCustomPanel).FImageType:=(s.Owner.Control as TdhCustomPanel).FImageType;
-
 end;
 
 procedure TdhCustomPanel.CopyStyles(fromState,toState:TState);
@@ -4049,24 +3500,14 @@ begin
  FImageType:=bitInherit;
 end;
 
-
-
-
 procedure TdhCustomPanel.TransferStylesToElement(Use:ICon);
 begin
  CopyFrom(Use,false);
-{ for State:=low(TState) to high(TState) do
- if (StyleArr[State]<>nil) and (Use.GetCommon.StyleArr[State]<>nil) then
-  Use.GetCommon.StyleArr[State].CopyFrom(StyleArr[State],false);}
 end;
 
 procedure TdhCustomPanel.GetStylesFromElement(Use:ICon);
 begin
  CopyFrom(Use,true);
-{ for State:=low(TState) to high(TState) do
- if (StyleArr[State]<>nil) and (Use.GetCommon.StyleArr[State]<>nil) then
-  StyleArr[State].CopyFrom(Use.GetCommon.StyleArr[State],true);
-}
 end;
 
 procedure TdhCustomPanel.GetStylesFromUse;
@@ -4083,16 +3524,11 @@ begin
  for State:=low(TState) to high(TState) do
  if StyleArr[State]<>nil then
   StyleArr[State].Clear;
-
  ClearObjectStyles;
-
  if ClearUse then
   Use:=nil;
-
  NotifyCSSChanged(AllChanged);
-
 end;
-
 
 procedure TdhCustomPanel.TransformUse(P:ICon; DoSUse:boolean);
 var i:integer;
@@ -4129,7 +3565,6 @@ begin
  until vn>length(s);
 end;
 
-
 function GetNearestFont(const s:TFontName):TFontName;
 var sl:TStringList;
     i:integer;
@@ -4155,39 +3590,12 @@ begin
  sl.Free;
 end;
 
-
-function TdhCustomPanel.FastDestroy:boolean;
-//var O:TComponent;
-begin
-{ O:=Owner;
- while (O<>nil) and (O.Owner<>nil) and not (O.Owner is TApplication) do
-  O:=O.Owner;
- result:= (O<>nil) and (csDestroying in O.ComponentState);
-}
- result:=false;
-end;
-
-
-
-
-
-
-
 destructor TdhCustomPanel.Destroy;
 var State:TState;
 begin
-
  InvalBack;
-
- {Free; //nicht FreeAndNil verwenden
- FCommon:=nil;
- }
-begin
- if not FastDestroy then
- begin
-  TransformUse(nil,true);
-  Use:=nil;
- end;
+ TransformUse(nil,true);
+ Use:=nil;
  if FMouseControl=Self then FMouseControl:=nil;
  if glSelCompo=Self then glSelCompo:=nil;
  if glEventObj=Self then glEventObj:=nil;
@@ -4195,12 +3603,7 @@ begin
   StyleArr[State].Free;
  UsedByList.Free;
  UsedByList:=nil;
- FreeAndNil(InlineUsedByList);//kj
-{ Control:=nil;
- Con:=nil;}
-end;
-
-
+ FreeAndNil(InlineUsedByList);
  if BackGraph=TopGraph then
   TopGraph:=nil;
  FreeAndNil(BackGraph);
@@ -4227,9 +3630,6 @@ begin
    ActStyle.BackgroundColor:=colInherit;
  end;
 end;
-
-
-
 
 Function ApplyDark(Color:TColor; HowMuch:Byte):TColor;
 Var r,g,b:Byte;
@@ -4274,14 +3674,10 @@ begin
   result:=i;
 end;
 
-
 Function AddRGB(Color:TColor32; HowMuch:integer):TColor32;
 Begin
 	result:=Color32(In255(RedComponent(Color)+HowMuch),In255(GreenComponent(Color)+HowMuch),In255(BlueComponent(Color)+HowMuch));
 End;
-
-
-{$IFNDEF DEB}
 
 procedure Exch(var a,b:Integer); overload;
 var c:Integer;
@@ -4290,8 +3686,6 @@ begin
  a:=b;
  b:=c;
 end;
-
-{$ENDIF}
 
 function ExchP(a:TPoint):TPoint; overload;
 begin
@@ -4341,38 +3735,6 @@ begin
  end;
 end;
 
-{
-procedure LineSpec(Canvas:TCanvas; P1,P2:TPoint; Width:Integer; ClosedInterval,Rectangular,Horizontal:boolean);
-var i,dist,count,m,plusX,plusY:integer;
-    P:TPoint;
-begin
- dist:=Round(Sqrt(Sqr(P1.X-P2.X)+Sqr(P1.Y-P2.Y)));
- plusY:=0;
- plusX:=0;
- gap:=Width;
- if Rectangular then
- begin
-  m:=3;
-  gap:=Width;
-  if Horizontal then
-   plusX:=Width else
-   plusY:=Width;
- end else
-  m:=2;
- count:=dist div (Width * m) * m;
- for i:=0 to count do
- if i mod m=0 then
- if (i<>0) and (i<>count) or ClosedInterval then
- begin
-  P.X:=P1.X+(P2.X-P1.X) * i * (P2.X-P1.X) div (P2.X-P1.X) div count;
-  P.Y:=P1.Y+(P2.Y-P1.Y) * i div count;
-  if Rectangular then
-   Canvas.Rectangle(P.X-Width div 2,P.Y-Width div 2,P.X-Width div 2+Width+1+plusX,P.Y-Width div 2+Width+1+plusY) else
-   Canvas.Ellipse  (P.X-Width div 2,P.Y-Width div 2,P.X-Width div 2+Width+1+plusX,P.Y-Width div 2+Width+1+plusY);
- end;
-end;
-}
-
 procedure TdhCustomPanel.LockDefinedCSS(var sStyleArr:TStyleArray);
 var st:TState;
 begin
@@ -4392,14 +3754,9 @@ begin
    end;
 end;
 
-//siehe ScrollArea
 function TdhCustomPanel.GetClientAdjusting:TRect;
 begin
  result:=ScrollArea_Edges;
- //result:=ClientEdgesPure;
-{ result:=ScrollAreaWithScrollbars;
- Result.Right:=Width-Result.Right;
- Result.Bottom:=Height-Result.Bottom;}
 end;
 
 function ColorToIdent(Color: Longint; var Ident: TColorName): Boolean;
@@ -4411,7 +3768,6 @@ function IdentToColor(const Ident: TColorName; var Color: Longint): Boolean;
 begin
   Result := IdentToInt(Ident, Color, Colors);
 end;
-
 
 function ColorToIntString(Color: TCSSColor): TColorName;
 var Col:TColor32;
@@ -4461,14 +3817,12 @@ begin
   if i<>1 then
    insert('-',result,i);
  end;
-// result:=lowercase(result);
 end;
 
 function GetCSSPropName(PropChoose:TPropChoose):TEnumName;
 begin
  result:=GetHyphens(GetEnumName( TypeInfo(TPropChoose), Integer(PropChoose)),3)
 end;
-
 
 function WithPX(const s:AString):AString;
 begin
@@ -4491,31 +3845,12 @@ begin
   result:=EmptyStr;
   TypeInfo:=GetTypeData(TypeInfo).CompType{$IFNDEF VER160}^{$ENDIF};
   for I := 0 to SizeOf(Byte) * 8 - 1 do
-//    if I in S then
     if (1 shl I) and Byte(S)<> 0 then
     begin
       if Length(Result) <> 1 then Result := Result + ' ';
       Result := Result + GetHyphens(GetEnumName(TypeInfo, I),4);
     end;
 end;
-
-           (*
-
-function GetCSSSetProp(TypeInfo: PTypeInfo): TEnumName;
-var
-  S: Integer;
-  I: Integer;
-  ss:TIntegerSet;
-begin
-  S :=Value.Width and 255;
-  TypeInfo:=GetTypeData(TypeInfo).CompType{$IFNDEF VER160}^{$ENDIF};
-  for I := 0 to SizeOf(Integer) * 8 - 1 do
-    if (1 shl I) and S <> 0 then
-    begin
-      if Length(Result) <> 1 then Result := Result + ' ';
-      Result := Result + GetHyphens(GetEnumName(TypeInfo, I),4);
-    end;
-end;          *)
 
 begin
 
@@ -4611,7 +3946,6 @@ begin
  result:=(ob is TStyle) and (GetParentForm(TStyle(ob).Owner.GetControl)<>GetParentForm(Self));
 end;
 
-
 function GetBorderRadiusString(al:TEdgeAlign):TEnumName;
 const sBorderCorner:array[TEdgeAlign] of TEnumName=(EmptyStr,'-top-left','-bottom-right','-bottom-left','-top-right');
 begin
@@ -4628,9 +3962,6 @@ const sBorderCorner:array[TEdgeAlign] of TEnumName=(EmptyStr,'-topleft','-bottom
 begin
  result:='-moz-border-radius'+sBorderCorner[al];
 end;
-
-
-
 
 function TdhCustomPanel.GetInfo:AString;
 var PropChoose:TPropChoose;
@@ -4764,8 +4095,6 @@ begin
  end;  
 end;
 
-
-
 procedure TdhCustomPanel.AddOwnInfo(sl:TStrings);
 begin
 end;
@@ -4788,15 +4117,6 @@ begin
  if not Result and (FUse<>nil) then
   Result:=FUse.GetCommon.ItGetVal(state,PropChoose,Align);
 end;
-
-{
-function FindParent(Self:TdhCustomPanel; var Parent:TWinControl):boolean;
-begin
- Parent:=Self.Parent;
- while (Parent<>nil) and not (Parent is TdhCustomPanel) do
-  Parent:=Parent.Parent;
- Result:=Parent<>nil;
-end;}
 
 function GetCursorBack(Cursor:TCursor):TCSSCursor;
 begin
@@ -4826,15 +4146,6 @@ begin
  result:=hsNormal;
 end;
 
-{function TdhCustomPanel.ShallContentWidthHeightStore:boolean;
-begin
- result:=true;
-end;
- }
-
-
-
-
 function TdhCustomPanel.GetVal(PropChoose:TPropChoose; const Align:TEdgeAlign=ealNone; CanInherit:boolean=true):boolean;
 var P:TWinControl;
     AStyle:TStyle;
@@ -4852,21 +4163,11 @@ function _ItGetVal2(state:TState):boolean;
 begin
  result:=GetFinal.GetCommon.ItGetVal(state,PropChoose,Align);
 end;
-                {
-function _ItGetVal(state:TState):boolean;
-begin
- result:=ItGetVal(state,PropChoose,Value,Align);
- if result then exit;
- if Con.GetFinal<>nil then
-  Result:=Con.GetFinal.GetCommon.ItGetVal(state,PropChoose,Value,Align);
-end;
-               }
 
 begin
  try
  result:=false;
  if (csDestroying in ComponentState) then exit;
- //Value.DoImg:=false;
  if not IsFromParent then
   ValStyle:=nil;
  result:=DoGetVal(PropChoose,Align,DoExit);
@@ -5004,31 +4305,25 @@ begin
   GetBorderRadiusPixels(Cascaded.BorderRadius,result);
 end;
 
-//const MapCornerToEdge:array[TCornerAlign] of TEdgeAlign=(ealNone, ealTop, ealBottom, ealLeft, ealRight);
-
 function TdhCustomPanel.IsBorderRadiusTwoValued(CornerAlign:TCornerAlign):boolean;
 begin
  result:=GetVal(pcBorderRadius,CornerAlign) and (Pos(' ',trim(Cascaded.BorderRadius))<>0);
 end;
-
 
 function TdhCustomPanel.GetTransparent:boolean;
 begin
  result:=BackgroundColor=colTransparent;
 end;
 
-
 function TdhCustomPanel.SemiTransparent:boolean;
 begin
  result:=not IsOpaqueColor(BackgroundColor);
 end;
 
-
 function IsNullRect(const R:TRect):boolean;
 begin
  result:=(R.Left=0) and (R.Right=0) and (R.Bottom=0) and (R.Top=0);     
 end;
-
 
 function TdhCustomPanel.TransparentEdges:TRect;
 var tt:TTransformations;
@@ -5039,7 +4334,7 @@ begin
   exit;
  end;  
  result:=MarginPure;
- if not IsNullRect(result) then exit;    
+ if not IsNullRect(result) then exit;
  result.Left:=TransparencyOfBorderWidth(ealLeft);
  result.Top:=TransparencyOfBorderWidth(ealTop);
  result.Bottom:=TransparencyOfBorderWidth(ealBottom);
@@ -5068,7 +4363,6 @@ begin
  result:=HasTransformations(tt) or HasBorderRadii;
 end;
 
-
 function TdhCustomPanel.Opaque:boolean;
 begin
  result:=not SemiTransparent and {IsNullRect(ClientEdgesPure}{EqualRect(ScrollAreaWithScrollbars,Rect(0,0,Width,Height))}IsNullRect(TransparentEdges) and not IsRasterized and Visibility;
@@ -5080,7 +4374,6 @@ begin
   result:=Cascaded.Width else
   result:=default_borderwidth{=medium};
 end;
-
 
 function TdhCustomPanel.GetCursor:TCSSCursor;
 begin
@@ -5125,9 +4418,8 @@ function TdhCustomPanel.BorderColor(const Align:TEdgeAlign):TCSSColor;
 begin
  if GetVal(pcBorderColor,Align) then
   result:=Cascaded.Color else
-  result:=clBlackCSS{FontColor};
+  result:=clBlackCSS;
 end;
-
 
 function TdhCustomPanel.ZIndex:TCSSInteger;
 begin
@@ -5135,7 +4427,6 @@ begin
   result:=Cascaded.CSSInteger else
   result:=0;
 end;
-
 
 function TdhCustomPanel.MinWidth:TCSSCardinal;
 begin
@@ -5158,7 +4449,6 @@ begin
   result:=0;
 end;
 
-
 function TdhCustomPanel.MarginWidth(const Align:TEdgeAlign):integer;
 var p:TControl;
 begin
@@ -5178,16 +4468,14 @@ begin
   end else
    p:=p.Parent;
  end;
- if IsDlg {and (Align in [alLeft,alRight,alBottom])} then
+ if IsDlg then
   inc(Result,3);
  if not PreventAdjustMargin then
   AdjustMarginWidth(result,Align);
-// if HasVertScroll and
 end;
 
 procedure TdhCustomPanel.AdjustMarginWidth(var i:integer; const Align:TEdgeAlign);
 begin
-
 end;
 
 function TdhCustomPanel.BackgroundColor:TCSSColor;
@@ -5200,10 +4488,7 @@ end;
 
 procedure TdhCustomPanel.AdjustBackgroundColor(var Col:TCSSColor);
 begin
-
 end;
-
-
 
 function TdhCustomPanel.GetVirtualBGColor:TCSSColor;
 var p:TControl;
@@ -5220,9 +4505,6 @@ begin
   result:=ColorToCSSColor(TFakeControl(p).Color) else
   result:=clWhiteCSS;
 end;
-
-
-
 
 procedure TdhCustomPanel.Frame3D(Border:TEdgeAlign; Points: array of TPoint);
 var BottomRight:boolean;
@@ -5242,7 +4524,6 @@ begin
   result:=ApplyDark(bc,HowMany*60);
 end;
 
-
 procedure ConvexPoint(var P1,P2:TPoint; m:integer=0);
 begin
    P1.X:=(P1.X+P2.X*(m+1)+AdjDivX) div (m+2);
@@ -5254,7 +4535,6 @@ begin
  Result.X:=(P1.X+P2.X*(m+1)+AdjDivX) div (m+2);
  Result.Y:=(P1.Y+P2.Y*(m+1)+AdjDivY) div (m+2);
 end;
-
 
 procedure DrawToCanvas(const Canvas:TCanvas);
 begin
@@ -5330,18 +4610,7 @@ begin
    exit;
   end;
   cbsDouble:
-  begin           {
-   P0:=Points[0];
-   P1:=Points[1];
-   ConvexPoint(Points[0],Points[3],1);
-   ConvexPoint(Points[1],Points[2],1);
-   Canvas.Polygon(Points);
-   Points[0]:=P0;
-   Points[1]:=P1;
-   ConvexPoint(Points[3],Points[0],1);
-   ConvexPoint(Points[2],Points[1],1);
-   Canvas.Polygon(Points);
-   exit;     }
+  begin
    Canvas.Polygon([GetConvexPoint(Points[0],Points[3],1),GetConvexPoint(Points[1],Points[2],1),Points[2],Points[3]]);
    Canvas.Polygon([Points[0],Points[1],GetConvexPoint(Points[2],Points[1],1),GetConvexPoint(Points[3],Points[0],1)]);
    exit;
@@ -5378,7 +4647,6 @@ begin
    inc(Points[0].Y);
    inc(Points[1].Y);
    inc(Points[0].X);
-   //dec(Points[1].X);
   end;
   if Border=ealLeft then
   begin
@@ -5403,29 +4671,7 @@ begin
     (Points[0].Y=Points[1].Y) and (Points[1].Y=Points[2].Y) and (Points[2].Y=Points[3].Y) then exit;
 
 
- if DisplayBorderWidth(Border)=0 then
- begin        {
- if (csDesigning in ComponentState) and Transparent then
- begin
-  Canvas.Brush.Color:=clBtnShadow;
-  Canvas.Pen.Style := psDash;
-  Canvas.Brush.Style := bsClear;
-//  Canvas.MoveTo(Points[0].X,Points[0].Y);
-//  Canvas.LineTo(Points[1].X,Points[1].Y);
-  rct.TopLeft:=Points[0];
-  rct.BottomRight:=Points[1];
-  Canvas.Rectangle(rct);
- end;     }
-{
- if (csDesigning in ComponentState) and FTransparent then
- begin
-  Canvas.Brush.Color:=clBtnShadow;
-  Canvas.Pen.Style := psDash;
-  Canvas.Brush.Style := bsClear;
-  Canvas.Rectangle(ClientRect);
- end;  }
- exit;
- end;
+ if DisplayBorderWidth(Border)=0 then exit;
 
  if not IsOpaqueColor(BorderColor(Border)) then
  begin
@@ -5462,136 +4708,6 @@ begin
  end;
 end;
 
-
-
-(*
-
-procedure TWinControl_WMNCPaint(P:TWinControl; DC: HDC; EdgeFlags,BorderFlags:integer);
-const
-  InnerStyles: array[TBevelCut] of Integer = (0, BDR_SUNKENINNER, BDR_RAISEDINNER, 0);
-  OuterStyles: array[TBevelCut] of Integer = (0, BDR_SUNKENOUTER, BDR_RAISEDOUTER, 0);
-  EdgeStyles: array[TBevelKind] of Integer = (0, 0, BF_SOFT, BF_FLAT);
-  Ctl3DStyles: array[Boolean] of Integer = (BF_MONO, 0);
-var
-  RC, RW, SaveRW: TRect;
-  EdgeSize: Integer;
-  WinStyle: Longint;
-begin
- with TFakeWinControl(P) do
-  { Get window DC that is clipped to the non-client area }
-  if (BevelKind <> bkNone) or (BorderWidth > 0) then
-  begin
-    //!DC := GetWindowDC(Handle);
-    try
-      Windows.GetClientRect(Handle, RC);
-      GetWindowRect(Handle, RW);
-      MapWindowPoints(0, Handle, RW, 2);
-      OffsetRect(RC, -RW.Left, -RW.Top);
-      RW:=RC;
-
-      //!ExcludeClipRect(DC, RC.Left, RC.Top, RC.Right, RC.Bottom);{client area not drawn yet}
-      { Draw borders in non-client area }
-      SaveRW := RW;
-      InflateRect(RC, BorderWidth, BorderWidth);
-      RW := RC;
-      if BevelKind <> bkNone then
-      begin
-        EdgeSize := 0;
-        if BevelInner <> bvNone then Inc(EdgeSize, BevelWidth);
-        if BevelOuter <> bvNone then Inc(EdgeSize, BevelWidth);
-        with RW do
-        begin
-          WinStyle := GetWindowLong(Handle, GWL_STYLE);
-          if beLeft in BevelEdges then Dec(Left, EdgeSize);
-          if beTop in BevelEdges then Dec(Top, EdgeSize);
-          if beRight in BevelEdges then Inc(Right, EdgeSize);
-          if (WinStyle and WS_VSCROLL) <> 0 then Inc(Right, GetSystemMetrics(SM_CYVSCROLL));
-          if beBottom in BevelEdges then Inc(Bottom, EdgeSize);
-          if (WinStyle and WS_HSCROLL) <> 0 then Inc(Bottom, GetSystemMetrics(SM_CXHSCROLL));
-        end;
-        DrawEdge(DC, RW, {EdgeFlags or} InnerStyles[BevelInner] or OuterStyles[BevelOuter],
-          {BorderFlags or }Byte(BevelEdges) or EdgeStyles[BevelKind] or Ctl3DStyles[Ctl3D] or BF_ADJUST);
-      end;
-      IntersectClipRect(DC, RW.Left, RW.Top, RW.Right, RW.Bottom);
-      //!RW := SaveRW;
-      { Erase parts not drawn }
-      //!OffsetRect(RW, -RW.Left, -RW.Top);
-      Windows.FillRect(DC, RW, Brush.Handle);
-    finally
-      //!ReleaseDC(Handle, DC);
-    end;
-  end;
-//!inherited;
-end;
-*)
-(*
-
-function IsAlone(Self:TdhCustomPanel; var col:TColor; P:TWinControl; R2:TRect):boolean;
-var R,R3:TRect;
-    i:integer;
-    c:TControl;
-    IsTop:boolean;
-    P1:TPoint;
-    lastP:TWinControl;
-    Common:TCommon;
-begin
- lastP:=nil;
- IsTop:=true;
- while (P<>nil) and P.HandleAllocated do
- begin
-  GetWindowRect(P.Handle, R);
-  IntersectRect(R3,R,R2);
-  R2:=R3;
-  {
-  if not (P is TScrollingWinControl) and not (P is TdhScrollingWinControl) then
-   TFakeWinControl(P).AdjustClientRect(R); geht nicht in Delphi8}
-  if not (IntersectRect(R,R,R2) and EqualRect(R,R2)) then
-  begin
-   result:=false;
-   exit;
-  end;
-  P1:=P.ClientOrigin;
-  for I := 0 to P.ControlCount - 1 do
-  if {(P.Controls[I] is TWinControl) and }(P.Controls[I]<>Self) and (P.Controls[I]<>lastP) and FinalVisible(P.Controls[I]) then
-  begin
-   if IsTop and (P.Controls[I] is TWinControl) then continue;
-   c:=P.Controls[I];
-   //GetWindowRect(c.Handle, R);
-   R:=c.BoundsRect;
-   OffsetRect(R,P1.X,P1.Y);
-   if IntersectRect(R,R,R2) then
-   begin
-    result:=false;
-    exit;
-   end;
-  end;
-  if (P is TCustomForm) or (P is TTabSheet) or (P is TdhScrollingWinControl) then
-  begin
-   col:=TFakeWinControl(P).Color;
-   result:=true;
-   exit;
-  end;
-  if not HasCommon(P,Common) or Common.HasVal(pcBackgroundImage) or Common.HasVal(pcImage) then
-  begin
-   result:=false;
-   exit;
-  end;
-  col:=Common.BackgroundColor;
-  if col<>colTransparent then
-  begin
-   result:=true;
-   exit;
-  end;
-  IsTop:=false;
-  lastP:=P;
-  P:=P.Parent;
- end;
- col:=clYellow;
- result:=true;
-end;
-*)
-
-
 function GetParentList(c:TControl):TList;
 begin
  result:=TList.Create;
@@ -5601,36 +4717,6 @@ begin
   c:=c.Parent;
  end;
 end;
-
-
-//type TFakeCustomControl=class(TCustomControl);
-             {
-procedure CopyTop2(src:TCustomControl; dst:TdhCustomPanel; rr:TRect);
-var s,d:TRect;
-    bt:TBitmap;
-begin
- s:=rr;
- d:=rr;
- with src.ClientOrigin do OffsetRect(s,-x,-y);
- with dst.ClientOrigin do OffsetRect(d,-x,-y);
- dst.Canvas.CopyRect(d,TFakeCustomControl(src).Canvas,s);
-end;
-          }  {
-procedure CopyTop3(src:TControl; dst:TdhCustomPanel; rr:TRect);
-var s,d:TRect;
-    bt:TBitmap;
-begin
- s:=rr;
- d:=rr;
- with src.ClientOrigin do OffsetRect(s,-x,-y);
- with dst.ClientOrigin do OffsetRect(d,-x,-y);
- bt:=TBitmap.Create;
- bt.Width:=src.Width;
- bt.Height:=src.Height;
- src.pa
- dst.Canvas.CopyRect(d,TFakeControl(src).Canvas,s);
-end;      }
-
 
 function TdhCustomPanel.HeightDiff:integer;
 begin
@@ -5642,7 +4728,7 @@ begin
  result:=R;
  inc(result.bottom,addheight);
 end;
-                  
+
 function RectInRect(const Rect: TRect; const R: TRect): Boolean;
 begin
  result:=PtInRect(Rect,R.TopLeft) and PtInRect(Rect,R.BottomRight);
@@ -5662,20 +4748,13 @@ begin
   p1:=SelfCBound.TopLeft;
   p2:=_parent.ClientOrigin;
   p3:=GetCBound(_parent).TopLeft;
-  //_Parent.PaintTo(Self.BackGraph.Canvas,-(p1.X-p2.x),-(p1.y-p2.y));
-
   with _Parent do
   begin
-
-   Self.BackGraph.Canvas.Lock;
-
+  Self.BackGraph.Canvas.Lock;
   try
   DC:=Self.BackGraph.Canvas.Handle;
   _Parent.ControlState:=_Parent.ControlState+[csPaintCopy];
   SaveIndex := SaveDC(DC);
-  //MoveWindowOrg(DC, -(p1.X-p2.x),-(p1.y-p2.y));
-
-  //GetWindowRect(_Parent.Handle, R);
   R:=IncHeight(GetCBound(_Parent),addheight);
   cCutR:=CutR;
   OffsetRect(cCutR,-R.Left,-R.Top);
@@ -5695,14 +4774,10 @@ begin
   end;
   if BorderFlags <> 0 then
   begin
-    //MoveWindowOrg(DC, -R.Left, -R.Top);
-    SetWindowOrgEx(DC,(p1.X-p3.x),(p1.y-p3.y), nil); //! genauer, z.b. bei TPageControl
+    SetWindowOrgEx(DC,(p1.X-p3.x),(p1.y-p3.y), nil); // more detailed, e.g. at TPageControl
     IntersectClipRect(DC, cCutR.Left, cCutR.Top, cCutR.Right, cCutR.Bottom);
     SetRect(R, 0, 0, Width, Height);
     DrawEdge(DC, R, EdgeFlags, BorderFlags);
-    //MoveWindowOrg(DC, R.Left, R.Top);
-    //IntersectClipRect(DC, 0, 0, R.Right - R.Left, R.Bottom - R.Top);
-    //IntersectClipRect(DC, R.Left, R.Top, R.Right, R.Bottom);
   end;
   end;
   SetWindowOrgEx(DC,(p1.X-p2.x),(p1.y-p2.y), nil); //! genauer, z.b. bei TPageControl
@@ -5716,7 +4791,6 @@ begin
    Self.BackGraph.Canvas.Unlock;
   end;
   end;
-
 end;
 
 {$ENDIF}
@@ -5729,10 +4803,7 @@ begin
    if (ppn.Parent is TdhCustomPanel) then
    begin
      p:=TdhCustomPanel(ppn.Parent);
-     //R:=GetCBound(p);
-     //IntersectRect(R,R,CutR);
-     //if not IsRectEmpty(R) then
-      PaintParentBGs(Self, p, CutR,SelfCBound);
+     PaintParentBGs(Self, p, CutR,SelfCBound);
    end;
    R:=GetCBound(ppn);
    ref_fixed:=GetOffsetRect(ppn.ScrollArea,R.Left-CutR.Left,R.Top-CutR.Top);
@@ -5777,7 +4848,7 @@ begin
 end;
 
 var i:integer;
-    R,R2:TRect;
+    R:TRect;
     AllWins:boolean;
     ppn:TdhCustomPanel;
     ref_fixed,ref_scrolled,OriCutR:TRect;
@@ -5815,7 +4886,6 @@ begin
    break;
   end;
  end;
- //FilledByChildren:=false;
 
  if not FilledByChildren then
  if (_Parent is TdhCustomPanel) and AllWins then
@@ -5825,8 +4895,9 @@ begin
    addheight:=0;
   R:=GetCBound(ppn);
   scrolledInParent:=ppn.IsScrollArea and ppn.ContainsControl(Self);
-  if scrolledInParent and not ppn.SomethingIsFixed{nachteilhaft bei HTML-Generierung, wenn über Rand hinaus, sonst ok}(* and (not RectInRect(GetScreenClientBound(ppn),CutR){for Speed: e.g. JPeg drawing extremely slow})*) then
+  if scrolledInParent and not ppn.SomethingIsFixed (* and (not RectInRect(GetScreenClientBound(ppn),CutR){for Speed: e.g. JPeg drawing extremely slow})*) then
   begin
+    //important for HTML generation
    ref_fixed:=GetOffsetRect(ppn.ScrollArea,R.Left-CutR.Left,R.Top-CutR.Top);
    ref_scrolled:=GetOffsetRect(ppn.GetInnerClientArea,R.Left-CutR.Left,R.Top-CutR.Top);
    ppn.SpecialBg(ref_scrolled,ref_fixed,Self.BackGraph,GetOffsetRect(CutR,-SelfCBound.Left,-SelfCBound.Top),ppn.BackgroundAttachment=cbaFixed);
@@ -5855,9 +4926,8 @@ begin
    end;
    if (not DoCopyTop or not EqualRect(CutR,OriCutR)) and (Self.Parent=_Parent) then
    begin
-    //wichtig für HTML-Generierung, da dort auch noch nicht sichtbare Elemente Graphiken haben müssen
+    //important for HTML generation
     PaintParentBGs(Self, ppn, OriCutR, SelfCBound);
-    //Self.BackGraph.Clear(Color32(ppn.GetVirtualBGColor));
    end;
    if DoCopyTop then
     CopyTop(ppn,Self,ppn.TopGraph,CutR);
@@ -5872,10 +4942,6 @@ begin
     Self.BackGraph.Canvas.Brush.Style:=bsSolid;
     Self.BackGraph.Canvas.Brush.Color:=TFakeWinControl(_Parent).Color;
     Self.BackGraph.Canvas.FillRect(cCutR);
-    //with cCutR do Self.BackGraph.FillRect(Left,Top.Right,Bottom,TFakeWinControl(_Parent).Color);
-    //hintergrund wo TWinControls standen wird net gezeichnet
-    //wird auch von TMemo benötigt, wenn eigene Hintergrundfarbe
-
 
 {$IFNDEF CLX}
   MyPaintTo(Self,_Parent,CutR,SelfCBound,addheight);
@@ -5885,13 +4951,7 @@ begin
    IntersectRect(CutR,CutR,GetScreenClientBound(_parent));
  end;
 
-//   if not(ppn.IsScrollArea and ppn.ContainsControl(Self) and ppn.SomethingIsFixed) and
-//      not((ppn.IsScrollArea and ppn.ContainsControl(Self) and ppn.SomethingIsFixed) then
-//    IntersectRect(CutR,CutR,GetClientBound(_parent));
-
-
-    if Self.NoSiblingsBackground then
-     exit;
+    if Self.NoSiblingsBackground then exit;
 
     glBinList.ClearFast;
     ObjHolder:=TBinList.Create;
@@ -5909,12 +4969,9 @@ begin
     begin
      c:=ObjHolder[i];
      R:=GetCBound(TWinControl(c));
-     {dec(r.Top,4);
-     dec(r.Bottom,4); }
-     IntersectRect(R,R,CutR{R2});
+     IntersectRect(R,R,CutR);
      if not IsRectEmpty(R) then
       ParentPaintTo(Self, TWinControl(c), false, R,SelfCBound,addheight,-5555);
-
     end;
     ObjHolder.Free;
 
@@ -5922,7 +4979,7 @@ end;
 
 function TdhCustomPanel.HasBackgroundImage(var FPicture:TGraphic):boolean;
 begin
- result:=GetVal(pcBackgroundImage){ and not CSSProp.AsImage};
+ result:=GetVal(pcBackgroundImage);
  if result then
   FPicture:=Cascaded.Picture.RequestGraphic;
 end;
@@ -5941,7 +4998,7 @@ end;
 
 function TdhCustomPanel.HasTransformations(var tt:TTransformations):boolean;
 begin
- result:=EffectsAllowed and GetVal(pcEffects){ and not CSSProp.AsImage};
+ result:=EffectsAllowed and GetVal(pcEffects);
  if result then
   tt:=Cascaded.Transformations;
 end;
@@ -5985,7 +5042,6 @@ begin
  result:=Self;
 end;
 
-
 function TdhCustomPanel.HasImage(var FPicture:TGraphic):boolean;
 begin
  result:=Referer.GetImageType=bitImage;
@@ -6016,7 +5072,6 @@ begin
  end;
 end;
 
-
 function TdhCustomPanel.HasImage:boolean;
 var PicWidth,PicHeight:integer;
 begin
@@ -6029,15 +5084,6 @@ begin
   if Child is TdhCustomPanel then
     TdhCustomPanel(Child).NotifyCSSChanged([wcZIndex,wcNoOwnCSS]);
 end;
-        {
-
-function TdhCustomPanel.HasImage(var FPicture:TPicture):boolean;
-var CSSProp:TCSSProp;
-begin
- result:=GetVal(pcImage,CSSProp);
- if result then
-  FPicture:=CSSProp.Picture;
-end;         }
 
 function TdhCustomPanel.BackgroundRepeat:TCSSBackgroundRepeat;
 begin
@@ -6053,35 +5099,19 @@ begin
   result:=cbaScroll;
 end;
 
-
-function TdhCustomPanel.GetAffine(inv:boolean):TMyAffineTransformation;
+function TdhCustomPanel.GetAffine:TMyAffineTransformation;
 begin
+ with Cascaded do
+ begin
   glAT:=TMyAffineTransformation.Create;
-  glRotate:=0;
-  glTrans:=1;
+  glATAlpha:=1;
   glATShiftX:=0;
   glATShiftY:=0;
   GetVal(pcTransformationsMatrix);
-
-//  result.SrcRect:=SrcRect;
-  if not inv or true then
-  begin
-  //result.Translate(Transformations.ShiftX,Transformations.ShiftY);
-  end;
-//  with Result.GetTransformedBoundsf do result.Translate(-Left,-Top);
   result:=glAT;
   glAT:=nil;
+ end;
 end;
-
-
-procedure NegRect(var R:TRect);
-begin
- R.Left:=-R.Left;
- R.Top:=-R.Top;
- R.Bottom:=-R.Bottom;
- R.Right:=-R.Right;
-end;
-
 
 procedure TdhCustomPanel.AdjustLittle(var W,H:integer; infl:boolean; adj:boolean=true);
 var
@@ -6092,11 +5122,6 @@ var
   Transformations:TTransformations;
 begin
 
-
-//  NegRect(R);
- { AdjustClientRect(R);
-  R:=InflRect(R,AllEdgesPure);  }
-//  NegRect(R);     
  if NoRotating then exit;
 
  if HasTransformations(Transformations) then
@@ -6104,10 +5129,9 @@ begin
 
     SrcR := W-1;
     SrcB := H-1;
-    T:=GetAffine(not infl);
+    T:=GetAffine;
     T.SrcRect:=FloatRect(0, 0, SrcR + 1, SrcB + 1);
     with T.GetTransformedBoundsf do T.Translate(-Left,-Top);
-
     with T.GetTransformedBoundsf do
     begin
     ScaleX:=0;
@@ -6125,7 +5149,6 @@ begin
      scale:=1;
     if not adj then
     begin
-
     W := Round(T.GetTransformedBoundsf.Right);
     H := Round(T.GetTransformedBoundsf.Bottom);
     end else
@@ -6133,46 +5156,19 @@ begin
     begin
     W := Round(W/Scale);
     H := Round(H/Scale);
-    {R.Right := Round(R.Right/((Right-Left)/R.Right));
-    if R.Bottom<>0 then
-     R.Bottom:= Round(R.Bottom/((Bottom-Top)/R.Bottom));   }
     end;
  end else
- begin              {
-  SrcR := R.Right-R.Left;
-  SrcB := R.Bottom-R.Top;
-  T:=GetAffine(Transformations,FloatRect(0, 0, SrcR + 1, SrcB + 1),true); }
+ begin
     with T.GetTransformedBoundsf do
     begin        
     W := Round(T.GetTransformedBoundsf.Right);
     H := Round(T.GetTransformedBoundsf.Bottom);
     W := Round(T.GetTransformedBoundsf.Right);
     H := Round(T.GetTransformedBoundsf.Bottom);
-
-
-                          {
-    R.Right := Round(R.Right*Scale);
-    R.Bottom:= Round(R.Bottom*Scale);  }
-     {
-    R.Right := Round(R.Right*((Right-Left)/R.Right));
-    R.Bottom:= Round(R.Bottom*((Bottom-Top)/R.Bottom));   }
     end;
  end;
  T.Free;
  end;
-
-   {
- if infl then
- begin
-  AdjustClientRect(R);
-  R:=InflRect(R,AllEdgesPure);
- end else
- begin
-  NegRect(R);
-  AdjustClientRect(R);
-  R:=InflRect(R,AllEdgesPure);
-  NegRect(R);
- end;   }
 end;
 
 
@@ -6205,7 +5201,6 @@ begin
   end;
   ptmBit:
   begin
-//   result.Assign(png);      
    result.SetSize(png.Width,png.Height);
    TransparentColor:=png.TransparentColor;
    P:=result.PixelPtr[0,0];
@@ -6215,7 +5210,7 @@ begin
     begin
      if png.Pixels[X,Y]=TransparentColor then
       P^:=0 else
-      P^:=Color32(png.Pixels[X,Y]){ or $FF000000};
+      P^:=Color32(png.Pixels[X,Y]);
      inc(P);
     end;
    end;
@@ -6229,7 +5224,7 @@ begin
    begin
     for X:=0 to png.Width-1 do
     begin
-     P^:=Color32(png.Pixels[X,Y]){ or $FF000000};
+     P^:=Color32(png.Pixels[X,Y]);
      inc(P);
     end;
    end;
@@ -6319,58 +5314,7 @@ begin
    end;
   end;
   result.DrawMode:=dmBlend;
-(*
-
-                    
-  result:=TMyBitmap32.Create;
-  result.Assign(gif);
-  if gif.ForceFrame>=0 then
-   GIFSubImage:=gif.Images[gif.ForceFrame] else
-  if (TFakeGIFImage(gif).DrawPainter<>nil) and (TFakeGIFImage(gif).DrawPainter.ActiveImage>=0)  then
-   GIFSubImage:=gif.Images[TFakeGIFImage(gif).DrawPainter.ActiveImage] else
-   GIFSubImage:=gif.Images[0];
-  if GIFSubImage.Transparent then
-  begin
-   TransparentColorIndex:=GIFSubImage.GraphicControlExtension.TransparentColorIndex;
-   P:=result.PixelPtr[0,0];
-   for Y:=0 to GIFSubImage.Height-1 do
-   begin
-    bp:=GIFSubImage.Scanline[Y];
-    for X:=0 to GIFSubImage.Width-1 do
-    begin
-     if bp^[X]=TransparentColorIndex then
-      P^:=0;
-     inc(P);
-    end;
-   end;
-   result.DrawMode:=dmBlend;
-  end;
-*)
 end;
-{$IFNDEF CLX}
-{$ENDIF}
-         {
-function GetBitmap32FromBitmap(bt:TBitmap):TMyBitmap32;
-var P: PColor32;
-    bp:pByteArray;
-    x,y:integer;
-    TransparentColor:TColor32;
-begin
-  result:=TMyBitmap32.Create;
-  result.Assign(bt);
-  if bt.Transparent and ((bt.Width<>0) or (bt.Height<>0)) then
-  begin
-   bt.
-   TransparentColor:=ColorToColor32(bt.TransparentColor);
-   P:=result.PixelPtr[0,0];
-   for Y:=0 to result.Height*result.Width-1 do
-   begin
-     if P^=TransparentColor then
-      P^:=0;
-     inc(P);
-   end;
-  end;
-end;    }
 
 function GetBitmap32FromGraphic(bt:TGraphic):TMyBitmap32;
 var P: PColor32;
@@ -6404,13 +5348,6 @@ begin
  begin
   result:=GetBitmap32FromGifImage(TGifImage(Graphic));
  end else
-{$IFNDEF CLX}
- {if Graphic is TBitmap then
- begin
-  res:=GetBitmap32FromBitmap(TBitmap(Graphic));
-  result:=true;
- end else }
-{$ENDIF}
  if Graphic<>nil then
  begin
   result:=GetBitmap32FromGraphic(Graphic);
@@ -6422,9 +5359,7 @@ end;
 
 procedure TdhCustomPanel.PaintWhiteBackground(ref_brct:TRect; Src:TMyBitmap32; const brct: TRect);
 begin
-
 end;
-
 
 function integral(rel_pos,abs_pos,W:integer): integer;
 begin
@@ -6433,28 +5368,21 @@ begin
   result:=rel_pos-((rel_pos-abs_pos    ) div W) * W;
 end;
 
-
 procedure GetRepeatings(var BPos:TPoint; var num_across,num_down:integer; W,H:integer; const brct:TRect; RepeatX,RepeatY:boolean);
 begin
  if RepeatX then
  begin
   BPos.X:=integral(BPos.X,brct.Left,W);
   num_across := ((brct.Right-BPos.X-1) div W) + 1;
-  {BPos.X:=BPos.X-((BPos.X-brct.Left+W-1) div W)*W;
-  num_across := ((brct.Right-BPos.X-1) div W) + 1;}
  end else
   num_across:=1;
  if RepeatY then
  begin
   BPos.Y:=integral(BPos.Y,brct.Top,H);
   num_down := ((brct.Bottom-BPos.Y) div H) + 1;
-  {BPos.Y:=BPos.Y-((BPos.Y-brct.Top+H-1) div H)*H;
-  num_down := ((brct.Bottom-BPos.Y) div H) +1;}
  end else
   num_down:=1;
 end;
-
-
 
 function Multiply32(Strech32:TMyBitmap32; NewWidth,NewHeight:integer):TMyBitmap32;
 var w,h,x,y:integer;
@@ -6502,13 +5430,10 @@ var
   Col:TColor32;
   P:PColor32;
 
-
 procedure cp(const R1,R2:TRect);
 begin
    Strech32.DrawTo(Src,R1,R2);
 end;
-
-
 
 procedure StretchDrawEx(Graphic:TGraphic);
 var Strech32:TMyBitmap32;
@@ -6660,19 +5585,8 @@ begin
  result:=ShrinkRect(result,MarginPure);
 end;
 
-{function TdhCustomPanel.BorderClientRect:TRect;
-begin
- result:=ShrinkRect(MarginClientRect,BorderPure);
-end;}
-
 function TdhCustomPanel.BorderPure:TRect;
-begin                             
-{ if Display=cdsNone then
- begin
-  result:=Rect(0,0,0,0);
-  exit;
- end;
- }
+begin
  result.Left:=DisplayBorderWidth(ealLeft);
  result.Top:=DisplayBorderWidth(ealTop);
  result.Bottom:=DisplayBorderWidth(ealBottom);
@@ -6706,20 +5620,13 @@ begin
  AddRect(result,BorderPure);
 end;
 
-
 function TdhCustomPanel.IncludeBorderAndPadding:boolean;
 begin
  result:=false;
 end;
 
-
 function TdhCustomPanel.PaddingPure:TRect;
-begin      
-{ if Display=cdsNone then
- begin
-  result:=Rect(0,0,0,0);
-  exit;
- end;}
+begin
  result.Left:=PaddingWidth(ealLeft);
  result.Top:=PaddingWidth(ealTop);
  result.Bottom:=PaddingWidth(ealBottom);
@@ -6728,51 +5635,11 @@ end;
 
 function TdhCustomPanel.MarginPure:TRect;
 begin
-{ if Display=cdsNone then
- begin
-  result:=Rect(0,0,0,0);
-  exit;
- end;}
  result.Left:=MarginWidth(ealLeft);
  result.Top:=MarginWidth(ealTop);
  result.Bottom:=MarginWidth(ealBottom);
  result.Right:=MarginWidth(ealRight);
 end;
-
-
-(*
-procedure TdhCustomPanel.WMPaint(var Message: TWMPaint);
-var
-  DC, MemDC: HDC;
-  MemBitmap, OldBitmap: HBITMAP;
-  PS: TPaintStruct;
-  SaveIndex: Integer;
-  _DC: HDC;
-begin
-  if not FDoubleBuffered or (Message.DC <> 0) then
-  begin
-    if not (csCustomPaint in ControlState) and (ControlCount = 0) then
-      inherited
-    else
-    begin
-  DC := Message.DC;
-  if DC = 0 then DC := BeginPaint(Handle, PS);
-  _DC:=Message.DC;
-  Message.DC:=DC;
-  try
-          SaveIndex := SaveDC(DC);
-          IntersectClipRect(DC, 0, 0, Width, Height-20);
-      PaintHandler(Message);
-          RestoreDC(DC, SaveIndex);
-  finally
-  Message.DC:=_DC;
-    if Message.DC = 0 then EndPaint(Handle, PS);
-  end;
-    end;
-  end
-  else inherited;
-end;
-*)
 
 procedure TdhCustomPanel.SpecialPaintBorder(const rct,brct: TRect);
 begin
@@ -6794,7 +5661,6 @@ begin
    Frame3D(ealTop,[rct.TopLeft,Point(rct.Right,rct.Top),Point(brct.Right,brct.Top), Point(brct.Left,brct.Top)]);
 end;
 
-
 procedure TdhCustomPanel.PaintBorder;
 var tt:TTransformations;
 begin
@@ -6811,11 +5677,10 @@ begin
   PaintOuterBorder;
 end;
 
-function Between(i,_min,_max:integer):integer;
+function Between(i,_min,_max:integer):integer; inline;
 begin
  result:=min(max(i,_min),_max);
 end;
-
 
 procedure TdhCustomPanel.PaintOuterBorder;
 var rct,brct: TRect;
@@ -6830,16 +5695,9 @@ begin
   SpecialBg(GetInnerClientArea,ScrollArea,ActTopGraph,ScrollArea,BackgroundAttachment=cbaFixed);
 end;
 
-
-
 function TdhCustomPanel.IsAbsolutePositioned:boolean;
 begin
  result:=Align<>alTop;
-end;
-
-function ToFloatRect(Rect:TRect):TFloatRect;
-begin
- result:=FloatRect(Rect.Left,Rect.Top,Rect.Right,Rect.Bottom);
 end;
 
 procedure ExtractTransparency(P,P2:PColor32; Size:integer);
@@ -6853,80 +5711,11 @@ begin
  end;
 end;
 
-const bias = $00800080;
-
-procedure _BlendMemEx(F: TColor32; var B: TColor32; M: TColor32);
-asm
-  // EAX <- F
-  // [EDX] <- B
-  // ECX <- M
-
-  // Check Fa > 0 ?
-        TEST    EAX,$FF000000   // Fa = 0? => write nothing
-        JZ      @2
-
-        PUSH    EBX
-
-  // Get weight W = Fa * M
-        MOV     EBX,EAX         // EBX  <-  Fa Fr Fg Fb
-        INC     ECX             // 255:256 range bias
-        SHR     EBX,24          // EBX  <-  00 00 00 Fa
-        IMUL    ECX,EBX         // ECX  <-  00 00  W **
-        SHR     ECX,8           // ECX  <-  00 00 00  W
-        JZ      @1              // W = 0 ?  => write nothing
-        INC ECX
-
-        PUSH    ESI
-
-  // P = W * F
-        MOV     EBX,EAX         // EBX  <-  ** Fr Fg Fb
-        AND     EAX,$00FF00FF   // EAX  <-  00 Fr 00 Fb
-        AND     EBX,$0000FF00   // EBX  <-  00 00 Fg 00
-        IMUL    EAX,ECX         // EAX  <-  Pr ** Pb **
-        SHR     EBX,8           // EBX  <-  00 00 00 Fg
-        IMUL    EBX,ECX         // EBX  <-  00 00 Pg **
-        ADD     EAX,bias
-        AND     EAX,$FF00FF00   // EAX  <-  Pr 00 Pb 00
-        SHR     EAX,8           // EAX  <-  00 Pr ** Pb
-        ADD     EBX,bias
-        AND     EBX,$0000FF00   // EBX  <-  00 00 Pg 00
-        OR      EAX,EBX         // EAX  <-  00 Pr Pg Pb
-
-  // W = 1 - W; Q = W * B
-        MOV     ESI,[EDX]
-        DEC ECX//
-        XOR     ECX,$000000FF   // ECX  <-  1 - ECX
-        //INC ECX//
-        MOV     EBX,ESI         // EBX  <-  00 Br Bg Bb
-        AND     ESI,$00FF00FF   // ESI  <-  00 Br 00 Bb
-        AND     EBX,$0000FF00   // EBX  <-  00 00 Bg 00
-        IMUL    ESI,ECX         // ESI  <-  Qr ** Qb **
-        SHR     EBX,8           // EBX  <-  00 00 00 Bg
-        IMUL    EBX,ECX         // EBX  <-  00 00 Qg **
-        ADD     ESI,bias
-        AND     ESI,$FF00FF00   // ESI  <-  Qr 00 Qb 00
-        SHR     ESI,8           // ESI  <-  00 Qr ** Qb
-        ADD     EBX,bias
-        AND     EBX,$0000FF00   // EBX  <-  00 00 Qg 00
-        OR      EBX,ESI         // EBX  <-  00 Qr Qg Qb
-
-  // Z = P + Q (assuming no overflow at each byte)
-        ADD     EAX,EBX         // EAX  <-  00 Zr Zg Zb
-
-        MOV     [EDX],EAX
-        POP     ESI
-
-@1:     POP     EBX
-@2:     RET
-end;
-
-
 function GetBlendMemEx(F: TColor32; B: TColor32; M: TColor32):TColor32;
 begin
  BlendMemEx(F,B,M);
  result:=B;
 end;
-
 
 function ColorNegMult(C1, C2: TColor32; M:TColor32=255): TColor32;
 var
@@ -6949,7 +5738,6 @@ begin
 
   Result := r shl 16 + g shl 8 + b;
 end;
-                         
 
 function ColorMult(C1, C2: TColor32; M:TColor32=255): TColor32;
 var
@@ -6973,32 +5761,9 @@ begin
   Result := r shl 16 + g shl 8 + b;
 end;
 
-
-procedure zerl(comp_black,comp_white:dword; var red_alpha:dword);
-begin
- //red_alpha:= 255*comp_black / (255 + comp_black - comp_white);
- red_alpha:= 255 + comp_black - comp_white;
-end;
-
-
-function GetOriginalRGB(Black:TColor32; alpha:DWORD):TColor32;
-begin
-      if alpha=0 then //is color completely transparent?
-      begin
-       result:=0; //if yes, we dont need (and cant) calc rgb values
-      end else
-      begin
-       //otherwise reconstruct rgb values;
-       result:=(((Black and $0000FF)*255 div alpha) and $0000FF) or
-               (((Black and $00FF00)*255 div alpha) and $00FF00) or
-               (((Black and $FF0000)*255 div alpha) and $FF0000) or
-               (alpha shl 24);
-      end;
-end;
-
 //Note that the real alpha value is "alpha/255/255", but this is no integer
 //"alpha/255/255/255" would be the value between 0 and 1
-function GetOriginalRGB2(Black:TColor32; alpha:DWORD):TColor32;
+function GetOriginalRGB(Black:TColor32; alpha:DWORD):TColor32;
 var r,g,b,ai:DWORD;
     f:single;
 const augm=255;
@@ -7008,100 +5773,20 @@ begin
        result:=0; //if yes, we dont need (and cant) calc rgb values
       end else
       begin
-       //otherwise reconstruct rgb values;
+       //otherwise reconstruct rgb values
        ai:=((augm+1) shl 16) div alpha;
        r:=dword((Black and $FF)*ai) shr 8;
        g:=dword((Black shr 8 and $FF)*ai) shr 8;
        b:=dword((Black shr 16 and $FF)*ai) shr 8;
-
-        {
-       r:=dword((Black and $FF)*256*augm) div alpha;
-       g:=dword((Black shr 8 and $FF)*256*augm) div alpha;
-       b:=dword((Black shr 16 and $FF)*256*augm) div alpha;     }
-       {if r>=255 then
-        r:=255;
-       if g>=255 then
-        g:=255;
-       if b>=255 then
-        b:=255; }
        result:=(r and $0000FF) or (g shl 8 and $00FF00) or (b shl 16 and $FF0000) or ((alpha{ div augm} shr 8) shl 24  and $FF000000);
       end;
 end;
-
-//Note that the real alpha value is "alpha/255/255", but this is no integer
-//"alpha/255/255/255" would be the value between 0 and 1
-function GetOriginalRGB3(Black:TColor32; alpha:DWORD):TColor32;
-var r,g,b,ai:DWORD;
-    f:single;
-const augm=255;
-begin
-      if alpha=0 then //is color completely transparent?
-      begin
-       result:=0; //if yes, we dont need (and cant) calc rgb values
-      end else
-      begin
-       //otherwise reconstruct rgb values;
-       r:=dword((Black and $FF)*256*augm) div alpha;
-       g:=dword((Black shr 8 and $FF)*256*augm) div alpha;
-       b:=dword((Black shr 16 and $FF)*256*augm) div alpha;
-       {if r>=255 then
-        r:=255;
-       if g>=255 then
-        g:=255;
-       if b>=255 then
-        b:=255; }
-       result:=(r and $0000FF) or (g shl 8 and $00FF00) or (b shl 16 and $FF0000) or ((alpha div augm) shl 24  and $FF000000);
-      end;
-end;
-
-function ExtractAlphaColor2(Black,White:TColor32):TColor32;
-var red_alpha,green_alpha,blue_alpha,all_alpha,alpha,r,g,b:dword;
-    result2:TColor32;
-    nBlack,nWhite:TColor32;
-begin
-       all_alpha:=(Black and $FFFFFF) - (White and $FFFFFF) + $FFFFFF;
-       assert((Black and $FF) - (White and $FF) + $FF<=255);
-
-       //alpha:=((all_alpha and $0000FF) + ((all_alpha and $00FF00) shr 8) + ((all_alpha and $FF0000) shr 16) +2{2, to have a ceil- and not a floor-divide}) *85{div 3}{= *255 div 3};
-       //result:=GetOriginalRGB2(Black,alpha);
-       red_alpha:=all_alpha and $FF;
-       green_alpha:=all_alpha shr 8 and $FF;
-       blue_alpha:=all_alpha shr 16 and $FF;
-
-       if red_alpha<green_alpha then
-        red_alpha:=green_alpha;
-       if red_alpha<blue_alpha then
-        red_alpha:=blue_alpha;
-       blue_alpha:=red_alpha;
-       green_alpha:=red_alpha;
-
-
-
-       if (red_alpha=0) or (green_alpha=0) or (blue_alpha=0) then
-       begin
-        result:=0;
-       end else
-       begin
-        alpha:=(red_alpha+green_alpha+blue_alpha) div 3;
-        r:=(Black and $FF)*255 div red_alpha;
-        g:=(Black shr 8 and $FF)*255 div green_alpha;
-        b:=(Black shr 16 and $FF)*255 div blue_alpha;
-        result:=r or (g shl 8) or (b shl 16) or (alpha shl 24{= *255 div 3});
-       end;
-end;
-
 
 function ExtractAlphaColor(Black,White:TColor32):TColor32;
 var alpha:dword;
     red_alpha,green_alpha,blue_alpha:integer;
     r,g,b:dword;
-    //result2:TColor32;
-    //nBlack,nWhite:TColor32;
-    //nBlack2,nWhite2:TColor32;
 begin
-       //alpha:=((all_alpha and $0000FF) + ((all_alpha and $00FF00) shr 8) + ((all_alpha and $FF0000) shr 16) +2{2, to have a ceil- and not a floor-divide}) *85{div 3}{= *255 div 3};
-       //result:=GetOriginalRGB2(Black,alpha);
-
        red_alpha:=$FF + (Black and $FF) - (White and $FF);
        green_alpha:=$FF + (Black shr 8 and $FF) - (White shr 8 and $FF);
        blue_alpha:=$FF + (Black shr 16 and $FF) - (White shr 16 and $FF);
@@ -7110,41 +5795,6 @@ begin
         result:=Black;
         exit;
        end;
-
-       {all_alpha:=$FFFFFF + (Black and $FFFFFF) - (White and $FFFFFF); //funzt nur gut, wenn wirklich black<=white ist, was aber bei ungenauem Blur nicht garantiert werden kann
-
-       if not($FF + (Black and $FF) - (White and $FF)<=255) then
-       begin
-        result:=Black;
-        exit;
-       end;
-       if not($FF + (Black shr 8 and $FF) - (White shr 8 and $FF)<=255) then
-       begin
-        result:=Black;
-        exit;
-       end;
-       if not($FF + (Black shr 16 and $FF) - (White shr 16 and $FF)<=255) then
-       begin
-        result:=Black;
-        exit;
-       end;
-       assert(($FF + (Black and $FF) - (White and $FF)<=255));
-
-
-       red_alpha:=all_alpha and $FF;
-       green_alpha:=all_alpha shr 8 and $FF;
-       blue_alpha:=all_alpha shr 16 and $FF;}
-
-
-
-      { if red_alpha<green_alpha then
-        red_alpha:=green_alpha;
-       if red_alpha<blue_alpha then
-        red_alpha:=blue_alpha;
-       blue_alpha:=red_alpha;
-       green_alpha:=red_alpha;
-
-              }
        if (red_alpha=0) or (green_alpha=0) or (blue_alpha=0) then
        begin
         result:=0;
@@ -7156,69 +5806,7 @@ begin
         b:=(Black shr 16 and $FF)*255 div dword(blue_alpha);
         result:=r or (g shl 8) or (b shl 16) or (alpha shl 24);
        end;
-              {
-       nBlack:=GetBlendMemEx(result,$FF000000,256);
-       nWhite:=GetBlendMemEx(result,$FFFFFFFF,256);
-       result2:=ExtractAlphaColor2(Black,White);;
-       nBlack2:=GetBlendMemEx(result2,$FF000000,256);
-       nWhite2:=GetBlendMemEx(result2,$FFFFFFFF,256);
-       if (Black<>nBlack) or (White<>nWhite) then
-       if (Black<>nBlack) or (White<>nWhite) then
-       if (Black<>nBlack2) or (White<>nWhite2) then
-       if (result<>result2) or true then
-        ExtractAlphaColor(Black,White);
-
-       if black=43245 then
-        showmessage(inttohex(black,8));
-                        }
-
-      //now, "Result" drawn onto white/black background gives "White"/"Black" again
-      //note: if you paint several partly-transparent layers over another, you
-      //      CANT reconstruct one single argb layer which has the same effect
-      //      as painting those many layers. It will always be an approximation,
-      //      only on white and black background pixels it should be the same
-
-
-(*
-      zerl(RedComponent(Black),RedComponent(White),red_alpha);
-      zerl(GreenComponent(Black),GreenComponent(White),green_alpha);
-      zerl(BlueComponent(Black),BlueComponent(White),blue_alpha);
-      alpha:=(red_alpha+green_alpha+blue_alpha +2) div 3;
-      if (red_alpha=0) or (green_alpha=0) or (blue_alpha=0) or (alpha=0) then
-      begin
-       result2:=0;
-       if alpha<>0 then
-        result2:=0;
-      end else
-      begin       {
-      if (red_alpha<>green_alpha) or (green_alpha<>blue_alpha) then
-      begin
-      alpha:=(red_alpha+green_alpha+blue_alpha)/3;
-      end;              }
-
-      result2:=Color32((dword(RedComponent(Black))*255 div red_alpha),
-                  (dword(GreenComponent(Black))*255 div green_alpha),
-                  (dword(BlueComponent(Black))*255 div blue_alpha),
-                  (alpha));
-      end;
-      //result:=result2;
-
-      if result2<>result then
-      if result2<>result then
-      begin
-       ExtractAlphaColor(Black,White);
-      end;      *)
-      //result:=result2;
-
 end;
-
-{function GetBetterDraw(F: TColor32; B: TColor32; M: TColor32):TColor32;
-begin
-
- result:=ExtractAlphaColor(GetBlendMemEx(F,GetBlendMemEx(B,$000000,$FF),M),GetBlendMemEx(F,GetBlendMemEx(B,$FFFFFF,$FF),M));
-
-end;
- }
 
 function GetPixelCombineNormal(F: TColor32; B: TColor32; M: TColor32=255):TColor32;
 begin
@@ -7226,140 +5814,35 @@ begin
 end;
 
 procedure TdhCustomPanel.PixelCombineUnderpaint(F: TColor32; var B: TColor32; M: TColor32);
-var B1,B2,B3:TColor32;
-    alpha,alpha2:DWORD;
-var r1,r2,g1,g2,bb1,bb2,a1,a2,r,g,bb,a,x,y:integer;
 begin
- B:=GetPixelCombineNormal(B,{(F and $FFFFFF) or (M shl 24)}F,$FF);
+ B:=GetPixelCombineNormal(B,F,$FF);
 end;
 
 procedure TdhCustomPanel.PixelCombineInner(F: TColor32; var B: TColor32; M: TColor32);
-var B1,B2,B3:TColor32;
-    alpha,alpha2:DWORD;
-var r1,r2,g1,g2,bb1,bb2,a1,a2,r,g,bb,a,x,y:integer;
 begin
-// F:=F and $FFFFFF or ($FF-(F shr 24)) shl 24;
-// B:=GetPixelCombineNormal(F and $FFFFFF or max(0,F shr 24-($FF-(B shr 24))) shl 24,B or $FF000000,F shr 24) and $FFFFFF or (B and $FF000000);
  B:=GetPixelCombineNormal(F and $FFFFFF or max(0,round((F shr 24 - ($FF-B shr 24)*eigen))) shl 24,B or $FF000000,$FF) and $FFFFFF or (B and $FF000000);
-// B:=GetPixelCombineNormal(B and $FFFFFF or $FF000000,(F and $FFFFFF) or ((F shr 24)*(B shr 24) shr 8) shl 24,$FF-(F shr 24));
 end;
 
 procedure TdhCustomPanel.PixelCombineNormal(F: TColor32; var B: TColor32; M: TColor32);
-var B1,B2,B3:TColor32;
-    alpha,alpha2:DWORD;
-
-var r1,r2,g1,g2,bb1,bb2,a1,a2,r,g,bb,a,x,y:integer;
 begin
-
- {if W=$FF then
- begin
-  result:=X;
-  exit;
- end else
- if W=0 then
- begin
-  result:=Y;
-  exit;
- end;  }
-{ x:=f;
- y:=b;
-
-
- a1:=X shr 24*(W+1);
- a2:=Y shr 24*(255-W+1);
- r1:=X shr 16 and $FF;
- r2:=Y shr 16 and $FF;
- g1:=X shr 8 and $FF;
- g2:=Y shr 8 and $FF;
- b1:=X and $FF;
- b2:=Y and $FF;
-
- r:=(r1*a1+r2*a2) shr 16;
- g:=(g1*a1+g2*a2) shr 16;
- b:=(b1*a1+b2*a2) shr 16;
- alpha:=(a1+a2);
- assert(alpha<=256*256-1);
- assert(r<=255);
- assert(g<=255);
- assert(b<=255);
- B2:=r shl 16 or g shl 8 or b;
-
- //result:=B2 and $FFFFFF or (alpha shr 8 shl 24);
- B:=GetOriginalRGB2(B2,alpha);
- exit;
- }
- {
- if (F<>0) and (F shr 24<>255) then
-  b:=$0 else
-  b:=$0;     }
- //B1:=ExtractAlphaColor(GetBlendMemEx(F,GetBlendMemEx(B,$000000,$FF),M),GetBlendMemEx(F,GetBlendMemEx(B,$FFFFFF,$FF),M));
- //B:=CombineReg(F or $FF000000,B,F shr 24);
  B:=GetPixelCombineNormal(F,B,M);
- exit;
- B2:=GetBlendMemEx(F,GetBlendMemEx(B,$00000000,$FF),255);
-// alpha:=((F shr 24)*(255 - (B shr 24))) div 255 + (B shr 24);
- alpha:=((F shr 24)*(255 - (B shr 24))) + (B shr 24)*255;
- {if alpha<>alpha2 then
-  assert(alpha=alpha2);   }
- B3:=GetOriginalRGB2(B2,alpha);
- {if b1<b3 then
- begin
- B3:=GetOriginalRGB2(B2,alpha);
- if b1+b2+b3+f+b+m+alpha<>0 then;
- end;    }
- B:=B3;
-
-                         {
-  if f=3420 then
-   showmessage(inttohex(GetBlendMemEx(f,b,m),3));; }
-{ F:=F and $FFFFFF;
- BlendMemEx(F,B,M);
- GetBlendMemEx(F,B,M);}
- //B:=F;
 end;
 
-
 procedure TdhCustomPanel.PixelCombineNegativeMultiply(F: TColor32; var B: TColor32; M: TColor32);
-var B1,B2,B3:TColor32;
-    alpha,alpha2:DWORD;
+var B2,B3:TColor32;
+    alpha:DWORD;
 begin
-// B:=ExtractAlphaColor(ColorNegMult(F,GetBlendMemEx(B,$FF000000,$FF),M),ColorNegMult(F,GetBlendMemEx(B,$FFFFFFFF,$FF),M));
  B2:=ColorNegMult(F,GetBlendMemEx(B,$FF000000,$FF),M);
-
  alpha:=M*(((F shr 24)*(255 - (B shr 24))) + (B shr 24)*255);
- B3:=GetOriginalRGB2(B2,alpha);
- B:=B3;
-        {
-  if f=34220 then showmessage(inttohex(GetBlendMemEx(f,b,m),8));;
-  if f=34220 then showmessage(inttohex(int64(GetBlendMemEx(f,b,m)),8));;  }
-{ F:=F and $FFFFFF;
- BlendMemEx(F,B,M);
- GetBlendMemEx(F,B,M);}
- //B:=F;
+ B:=GetOriginalRGB(B2,alpha);
 end;
 
 procedure TdhCustomPanel.PixelCombineMultiply(F: TColor32; var B: TColor32; M: TColor32);
 var B1,B2,B3:TColor32;
-    alpha,alpha2:DWORD;
+    alpha:DWORD;
 begin
-//howmessage(inttohex(colormult($FFFF0000,$FF00FF00,255),8));
  B:=ExtractAlphaColor(ColorMult(F,GetBlendMemEx(B,$FF000000,$FF),M),ColorMult(F,GetBlendMemEx(B,$FFFFFFFF,$FF),M));
-
-// B:=ExtractAlphaColor(ColorNegMult(F,GetBlendMemEx(B,$FF000000,$FF),M),ColorNegMult(F,GetBlendMemEx(B,$FFFFFFFF,$FF),M));
-{ B2:=ColorMult(F,GetBlendMemEx(B,$FF000000,$FF),M);
-
- alpha:=((F shr 24)*(255 - (B shr 24))) + (B shr 24)*255;
- B3:=GetOriginalRGB2(B2,alpha);
- B:=B3;  }
-
-//  if f=34220 then showmessage(inttohex(GetBlendMemEx(f,b,m),3));;
-{ F:=F and $FFFFFF;
- BlendMemEx(F,B,M);
- GetBlendMemEx(F,B,M);}
- //B:=F;
 end;
-
-type TPixelCombineMode=(pcNormal,pcMult,pcNegMult);
 
 procedure ExtractTransparencyInverse(P,P2:PColor32; Size:integer);
 var i:integer;
@@ -7383,7 +5866,6 @@ begin
   end;
 end;
 
-
 procedure MixColor(Src:TMyBitmap32; Color:TColor32);
 var P:PColor32;
     i:integer;
@@ -7396,7 +5878,6 @@ begin
  end;
 end;
 
-
 procedure Exch(var a,b:TMyBitmap32); overload;
 var c:TMyBitmap32;
 begin
@@ -7408,9 +5889,7 @@ end;
 procedure MixAlpha(Src:TMyBitmap32);
 var P:PColor32;
     i:integer;
-    alpha,alpha_shifted,p1,p2:DWORD;
-    a:array[0..255] of record min,max:integer end;
-    good:boolean;
+    alpha,alpha_shifted:DWORD;
 begin
  P:=Src.PixelPtr[0,0];
  alpha:=Src.MasterAlpha;
@@ -7423,52 +5902,6 @@ begin
   Inc(P);
  end;
  Src.MasterAlpha:=255;
-
-(*  for alpha:=0 to 255 do
-  begin
-    a[alpha].min:=maxint;
-    a[alpha].max:=0;
-  end;
-
- //The proof why the optimized version yields the same result:
- for alpha:=0 to 255 do
- for alpha_shifted:=0 to 256*256*256 do
- begin
-  good:=true;
-  for p1:=0 to 255 do
-  begin
-   p2:=round(p1 * alpha / 255);
-   begin
-    if not(((p1 * alpha_shifted {+ $8080}) shr 24) = p2) then
-    begin
-     good:=false;
-     break;
-    end;
-   end;
-  end;
-  if good then
-  begin
-   a[alpha].min:=min(a[alpha].min,alpha_shifted);
-   a[alpha].max:=max(a[alpha].max,alpha_shifted);
-  end;
- end;
-
-  for alpha:=0 to 256*256 do
-   if a[alpha].max<>0 then
-    showmessage(inttostr(alpha));
-   *)
-
-   (*
- for p1:=0 to 255 do
- for alpha:=0 to 255 do
- begin
-  alpha_shifted:=alpha*256*256 div 255{++$FFFF}+1;
-  if not (((p1 * alpha_shifted{ + $8080}) shr 16) = round(p1 * alpha / 255)) then
-  assert(p1 * alpha_shifted shr 16 = round(p1 * alpha / 255));
-//  assert(p1 * alpha_shifted shl 8 and $FF000000 = p1 * alpha div 255 shl 24);
- end;   *)
- //A look-up table with 255 entries may be even faster, but has another data access, not tested
-
 end;
 
 function NearNull(a:double):boolean;
@@ -7494,39 +5927,7 @@ begin
   if not HasTransformations(Transformations) then
    Transformations:=nil;
 
-  T:=GetAffine(false);
-
-  {
-  Skew muß doch als rotation gezählt werden weil x und y voneinander abhängen
-
-  HorzRotated:=MapMod(glRotate,180)=0;
-  VertRotated:=MapMod(glRotate,180)=90;
-  if HorzRotated or VertRotated then
-  begin
-
-   if not EffectsAllowed then exit;
-
-   if (Transformations=nil) or Transformations.FullIfEasy then
-   begin
-    if IsRegular(Determinant(t.Matrix)) then
-    begin
-     T2:= TAffineTransformation.Create;
-     try
-      T2.Matrix:=T.Matrix;
-      Invert(T2.Matrix);
-      T2.SrcRect:=FloatRect(0,0,Rct.Right,Rct.Bottom);
-      Rct:=T2.GetTransformedBounds;
-     except
-      T2.Free;
-     end;
-    end;
-   end else
-    result:=false;
-
-  end else
-  begin
-   result:=false;
-  end;    }
+  T:=GetAffine;
 
   HorzRotated:=NearNull(T.Matrix[1,0]) and NearNull(T.Matrix[0,1]) and not NearNull(T.Matrix[0,0]) and not NearNull(T.Matrix[1,1])        {and NearNull(abs(T.Matrix[0,0])-1) and NearNull(abs(T.Matrix[1,1])-1)};
   VertRotated:=NearNull(T.Matrix[0,0]) and NearNull(T.Matrix[1,1]) and not NearNull(T.Matrix[0,1]) and not NearNull(T.Matrix[1,0])        {and NearNull(abs(T.Matrix[0,1])-1) and NearNull(abs(T.Matrix[1,0])-1)};
@@ -7556,9 +5957,6 @@ begin
    result:=false;
 end;
 
-type TTransFromProc=procedure (bmp:TMyBitmap32) of object;
-
-
 procedure TdhCustomPanel.TransFromBlackWhite_BG(bmp:TMyBitmap32);
 begin
   BeginPainting(bmp);
@@ -7581,7 +5979,6 @@ begin
 end;
 
 
-
 function TransFromBlackWhite(callback:TTransFromProc; w,h:integer):TMyBitmap32;
 var Src2:TMyBitmap32;
 begin
@@ -7600,19 +5997,6 @@ begin
   Src2.Free;
   end;
   result.DrawMode:=dmBlend;
-end;
-
-
-procedure ColXor(bmp:TMyBitmap32);
-var i:integer;
-var P: PColor32;
-begin
-   P:=bmp.PixelPtr[0,0];
-   for i := 0 to bmp.Width*bmp.Height do
-   begin
-    P^:=P^ xor $FF000000;
-    inc(P);
-   end;
 end;
 
 function _CombineReg(X, Y, W: TColor32): TColor32;
@@ -7634,20 +6018,8 @@ begin
   exit;
  end;
 
-
-
  a1:=X shr 24*(W+1);
  a2:=Y shr 24*(255-W+1);
- {if a1=0 then
- begin
-  result:=Y and $FFFFFF or (a2 shr 8 shl 24);
-  exit;
- end;
- if a2=0 then
- begin
-  result:=X and $FFFFFF or (a1 shr 8 shl 24);
-  exit;
- end; }
  r1:=X shr 16 and $FF;
  r2:=Y shr 16 and $FF;
  g1:=X shr 8 and $FF;
@@ -7664,10 +6036,7 @@ begin
  assert(b<=255);
  assert(alpha<=256*256-1);
  B2:=r shl 16 or g shl 8 or b;
-
- //result:=B2 and $FFFFFF or (alpha shr 8 shl 24);
- Result:=GetOriginalRGB2(B2,alpha);
-
+ Result:=GetOriginalRGB(B2,alpha);
 end;
 
 
@@ -7685,29 +6054,23 @@ var P,P2,P3: PColor32;
     col:DWORD;
 begin
  count:=Src.Width*Src.Height;
-// inv:=false;
 
  P:=Src.PixelPtr[0, 0];
  P2:=_Src.PixelPtr[0, 0];
  for j := 0 to _Src.Height*_Src.Width - 1 do
  begin
-  P2^:=(P^ shr shift) and $FF; {
-  if inv then
-   P2^:=255-P2^;            }
+  P2^:=(P^ shr shift) and $FF;
   inc(P2);
   inc(P);
  end;
 
  gauss.Blur(PDWORD(_Src.PixelPtr[0, 0]),_Src.Width,_Src.Height,Blur.GetDoubleRadius,Blur.Flood/100,inv);
 
-
  P:=Src.PixelPtr[0, 0];
  P2:=_Src.PixelPtr[0, 0];
  for j := 0 to _Src.Height*_Src.Width - 1 do
- begin     {
-  if inv then
-   P^:=(P^ and not ($FF shl shift)) or ((255-P2^) shl shift) else   }
-   P^:=(P^ and not ($FF shl shift)) or (P2^ shl shift);
+ begin
+  P^:=(P^ and not ($FF shl shift)) or (P2^ shl shift);
   inc(P2);
   inc(P);
  end;
@@ -7723,7 +6086,6 @@ var P,P2,P4: PColor32;
     R1,R2:TRect;
 begin
  Alpha := Blur.Degree * 3.14159265358979 / 180;
-
  offsX:=-Round(Cos(Alpha)*Blur.Distance);
  offsY:=--Round(Sin(Alpha)*Blur.Distance);
 
@@ -7731,7 +6093,6 @@ begin
  P:=Src.PixelPtr[0, 0];
  P2:=_Src.PixelPtr[0, 0];      
  FillLongword(_Src.PixelPtr[0,0]^,count,0);
-
 
  R1:=Src.BoundsRect;
  R2:=R1;
@@ -7753,106 +6114,23 @@ begin
  end;
  end;
 
- (*
- offs:=offsY*_Src.Width+OffsX;
-
- FillLongword(_Src.PixelPtr[0,0]^,count,0);
-
- ausschnittHeight:=Src.Height-abs(offsY);
- ausschnittWidth:=Src.Width-abs(offsX);
- if offs>0 then
- begin
-  FillLongword(P2^,offs,$0);
-  inc(P2,offs);
-  dec(count,offs);
- end else
- begin
-  P4:=P2;
-  inc(P4,count-(-offs));
-  FillLongword(P4^,(-offs),$0);
-  inc(P,(-offs));
-  dec(count,(-offs));
-  inc(P,
-
- end;
-
-{ if inv then
-  ExtractTransparencyInverse(p,p2,count) else
-  ExtractTransparency(p,p2,count);
- }                                                              
- for y:=0 to ausschnittHeight-1 do
- begin
-  if inv then
-   ExtractTransparencyInverse(p,p2,ausschnittWidth) else
-   ExtractTransparency(p,p2,ausschnittWidth);
-  inc(p,Src.Width);
-  inc(p2,Src.Width);
- end;*)
-
-
  gauss.Blur(PDWORD(_Src.PixelPtr[0, 0]),_Src.Width,_Src.Height,Blur.GetDoubleRadius,Blur.Flood/100,inv);
 
  P:=Src.PixelPtr[0, 0];
  P2:=_Src.PixelPtr[0, 0];
-// P3:=SrcFinal.PixelPtr[0, 0];
  a:=(Blur.Alpha*(CSSColorToColor32(Blur.Color) shr 24)) div 255;
  col:=CSSColorToColor32(Blur.Color) and $FFFFFF;
- (*if inv then
- begin
- for j := 0 to _Src.Height*_Src.Width - 1 do
- begin         {
-  if P^ shr 24=0 then
-   P2^:=0 else
-   P2^:=(min(0,P2^-256+(P^ shr 24))*a shr 8) shl 24 or col;  }
-  //P2^:=((((P^ shr 24))*P2^ shr 8)*a shr 8) shl 24 or col;
 
-
-//  P2^:={P^ and $FF000000 or} (GetBetterDraw((P2^ shl 24) or col,0,P^ shr 24) {and $FFFFFF});
-
-//  P2^:=P^ and $FF000000 or (GetBlendMemEx((P2^ shl 24) or col,P^,255) and $FFFFFF);
-  //P2^:=((min(P^ shr 20,P2^))*a shr 8) shl 24 or col;
-  //P2^:=(((P^ shr 24)*P2^ shr 8)*a shr 8) shl 24 or col;
-  P2^:=P2^ shl 24 or col;
-
-
-  inc(P3);
-  inc(P2);
-  inc(P);
- end;
- end else
- *)
- begin
  for j := 0 to _Src.Height*_Src.Width - 1 do
  begin
-  //P2^:={((max(P^ shr 32,P2^)*a shr 8) shl 24) or}{ col}$FFFFFF;
-  //((P2^:=(((255-(P^ shr 24))*P2^ shr 8)*a shr 8) shl 24 or col;
-{  if P2^=0 then
-   P2^:=P^ else
-  P2^:=((P2^*a shr 8) shl 24) or col;}
-  //P2^:=((P2^*a shr 8) shl 24) or col;
-
-
-  //P2^:=((($ff-(P^ shr 24))*P2^ shr 8)*a shr 8) shl 24 or col;
   P2^:=P2^ shl 24 or col;
-
   inc(P2);
   inc(P);
  end;
  _Src.MasterAlpha:=a;
-  MixAlpha(_Src);
- end;
-end;
+ MixAlpha(_Src);
 
-function Rest(r:Double):Double;
-begin
- result:=-(R/2-Round(R/2));
 end;
-
-function roundrest(x:double):double;
-begin
- result:=x-round(x);
-end;
-
 
 function GetAngle(FX,FY:double):double;
 begin
@@ -7866,58 +6144,22 @@ begin
  result:=arccos(x/a);
 end;
 
-
-procedure EllipsePoint2(alpha:double; a,b:double; var x,y:double);
-begin
- if a=b then
- begin
-  x:=cos(alpha)*a;
-  y:=sin(alpha)*b;
- end else
- begin
-  if a=0 then a:=0.001;
-  if b=0 then b:=0.001;
-  x:=1/sqrt( sqr(1/a) + sqr(  tan(alpha)/b) );
-  if alpha=0 then
-   y:=0 else
-   y:=1/sqrt( sqr(1/b) + sqr(1/tan(alpha)/a) );
- end;
- //http://groups.google.de/groups?hl=de&lr=&threadm=3E4917BF.7F0082BE%40bluemail.ch&rnum=1&prev=/groups%3Fhl%3Dde%26lr%3D%26q%3Dellipsenbogen%26btnG%3DSuche
-//http://home.att.net/~numericana/answer/ellipse.htm#gausskummer
-end;
-
-//const old_alpha:double=pi/2;
-
-
 procedure GetNormal(alpha,a,b:double; var rx,ry:double);
 var f_derived,g_derived,Sqrt_fg:double;
 begin
  f_derived:=-a*sin(alpha);
  g_derived:= b*cos(alpha);
- {
- //if alpha<pi/4 then
- begin
-  //f_derived:=-f_derived;
-  g_derived:=-g_derived;
- end;
-  }
  Sqrt_fg:=Sqrt(Sqr(f_derived)+Sqr(g_derived));
  rx:=g_derived/Sqrt_fg;
  ry:=-f_derived/Sqrt_fg;
- //http://mathworld.wolfram.com/ParallelCurves.html
 end;
 
 var maxit:integer;
-
-
-{$DEFINE XYS}
-{$IFDEF XYS}
 
 procedure EllipsePoint(x,y:double; a,b:double; var rx,ry,ralpha:double);
 var T:double;
     f,f_pred,T_pred,D,Sqr_a_b,ax,by,COS_t,SIN_t:double;
     i:integer;
-    UseOld:boolean;
 begin
 
  if a=b then
@@ -7928,41 +6170,24 @@ begin
   exit;
  end;
 
-      {
-
- T:=ralpha;    
-// if (a<
- if a<b then
-  UseOld:=t<2*pi/8 else
- if a>b then
-  UseOld:=t>2*pi/8 else
-  UseOld:=false;  }
-      {
- UseOld:=T:=ralpha
- if not UseOld then   }
  if a=b then
   t:=2*pi/8 else
  if a<b then
   t:=1*pi/8 else
- //if a>b then
   t:=3*pi/8;
- //T:=GetWinkel(X/a,Y/b);
-// t := ArcTan2  ( y, x );
-{ assert(x>0);
- assert(y>0);}
+
  Sqr_a_b:=(Sqr(a) - Sqr(b));
  ax:=a*x;
  by:=b*y;
+
  //Newton approximation
  for i:=1 to 20 do
  begin
-
  COS_t:=COS(t);
  SIN_t:=SIN(t);
  D:=
  (COS_t*(Sqr_a_b*SIN_t + by) - ax*SIN_t)/
  (2*Sqr_a_b*Sqr(COS_t) - ax*COS_t - by*SIN_t - Sqr_a_b);
- //maxit:=max(maxit,i);
  inc(maxit);
  T:=T-d;
  if abs(D)<0.000001 then break;
@@ -7972,158 +6197,10 @@ begin
   t:=t-2*pi;
  while t<0 do
   t:=t+2*pi;
-// if t>=
 
   rx := a * cos ( t );
   ry := b * sin ( t );
   ralpha:=T;
-  //old_alpha:=T;
-
-
-end;
-{$ELSE}
-
-
-procedure EllipsePoint(x,y:double; a,b:double; var rx,ry,ralpha:double);
-var T:double;
-    f,f_pred,T_pred,D,SIN_t,COS_t:double;
-    i:integer;
-begin
-
- if a<b then
-  T:=0 else
-  T:=pi/2;
- //t := ArcTan2  ( y, x );
-f_pred:=
-- A * sin ( T ) * ( X - A * cos ( T ) )
-+ B * cos ( T ) * ( Y - B * sin ( T ) );
- T_pred:=T;
- T:=pi/4;
- //f_pred:=0.4522345;
- //Secand approximation
- for i:=1 to 20 do
- begin
-SIN_t:=sin ( T );
-COS_t:=cos ( T );
-f:=
-- A * SIN_t * ( X - A * COS_t )
-+ B * COS_t * ( Y - B * SIN_t );
- //maxit:=max(maxit,i);
- inc(maxit);
-D:=(T-T_pred)/(f-f_pred)*f;
-f_pred:=f;
-T_pred:=T;
-T:=T-d;
-if abs(D)<0.000001 then
-begin
- break;
-end;
- end;
-  rx := a * cos ( t );
-  ry := b * sin ( t );
-  ralpha:=T;
-//  http://www.csit.fsu.edu/~burkardt/m_src/geometry/ellipse_point_near_2d.m
-end;
-{$ENDIF}
-
-procedure EllipsePointBoth(x,y:double; c,d,a,b:double; var orx,ory,irx,iry,ralpha:double);
-var lo,hi,t,a1,a2,dist,quot,delta,COS_t,SIN_t:double;
-    i:integer;
-begin
- if (a=c) and (b=d) then
- begin
-  EllipsePoint(x,y,c,d,orx,ory,ralpha);
-  irx:=orx;
-  iry:=ory;
-  exit;
- end;
-
- //find t so that cross product of (orx,ory)-(irx,iry) and (x,y)-(irx,iry) becomes 0
- (*
- lo:=0;
- hi:=pi/2;
- t:=(lo+hi)/2;
- repeat
-  orx:=c*cos(t);
-  ory:=d*sin(t);
-  irx:=a*cos(t);
-  iry:=b*sin(t);
-  quot:=(irx*ory-orx*iry);
-  if quot=0 then
-  begin
-   {if irx-orx<>0 then
-   begin
-    a2:=1;
-    a1:=(ory-iry)/(irx-orx);
-   end else
-   begin
-    a1:=1;
-    a2:=(orx-irx)/(iry-ory);
-   end; }break;
-  end else
-  begin
-   a2:=(irx-orx)/quot;
-   a1:=(1-a2*iry)/irx;
-  end;
-  dist:=a1*x+a2*y-1;
-  if abs(dist)<0.01 then break;
-  if dist<0 then
-   lo:=t else
-   hi:=t;
-  t:=(lo+hi)/2;
- until false;
- ralpha:=t;
-*)
-         {
- if a=b then
- begin
-  ralpha:=GetWinkel(x,y);
-  rx:=cos(ralpha)*a;
-  ry:=sin(ralpha)*a;
-  exit;
- end;    }
- //t:=pi/2;
-
-
- if a=b then
-  t:=2*pi/8 else
- if a<b then
-  t:=1*pi/8 else
- //if a>b then
-  t:=3*pi/8;
- for i:=1 to 20 do
- begin
-
- COS_t:=COS(t);
- SIN_t:=SIN(t);
- try
- delta:=
-(COS(t)*((a*d - b*c)*SIN_t - y*(a - c)) + x*(b - d)*SIN_t)/
-(2*(a*d - b*c)*Sqr(COS_t) + x*(b - d)*COS_t + y*(a - c)*SIN_t - a*d + b*c);
-except
- delta:=
-(COS(t)*((a*d - b*c)*SIN_t - y*(a - c)) + x*(b - d)*SIN_t)/
-(2*(a*d - b*c)*Sqr(COS_t) + x*(b - d)*COS_t + y*(a - c)*SIN_t - a*d + b*c);
-end;
- //maxit:=max(maxit,i);
- inc(maxit);
- T:=T-delta;
- if abs(delta)<0.000001 then break;
- end;
-
- while t>2*pi do
-  t:=t-2*pi;
- while t<0 do
-  t:=t+2*pi;
-// if t>=
-
-  irx := a * cos ( t );
-  iry := b * sin ( t );
-  orx := c * cos ( t );
-  ory := d * sin ( t );
-  ralpha:=T;
-  //old_alpha:=T;
-
 
 end;
 
@@ -8160,7 +6237,7 @@ begin
   exit;
  end;
 
- //old_t1:=0;  //wenn keine Optimierung
+ //old_t1:=0;  //if no optimization
  UseOldVal:=false;
  if t1<old_t1 then
  begin
@@ -8177,7 +6254,6 @@ begin
  begin
   t0:=0;
   ttt:=pi/2;
-  //assert(t1=ttt);
  end;
 
  if n=0 then
@@ -8193,48 +6269,11 @@ begin
  result := result * ((t1 - t0) / n);
  if UseOldVal then
  begin
-  //result:=result+old_result;
   result:=-result+old_result;
   t1:=t0;
  end;
  old_t1:=t1;
  old_result:=result;
-end;
-
-function convex(a,b,epsilon:double):double;
-begin
- result:=b+(a-b)*epsilon;
-end;
-                        
-function RoundTo2(const AValue: Double; const ADigit: TRoundToRange): Double;
-var
-  LFactor: Double;
-begin
-  LFactor := IntPower(2, ADigit);
-  Result := Round(AValue / LFactor) * LFactor;
-end;
-
-function Round2(d,von,einheit:double):double;
-var e:double;
-begin
- result:=round((d-von)/einheit)*einheit+von;
-end;
-
-function Round3(d,von,ber,einheit:double;var e:double):double;
-begin
- e:=1;
- while einheit<ber/e do
-  e:=e*2;
- //einheit>=ber/e
- //if einheit-ber/e>ber/(e/2)-einheit then
-  //e:=e/2;
-// e:=e/2;
- //einheit<=e
-{ if e-einheit>einheit-e/2 then
-  e:=e/2;  }
- einheit:=ber/e;
- e:=einheit;
- result:=round((d-von)/einheit)*einheit+von;
 end;
 
 function ScaledCol(Src:TMyBitmap32; X,Y,ScaleX,ScaleY:Double; const BorderClip:TRect):TColor32;
@@ -8256,7 +6295,7 @@ begin
  ivonY:=Floor(vonY);
  ibisX:=Floor(bisX);
  ibisY:=Floor(bisY);
- if not DoIntersectStrong({Src.BoundsRect}BorderClip,Rect(ivonX,ivonY,ibisX+1,ibisY+1)) then
+ if not DoIntersectStrong(BorderClip,Rect(ivonX,ivonY,ibisX+1,ibisY+1)) then
  begin
   result:=0;
   exit;
@@ -8367,13 +6406,10 @@ begin
  rx:=c*ry+d;
 end;
 
-
 function Distance(a,b,x,y:double):double;
 begin
  result:=Sqrt(Sqr(a-x)+Sqr(b-y));
 end;
-
-
 
 procedure RoundCorner(const OuterRect:TRect; Src,Dst:TMyBitmap32; HorzOuterRadius,VertOuterRadius,HorzBorderWidth,VertBorderWidth:integer; Align:TAlign);
 var HorzInnerRadius,VertInnerRadius,x,y:integer;
@@ -8402,9 +6438,6 @@ end;
 
 var FirstQuarterClip,NonFirstQuarterClip,BorderClip,TryR:TRect;
     FirstQuarterRange,NonFirstQuarterRange:Double;
-
-
-
 begin
  if (HorzOuterRadius=0) or (VertOuterRadius=0) then exit;
 
@@ -8431,24 +6464,8 @@ begin
  Inc(NonFirstQuarterClip.Right);
  HorzBorderWidth:=VertOuterRadius-VertInnerRadius;
  VertBorderWidth:=HorzOuterRadius-HorzInnerRadius;
- //Assert(IntersectRect(TryR,FirstQuarterClip,Src.BoundsRect) and EqualRect(TryR,FirstQuarterClip));
- //Assert(IntersectRect(TryR,NonFirstQuarterClip,Src.BoundsRect) and EqualRect(TryR,NonFirstQuarterClip));
-
-
-
-{ old_t1:=0; old_result:=0;
- perimeter:=arclength(pi/2,HorzInnerRadius,VertInnerRadius,2);
- if perimeter<>-1 then
- begin
- old_t1:=0; old_result:=0;
- perimeter:=arclength(pi/4,HorzInnerRadius,VertInnerRadius,1);
- perimeter:=arclength(pi/2,HorzInnerRadius,VertInnerRadius,1);
- if perimeter<>-1 then
- perimeter:=0;
- end;     }
 
  old_t1:=0; old_result:=0;
- //perimeter:=arclength(pi/2,HorzOuterRadius,VertOuterRadius);
  perimeter:=arclength(pi/2,HorzInnerRadius,VertInnerRadius);
  old_t1_x:=old_t1; old_result_x:=old_result;
 
@@ -8466,38 +6483,17 @@ begin
    projX:=HorzInnerRadius-ScaleX/2;
    projY:=VertInnerRadius+x*ScaleY+ScaleY/2;
    NewCol:=ScaledCol(Src,P.X+multPX*(projX-0.5)+0.5,P.Y+multPY*(projY-0.5)+0.5,ScaleX,ScaleY,NonFirstQuarterClip);
-   //if x=0 then NewCol:=_CombineReg(NewCol,Src.PixelS[P.X+multPX*(HorzInnerRadius),P.Y+multPY*(VertInnerRadius)],$FF div 2);
    Src.PixelS[P.X+multPX*(HorzInnerRadius+x),P.Y+multPY*(VertInnerRadius)]:=NewCol;
   end;
   FirstQuarterRange:=VertInnerRadius-0.5+1;//perimeter/(HorzInnerRadius+VertInnerRadius);
 
-
-  {ScaleX:=VertBorderWidth/HorzBorderWidth;
-  ScaleY:=1;
-  for y:=0 to HorzBorderWidth-1 do
-  begin
-   projY:=VertInnerRadius-ScaleY/2;
-   projX:=HorzInnerRadius+y*ScaleX+ScaleX/2;
-   NewCol:=ScaledCol(Src,P.X+multPX*(projX-0.5)+0.5,P.Y+multPY*(projY-0.5)+0.5,ScaleX,ScaleY,FirstQuarterClip);
-   //if y=0 then NewCol:=_CombineReg(NewCol,Src.PixelS[P.X+multPX*(HorzInnerRadius),P.Y+multPY*(VertInnerRadius)],$FF div 2);
-   Src.PixelS[P.X+multPX*(HorzInnerRadius),P.Y+multPY*(VertInnerRadius+y)]:=NewCol;
   end;
-  NonFirstQuarterRange:=HorzInnerRadius+0.5;
-  }
 
-
-  end;
-  //beta:=fx/HorzOuterRadius/(fx/HorzOuterRadius+fy/VertOuterRadius);
-  //beta:=arccos(HorzOuterRadius/sqrt(sqr(HorzOuterRadius)+sqr(VertOuterRadius)))/pi*2;
-  //beta:=0.5;
-  //beta:=(VertOuterRadius/(HorzOuterRadius+VertOuterRadius));
   if (HorzBorderWidth=0) and (VertBorderWidth<>0) then
    beta:=1 else
   if (VertBorderWidth=0) and (HorzBorderWidth<>0) then
    beta:=0 else
    beta:=(FirstQuarterRange/(NonFirstQuarterRange+FirstQuarterRange));
-   //beta:=(VertInnerRadius/(HorzInnerRadius+VertInnerRadius));
-
 
  alphaO:=0;
  alphaI:=0;
@@ -8521,82 +6517,14 @@ begin
   RP.X:=P.X+multPX*X;
   FX:=x+0.5;
   Inc(x);
-      {
- //if (x=177) and (y=6) then
- if (fx=2.5) and (fy=2.5) then
- //if (x=150) and (y=-1) then
-  begin
-  Dst.PixelS[RP.X,RP.Y]:=clRed32;;//random(255) shl 16 or $FF000000;
-  //continue;
-  end;   }
-
-
-  //alpha:=GetWinkel(FX,FY);
-{  EllipsePoint2(alpha,HorzOuterRadius,VertOuterRadius,RoundOuterX,RoundOuterY);
-  EllipsePoint2(alpha,HorzInnerRadius,VertInnerRadius,RoundInnerX,RoundInnerY);
-  alpha:=alpha/pi*2;
- }
-
-
-//  EllipsePointBoth(FX,FY,HorzOuterRadius,VertOuterRadius,HorzInnerRadius,VertInnerRadius,RoundOuterX,RoundOuterY,RoundInnerX,RoundInnerY,alphai);
-
 
   EllipsePoint(FX,FY,HorzInnerRadius,VertInnerRadius,RoundInnerX,RoundInnerY,alphaI);
-  //EllipsePoint(FX,FY,HorzOuterRadius,VertOuterRadius,RoundOuterX,RoundOuterY,alphaO);
 
   Get_X_EQ_CY_PLUS_D(FX,FY,RoundInnerX,RoundInnerY,_C,_D);
   Line_Intersects_Ellipse(_C,_D,HorzOuterRadius,VertOuterRadius,RoundOuterX,RoundOuterY);
   alphaO:=GetEllipseParameterizedAngle(HorzOuterRadius,VertOuterRadius,RoundOuterX,RoundOuterY);
 
-
-
-{  Get_X_EQ_CY_PLUS_D(FX,FY,RoundOuterX,RoundOuterY,_C,_D);
-  Line_Intersects_Ellipse(_C,_D,HorzInnerRadius,VertInnerRadius,RoundInnerX,RoundInnerY);
-  alphaI:=alphaO;
-}
-  {alpha:=GetWinkel(RoundInnerX,RoundInnerY);
-  EllipsePoint2(alpha,HorzOuterRadius,VertOuterRadius,RoundOuterX,RoundOuterY);}
-{  RoundOuterX:=cos(alphaI)*HorzOuterRadius;
-  RoundOuterY:=sin(alphaI)*VertOuterRadius;
-}
-  //alphaI:=alphaO;
   act_arc:=arclength(alphaI,HorzInnerRadius,VertInnerRadius);
-
-{  EllipsePoint(FX,FY,HorzInnerRadius,VertInnerRadius,RoundInnerX,RoundInnerY,alphaI);
-  act_arc:=arclength(alphaI,HorzInnerRadius,VertInnerRadius);
-  GetNormal(alphaI,HorzInnerRadius,VertInnerRadius,NormalX,NormalY);
-  RoundOuterX:=RoundInnerX+HorzBorderWidth*NormalX;
-  RoundOuterY:=RoundInnerY+HorzBorderWidth*NormalY;
-}
-
-{  EllipsePoint(FX,FY,HorzOuterRadius,VertOuterRadius,RoundOuterX,RoundOuterY,alphaO);
-  act_arc:=arclength(alphaO,HorzOuterRadius,VertOuterRadius);
-  GetNormal(alphaO,HorzOuterRadius,VertOuterRadius,NormalX,NormalY);
-  RoundInnerX:=RoundOuterX-convex(HorzBorderWidth,VertBorderWidth,act_arc/perimeter)*NormalX;
-  RoundInnerY:=RoundOuterY-convex(HorzBorderWidth,VertBorderWidth,act_arc/perimeter)*NormalY;
- }
-
-
-(*  if {(alphaO<0) or (alphaO>pi/2) or}(abs((-NormalY)*(RoundOuterX-FX)+(NormalX)*(RoundOuterY-FY))>0.0001) or (RoundOuterY<0) or (RoundOuterX<0) then
-  begin
-//    Dst.PixelS[RP.X,RP.Y]:=clYellow32;
-    continue;
-  end;*)
-  //  if not ((RoundInnerX<=FX) and (FX<=RoundOuterX)) or not ((RoundInnerY<=FY) and (FY<=RoundOuterY)) then continue;
-  //if (y<0) and (x>HorzInnerRadius) {and (RoundInnerY>=0)} then   continue;
-
-
-(*  while RoundInnerY<0 do
-  begin
-  { RoundInnerX:=RoundInnerX+NormalX;
-   RoundInnerY:=RoundInnerY+NormalY;     }
-   RoundOuterX:=RoundOuterX+NormalX;
-   RoundOuterY:=RoundOuterY+NormalY;
-  RoundInnerX:=RoundOuterX-HorzBorderWidth*NormalX;
-  RoundInnerY:=RoundOuterY-HorzBorderWidth*NormalY;
-
-  end;*)
-
 
   if first_arc_x then
   begin
@@ -8604,31 +6532,7 @@ begin
   end;
   alpha:=act_arc/perimeter;
 
-  //alpha:=0;
-  //alpha:=alpha/pi*2;
-  //alpha:=alpha/pi*4/(VertOuterRadius/HorzOuterRadius);
-
   FirstQuarter:=alpha<beta;
-
-  //if alpha=beta then continue;
-  //FirstQuarter:=alpha/pi*2<0.5;
-
-         {
-  RoundInnerY:=max(0,RoundInnerY);
-  RoundInnerX:=max(0,RoundInnerX);
-              }
-  {if (RoundOuterY<0) or (RoundInnerY<0) or (RoundOuterX<0) or (RoundInnerX<0) then
-  begin
-   Dst.PixelS[RP.X,RP.Y]:=clWhite32;//random(255) shl 16 or $FF000000;
-   continue;
-  end; }         {
-  if RoundOuterY<0 then
-   RoundOuterY:=0;
-  if RoundInnerY<0 then
-   RoundInnerY:=0;   }
-  //alpha:=GetWinkel(RoundOuterX-RoundInnerX,RoundOuterY-RoundInnerY);
-
-
 
   DistOuter:=Distance(RoundOuterX,RoundOuterY,FX,FY);
   DistInner:=Distance(RoundInnerX,RoundInnerY,FX,FY);
@@ -8666,8 +6570,6 @@ begin
 
    w:=(w1-w2);
    w:=DistRound/(DistRound*cos(w));
-  // w:=convex(w,1,pct2);
-   //w:=1;
   end;
 
   if FirstQuarter then
@@ -8675,21 +6577,15 @@ begin
    _alpha:=alpha/beta;
    OuterX:=HorzOuterRadius;
    InnerX:=HorzInnerRadius;
-   //OuterY:=(VertOuterRadius{-0.5})*_alpha;
    InnerY:=FirstQuarterRange*_alpha;
    OuterY:=InnerY;
-   //InnerY:=OuterY;
   end else
   begin
    _alpha:=(1-alpha)/(1-beta);
    OuterY:=VertOuterRadius;
    InnerY:=VertInnerRadius;
-   //OuterX:=(HorzOuterRadius{-0.5})*_alpha;
    InnerX:=NonFirstQuarterRange*_alpha;
    OuterX:=InnerX;
-   //InnerX:=OuterX;
-   {if VertOuterRadius=VertInnerRadius then
-    DistRound:=0;}
   end;
    ScaleX:=1;
    ScaleY:=1;
@@ -8706,59 +6602,19 @@ begin
     end;
    end else
    begin
-    projX:=OuterX+(InnerX-OuterX)*pct;//InnerX+(OuterX-InnerX)*pct2;
-    projY:=OuterY+(InnerY-OuterY)*pct;//InnerY+(OuterY-InnerY)*pct2;
-    
-    //if false then
+    projX:=OuterX+(InnerX-OuterX)*pct;
+    projY:=OuterY+(InnerY-OuterY)*pct;
+
     if FirstQuarter then
     begin
      if VertBorderWidth<>0 then
-      ScaleX:=(VertBorderWidth*{convex(VertBorderWidth/DistRound,1,Pct2*w1)}w)/DistRound;//*(HorzBorderWidth/VertBorderWidth*abs(AlphaO-AlphaI)/(pi/2));
-
-     //ScaleY:= perimeter/((VertInnerRadius)+(HorzInnerRadius));
+      ScaleX:=(VertBorderWidth*w)/DistRound;
     end else
     begin
      if HorzBorderWidth<>0 then
       ScaleY:=HorzBorderWidth*w/DistRound;
     end;
-    (*
-    if not FirstQuarter then
-    begin
-     if (HorzBorderWidth<>0) and (DistRound>HorzBorderWidth)  then
-     begin
-      assimilate:=roundrest(ProjY)*DistRound/HorzBorderWidth;
-      if Abs(assimilate)<=0.5 then
-       ProjY:=round(ProjY)+assimilate else
-       ProjY:=round(ProjY-0.5)+0.5;
-     end else
-     if (HorzBorderWidth<>0) then
-     begin
-      assimilate:=Round2(ProjY,InnerY,HorzBorderWidth/round(DistRound));
-      ProjY:=(assimilate)+(ProjY-assimilate)/(HorzBorderWidth/round(DistRound));
-     end;
-    end else
-    begin
-     if (VertBorderWidth<>0) and (DistRound>VertBorderWidth) then
-     begin
-      assimilate:=roundrest(ProjX)*DistRound/VertBorderWidth;
-      if Abs(assimilate)<=0.5 then
-       ProjX:=round(ProjX)+assimilate else
-       ProjX:=round(ProjX-0.5)+0.5;
-     end else
-     if (VertBorderWidth<>0) and ((ProjX>OuterX-0.5) or (ProjX<InnerX+0.5)) then
-     begin
-      assimilate:=Round2(ProjX,InnerX,VertBorderWidth/round(DistRound));
-      ProjX:=(assimilate)+(ProjX-assimilate)/(VertBorderWidth/round(DistRound));
-     end;
-    end;*)
    end;
-
-     {
-  if abs(alpha-0.5)<0.001 then
-  begin
-  Dst.PixelS[RP.X,RP.Y]:=clBlue32;//random(255) shl 16 or $FF000000;
-  continue;
-  end;    }
 
  if DistRound=0 then
   NewCol:=0 else
@@ -8766,13 +6622,8 @@ begin
  if FirstQuarter then
   BorderClip:=FirstQuarterClip else
   BorderClip:=NonFirstQuarterClip;
-  //BorderClip:=Rect(-1000,-1000,2000,2000);
-  //NewCol:=Src.PixelS[P.X+multPX*round(projX),P.Y+multPY*round(projY)];
  if AntiAliaseCorner then
  begin
-{.$DEFINE NEED_LINEAR_ANTIALIASING}
-  //if (ScaleX=1) and (ScaleY=1) then
-  // NewCol:=Src.PixelFDS[P.X+multPX*(projX-0.5),P.Y+multPY*(projY-0.5)] else
    NewCol:=ScaledCol(Src,P.X+multPX*(projX-0.5)+0.5,P.Y+multPY*(projY-0.5)+0.5,ScaleX,ScaleY,BorderClip);
  end else
  begin
@@ -8782,7 +6633,6 @@ begin
    NewCol:=0;
  end;
  end;
-  //if false then
   if AntiAliaseCorner then
   begin
    if FirstQuarter and (projX<HorzInnerRadius-ScaleX/2) or not FirstQuarter and (projY<VertInnerRadius-ScaleY/2) then
@@ -8798,8 +6648,7 @@ begin
     continue;
    end;
   end;
-           
-  //if false then
+
   if FirstQuarter and (projX>HorzOuterRadius+ScaleX/2) or not FirstQuarter and (projY>VertOuterRadius+ScaleY/2) then
   begin
    assert(NewCol shr 24=0);
@@ -8819,20 +6668,11 @@ begin
    if FirstQuarter then
     NewAlpha:=max(min(round(((HorzInnerRadius-projX)/ScaleX+0.5)*255),255),0) else
     NewAlpha:=max(min(round(((VertInnerRadius-projY)/ScaleY+0.5)*255),255),0);
-
-   {if 255-integer(NewCol shr 24)-1(*für rundungsfehler*)>NewAlpha then
-    OldCol:=(OldCol and $FFFFFF) or cardinal(min(255,max((NewAlpha*integer(OldCol shr 24)) div 255,0))) shl 24;
-   PixelCombineNormal(NewCol,OldCol,255);
-   NewCol:=OldCol;
-   }
    if NewAlpha=255 then
     NewCol:=OldCol else
     NewCol:=_CombineReg(NewCol and $FFFFFF or min(round((NewCol shr 24)/((255-NewAlpha)/255)),255) shl 24,OldCol,255-NewAlpha);
-
  end;
  Dst.PixelS[RP.X,RP.Y]:=NewCol;
-
-
  end;
  end;
 
@@ -8848,8 +6688,7 @@ begin
 end;
 
 var HorzRotated,VertRotated,IsEasy:boolean;
-var c1,c2:int64;
-    i:integer;
+var i:integer;
 
 procedure NotTooBig(var L,R,L2,R2:integer; avail:integer; LDouble,RDouble:boolean);
 var sL,sR:integer;
@@ -9009,8 +6848,7 @@ begin
    T.Translate(-Left+(nWidth/2)-((bWidth+nWidth) mod 2 / 2)-(Right-Left)/2,-Top+(nHeight/2)-((bHeight+nHeight) mod 2 / 2)-(Bottom-Top)/2) else
   if not IsEasy and VertRotated then
    T.Translate(-Left+(nWidth/2)-((bHeight+nWidth) mod 2 / 2)-(Right-Left)/2,-Top+(nHeight/2)-((bWidth+nHeight) mod 2 / 2)-(Bottom-Top)/2) else
-   T.Translate(-Left+Round((nWidth/2){-((bHeight+nHeight) mod 2 / 2)}-(Right-Left)/2),-Top+Round((nHeight/2){-((bWidth+nWidth) mod 2 / 2)}-(Bottom-Top)/2));
-   //T.Translate(-Left+(nWidth/2){-((bHeight+nHeight) mod 2 / 2)}-(Right-Left)/2,-Top+(nHeight/2){-((bWidth+nWidth) mod 2 / 2)}-(Bottom-Top)/2);
+   T.Translate(-Left+Round((nWidth/2)-(Right-Left)/2),-Top+Round((nHeight/2)-(Bottom-Top)/2));
 
   Inc(nWidth,cr.Left+cr.Right);
   Inc(nHeight,cr.Top+cr.Bottom);
@@ -9019,11 +6857,9 @@ begin
 
   T.Translate(cr.Left,cr.Top);
 
-  T.Translate(glATShiftX, glATShiftY);
+  T.Translate(Cascaded.glATShiftX, Cascaded.glATShiftY);
 
   T.SrcRect:=FloatRect(0,0,Src.Width,Src.Height);
-//  if not NearSameMatrix(T.Matrix,IdentityMatrix) then
-    begin
 
   Src.ApplyGoodStrechFilter;
   Src.DrawMode:=dmBlend;
@@ -9040,13 +6876,6 @@ begin
     FreeAndNil(Src);
     Src:=Src2;
     Src.DrawMode:=dmBlend;
-    end;
-
-    { else
-    begin
-    FreeAndNil(Src2);
-    result:=Src;
-    end};
 
     if IsEasy then
     begin
@@ -9096,16 +6925,10 @@ begin
    EqArea.Bottom:=Min(InnerRect.Bottom,Min(OuterRect.Bottom-brBottomLeft.Y,OuterRect.Bottom-brBottomRight.Y));
 
    maxit:=0;
-{$IFNDEF CLX}
-   QueryPerformanceCounter(c1);
-{$ENDIF}
    RoundCorner(OuterRect,SrcFinal,Src,brTopLeft.X,brTopLeft.Y,bo.Top,bo.Left,alTop);
    RoundCorner(OuterRect,SrcFinal,Src,brBottomLeft.X,brBottomLeft.Y,bo.Bottom,bo.Left,alLeft);
    RoundCorner(OuterRect,SrcFinal,Src,brTopRight.X,brTopRight.Y,bo.Top,bo.Right,alRight);
    RoundCorner(OuterRect,SrcFinal,Src,brBottomRight.X,brBottomRight.Y,bo.Bottom,bo.Right,alBottom);
-{$IFNDEF CLX}
-   QueryPerformanceCounter(c2);
-{$ENDIF}
 
    FreeAndNil(SrcFinal);
   end;
@@ -9124,7 +6947,7 @@ begin
   IsEasy:=EasyBounds(Transformations,T,bWidth,bHeight,HorzRotated,VertRotated);
   Inc(bWidth,cr.Left+cr.Right);
   Inc(bHeight,cr.Top+cr.Bottom);
-  if EffectsAllowed and not IsEasy{ and CustomSizesForEffects} then
+  if EffectsAllowed and not IsEasy then
   begin
    NoRotating:=true;
    GetAutoRect(CustomSizesForEffects,CustomSizesForEffects,bWidth,bHeight);
@@ -9149,7 +6972,7 @@ begin
    DoBlurEffects;
    DoTransform;
 
-   Src.MasterAlpha:=Round(glTrans*255);
+   Src.MasterAlpha:=Round(Cascaded.glATAlpha*255);
    MixAlpha(Src);
   end;
 
@@ -9174,12 +6997,10 @@ begin
  result:=false;
 end;
 
-
 function TdhCustomPanel.CustomSizesForEffects:boolean;
 begin
  result:=false;
 end;
-
 
 procedure TdhCustomPanel.DrawFrame;
 var _ActDown:TActMode;
@@ -9195,10 +7016,9 @@ end;
 
 procedure TdhCustomPanel.DoDrawFrame(Canvas:TCanvas; _ActDown:TActMode);
 
-//für frame:
+//for frame
 var Scrollbar3dlightColor,ScrollbarDarkshadowColor:TColor32;
     ScrollbarHighlightColor,ScrollbarShadowColor:TColor32;
-
     ScrollbarFaceColor,ScrollbarArrowColor,ScrollbarBaseColor:TColor32;
                                                                        
 var Src:TMyBitmap32;
@@ -9370,7 +7190,6 @@ begin
  result:=not((HorzScrollInfo.nMax=0) or (HorzScrollInfo.nPage>=HorzScrollInfo.nMax));
 end;
 
-
 procedure GetSlack(const ScrollInfo: TMyScrollInfo; Range,Pos:integer; var h,position:integer; inverse:boolean);
 const min_h=11;
 begin
@@ -9385,7 +7204,6 @@ begin
   position:=Round(Pos/(ScrollInfo.nMax-ScrollInfo.nPage)*(Range-h)) else //(ScrollInfo.nMax-ScrollInfo.nPage)<>0 since ScrollInfo.nMax>ScrollInfo.nPage
   position:=Round(Pos*(ScrollInfo.nMax-ScrollInfo.nPage)/(Range-h));  //(Range-h)<>0 since h<Range since ScrollInfo.nPage<ScrollInfo.nMax
 end;
-
 
 function TdhCustomPanel.GetHorzBar:TRect;
 var h,position:integer;
@@ -9410,7 +7228,6 @@ begin
  if IsHorzScrollBarVisible then
   inc(result.Bottom,HorzScrollbar);
 end;
-
 
 function TdhCustomPanel.GetVertWhole:TRect;
 begin
@@ -9448,8 +7265,6 @@ begin
  result:=not((VertScrollInfo.nMax=0) or (VertScrollInfo.nPage>=VertScrollInfo.nMax));
 end;
 
-
-
 function TdhCustomPanel.GetVertBar:TRect;
 var h,position:integer;
 begin
@@ -9484,12 +7299,10 @@ begin
    end;
 end;
 
-
 function TdhCustomPanel.AlwaysVisibleVisibility:boolean;
 begin
  result:=false;
 end;
-
 
 function TdhCustomPanel.CanBeTopPC:boolean;
 begin
@@ -9617,7 +7430,6 @@ begin
    ActTopGraph:=nil;
 end;
 
-
 procedure TdhCustomPanel.DoTopPainting;
 begin
  PaintBorder;
@@ -9667,10 +7479,7 @@ begin
      IntersectRect(Result,Result,GetOffsetRect(TdhCustomPanel(Parent).ScrollArea,-Left-DeltaX,-Top-DeltaY));
 end;
 
-
 {$IFDEF CLX}
-
-type TFakeWinControl2=class(TWinControl);
 
 procedure TdhCustomPanel.Paint;
 var R:TRect;
@@ -9749,7 +7558,7 @@ begin
 end;
 
 function TdhCustomPanel.ScrollArea:TRect;
-begin                     
+begin
  result:=ShrinkRect(DynamicTotalRect,ScrollArea_Edges);
 end;
 
@@ -9892,8 +7701,6 @@ begin
  Masked:=True;
 end;
 
-
-
 procedure TdhCustomPanel.DrawMask(Canvas: TCanvas);
 var
   R,_NC: TRect;
@@ -9929,9 +7736,8 @@ end;
                     
 {$ENDIF}
 
-
 procedure TdhCustomPanel.RequestAlign;
-begin                                   
+begin
   if Parent is TdhCustomPanel then TdhCustomPanel(Parent).MyRealign else
   if Parent <> nil then Parent.Realign;
 end;
@@ -9940,7 +7746,6 @@ procedure TdhCustomPanel.MyRealign;
 begin
   MyAlignControl(nil);
 end;
-
 
 procedure TdhCustomPanel.MyAlignControl(AControl: TControl);
 var
@@ -9992,7 +7797,6 @@ begin
   ALeft:=ParentWH.X-(CSSRight+AWidth);
 end;
 
-
 procedure TdhCustomPanel.CalcStrongToWeak(var ALeft,ATop,AWidth,AHeight:integer);
 var ParentWH:TPoint;
     i:integer;
@@ -10015,8 +7819,6 @@ begin
  end;
  DoCalcStrongToWeak(ALeft,ATop,AWidth,AHeight,GetLocalClientBound(Parent),Anchors,CSSRight,CSSBottom);
 end;
-
-
 
 procedure TdhCustomPanel.StrongToWeak; //equates UpdateAnchorRules
 var ALeft,ATop,AWidth,AHeight:integer;
@@ -10047,7 +7849,6 @@ begin
 
  if IncludeActiveStrong or not HasActiveStrong([akBottom]) then
   CSSBottom:=ParentWH.Y-(ATop+AHeight);
-
 end;
 
 procedure TdhCustomPanel.WeakToStrong(IncludeActiveStrong:boolean);
@@ -10184,7 +7985,6 @@ procedure TdhCustomPanel.NotifyUseChanged(OldValue:ICon);
 begin
 end;
 
-
 {$IFNDEF CLX}
 function TdhCustomPanel.DesignWndProc(var Message: TMessage): Boolean;
 begin
@@ -10241,7 +8041,6 @@ begin
   result:=TotalRect else
   result:=MarginTotalRect;
 end;
-
 
 {$IFNDEF CLX}
 
@@ -10325,13 +8124,11 @@ begin
   result:=c;
 end;
 
-
 function rGetOffsetRect(R:TRect; P:TPoint):TRect;
 begin
  result:=R;
  rOffsetRect(Result,P);
 end;
-
 
 function MyFindDragTarget(const Pos: TPoint; AllowDisabled: Boolean): TControl;
 begin
@@ -10348,7 +8145,6 @@ begin
  while result.Owner is TWinControl do
   result:=TWinControl(result.Owner);
 end;
-
 
 function MyFindControl(c:TControl): TControl;
 begin
@@ -10420,12 +8216,10 @@ begin
  result:=ConsumeMouseWheel(Self,WheelDelta);
 end;
 
-
 function RectWidth(const R:TRect):Integer;
 begin
  result:=R.Right-R.Left;
 end;
-
 
 procedure TdhCustomPanel.ScrollInView(AControl: TControl; ForceTop:boolean);
 var
@@ -10470,7 +8264,6 @@ end;
 
 {$ENDIF}
 
-
 procedure TdhCustomPanel.DoClickAction(Initiator:TdhCustomPanel);
 begin
  //do nothing
@@ -10484,9 +8277,7 @@ end;
 
 var OldOnIdle:TIdleEvent;
     ObjIdleProc:TObjIdleProc;
-
 var glerrorlog:AnsiString;
-
 
 procedure TObjIdleProc.ApplicationEvents1Exception(Sender: TObject;
   E: Exception);
@@ -10568,7 +8359,6 @@ begin
 end;
 {$ENDIF}
 
-
 procedure TdhCustomPanel.Release;
 begin
 {$IFDEF CLX}
@@ -10577,7 +8367,6 @@ begin
   PostMessage(Handle, CM_RELEASE, 0, 0);
 {$ENDIF}
 end;
-
 
 {$IFNDEF CLX}
 procedure TdhCustomPanel.CMVisibleChanged(var Message: TMessage);
@@ -10621,12 +8410,6 @@ begin
   AdjustSize;
 end;
 
-
-
-type
-  TDWORDArray = Array[Word] of DWORD;
-  pDWORDArray = ^TDWORDArray;
-
 function ReduceColorsWithTransparentColorReservation(GIFImage:TGIFImage; Bitmap:TBitmap):TBitmap;
 var Bitmaps:TList;
     Palette:hPalette;
@@ -10648,6 +8431,9 @@ begin
 end;
 
 function AddGIFSubImageFromBitmap32(Transparent:TBitmap32; Opaque:TBitmap32; GIF:TGIFImage; Loop:boolean=false; CopyFrom:TGIFFrame=nil; PrevSubImage:TGIFFrame=nil):TGIFFrame;
+type
+  TDWORDArray = Array[Word] of DWORD;
+  pDWORDArray = ^TDWORDArray;
 var y,x,i:integer;
 var P,P2,P3: PColor32;
     bp:pByteArray;
@@ -10784,7 +8570,6 @@ begin
   result.DitherMode := dmFloydSteinberg;
 end;
 
-
 procedure CloseGif(GIF:TGifImage);
 begin
  GIF.Optimize([{ooCrop, Opera cannot deal with cropping: treats as if cropped edges not exist}ooMerge,ooCleanup,ooColorMap],GIF.ColorReduction,GIF.DitherMode,GIF.ReductionBits);
@@ -10848,7 +8633,6 @@ begin
  bt.Free;
 end;
 
-
 function GetPNGObjectPTFromBitmap32(Transparent:TMyBitmap32; Opaque:TMyBitmap32):TPngImage;
 var gif:TGifImage;
 begin
@@ -10860,7 +8644,6 @@ begin
  end;
 end;
 
-
 function GetPNGObjectPTFromGif(gif:TGIFImage):TPngImage;
 var Transparent:TMyBitmap32;
 begin
@@ -10870,11 +8653,8 @@ begin
  finally
   Transparent.Free;
  end;
-end;     
+end;
 {$ENDIF}
-
-
-
                   
 {$IFNDEF CLX}
 function GetJPEGImageFromBitmap32(Src:TMyBitmap32):TJPEGImage;
@@ -10887,7 +8667,6 @@ begin
   bt.Free;
 end;
 {$ENDIF}
-
 
 function GetFromBitmap32(Transparent:TMyBitmap32):TGraphic;
 begin
@@ -10965,7 +8744,6 @@ begin
  end;
 end;
 
-
 procedure SaveGraphic(g:TGraphic; const FileName: TPathName);
 var ext:TPathName;
     bmp:TMyBitmap32;
@@ -10982,7 +8760,6 @@ begin
   end;
  end;
 end;
-
 
 procedure TdhCustomPanel.SaveAsImage(const FileName: TPathName; WithBackground:boolean);
 begin
@@ -11204,7 +8981,6 @@ begin
   if FinalVisible(c) then
   if OnlyForScrollbars then
   begin
-
       if not (c.Align in [alBottom,alRight,alClient]) then
       begin
 
@@ -11240,7 +9016,6 @@ begin
   end;
   end;
 end;
-
 
 procedure TdhCustomPanel.SetIsScrollArea(const Value: boolean);
 begin
@@ -11305,7 +9080,6 @@ begin
 end;
 
 var MouseTimer:TTimer;
-
 
 procedure TdhCustomPanel.ProcessFrameEvent(FrameEventType:TFrameEventType);
 var NeedPaint:boolean;
@@ -11434,12 +9208,10 @@ begin
   MyDragStartPos:=Mouse.CursorPos;
 end;
 
-
 function TdhCustomPanel.CanUseMouseClick:boolean;
 begin
  result:=(GetActDown<>amNone);
 end;
-
 
 {$IFNDEF CLX}
 procedure TdhCustomPanel.WMNCCalcSize(var Message: TWMNCCalcSize);
@@ -11462,7 +9234,6 @@ begin
    result:=Bounds(0,0,Width,Height);
 end;
 {$ENDIF}
-
                          
 function TdhCustomPanel.GetOpaquePainting(var TopGraph:TMyBitmap32):boolean;
 begin
@@ -11590,7 +9361,6 @@ begin
  FIsDlg:=Value;
 end;
 
-
 {$IFDEF CLX}
 procedure TdhCustomPanel.ScrollBy(DeltaX, DeltaY: Integer);
 var
@@ -11617,9 +9387,6 @@ initialization
  Exclude(GIFImageDefaultDrawOptions,goAnimate); //gif-animations has problems at CLX
 {$ENDIF}
 
-{$IFDEF NEED_LINEAR_ANTIALIASING}
- SetGamma(1);
-{$ENDIF}
  SetGamma(1); //looks better
 
  FullEdge:=false;
@@ -11655,7 +9422,7 @@ finalization
  FreeAndNil(glBinList);
  if ObjIdleProc<>nil then
  begin
- Application.OnIdle:=OldOnIdle;                            
+ Application.OnIdle:=OldOnIdle;
  ObjIdleProc.Free;
  end;
 

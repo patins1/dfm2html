@@ -416,6 +416,8 @@ type
     FontFamily:TCSSFontFamily;
     Other:HypeString;
     FontSize:TCSSFontSize;
+    glAT:TMyAffineTransformation;
+    glATAlpha,glATShiftX,glATShiftY:single;
   end;
 
   IRelativePathProvider=interface ['{F26D0C91-801B-44A4-86CC-0D265F94F7C6}']
@@ -618,7 +620,7 @@ function GetImageBitmap:TGraphic;
 
 const sStyle:array[TState] of TPropertyName=('Style','StyleOver','StyleDown','StyleOverDown');
 const MarginDefault=EmptyStr;
-const DefaultNoncomputedFontSize=EmptyStr;//muß EmptyStr sein für SetFontSize
+const DefaultNoncomputedFontSize=EmptyStr;//must be EmptyStr for SetFontSize
 const AutoInherit=[{pcDisplay,}{pcAntiAliasing,}pcDirection,pcTextAlign,{pcWhiteSpace (div, pre true),}pcTextIndent,pcTextTransform,     pcFontSize,pcFontFamily,pcColor,pcFontStyle,pcFontVariant,pcFontWeight,pcLetterSpacing,pcLineHeight,pcListStyleType,pcTextDecoration,   pcCursor,pcVisibility,pcWordSpacing];
 
 {set by the HTML generator}
@@ -634,9 +636,6 @@ var
     TopTextDecoration,ParentTextDecoration:TCSSTextDecorations;
     IsFromParent:boolean;
     SelfHit:boolean;
-    glAT:TMyAffineTransformation;
-    glRotate:integer;
-    glTrans,glATShiftX,glATShiftY:single;
 
 {message strings which may be localized}
 var
@@ -2508,8 +2507,7 @@ begin
   glAT.Skew(FTransformations.SkewX/100,FTransformations.SkewY/100);
   glAT.Scale(FTransformations.ScaleX/100,FTransformations.ScaleY/100);
   glAT.Rotate(0,0,-FTransformations.Rotation);
-  glRotate:=glRotate+FTransformations.Rotation;
-  glTrans:=glTrans*FTransformations.Alpha/255;
+  glATAlpha:=glATAlpha*FTransformations.Alpha/255;
   glATShiftX:=glATShiftX+FTransformations.ShiftX;
   glATShiftY:=glATShiftY+FTransformations.ShiftY;
   SelfHit:=not FTransformations.FUseBased;

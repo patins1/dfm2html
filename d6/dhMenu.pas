@@ -973,7 +973,6 @@ procedure TdhLink.Notification(AComponent: TComponent; Operation: TOperation);
 begin
  if Operation = opRemove then
  begin
-  if not FastDestroy then
   if LinkAnchor=AComponent then
   begin
    CancelInvDesigner:=true;
@@ -998,12 +997,9 @@ end;
 
 destructor TdhLink.Destroy;
 begin
- if not FastDestroy then
- begin
-  FSubMenu.Free;
-  LinkAnchor:=nil;
-  LinkPage:=nil;
- end;
+ FSubMenu.Free;
+ LinkAnchor:=nil;
+ LinkPage:=nil;
  Inherited;
 end;
 
@@ -1614,8 +1610,7 @@ end;
 destructor TdhMenu.Destroy;
 begin                         
  ToOpen:=nil; //set always to nil
- if not FastDestroy then
-  ParentMenuItem:=nil;                
+ ParentMenuItem:=nil;
  if TailSubMenu=Self then TailSubMenu:=nil;
  Inherited;
 end;

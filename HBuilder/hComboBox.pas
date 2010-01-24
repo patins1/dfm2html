@@ -8,7 +8,7 @@ uses
   {$ELSE}
   Forms, Controls, Windows, Messages, Graphics, StdCtrls, ShellAPI, Mask, Dialogs, UnicodeCtrls,
   {$ENDIF}
-  SysUtils, Classes,UIConstants,uWException,dhPanel,dhStrUtils;
+  SysUtils, Classes,UIConstants,dhPanel,dhStrUtils;
 
 type IhCommitable=interface
  ['{12C954E2-1883-46E2-A923-67DE1CC22DC8}']

@@ -25,7 +25,7 @@ uses
   hComboBox, hEdit, hMemo,
   dhOleContainer,dhFile,dhHiddenField,GR32,
   MyPageControl, MyFontDialog,
-  MySpinEdit, MyTrackBar, hCheckBox, dhSelect, UseFastStrings, DKLang,UIConstants,uWException,
+  MySpinEdit, MyTrackBar, hCheckBox, dhSelect, UseFastStrings, DKLang,UIConstants,
   MyGroupBox, MyPanel, MyForm, Contnrs, dhStrUtils, uMetaWriter, dhStyles;
 
 

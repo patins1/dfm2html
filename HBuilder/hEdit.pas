@@ -8,7 +8,7 @@ uses
   {$ELSE}
   Controls, Windows, Messages, Graphics, StdCtrls, ShellAPI, Dialogs, Mask, UnicodeCtrls,dhStrUtils,
   {$ENDIF}
-  SysUtils, Classes, hComboBox,dhPanel,uWException;
+  SysUtils, Classes, hComboBox,dhPanel;
 
 type
   ThEdit = class(TTntEdit,IhCommitable)

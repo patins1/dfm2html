@@ -23,7 +23,7 @@ uses
   Consts,PicEdit,DesignIntf,DesignEditors,VCLEditors,DesignMenus,RTLConsts,
 {$ENDIF}
 {$ENDIF}
-  dhMultiLine,typinfo, dhLabel,dhMenu,dhDirectHTML,dhPageControl,dhPanel,dhStyleSheet,dhStrUtils;
+  dhMultiLine,typinfo, dhLabel,dhMenu,dhDirectHTML,dhPageControl,dhPanel,dhStyleSheet,dhStrUtils,dhStyles;
 
 const StyleCol=clYellow;
 
@@ -473,10 +473,8 @@ end;
 
 
 procedure GetColorValues(Proc: TGetStrProc);
-var
-  I: Integer;
 begin
-  for I := Low(dhPanel.Colors)+1 to High(dhPanel.Colors) do Proc(dhPanel.Colors[I].Name);
+  ListColorValues(Proc);
 end;
 
 procedure TCSSColorProperty.GetValues(Proc: TGetStrProc);
@@ -1004,7 +1002,7 @@ var
 begin
   PictureEditor := TPictureEditor.Create(nil);
   try
-    PictureEditor.Picture := TLocationImage(Pointer(GetOrdValue)).PictureID;
+    PictureEditor.Picture := TLocationImage(Pointer(GetOrdValue)).Picture;
     if PictureEditor.Execute then
       SetOrdValue(Longint(PictureEditor.Picture));
   finally
@@ -1014,9 +1012,9 @@ end;
 
 function TMyPictureProperty.GetValue: AString;
 var
-  Picture: TPictureID;
+  Picture: TPicture;
 begin
-  Picture := TLocationImage(GetOrdValue).PictureID;
+  Picture := TLocationImage(GetOrdValue).Picture;
   if (Picture=nil) or (Picture.Graphic = nil) then
     Result := srNone else
     Result := '(' + Picture.Graphic.ClassName + ')';

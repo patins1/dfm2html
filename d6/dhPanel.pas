@@ -685,6 +685,7 @@ function Color32ToCSSColor(const Color:TColor32):TCSSColor;
 function IsOpaqueColor(Color:TCSSColor): boolean;
 function GetPixelCombineNormal(F: TColor32; B: TColor32; M: TColor32=255):TColor32;
 Function ApplyDark(Color:TColor; HowMuch:Byte):TColor;
+procedure ListColorValues(Proc: TGetStrProc);
 
 function CursorToString(Cursor: TCSSCursor): TEnumName;
 function GetCursorBack(Cursor:TCursor):TCSSCursor;
@@ -896,6 +897,13 @@ var
 
 const MyDragThreshold=5;
 var MyDragStartPos:TPoint;
+
+procedure ListColorValues(Proc: TGetStrProc);
+var
+  I: Integer;
+begin
+  for I := Low(dhPanel.Colors)+1 to High(dhPanel.Colors) do Proc(dhPanel.Colors[I].Name);
+end;
 
 procedure Browse(URL:TPathName; Viewer:TPathName; maxi:boolean; browse:boolean=false);
 var i:integer;

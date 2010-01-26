@@ -10,7 +10,7 @@ uses
   Controls, Windows, Messages, Graphics, StdCtrls, Mask,
   {$ENDIF}
   SysUtils, Classes, dhPanel, dhStyleSheet,dhSelect,
-  dhMemo,dhEdit,dhCheckBox,dhRadioButton,dhMenu,dhLabel,BasicHTMLElements,dhHiddenField,dhFileField,dhStrUtils;
+  dhMemo,dhEdit,dhCheckBox,dhRadioButton,dhMenu,dhLabel,dhHiddenField,dhFileField,dhStrUtils;
 
 type
   TFormMethod=(fmtGet,fmtPost);
@@ -36,6 +36,8 @@ type
 procedure Register;
 
 implementation
+
+uses BasicHTMLElements;
 
 procedure Register;
 begin

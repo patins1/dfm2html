@@ -9,7 +9,7 @@ uses
   {$ELSE}
   Controls, Windows, Messages, Graphics, StdCtrls, dialogs, Forms, clipbrd,
   {$ENDIF}
-  dhLabel,dhEdit, SysUtils, Classes, math, dhPanel,BasicHTMLElements,dhStrUtils,dhStyles;
+  dhLabel,dhEdit, SysUtils, Classes, math, dhPanel,dhStrUtils,dhStyles;
 
 type
   TSelectType=(stDropDown,stList);
@@ -129,6 +129,8 @@ type
 procedure Register;
 
 implementation
+
+uses BasicHTMLElements;
 
 procedure Register;
 begin

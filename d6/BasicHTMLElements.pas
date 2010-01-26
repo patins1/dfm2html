@@ -91,8 +91,10 @@ implementation
 procedure TBasicHTMLElements.Loaded;
 begin
  inherited;
- (RadioButtonDown.Style.BackgroundImage.RequestGraphic as TBitmap).Transparent:=true;
- (RadioButtonNormal.Style.BackgroundImage.RequestGraphic as TBitmap).Transparent:=true;
+ if RadioButtonDown.Style.BackgroundImage.RequestGraphic<>nil then
+  (RadioButtonDown.Style.BackgroundImage.RequestGraphic as TBitmap).Transparent:=true;
+ if RadioButtonNormal.Style.BackgroundImage.RequestGraphic<>nil then
+  (RadioButtonNormal.Style.BackgroundImage.RequestGraphic as TBitmap).Transparent:=true;
  dhStyleSheet1.VertPosition:=0;
 end;
 

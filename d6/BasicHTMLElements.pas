@@ -2,7 +2,12 @@ unit BasicHTMLElements;
 
 interface
 
-uses                       
+{$R 'checkboxdown.res'}
+{$R 'checkboxnormal.res'}
+{$R 'radiobuttondown.res'}
+{$R 'radiobuttonnormal.res'}
+
+uses
   {$IFDEF CLX}
   QControls, QGraphics, QForms,
   {$ELSE}
@@ -75,11 +80,6 @@ type
     listboxitem: TdhLabel;
     menupopup: TdhLabel;
     hidden: TdhLabel;
-  private
-    { Private declarations }
-  public
-    { Public declarations }
-    procedure Loaded; override;
   end;
 
 var dhStrEditDlg:TBasicHTMLElements;
@@ -87,16 +87,5 @@ var dhStrEditDlg:TBasicHTMLElements;
 implementation
 
 {$R BasicHTMLElements.dfm}
-
-procedure TBasicHTMLElements.Loaded;
-begin
- inherited;
- if RadioButtonDown.Style.BackgroundImage.RequestGraphic<>nil then
-  (RadioButtonDown.Style.BackgroundImage.RequestGraphic as TBitmap).Transparent:=true;
- if RadioButtonNormal.Style.BackgroundImage.RequestGraphic<>nil then
-  (RadioButtonNormal.Style.BackgroundImage.RequestGraphic as TBitmap).Transparent:=true;
- dhStyleSheet1.VertPosition:=0;
-end;
-
 
 end.

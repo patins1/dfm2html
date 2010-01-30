@@ -621,6 +621,8 @@ const sStyle:array[TState] of TPropertyName=('Style','StyleOver','StyleDown','St
 const MarginDefault=EmptyStr;
 const DefaultNoncomputedFontSize=EmptyStr;//must be EmptyStr for SetFontSize
 const AutoInherit=[pcDirection,pcTextAlign,pcTextIndent,pcTextTransform,pcFontSize,pcFontFamily,pcColor,pcFontStyle,pcFontVariant,pcFontWeight,pcLetterSpacing,pcLineHeight,pcListStyleType,pcTextDecoration,pcCursor,pcVisibility,pcWordSpacing];
+const RES_PROT='res:';
+const RES_PROT_TRANSPARENT='res:TRANSPARENT_';
 
 {set by the HTML generator}
 var
@@ -1525,6 +1527,7 @@ end;
 function TLocationImage.RequestGraphic:TGraphic;
 var NewGraphic: TGraphic;
     Filename:TPathName;
+    ResourceBitmap:TBitmap;
 begin
  if GetGraphic<>nil then
  begin
@@ -1535,6 +1538,17 @@ begin
   FreeAndNil(FPicture);
   FPicture:=TPicture.Create;
   try
+   if Copy(FPath,1,Length(RES_PROT))=RES_PROT then
+   begin
+    ResourceBitmap := TBitmap.Create;
+    ResourceBitmap.LoadFromResourceName(HInstance, Copy(FPath,Length(RES_PROT)+1));
+    if Copy(FPath,1,Length(RES_PROT_TRANSPARENT))=RES_PROT_TRANSPARENT then
+    begin
+     ResourceBitmap.Transparent:=true;
+    end;
+    FPicture.Assign(ResourceBitmap);
+   end else
+   begin
     Filename:=GetAbsolutePath;
     if LowerCase(ExtractFileExt(Filename))='.gif' then
     begin
@@ -1547,7 +1561,8 @@ begin
      end;
     end else
      FPicture.LoadFromFile(Filename);
-    FPicture.OnChange:=Changed;
+   end;
+   FPicture.OnChange:=Changed;
   except
     FreeAndNil(FPicture);
   end;

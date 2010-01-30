@@ -49,12 +49,13 @@ contains
   dhSelect in 'dhSelect.pas',
   dhHiddenField in 'dhHiddenField.pas',
   BinList in 'BinList.pas',
-  BinTree in 'BinTree.pas',
   dhPanel in 'dhPanel.pas',
   dhDirectHTML in 'dhDirectHTML.pas',
-  BasicHTMLElements in 'BasicHTMLElements.pas' {BasicHTMLElements: TFrame},
-  MyBitmap32 in 'MyBitmap32.pas',
+  dhBitmap32 in 'dhBitmap32.pas',
   dhFile in 'dhFile.pas',
-  dhStrUtils in 'dhStrUtils.pas';
+  dhStrUtils in 'dhStrUtils.pas',
+  dhOleContainer in 'dhOleContainer.pas',
+  dhStyles in 'dhStyles.pas',
+  BasicHTMLElements in 'BasicHTMLElements.pas';
 
 end.

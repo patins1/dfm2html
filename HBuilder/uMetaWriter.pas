@@ -348,7 +348,7 @@ end;
 
 function IsAbsolute(s:TPathName):boolean;
 begin
- if (length(s)>=2) and (s[2]=DriveDelim) then
+ if (Pos(DriveDelim,s)<>0) then
  begin
   result:=true;
   exit;

@@ -72,11 +72,13 @@ uses
 {$ENDIF}
   GR32_DrawingEx;
 
+{$IFDEF COMPILER2009}
 type TMyKernelResampler = class(TKernelResampler)
   public
     function GetSampleFloat(X: Single; Y: Single): TColor32; override;
 end;
 type TMyCustomKernel=class(TCustomKernel);
+{$ENDIF}
   
 var
   StockBitmap: TBitmap;
@@ -507,7 +509,6 @@ begin
 
   TransformValid := True;
 end;
-{$ENDIF}
 
 function TMyKernelResampler.GetSampleFloat(X: Single; Y: Single): TColor32;
 var
@@ -790,6 +791,7 @@ begin
   // Result.B = E(Bi*Ai*Wi) / E(Ai*Wi)
 
 end;
+{$ENDIF}
 
 
 initialization

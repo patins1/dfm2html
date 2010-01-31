@@ -6,30 +6,14 @@ interface
 
 uses
   SysUtils, Classes, TypInfo,
-  pngimage, {$IFDEF MSWINDOWS}ShellAPI,jpeg,{$ELSE}libc,{$ENDIF}
+  {$IFDEF MSWINDOWS}ShellAPI,jpeg,{$ELSE}libc,{$ENDIF}
 {$IFDEF CLX}
   GIFImage, QControls,  Qt, QGraphics, QDialogs,
 {$ELSE}
- {$IFDEF VER210}GIFImg{$ELSE}GIFImage{$ENDIF},Controls, Graphics, Dialogs,
+ {$IFDEF VER210}GIFImg{$ELSE}GIFImage{$ENDIF},Windows,Controls, Graphics, Dialogs,
 {$ENDIF}
   math{$IFDEF DEB},funcutils,jclDebug{$ENDIF},
-  GR32,BinList,dhBitmap32,dhStrUtils,WideStrUtils;
-
-{$IFDEF VER210}
-type TPatchedGIFRenderer=class(TGIFRenderer)
-  public
-    procedure Draw(ACanvas: TCanvas; const Rect: TRect); override;
-end;
-type TGIFRenderer32=class(TPatchedGIFRenderer)
-  public
-    constructor Create(AImage: TGIFImage); override;
-    procedure StartAnimation; override;
-end;
-type TPatchedGifImage=class(TGifImage)
-  strict protected
-    function CreateRenderer: TCustomGIFRenderer; override;
-end;
-{$ENDIF}
+  GR32,BinList,dhBitmap32,dhStrUtils,WideStrUtils,dhGraphicFormats;
 
 const
   CSSAlphaInverter=$FF000000;
@@ -614,7 +598,6 @@ function GetBorderRadiusPixels(Value:TCSSRadius; var res:TPoint; var IsDouble:bo
 function GetShorter(const Top,Right,Bottom,Left:AString):AString;
 function GetMarginPixels(Value:TCSSMargin; const FontSize:single):integer;
 
-function GetGraphicExtension(Graphic:TGraphic):TPathName;
 function GetImageBitmap:TGraphic;
 
 const sStyle:array[TState] of TPropertyName=('Style','StyleOver','StyleDown','StyleOverDown');
@@ -638,7 +621,6 @@ var
 var
     QUOTEINVALIDVALUE_STR:WideString='"%" is not a valid value';
 
-
 implementation
 
 var pcChanges:array[TPropChoose] of TWhatChanged=({pcAntiAliasing}[{empty}],{pcBackgroundAttachment}[],{pcBackgroundColor}[wcColor],{pcBackgroundImage}[wcSize,wcText],{pcBackgroundPosition}[],{pcBackgroundRepeat}[],{pcBorderColor}[],{pcBorderRadius}[],{pcBorderWidth}[wcSize,wcText2],{pcBorderStyle}[wcSize,wcText2],{pcColor}[wcFont],{pcContentAfter}[wcText,wcSize],{pcContentBefore}[wcText,wcSize],{pcCursor}[wcCursor],{pcDirection}[wcText2,wcSize],{pcDisplay}[wcText,wcSize],{pcEffects}[wcSize],{pcFontFamily}[wcFont,wcText2,wcSize],{pcFontSize}[wcFont,wcText2,wcSize],{pcFontStyle}[wcSize,wcFont,wcText2],{pcFontVariant}[wcText,wcSize],{pcFontWeight}[wcFont,wcText2,wcSize],{pcLetterSpacing}[wcText2,wcSize],{pcLineHeight}[wcText2,wcSize],{pcListStyleType}[],
@@ -656,51 +638,6 @@ begin
     ImageBitmap.Transparent:=false;
    end;
    result:=ImageBitmap;
-end;
-
-function IsSemi(png:TPngImage):boolean;
-var X,Y:integer;
-    bp:pngimage.pByteArray;
-begin
-   if png.TransparencyMode=ptmPartial then
-   for Y:=0 to png.Height-1 do
-   begin
-    bp:=png.AlphaScanline[Y];
-    for X:=0 to png.Width-1 do
-    if bp^[X]<>255 then
-    begin
-     result:=true;
-     exit;
-    end;
-   end;
-   result:=false;
-end;
-
-function GetGraphicExtension(Graphic:TGraphic):TPathName;
-begin
- result:=EmptyStr;
- if Graphic is TPngImage then
- begin
-  result:='.png';
- end else
- if Graphic is TGifImage then
- begin
-  result:='.gif';
- end else
-{$IFNDEF CLX}
- if Graphic is TJPEGImage then
- begin
-  result:='.jpg';
- end else
- if Graphic is TBitmap then
- begin
-  result:='.bmp';
- end else
- if Graphic is TIcon then
- begin
-  result:='.ico';
- end;
-{$ENDIF}
 end;
 
 function MyStrToFloat(s:TCSSStringValue):Extended;
@@ -1655,7 +1592,7 @@ end;
 
 function TLocationImage.CalculateImgCanT1X1:boolean;
 begin
- result:=(GetGraphic is TPngImage) and (TPngImage(GetGraphic).Width=1) and (TPngImage(GetGraphic).Height=1) and IsSemi(TPngImage(GetGraphic));
+ result:=(GetGraphic<>nil) and (GetGraphic.Width=1) and (GetGraphic.Height=1) and HasSemiTransparence(GetGraphic);
 end;
 
 function TLocationImage.ImgIsT1X1:boolean;
@@ -1678,7 +1615,7 @@ end;
 
 function TLocationImage.CalculateImgCouldBeRastered:boolean;
 begin
- result:=(GetGraphic is TPngImage) and IsSemi(TPngImage(GetGraphic));
+ result:=HasSemiTransparence(GetGraphic);
 end;
 
 function TLocationImage.CalculateAnimatedGIF:boolean;
@@ -1824,36 +1761,6 @@ begin
    Exit;
   end;
   Result:=FPath;
-end;
-
-procedure TPatchedGIFRenderer.Draw(ACanvas: TCanvas; const Rect: TRect);
-type PCanvas=^TCanvas;
-begin
-  PCanvas(@TargetCanvas)^:=ACanvas;
-  inherited Draw(ACanvas, Rect);
-  PCanvas(@TargetCanvas)^:=nil;
-end;
-
-function TPatchedGIFImage.CreateRenderer: TCustomGIFRenderer;
-begin
-  Result := TPatchedGIFRenderer.Create(Self);
-  Result.Speed := AnimationSpeed;
-  Result.Transparent := Transparent;
-  Result.BackgroundColor := EffectiveBackgroundColor;
-  Result.Animate := Animate;
-end;
-
-constructor TGIFRenderer32.Create(AImage: TGIFImage);
-begin
-     inherited Create(AImage);
-     if AImage.Transparent then
-      Transparent:=true;
-     Animate:=True;
-end;
-
-procedure TGIFRenderer32.StartAnimation;
-begin
-  // do nothing
 end;
 
 function TStyle.GetNameByStyle:TPropertyName;

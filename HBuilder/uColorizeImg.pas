@@ -11,7 +11,7 @@ uses
   Controls, Windows, Messages, Graphics, Forms, ComCtrls, ShellAPI, Mask, ExtCtrls, StdCtrls,  Variants, clipbrd, UnicodeCtrls,
 {$ENDIF}
   GR32, GR32_Image, math, {$IFDEF VER210}GIFImg{$ELSE}GIFImage{$ENDIF}, hComboBox, unit3, dhPanel, MyTrackBar, dhLabel, DKLang,
-  MyPanel;
+  MyPanel,dhGraphicFormats;
 
 //const WM_DelayDraw = WM_USER + 3;
 type

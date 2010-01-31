@@ -10,7 +10,7 @@ uses
   {$ENDIF}
   SysUtils, Classes,
   dhLabel, dhMenu, dhPanel, dhColorPicker, gr32, DKLang, MySpinEdit, Math,
-  ExtCtrls, dhStyles;
+  ExtCtrls, dhStyles, dhGraphicFormats;
 
 type
   TGradientWizard = class(TTntForm)

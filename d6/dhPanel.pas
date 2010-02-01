@@ -5605,6 +5605,19 @@ begin
  result:=abs(a-1)<0.001;
 end;
 
+function NearSameMatrix(const a,b:TFloatMatrix):boolean;
+var i,j:integer;
+begin
+ for i:=0 to 2 do
+ for j:=0 to 2 do
+ if not NearNull(a[i,j]-b[i,j]) then
+ begin
+  result:=false;
+  exit;
+ end;
+ result:=true;
+end;
+
 function IsRegular(Det:Single):boolean;
 begin
  result:=not (Abs(Det) < 1E-5);
@@ -6548,6 +6561,8 @@ begin
   T.Translate(Cascaded.glATShiftX, Cascaded.glATShiftY);
 
   T.SrcRect:=FloatRect(0,0,Src.Width,Src.Height);
+  if not NearSameMatrix(T.Matrix,IdentityMatrix) then
+  begin
 
   Src.ApplyGoodStrechFilter;
   Src.DrawMode:=dmBlend;
@@ -6564,6 +6579,7 @@ begin
     FreeAndNil(Src);
     Src:=Src2;
     Src.DrawMode:=dmBlend;
+  end;
 
     if IsEasy then
     begin

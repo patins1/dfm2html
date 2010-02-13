@@ -110,7 +110,7 @@ var
 begin
   Result := False;
   if (Data <> nil) then
-    while (Size > 0) and (PChar(Data)^ <> #0) do
+    while (Size > 0) and (PAnsiChar(Data)^ <> #0) do
     begin
       if (Wide) then
       begin
@@ -118,10 +118,10 @@ begin
         StringSize := (Length(PWideChar(Data)) + 1) * 2;
       end else
       begin
-        Files.Add(PChar(Data));
-        StringSize := Length(PChar(Data)) + 1;
+        Files.Add(PAnsiChar(Data));
+        StringSize := Length(PAnsiChar(Data)) + 1;
       end;
-      inc(PChar(Data), StringSize);
+      inc(PAnsiChar(Data), StringSize);
       dec(Size, StringSize);
       Result := True;
     end;
@@ -136,7 +136,7 @@ begin
   begin
     Wide := PDropFiles(Data)^.fWide;
     dec(Size, PDropFiles(Data)^.pFiles);
-    inc(PChar(Data), PDropFiles(Data)^.pFiles);
+    inc(PAnsiChar(Data), PDropFiles(Data)^.pFiles);
     ReadFilesFromZeroList(Data, Size, Wide, Files);
   end;   
   Result := (Files.Count > 0);
@@ -167,7 +167,7 @@ function TURLDropTarget.GetURL(const dataObj: IDataObject; grfKeyState: Longint;
 var
  Format: TFORMATETC;
  Data: TSTGMEDIUM;
- Buffer: PChar;
+ Buffer: PAnsiChar;
  Files: TStrings;
  DropFiles:PDropFiles;
 

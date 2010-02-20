@@ -31,6 +31,7 @@ type
     FtpClient1: TFtpClient;
     procedure FtpClient1RequestDone(Sender: TObject; RqType: TFtpRequest;
       Error: Word);
+    procedure FtpClient1OnDisplay(Sender: TObject; var Msg: String);
 {$ENDIF}
     procedure Log(Const Msg: WideString; Color: TColor=clBlack);
     procedure SetBusy(const Value: boolean);     
@@ -199,7 +200,7 @@ begin
  FtpClient1.Port:=DefaultS(Port,'21');
  FtpClient1.Username:=DefaultS(Username,'anonymous');
  FtpClient1.Password:=DefaultS(Password,'non@email.com');
- RootHostDirName:=Path;
+ RootHostDirName:=Copy(Path,2,MaxInt);
  FtpClient1.HostDirName:=EmptyStr;
  FtpClient1.HostFileName:=EmptyStr;
  FtpClient1.ConnectAsync;
@@ -226,6 +227,7 @@ begin
 {$IFNDEF CLX}
  FtpClient1:= TFtpClient.Create(Self);
  FtpClient1.OnRequestDone := FtpClient1RequestDone;
+ FtpClient1.OnDisplay := FtpClient1OnDisplay;
 {$ENDIF}
 end;
 
@@ -235,6 +237,12 @@ begin
 end;
 
 {$IFNDEF CLX}
+
+procedure TPublishLog.FtpClient1OnDisplay(Sender: TObject; var Msg: String);
+begin
+  Log('        '+Msg,clRed);
+end;
+
 procedure TPublishLog.FtpClient1RequestDone(Sender: TObject;
   RqType: TFtpRequest; Error: Word);
 var i:integer;
@@ -242,7 +250,7 @@ var i:integer;
 begin
  if (Error<>0) and (RqType<>ftpMkdAsync) then
  begin
-  if (RqType=ftpCwdAsync) then
+  if (RqType=ftpCwdAsync) and not (Copy(FtpClient1.HostDirName,1,3)='../') then
   begin
    FtpClient1.HostFileName:=Copy(FtpClient1.HostDirName,1,AdvPos('/',FtpClient1.HostDirName,2)-1);
    if FtpClient1.HostFileName<>'' then
@@ -263,14 +271,21 @@ begin
  end;
  ftpMkdAsync:
  begin
-  Log(DKFormat(FTPLOG_CREATEDDIR,FtpClient1.HostFileName));
+  if Error=0 then
+   Log(DKFormat(FTPLOG_CREATEDDIR,FtpClient1.HostFileName));
   i:=AdvPos('/',FtpClient1.HostDirName,Length(FtpClient1.HostFileName)+2);
   if i<>0 then
   begin
    FtpClient1.HostFileName:=Copy(FtpClient1.HostDirName,1,i-1);
    FtpClient1.MkdAsync;
    Exit;
-  end;       
+  end;
+  if Error<>0 then
+  begin
+   Log(FtpClient1.ErrorMessage,clRed);
+   bStopTransfer.Click;
+   Exit;
+  end;
   FtpClient1.CwdAsync;
   Exit;
  end;
@@ -285,12 +300,21 @@ begin
   if ToUpload.Count<>0 then
   begin
    HostDirName:=ExtractHostDirName(ToUpload[0]);
+   if Copy(FtpClient1.HostDirName,1,3)='../' then
+    FtpClient1.HostDirName:='';
    if FtpClient1.HostDirName<>HostDirName then
    begin
     if FtpClient1.Binary then
     begin
      FtpClient1.TypeAsciiAsync;
      Exit;
+    end;
+    if FtpClient1.HostDirName<>'' then
+    begin
+     HostDirName:='';
+     for i := 1 to Length(FtpClient1.HostDirName) do
+      if FtpClient1.HostDirName[i]='/' then
+       HostDirName:=HostDirName+'../';
     end;
     FtpClient1.HostDirName:=HostDirName;
     FtpClient1.CwdAsync;

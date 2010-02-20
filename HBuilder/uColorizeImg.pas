@@ -150,8 +150,10 @@ begin
  end;
  if DoStats then
  begin
+  if pixels<>0 then
   lStats.Text
-  :=lAverageSaturation.Text+' = '+IntToStr(round(AllSaturation/pixels*100))+'% '+lAverageLightness.Text+' = '+IntToStr(round(AllLightness/pixels*100))+'%';
+  :=lAverageSaturation.Text+' = '+IntToStr(round(AllSaturation/pixels*100))+'% '+lAverageLightness.Text+' = '+IntToStr(round(AllLightness/pixels*100))+'%' else
+  lStats.Text:='';
  end;
 end;
 

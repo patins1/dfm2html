@@ -795,6 +795,11 @@ end;
 
 
 initialization
+
+  SetGamma(1); //looks better
+
+  FullEdge:=false;
+
   StockBitmap := TBitmap.Create;
   StockBitmap.Width := 8;
   StockBitmap.Height := 8;

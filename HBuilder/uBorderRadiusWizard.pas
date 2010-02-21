@@ -13,7 +13,7 @@ uses
 {$ENDIF}
   GR32, GR32_Image,math,
   hComboBox,unit3,dhPanel, MyTrackBar,  MySpinEdit, dhLabel, dhMenu,
-  dhStyleSheet, DKLang, dhStyles;
+  dhStyleSheet, DKLang, dhStyles,dhColorUtils;
 
 type
   TBorderRadiusWizard = class(TTntForm)

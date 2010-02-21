@@ -23,7 +23,7 @@ uses
   Consts,PicEdit,DesignIntf,DesignEditors,VCLEditors,DesignMenus,RTLConsts,
 {$ENDIF}
 {$ENDIF}
-  dhMultiLine,typinfo, dhLabel,dhMenu,dhDirectHTML,dhPageControl,dhPanel,dhStyleSheet,dhStrUtils,dhStyles;
+  dhMultiLine,typinfo, dhLabel,dhMenu,dhDirectHTML,dhPageControl,dhPanel,dhStyleSheet,dhStrUtils,dhStyles,dhColorUtils;
 
 const StyleCol=clYellow;
 
@@ -181,7 +181,7 @@ implementation
 
 function IsColorFormat(const Value: AString; var L:integer):boolean;
 begin
- result:=dhPanel.IdentToColor(Value, L);
+ result:=dhColorUtils.IdentToColor(Value, L);
  if (Value<>'') and (Value[1]='#') and (length(Value)=7) then
  try
    L:=strtoint('$'+copy(Value,6,2))*256*256+strtoint('$'+copy(Value,4,2))*256+strtoint('$'+copy(Value,2,2));
@@ -468,7 +468,7 @@ end;
 
 function TCSSColorProperty.GetValue: AString;
 begin
-  Result := dhPanel.ColorToString(TColor(GetOrdValue));
+  Result := dhColorUtils.ColorToString(TColor(GetOrdValue));
 end;
 
 

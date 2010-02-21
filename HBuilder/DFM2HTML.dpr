@@ -34,8 +34,7 @@ uses
   uChooseWide in 'uChooseWide.pas' {ChooseUnicode},
   uObjectExplorer in 'uObjectExplorer.pas' {ObjectExplorer},
   uResourceExplorer in 'uResourceExplorer.pas' {ResourceExplorer},
-  uMetaWriter in 'uMetaWriter.pas',
-  dhGraphicFormats in '..\d6\dhGraphicFormats.pas';
+  uMetaWriter in 'uMetaWriter.pas';
 
 {$ELSE}
 

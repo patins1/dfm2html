@@ -8,7 +8,7 @@ uses
   {$ELSE}
   Forms, Controls, Windows, Messages, Graphics, StdCtrls, ShellAPI, Mask, dialogs,Buttons, UnicodeCtrls,
   {$ENDIF}
-  SysUtils, Classes, types, uColorPicker, funcutils,AColorPickerAX_TLB, dhPanel, gr32, dhStyles;
+  SysUtils, Classes, types, uColorPicker, funcutils,AColorPickerAX_TLB, dhPanel, gr32, dhStyles, dhColorUtils;
 
 type
   //TNotifyEvent = procedure(Sender: TObject; Color:TColor) of object;

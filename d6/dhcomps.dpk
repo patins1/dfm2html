@@ -57,6 +57,7 @@ contains
   dhOleContainer in 'dhOleContainer.pas',
   dhStyles in 'dhStyles.pas',
   BasicHTMLElements in 'BasicHTMLElements.pas',
-  dhGraphicFormats in 'dhGraphicFormats.pas';
+  dhGraphicFormats in 'dhGraphicFormats.pas',
+  dhColorUtils in 'dhColorUtils.pas';
 
 end.

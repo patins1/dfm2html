@@ -10,7 +10,7 @@ uses
   Dialogs, Controls, Windows, Messages, Graphics, Forms,
   {$ENDIF}
   SysUtils, Classes,
-  dhPanel,dhLabel,GR32,dhStrUtils,dhBitmap32,dhStyles;
+  dhPanel,dhLabel,GR32,dhStrUtils,dhBitmap32,dhStyles,dhColorUtils;
 
 {$R 'dhPageControl.dcr'}
 

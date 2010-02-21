@@ -16,7 +16,7 @@ uses
   dhFile,dhHTMLForm, dhPanel, dhPageControl, dhMultilineCaptionEdit, dhStyleSheet, dhOleContainer,dhHiddenField,
   dhDirectHTML, dhMenu, dhLabel, dhCheckBox, dhRadioButton, dhEdit, dhMemo, dhFileField,dhSelect,
   UseFastStrings,
-  math,binlist,bintree,dhStrUtils, uMetaWriter, dhStyles;
+  math,binlist,bintree,dhStrUtils, uMetaWriter, dhStyles, dhColorUtils;
 
 const directIE=false;
 type TBounds=record Left, Top, Width, Height: Longint; end;
@@ -614,7 +614,7 @@ var
       if SubEqualEnd('Color',PropName) then
       begin
         val:=Reader.ReadInteger;
-        colval:=dhPanel.ColorToString(val);
+        colval:=dhColorUtils.ColorToString(val);
         WriteStr(' value="'+colval+'" type="hex"/>');
       end else
         WriteStr(' value="'+IntToStr(Reader.ReadInteger)+'" type="integer"/>');
@@ -649,7 +649,7 @@ var
       if SubEqualEnd('Color',PropName) and not SubEqual('Style',PropName) then
       begin
         val:=StringToColor(Reader.ReadIdent);
-        colval:=dhPanel.ColorToString(val);
+        colval:=dhColorUtils.ColorToString(val);
         WriteStr(' value="'+colval+'" type="ident"/>');
       end else
          WriteStr(' value="'+Reader.ReadIdent+'" type="ident"/>');

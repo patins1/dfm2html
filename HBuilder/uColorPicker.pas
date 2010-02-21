@@ -8,7 +8,7 @@ uses
   {$ELSE}
   Forms, Controls, Windows, Messages, Graphics, StdCtrls, Buttons, ExtCtrls, Menus, clipbrd, Dialogs, UnicodeCtrls,
   {$ENDIF}
-  SysUtils, Classes, types, dhPanel, dhLabel, uSearchStr, DKLang, Gr32, MyForm{$IFDEF LINUX},libc{$ENDIF}, dhStrUtils, dhStyles;
+  SysUtils, Classes, types, dhPanel, dhLabel, uSearchStr, DKLang, Gr32, MyForm{$IFDEF LINUX},libc{$ENDIF}, dhStrUtils, dhStyles, dhColorUtils;
 
 type
   TColorPicker = class(TMyForm)
@@ -161,7 +161,7 @@ var col:TColor;
     picker:TdhColorPicker;
 begin
  picker:=PopupMenu1.PopupComponent as TdhColorPicker;
- Clipboard.AsText:=dhPanel.ColorToString(picker.CSSColor);
+ Clipboard.AsText:=dhColorUtils.ColorToString(picker.CSSColor);
 end;
 
 procedure TColorPicker.GetColorfromClipboard1Click(Sender: TObject);
@@ -171,7 +171,7 @@ var icol:Longint;
     SaveSeparator:Char;
 begin
  s:=LowerCase(Trim(Clipboard.AsText));
- if not dhPanel.IdentToColor(s,icol) then
+ if not dhColorUtils.IdentToColor(s,icol) then
  if (s<>'') and (s[1]='#') and TryStrToInt('$'+Copy(s,2,maxint),icol) then
  begin
   icol:=Longint(Color32ToCSSColor(TColor32(icol) or $FF000000));

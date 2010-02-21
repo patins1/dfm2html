@@ -1009,6 +1009,7 @@ var FPageRange,CurrPage,RealLinkPage,RealLastPage,r:integer;
 begin
  href:='';
  target:='';
+ nest.HasProp('Target',target);
  nest.HasProp('Link',href);
 
  if (nest.LinkPage<>'') and not nest.HasProp('RealLinkPage') {and (nest.PageRange<>0)} and gln.IndexOf(nest.LinkPage,RealLinkPage) then

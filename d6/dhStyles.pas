@@ -1724,13 +1724,15 @@ end;
 
 function TLocationImage.CachingIsUseful:Boolean;
 begin
- result:=self.Owner.Owner.RecursiveShowing;
+ result:=(self.Owner<>nil) and (self.Owner.Owner<>nil) and self.Owner.Owner.RecursiveShowing;
 end;
 
 procedure TLocationImage.SetPath(const Path:TPathName);
 var RelativePathProvider:IRelativePathProvider;
 begin
-  RelativePathProvider:=self.Owner.Owner.GetRelativePathProvider;
+  RelativePathProvider:=nil;
+  if (self.Owner<>nil) and (self.Owner.Owner<>nil)  then
+   RelativePathProvider:=self.Owner.Owner.GetRelativePathProvider;
   if RelativePathProvider<>nil then
   begin
    FPath:=RelativePathProvider.GetAbsolutePath(Path);
@@ -1742,7 +1744,9 @@ end;
 function TLocationImage.GetRelativePath:TPathName;
 var RelativePathProvider:IRelativePathProvider;
 begin
-  RelativePathProvider:=self.Owner.Owner.GetRelativePathProvider;
+  RelativePathProvider:=nil;
+  if (self.Owner<>nil) and (self.Owner.Owner<>nil)  then
+   RelativePathProvider:=self.Owner.Owner.GetRelativePathProvider;
   if RelativePathProvider<>nil then
   begin
    Result:=RelativePathProvider.GetRelativePath(FPath);
@@ -1754,7 +1758,9 @@ end;
 function TLocationImage.GetAbsolutePath:TPathName;
 var RelativePathProvider:IRelativePathProvider;
 begin
-  RelativePathProvider:=self.Owner.Owner.GetRelativePathProvider;
+  RelativePathProvider:=nil;
+  if (self.Owner<>nil) and (self.Owner.Owner<>nil)  then
+   RelativePathProvider:=self.Owner.Owner.GetRelativePathProvider;
   if RelativePathProvider<>nil then
   begin
    Result:=RelativePathProvider.GetAbsolutePath(FPath);

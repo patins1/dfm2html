@@ -3945,7 +3945,7 @@ begin
  BottomRight:=Point(0,0);
  if GetVal(pcBorderRadius,calTopLeft) then
   GetBorderRadiusPixels(Cascaded.BorderRadius,TopLeft,TopLeftDouble);
- if GetVal(pcBorderRadius,calBottomRight) then
+ if GetVal(pcBorderRadius,calTopRight) then
   GetBorderRadiusPixels(Cascaded.BorderRadius,TopRight,TopRightDouble);
  if GetVal(pcBorderRadius,calBottomLeft) then
   GetBorderRadiusPixels(Cascaded.BorderRadius,BottomLeft,BottomLeftDouble);

@@ -704,7 +704,6 @@ function IsNullRect(const R:TRect):boolean;
 function GetVirtualParent(C:TControl):TControl;
 function GetTopForm(P:TControl):TScrollingWinControl;
 function NameWithForm(c:TControl):TComponentName;
-function GoodWin(c:TControl):TWinControl;
 function GetBaseZOrder(Child:TControl; ChildPos:integer):integer;
 procedure UpdateZIndex(Self:TWinControl);
 function GetChildPosition(Child:TControl):integer;
@@ -904,11 +903,6 @@ function AddPoint(const a:TPoint; const b:TPoint):TPoint;
 begin
  result.X:=a.X+b.X;
  result.Y:=a.Y+b.Y;
-end;
-
-function NotNull(const P1: TPoint): Boolean;
-begin
-  Result := (P1.X <> 0) or (P1.Y <> 0);
 end;
 
 function TdhCustomPanel.GetStyleByName(const name:TPropertyName; var r:TStyle):boolean;
@@ -2450,23 +2444,6 @@ function DoIntersectStrong(R1,R2:TRect):boolean;
 begin
  IntersectRect(R1,R1,R2);
  Result:=not IsRectEmpty(R1);
-end;
-
-function DoIntersectWeak(R1,R2:TRect):boolean;
-begin
- result:=IntersectRect(R1,R1,R2);
-end;
-
-procedure RecursiveInvalidate(c:TWinControl);
-var i:integer;
-begin
- with c do
- begin
-  for i:=0 to ControlCount-1 do
-  if Controls[i] is TWinControl then
-   RecursiveInvalidate(TWinControl(Controls[i]));   
-  Invalidate;
- end;
 end;
 
 procedure TdhCustomPanel.SetVHPos(H,V:integer);
@@ -4361,16 +4338,6 @@ begin
  end else
  begin
   DrawToCanvas(GetCanvas);
- end;
-end;
-
-function GetParentList(c:TControl):TList;
-begin
- result:=TList.Create;
- while c<>nil do
- begin
-  result.Add(c);
-  c:=c.Parent;
  end;
 end;
 
@@ -7592,13 +7559,6 @@ begin
   end;
 end;
 
-function GoodWin(c:TControl):TWinControl;
-begin
- if (c=nil) or (c is TWinControl) then
-  result:=TWinControl(c) else
-  result:=c.Parent;
-end;
-
 {$ENDIF}
 
 procedure TdhCustomPanel.DoClickAction(Initiator:TdhCustomPanel);
@@ -7745,13 +7705,6 @@ procedure TdhCustomPanel.SetASXY(const Value: TASXY);
 begin
   FAutoSize := Value;
   AdjustSize;
-end;
-
-function _if(q:boolean; a,b:integer):integer;
-begin
- if q then
-  result:=a else
-  result:=b;
 end;
 
 procedure TdhCustomPanel.SetImageType(const Value:TImageType);

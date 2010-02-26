@@ -421,7 +421,7 @@ end;
 
 function TdhBitmap32.GET_FDS256(X, Y: Integer): TColor32;
 var
-    flrx, flry, celx, cely: Longword;
+    celx, cely: Longword;
     C1, C2, C3, C4: TColor32;
 begin
   if (X > 0) and (Y > 0) and (X < (Width - 1) shl 8) and (Y < (Height - 1) shl 8) then

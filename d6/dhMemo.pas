@@ -61,7 +61,7 @@ begin
 end;
 
 procedure TdhMemo.GetRowsCols(AllowModifyX,AllowModifyY:boolean; var NewWidth, NewHeight, Rows,Cols: Integer);
-var Rect,scrolls:TRect;
+var scrolls:TRect;
 begin
   Rows:=0;
   Cols:=0;

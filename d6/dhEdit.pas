@@ -91,7 +91,6 @@ begin
 end;
 
 procedure TdhCustomEdit.GetRowsCols(AllowModifyX,AllowModifyY:boolean; var NewWidth, NewHeight, Rows,Cols: Integer);
-var Rect:TRect;
 begin
   Rows:=0;
   Cols:=0;

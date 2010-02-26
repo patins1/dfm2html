@@ -1070,7 +1070,7 @@ begin
 end;
 
 procedure UpdateZIndex(Self:TWinControl);
-var i,p,sp,bestp,besti,szi:integer;
+var i,p,sp,bestp,besti:integer;
     Pos: HWND;
 begin
  with Self do
@@ -1167,7 +1167,6 @@ begin
 end;
 
 procedure TdhCustomPanel.CSSToWinControl(WhatChanged:TWhatChanged=[]);
-var i:integer;
 var _State:TState;
 begin
  if Fetching then exit;
@@ -1935,7 +1934,6 @@ procedure TdhCustomPanel.SetBounds(ALeft, ATop, AWidth, AHeight: Integer);
 procedure TdhCustomPanel.ChangeBounds(ALeft, ATop, AWidth, AHeight: Integer);
 {$ENDIF}
 var R,R2,R3:TRect;
-    i:integer;
 begin
 
  if FinalShowing and not (csReading in ComponentState) then
@@ -2640,7 +2638,7 @@ var
   var
     NewLeft, NewTop, NewWidth, NewHeight: Integer;
     ParentSize: TPoint;
-    mar,R:TRect;
+    mar:TRect;
     sLightBoundsChanging:boolean;
   begin        
       if (AAlign = alNone) then
@@ -2815,7 +2813,6 @@ var
     Result := False;
   end;
 
-var P:TWinControl;
 begin
   with TFakeWinControl(Self) do
   begin            
@@ -3155,7 +3152,6 @@ begin
 end;
 
 procedure TdhCustomPanel.TransferStylesToUse;
-var State:TState;
 begin
  if Use=nil then exit;
  TransferStylesToElement(Use);
@@ -3203,8 +3199,6 @@ begin
 end;
 
 procedure TdhCustomPanel.CopyStyles(fromState,toState:TState);
-var UsePn,Pn:TdhCustomPanel;
-    State:TState;
 begin
  if (StyleArr[fromState]<>nil) and (StyleArr[toState]<>nil) then
  begin                                   
@@ -3236,7 +3230,6 @@ begin
 end;
 
 procedure TdhCustomPanel.GetStylesFromUse;
-var State:TState;
 begin
  if Use=nil then exit;
  GetStylesFromElement(Use);
@@ -3959,7 +3952,6 @@ begin
 end;
 
 function TdhCustomPanel.TransparentEdges:TRect;
-var tt:TTransformations;
 begin
  if IsScrollArea and EdgesInScrolledArea then
  begin
@@ -3975,7 +3967,6 @@ begin
 end;
 
 function TdhCustomPanel.SemiTransparentEdges:TRect;
-var tt:TTransformations;
 begin
  if IsScrollArea and EdgesInScrolledArea then
  begin
@@ -4144,7 +4135,6 @@ var BottomRight:boolean;
     bs:TCSSBorderStyle;
     bc:TColor;
     L,bw:integer;
-    P0,P1:TPoint;
     AdjDivX,AdjDivY:integer;
     Color1,Color2,Col:TColor;
 var ColorDefined:boolean;
@@ -4741,7 +4731,7 @@ var
   SrcR: Integer;
   SrcB: Integer;
   T: TdhAffineTransformation;
-  Sx, Sy, Scale, ScaleX,ScaleY: Single;
+  Scale, ScaleX,ScaleY: Single;
   Transformations:TTransformations;
 begin
 
@@ -4855,13 +4845,11 @@ end;
 procedure TdhCustomPanel.SpecialBg(const ref_scrolled,ref_fixed:TRect; Src:TdhBitmap32; const brct: TRect; IsFixed:boolean);
 var
   num_across, num_down,
-  y_coord, x_coord,
   y, x : integer;
   FPicture:TGraphic;
   FBackgroundRepeat:TCSSBackgroundRepeat;
   BPos:TPoint;
-  SaveIndex: Integer;
-  x1,x2,y1,y2,i:integer;
+  x1,x2,y1,y2:integer;
   Strech32,Strech32Mult:TdhBitmap32;
   R,R2,ref:TRect;
   Col:TColor32;
@@ -5095,7 +5083,6 @@ begin
 end;
 
 procedure TdhCustomPanel.PaintBorder;
-var tt:TTransformations;
 begin
   if not RuntimeMode and (csDesigning in ComponentState) and IsNullRect(BorderPure) and not Opaque then
   if not IsRasterized then
@@ -5160,7 +5147,7 @@ begin
 end;
 
 procedure TdhCustomPanel.PixelCombineNegativeMultiply(F: TColor32; var B: TColor32; M: TColor32);
-var B2,B3:TColor32;
+var B2:TColor32;
     alpha:DWORD;
 begin
  B2:=ColorNegMult(F,GetBlendMemEx(B,$FF000000,$FF),M);
@@ -5169,8 +5156,6 @@ begin
 end;
 
 procedure TdhCustomPanel.PixelCombineMultiply(F: TColor32; var B: TColor32; M: TColor32);
-var B1,B2,B3:TColor32;
-    alpha:DWORD;
 begin
  B:=ExtractAlphaColor(ColorMult(F,GetBlendMemEx(B,$FF000000,$FF),M),ColorMult(F,GetBlendMemEx(B,$FFFFFFFF,$FF),M));
 end;
@@ -5265,7 +5250,6 @@ end;
 
 
 function TdhCustomPanel.EasyBounds(var Transformations:TTransformations;var T: TdhAffineTransformation; var W,H:Integer; var HorzRotated,VertRotated:boolean): boolean;
-var T2: TAffineTransformation;
 begin
   result:=true;
   if not HasTransformations(Transformations) then
@@ -5350,10 +5334,8 @@ var T: TdhAffineTransformation;
     cr:TRect;
 
 procedure DoBlurPure(_Src:TdhBitmap32; Blur:TBlur; shift:integer; inv:boolean=false);
-var P,P2,P3: PColor32;
-    j,OffsX,OffsY,Offs,count:integer;
-    a:DWORD;
-    col:DWORD;
+var P,P2: PColor32;
+    j,count:integer;
 begin
  count:=Src.Width*Src.Height;
 
@@ -5379,7 +5361,7 @@ begin
 end;
 
 procedure DoBlur(_Src:TdhBitmap32; Blur:TBlurEffect; inv:boolean);
-var P,P2,P4: PColor32;
+var P,P2: PColor32;
     j,OffsX,OffsY{,Offs},count:integer;
     Alpha:double;
     a:DWORD;
@@ -5460,7 +5442,7 @@ var maxit:integer;
 
 procedure EllipsePoint(x,y:double; a,b:double; var rx,ry,ralpha:double);
 var T:double;
-    f,f_pred,T_pred,D,Sqr_a_b,ax,by,COS_t,SIN_t:double;
+    D,Sqr_a_b,ax,by,COS_t,SIN_t:double;
     i:integer;
 begin
 
@@ -5989,7 +5971,6 @@ begin
 end;
 
 var HorzRotated,VertRotated,IsEasy:boolean;
-var i:integer;
 
 procedure NotTooBig(var L,R,L2,R2:integer; avail:integer; LDouble,RDouble:boolean);
 var sL,sR:integer;
@@ -6390,9 +6371,6 @@ begin
   DrawArrow(ClpRct,P,Vert,Mirror,ScrollbarShadowColor);
   end;
 end;
-
-var It:integer;
-    H, S, L : Single;
 
 const IncLight=35;
       MulLight=0.5;
@@ -7102,8 +7080,7 @@ begin
 end;
 
 procedure TdhCustomPanel.CalcStrongToWeak(var ALeft,ATop,AWidth,AHeight:integer);
-var ParentWH:TPoint;
-    i:integer;
+var i:integer;
 begin
  AHeight:=Height;
  ATop:=Top;
@@ -8014,8 +7991,6 @@ begin
 end;
         
 procedure TdhCustomPanel.SetBoundedVHPos(H,V:integer);
-var OldPos,P:TPoint;
-    R:TRect;
 begin
   SetVHPos(H,V);
 end;

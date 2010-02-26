@@ -274,8 +274,7 @@ type
   TDWORDArray = Array[Word] of DWORD;
   pDWORDArray = ^TDWORDArray;
 var y,x,i:integer;
-var P,P2,P3: PColor32;
-    bp:pByteArray;
+var P: PColor32;
     bt:TBitmap;
     PP : pDWORDArray;
     Ext : TGIFGraphicControlExtension;
@@ -286,7 +285,6 @@ var P,P2,P3: PColor32;
     GIFSubImage:TGIFFrame;
     ba,ba2:PByteArray;
     DelayMS:Word;
-    png:TPngImage;
 begin
 
   if (CopyFrom<>nil) and (CopyFrom.GraphicControlExtension<>nil) then
@@ -467,8 +465,8 @@ begin
 end;
 
 function GetPNGObjectFromBitmap32(Src:TBitmap32):TGraphic;
-var y,x,intFormCount:integer;
-var P,P2,P3: PColor32;
+var y,x:integer;
+var P: PColor32;
     bp:pngimage.pByteArray;
     png:TPngImage;
 begin
@@ -510,11 +508,7 @@ type TGraphicAccess = class(TGraphic);
 
 function GetBitmap32FromGifImage(gif:TGIFImage):TdhBitmap32;
 var P: PColor32;
-    bp:pByteArray;
-    x,y,i:integer;
-    TransparentColorIndex:BYTE;
-    GIFSubImage:TGIFFrame;
-    //col:TColor;
+    x:integer;
     Source:TGraphic;
     Canvas: TCanvas;
 begin
@@ -549,8 +543,7 @@ end;
 
 function GetBitmap32FromGraphic(bt:TGraphic):TdhBitmap32;
 var P: PColor32;
-    bp:pByteArray;
-    x,y:integer;
+    y:integer;
     TransparentColor:TColor32;
 begin
   result:=TdhBitmap32.Create;

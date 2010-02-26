@@ -299,7 +299,6 @@ end;
 //"alpha/255/255/255" would be the value between 0 and 1
 function GetOriginalRGB(Black:TColor32; alpha:DWORD):TColor32;
 var r,g,b,ai:DWORD;
-    f:single;
 const augm=255;
 begin
       if alpha=0 then //is color completely transparent?
@@ -343,7 +342,7 @@ begin
 end;
 
 function _CombineReg(X, Y, W: TColor32): TColor32;
-var r1,r2,g1,g2,b1,b2,a1,a2,r,g,b,a,alpha:integer;
+var r1,r2,g1,g2,b1,b2,a1,a2,r,g,b,alpha:integer;
 begin
  if W=0 then
  begin

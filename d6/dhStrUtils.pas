@@ -156,7 +156,6 @@ end;
 function AsString(graphic:TGraphic):TFileContents; overload;
 var
   Stream: TMemoryStream;
-  size:Int64;
 begin
   Stream := TMemoryStream.Create;
   try

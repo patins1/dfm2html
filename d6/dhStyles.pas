@@ -854,8 +854,7 @@ begin
 end;
 
 function GetBackgroundPixels(Value:TCSSBackgroundPosition; const rct:TRect; imgWidth,imgHeight:integer; var res:TPoint):boolean;
-var r:integer;
-    v1,v2,vi:TCSSBackgroundPosition;
+var v1,v2,vi:TCSSBackgroundPosition;
 begin
  try
  SplitBackgroundPixels(Value,v1,v2);
@@ -877,7 +876,6 @@ begin
 end;
 
 procedure TBlurEffect.Assign(Source: TPersistent);
-var tt:TTransformations;
 begin
   if Source is TBlurEffect then
   with TBlurEffect(Source) do
@@ -1708,7 +1706,6 @@ begin
 end;
 
 function TLocationImage.GraphicExtension:TPathName;
-var i:integer;
 begin
  result:='';
  if HasPath then
@@ -1968,8 +1965,7 @@ begin
 end;
 
 function TStyle.CopyBlurEffectsByInherited:boolean;
-var P:TPoint;
-    tt:TTransformations;
+var tt:TTransformations;
     OldEnabled:boolean;
 begin
    OldEnabled:=Effects.Enabled;

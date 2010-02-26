@@ -581,8 +581,7 @@ begin
 end;
 
 procedure TdhLink.DoClickAction(Initiator:TdhCustomPanel);
-var apage:TWinControl;
-    p:TControl;
+var p:TControl;
     histPage:TdhPage;
     histAnchor:TControl;
 begin
@@ -728,7 +727,6 @@ begin
 end;
 
 procedure TdhMenu.OpenMenu;
-var i:integer;
 begin
    ToOpen:=nil;
    if Visible then exit;
@@ -1506,7 +1504,7 @@ end;
 
 procedure TdhMenu.NotifyUseChanged(OldValue:ICon);
 var ls:TList;
-    i,lev:integer;
+    i:integer;
     pn:TdhCustomPanel;
     BestUse:TdhCustomPanel;
     OldTopMenu,NewTopMenu:TdhMenu;

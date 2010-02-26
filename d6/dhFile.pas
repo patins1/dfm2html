@@ -143,7 +143,6 @@ begin
 end;
 
 procedure TdhFile.DoTopPainting;
-var rct:TRect;
 begin
  if (csDesigning in ComponentState) then
  begin

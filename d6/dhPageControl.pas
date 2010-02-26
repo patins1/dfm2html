@@ -286,8 +286,6 @@ begin
 end;
 
 procedure TdhPageControl.DoTopPainting;
-var
-  rct:TRect;
 begin
  if (csDesigning in ComponentState) then
  begin
@@ -388,7 +386,6 @@ end;
 procedure TdhPageControl.UpdateLinks(OldActivePage:TdhPage; OnlyLocal:boolean);
 var ii:integer;
 var DownForURLAnchor:TdhLink;
-    sl:TList;
 
 procedure ItUpdateLinks(p:TWinControl);
 var i:integer;
@@ -740,7 +737,6 @@ procedure TdhPage.SetParent(AParent: TWinControl);
 {$ELSE}
 procedure TdhPage.SetParent(const AParent: TWidgetControl);
 {$ENDIF}
-var F:TCustomForm;
 begin
   if PageControl<>nil then
    inherited SetParent(PageControl.Parent) else

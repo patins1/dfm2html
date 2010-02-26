@@ -951,7 +951,7 @@ var StyleTree,NoneStyle:TStyleTree;
     text:HypeString;
 
 procedure PushText(vn:integer; IsBreak:boolean=false);
-var i,i2,c,fwcapsIndex:integer;
+var i,i2,c:integer;
     s,ss:HypeString;
     wtext:WideString;
     sec,sec2:WideChar;
@@ -1426,8 +1426,7 @@ begin
 end;
 
 function TdhCustomLabel.GetAutoRectPoint(AllowModifyX,AllowModifyY:boolean; NewWidth, NewHeight: Integer):TPoint;
-var NewWidth2, NewHeight2: Integer;
-    Avail,Req:TPoint;
+var Avail,Req:TPoint;
     IsHorzScrollBarVisible,IsVertScrollBarVisible:boolean;
 begin
  Req:=Point(NewWidth,NewHeight);
@@ -1455,8 +1454,6 @@ end;
 procedure TdhCustomLabel.GetInnerAutoRect(AllowModifyX,AllowModifyY:boolean; var NewWidth, NewHeight: Integer);
 var
   Rect: TRect;
-  FPicture: TPicture;
-  PicHeight,PicWidth:integer;
   Transformations:TTransformations;
   T: TdhAffineTransformation;
   HorzRotated,VertRotated:boolean;
@@ -1667,7 +1664,6 @@ var bs,vn,ii,toleft,toright,Fit:integer;
     teil:AnsiString;
     Sz:TSize;
     Canvas:TCanvas;
-    pi:^Integer;
     _LetterSpacing,_WordSpacing:Integer;
 {$IFNDEF CLX}
     DC: HDC;
@@ -1913,7 +1909,7 @@ var
     ForceBreak,BreakByBlock:boolean;
     StyleTree:TStyleTree;
     _WrapAlways:boolean;
-    cx,delta,bs:integer;
+    delta,bs:integer;
 
 begin                      
   UseStyleTree:=nil;
@@ -2076,7 +2072,7 @@ end;
 
 
 function TdhCustomLabel.FindChildContent(ActLine:PLineInfo; _StyleTree:TStyleTree):TPoint;
-var lmin,lmax,w,i:integer;
+var lmin,lmax,w:integer;
     StyleTree:TStyleTree;
 begin
  lmin:=maxint;
@@ -2236,7 +2232,7 @@ end;
 procedure TdhCustomLabel.CalcMinMax;
 var line:integer;
     ActLine:PLineInfo;
-    ti,vn:integer;
+    ti:integer;
     StyleTree:TStyleTree;
 begin
 
@@ -2758,8 +2754,6 @@ end;
 
 
 function TdhCustomLabel.ListStyleType:TCSSListStyleType;
-var StyleTree:TStyleTree;
-    lists:integer;
 begin
  Cascaded.ListStyleType:=clsDisk;
  GetVal(pcListStyleType);
@@ -2776,7 +2770,6 @@ begin
 end;
 
 function TdhCustomLabel.TextIndent:integer;
-var res:integer;
 begin
  if GetVal(pcTextIndent) then
   result:=GetTextIndentPixels(Cascaded.TextIndent,ComputedFontSize) else
@@ -2948,7 +2941,6 @@ end;
 
 function TdhCustomLabel.CharPos:integer;
 var
-    NewClientStyleTree,OldClientStyleTree:TStyleTree;
     P:TPoint;
     R:TRect;
 
@@ -3007,8 +2999,6 @@ end;
 procedure TdhCustomLabel.WMSetCursor(var Message: TWMSetCursor);
 var
   Cursor: TCursor;
-  Control: TControl;
-  P: TPoint;
 begin
   if TControl(Self) is TWinControl then
   if IsDlg then

@@ -80,7 +80,6 @@ begin
 end;
 
 procedure TdhCheckBox.SetChecked(const Value: boolean);
-var i:integer;
 begin
  if FChecked <> Value then
  begin

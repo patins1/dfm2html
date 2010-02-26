@@ -317,7 +317,7 @@ end;
 procedure TdhSelect.DropDown;
 var
   P: TPoint;
-  I, Y: Integer;
+  Y: Integer;
 begin
   FDataList.Width:=Width;
   FDataList.Items.Assign(Items);
@@ -421,7 +421,6 @@ end;
 
 procedure TdhSelect.GetRowsCols(AllowModifyX, AllowModifyY: boolean;
   var NewWidth, NewHeight, Rows, Cols: Integer);
-var Rect:TRect;
 begin
   Rows:=0;
   Cols:=0;

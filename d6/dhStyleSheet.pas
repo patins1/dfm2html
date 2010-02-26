@@ -90,10 +90,8 @@ begin
  result:=false;
 end;
 
-
 function UsefulUse(c,comp:TPersistent; ForInline:boolean; var pn:TdhCustomPanel):boolean; overload;
-var p:TControl;
-    StyleSheet:TdhStyleSheet;
+var StyleSheet:TdhStyleSheet;
 begin
  result:=false;
  if c=nil then exit;

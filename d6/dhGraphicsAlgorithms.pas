@@ -5,11 +5,9 @@ interface
 uses
   SysUtils, Classes, TypInfo,
 {$IFDEF CLX}
-  QControls, QForms, Qt, QGraphics, QDialogs, QExtCtrls,
-  QComCtrls, QStdCtrls, QTypes,
+  Qt, QGraphics,
 {$ELSE}
-  Controls, Forms, Windows, Messages, Graphics, Dialogs, ExtCtrls,
-  ComCtrls, CommCtrl, StdCtrls, clipbrd,
+  Windows, Messages, Graphics,
 {$ENDIF}
   math,
   GR32,GR32_Transforms,gauss,GR32_Blend,GR32_LowLevel,dhBitmap32, dhStyles, dhColorUtils;
@@ -23,7 +21,7 @@ procedure DoBlurPure(Src:TdhBitmap32; _Src:TdhBitmap32; Blur:TBlur; shift:intege
 procedure NotTooBig(var L,R,L2,R2:integer; avail:integer; LDouble,RDouble:boolean);
 procedure NotTooBig2(var Corner:TPoint; AvailX,AvailY:integer; IsDouble:boolean);
 
-procedure RoundCorner(const OuterRect:TRect; Src,Dst:TdhBitmap32; HorzOuterRadius,VertOuterRadius,HorzBorderWidth,VertBorderWidth:integer; Align:TAlign);
+procedure RoundCorner(const OuterRect:TRect; Src,Dst:TdhBitmap32; HorzOuterRadius,VertOuterRadius,HorzBorderWidth,VertBorderWidth:integer; Align:TCornerAlign);
 procedure LineSpec(Canvas:TCanvas; P1,P2:TPoint; Width,Length,Gap:Integer; ClosedInterval,Rectangular:boolean);
 
 procedure MixAlpha(Src:TdhBitmap32);
@@ -491,7 +489,7 @@ begin
  result:=Sqrt(Sqr(a-x)+Sqr(b-y));
 end;
 
-procedure RoundCorner(const OuterRect:TRect; Src,Dst:TdhBitmap32; HorzOuterRadius,VertOuterRadius,HorzBorderWidth,VertBorderWidth:integer; Align:TAlign);
+procedure RoundCorner(const OuterRect:TRect; Src,Dst:TdhBitmap32; HorzOuterRadius,VertOuterRadius,HorzBorderWidth,VertBorderWidth:integer; Align:TCornerAlign);
 var HorzInnerRadius,VertInnerRadius,x,y:integer;
     alpha,betta,_alpha,alphaO,alphaI,perimeter,act_arc,beta,
     NormalX,NormalY,DistRound,DistOuter,DistInner,projX,projY,RoundOuterX,RoundOuterY,RoundInnerX,RoundInnerY,OuterX,OuterY,InnerX,InnerY,pct,pct2:double;
@@ -522,15 +520,15 @@ begin
  if (HorzOuterRadius=0) or (VertOuterRadius=0) then exit;
 
  case Align of
- alTop:    P:=Point(OuterRect.Left+HorzOuterRadius-1,OuterRect.Top+VertOuterRadius-1);
- alRight:  P:=Point(OuterRect.Right-HorzOuterRadius ,OuterRect.Top+VertOuterRadius-1);
- alBottom: P:=Point(OuterRect.Right-HorzOuterRadius ,OuterRect.Bottom-VertOuterRadius);
- alLeft:   P:=Point(OuterRect.Left+HorzOuterRadius-1,OuterRect.Bottom-VertOuterRadius);
+ calTopLeft:    P:=Point(OuterRect.Left+HorzOuterRadius-1,OuterRect.Top+VertOuterRadius-1);
+ calTopRight:  P:=Point(OuterRect.Right-HorzOuterRadius ,OuterRect.Top+VertOuterRadius-1);
+ calBottomRight: P:=Point(OuterRect.Right-HorzOuterRadius ,OuterRect.Bottom-VertOuterRadius);
+ calBottomLeft:   P:=Point(OuterRect.Left+HorzOuterRadius-1,OuterRect.Bottom-VertOuterRadius);
  end;
  multPX:=1;
  multPY:=1;
- if Align in [alTop,alLeft] then multPX:=-1;
- if Align in [alTop,alRight] then multPY:=-1;
+ if Align in [calTopLeft,calBottomLeft] then multPX:=-1;
+ if Align in [calTopLeft,calTopRight] then multPY:=-1;
  HorzInnerRadius:=HorzOuterRadius-VertBorderWidth;
  VertInnerRadius:=VertOuterRadius-HorzBorderWidth;
  HorzInnerRadius:=max(1,HorzInnerRadius);

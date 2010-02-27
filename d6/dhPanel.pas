@@ -5352,10 +5352,10 @@ begin
    EqArea.Top:=Max(InnerRect.Top,Max(OuterRect.Top+brTopLeft.Y,OuterRect.Top+brTopRight.Y));
    EqArea.Bottom:=Min(InnerRect.Bottom,Min(OuterRect.Bottom-brBottomLeft.Y,OuterRect.Bottom-brBottomRight.Y));
 
-   RoundCorner(OuterRect,SrcFinal,Src,brTopLeft.X,brTopLeft.Y,bo.Top,bo.Left,alTop);
-   RoundCorner(OuterRect,SrcFinal,Src,brBottomLeft.X,brBottomLeft.Y,bo.Bottom,bo.Left,alLeft);
-   RoundCorner(OuterRect,SrcFinal,Src,brTopRight.X,brTopRight.Y,bo.Top,bo.Right,alRight);
-   RoundCorner(OuterRect,SrcFinal,Src,brBottomRight.X,brBottomRight.Y,bo.Bottom,bo.Right,alBottom);
+   RoundCorner(OuterRect,SrcFinal,Src,brTopLeft.X,brTopLeft.Y,bo.Top,bo.Left,calTopLeft);
+   RoundCorner(OuterRect,SrcFinal,Src,brBottomLeft.X,brBottomLeft.Y,bo.Bottom,bo.Left,calBottomLeft);
+   RoundCorner(OuterRect,SrcFinal,Src,brTopRight.X,brTopRight.Y,bo.Top,bo.Right,calTopRight);
+   RoundCorner(OuterRect,SrcFinal,Src,brBottomRight.X,brBottomRight.Y,bo.Bottom,bo.Right,calBottomRight);
 
    FreeAndNil(SrcFinal);
   end;

@@ -4351,8 +4351,8 @@ begin
   SetWindowOrgEx(DC,(p1.X-p2.x),(p1.y-p2.y), nil); //! genauer, z.b. bei TPageControl
   OffsetRect(cCutR,-(p2.x-p3.x),-(p2.y-p3.y));
   IntersectClipRect(DC, cCutR.Left, cCutR.Top, cCutR.Right, cCutR.Bottom);
-  Perform(WM_ERASEBKGND, Longint(DC), 0);
-  Perform(WM_PAINT, Longint(DC), 0);
+  Perform(WM_ERASEBKGND, WPARAM(DC), 0);
+  Perform(WM_PAINT, WPARAM(DC), 0);
   RestoreDC(DC, SaveIndex);
   _Parent.ControlState:=_Parent.ControlState-[csPaintCopy];
   finally

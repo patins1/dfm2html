@@ -145,14 +145,14 @@ end;
 
 function ColorToString(Color: TCSSColor): TColorName;
 begin
-  if not dhColorUtils.ColorToIdent(Color, Result) then
+  if not dhColorUtils.ColorToIdent(Longint(Color), Result) then
    Result:=ColorToIntString(Color);
 end;
 
 function ColorToString(Color: Longint): TColorName;
 begin
   if not dhColorUtils.ColorToIdent(Color, Result) then
-   Result:=ColorToIntString(Color);
+   Result:=ColorToIntString(TColor32(Color));
 end;
 
 function ColorToColor32(Color:TColor):TColor32;

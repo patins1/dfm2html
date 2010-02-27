@@ -2488,7 +2488,7 @@ begin
  P:=Bt.PixelPtr[0,y];
  for x:=0 to w-1 do
  begin
-  P^:=dword(min(($FF-GreenComponent(P^))*5 div 4,$FF)) shl 24 or Color;
+  P^:=Cardinal(min(($FF-GreenComponent(P^))*5 div 4,$FF)) shl 24 or Color;
   inc(P);
  end;
  end;

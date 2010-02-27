@@ -270,13 +270,10 @@ begin
 end;
 
 function AddGIFSubImageFromBitmap32(Transparent:TBitmap32; Opaque:TBitmap32; GIF:TGIFImage; Loop:boolean=false; CopyFrom:TGIFFrame=nil; PrevSubImage:TGIFFrame=nil):TGIFFrame;
-type
-  TDWORDArray = Array[Word] of DWORD;
-  pDWORDArray = ^TDWORDArray;
 var y,x,i:integer;
 var P: PColor32;
     bt:TBitmap;
-    PP : pDWORDArray;
+    PP : PColor32;
     Ext : TGIFGraphicControlExtension;
     LoopExt: TGIFAppExtNSLoop;
     TransparentIndex	: integer;
@@ -309,9 +306,10 @@ begin
      if P^ shr 24=$00 then
      begin
       WasTransparent:=true;
-      pp[x]:=$0;
+      pp^:=$0;
      end;
      inc(P);
+     inc(pp);
     end;
    end;
   end;

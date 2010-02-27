@@ -7,7 +7,7 @@ uses
 {$IFDEF CLX}
   QGraphics,
 {$ELSE}
-   Windows, Graphics,
+  Graphics,
 {$ENDIF}
   math,
   GR32,GR32_Blend,GR32_LowLevel,dhStrUtils,dhStyles;
@@ -26,7 +26,7 @@ Function AddRGB(Color:TColor32; HowMuch:integer):TColor32;
 procedure ListColorValues(Proc: TGetStrProc);
 
 function GetPixelCombineNormal(F: TColor32; B: TColor32; M: TColor32=255):TColor32;
-function GetOriginalRGB(Black:TColor32; alpha:DWORD):TColor32;
+function GetOriginalRGB(Black:TColor32; alpha:Cardinal):TColor32;
 function ColorNegMult(C1, C2: TColor32; M:TColor32=255): TColor32;
 function ColorMult(C1, C2: TColor32; M:TColor32=255): TColor32;
 function GetBlendMemEx(F: TColor32; B: TColor32; M: TColor32):TColor32;
@@ -193,22 +193,22 @@ end;
 Function ApplyDark(Color:TColor; HowMuch:Byte):TColor;
 Var r,g,b:Byte;
 
-function GetRValue(rgb: DWORD): Byte;
+function GetRValue(rgb: Cardinal): Byte;
 begin
   Result := Byte(rgb);
 end;
 
-function GetGValue(rgb: DWORD): Byte;
+function GetGValue(rgb: Cardinal): Byte;
 begin
   Result := Byte(rgb shr 8);
 end;
 
-function GetBValue(rgb: DWORD): Byte;
+function GetBValue(rgb: Cardinal): Byte;
 begin
   Result := Byte(rgb shr 16);
 end;
 
-function RGB(r, g, b: Byte): DWORD;
+function RGB(r, g, b: Byte): Cardinal;
 begin
   Result := (r or (g shl 8) or (b shl 16));
 end;
@@ -253,8 +253,8 @@ end;
 
 function ColorNegMult(C1, C2: TColor32; M:TColor32=255): TColor32;
 var
-  r1, g1, b1: DWORD;
-  r2, g2, b2, r,g,b: DWORD;
+  r1, g1, b1: Cardinal;
+  r2, g2, b2, r,g,b: Cardinal;
 begin
   M := M * (C1 shr 24);
 
@@ -275,8 +275,8 @@ end;
 
 function ColorMult(C1, C2: TColor32; M:TColor32=255): TColor32;
 var
-  r1, g1, b1: DWORD;
-  r2, g2, b2, r,g,b: DWORD;
+  r1, g1, b1: Cardinal;
+  r2, g2, b2, r,g,b: Cardinal;
 begin
   M := M * (C1 shr 24);
 
@@ -297,8 +297,8 @@ end;
 
 //Note that the real alpha value is "alpha/255/255", but this is no integer
 //"alpha/255/255/255" would be the value between 0 and 1
-function GetOriginalRGB(Black:TColor32; alpha:DWORD):TColor32;
-var r,g,b,ai:DWORD;
+function GetOriginalRGB(Black:TColor32; alpha:Cardinal):TColor32;
+var r,g,b,ai:Cardinal;
 const augm=255;
 begin
       if alpha=0 then //is color completely transparent?
@@ -308,17 +308,17 @@ begin
       begin
        //otherwise reconstruct rgb values
        ai:=((augm+1) shl 16) div alpha;
-       r:=dword((Black and $FF)*ai) shr 8;
-       g:=dword((Black shr 8 and $FF)*ai) shr 8;
-       b:=dword((Black shr 16 and $FF)*ai) shr 8;
+       r:=Cardinal((Black and $FF)*ai) shr 8;
+       g:=Cardinal((Black shr 8 and $FF)*ai) shr 8;
+       b:=Cardinal((Black shr 16 and $FF)*ai) shr 8;
        result:=(r and $0000FF) or (g shl 8 and $00FF00) or (b shl 16 and $FF0000) or ((alpha{ div augm} shr 8) shl 24  and $FF000000);
       end;
 end;
 
 function ExtractAlphaColor(Black,White:TColor32):TColor32;
-var alpha:dword;
+var alpha:Cardinal;
     red_alpha,green_alpha,blue_alpha:integer;
-    r,g,b:dword;
+    r,g,b:Cardinal;
 begin
        red_alpha:=$FF + (Black and $FF) - (White and $FF);
        green_alpha:=$FF + (Black shr 8 and $FF) - (White shr 8 and $FF);
@@ -334,9 +334,9 @@ begin
        end else
        begin
         alpha:=(red_alpha+green_alpha+blue_alpha) div 3;
-        r:=(Black and $FF)*255 div dword(red_alpha);
-        g:=(Black shr 8 and $FF)*255 div dword(green_alpha);
-        b:=(Black shr 16 and $FF)*255 div dword(blue_alpha);
+        r:=(Black and $FF)*255 div Cardinal(red_alpha);
+        g:=(Black shr 8 and $FF)*255 div Cardinal(green_alpha);
+        b:=(Black shr 16 and $FF)*255 div Cardinal(blue_alpha);
         result:=r or (g shl 8) or (b shl 16) or (alpha shl 24);
        end;
 end;

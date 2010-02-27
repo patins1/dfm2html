@@ -5038,7 +5038,7 @@ end;
 
 procedure TdhCustomPanel.PixelCombineNegativeMultiply(F: TColor32; var B: TColor32; M: TColor32);
 var B2:TColor32;
-    alpha:DWORD;
+    alpha:Cardinal;
 begin
  B2:=ColorNegMult(F,GetBlendMemEx(B,$FF000000,$FF),M);
  alpha:=M*(((F shr 24)*(255 - (B shr 24))) + (B shr 24)*255);

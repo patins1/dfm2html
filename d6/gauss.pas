@@ -6,12 +6,10 @@ interface
 
 uses Types,Classes, math,GR32_LowLevel;
 
-type  PDWORD = ^DWORD;
-
 //Radius cannot exceed 255 since overflow at integer operations hazard
 //flood=0: no flood; 1: a pixel is added 100% to pixel-next neighbours, to more far away pixels with normal decrease
 //normaly, a pixel distributes its color to Radius^2/(pi/2) surrounding pixels
-procedure Blur(Bitmap: PDWORD; Width,Height:integer; Radius: double{byte}; flood:double; inv:boolean=false);
+procedure Blur(Bitmap: PCardinal; Width,Height:integer; Radius: double{byte}; flood:double; inv:boolean=false);
 
 
 var eigen:single;
@@ -32,8 +30,8 @@ type
   TKernel = record
     Size: TKernelSize;
     dSize:double;
-    FullAdd: Array [0..MaxKernelSize] of DWORD;
-    FullAddTimes255: Array [0..MaxKernelSize] of DWORD;
+    FullAdd: Array [0..MaxKernelSize] of Cardinal;
+    FullAddTimes255: Array [0..MaxKernelSize] of Cardinal;
     Weights: Array [{-MaxKernelSize}0..MaxKernelSize] of single;
   end;
 
@@ -96,19 +94,19 @@ var
   J, N: Integer;
   W:QWORD;
   TR, TG, TB: Double;
-  Src:PDWord;
+  Src:PCardinal;
   Src3,Src2:PQWORD;
   incr:QWORD;
-  WP:PDWORD;
+  WP:PCardinal;
   fW:Single;
   fWP:PSingle;
   fincr:double;
   P2,theRow2,Pstart: PQWORD;
   ffinal:Single;
-  P_Preview:PDWORD;
-  LastVal:DWORD;
+  P_Preview:PCardinal;
+  LastVal:Cardinal;
   LastRepeat:integer;
-  NewVal:DWORD;
+  NewVal:Cardinal;
   PredKSize,BadArea:integer;
   P3:PQWORD;
 
@@ -133,7 +131,7 @@ begin
    BadArea:=-(PredKSize*2+1)+1;
    LastVal:=0;
    LastRepeat:=(BadArea-1)+PredKSize;
-   P_Preview:=PDWORD(P);
+   P_Preview:=PCardinal(P);
    for J := 1 to PredKSize do
    begin
     NewVal:=P_Preview^;
@@ -250,17 +248,17 @@ begin
   end;
 end;
 
-procedure Blur(Bitmap: PDWORD; Width,Height:integer; Radius: double; flood:double; inv:boolean=false);
+procedure Blur(Bitmap: PCardinal; Width,Height:integer; Radius: double; flood:double; inv:boolean=false);
 var
   Row: Integer;
   Col,N,J: Integer;
-  P2: PDWORD;
+  P2: PCardinal;
   LineStart,P,Pstart,P3:PQWORD;
   adj:Single;
-var PP:PDWORD;
+var PP:PCardinal;
 
 procedure Normalize;
-var PP:PDWORD;
+var PP:PCardinal;
     J:integer;
 begin
     PP:=Bitmap;
@@ -274,7 +272,7 @@ begin
 end;
            
 procedure Invert;
-var PP:PDWORD;
+var PP:PCardinal;
     J:integer;
 begin   
     PP:=Bitmap;
@@ -291,7 +289,7 @@ end;
 type PSingle=^Single;
 
 procedure ToSingle;
-var PP:PDWORD;
+var PP:PCardinal ;
     J:integer;
 begin
     PP:=Bitmap;

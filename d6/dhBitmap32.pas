@@ -217,8 +217,8 @@ var
   Dst: PColor32;
   ScaleX,ScaleY:Double;
   prevY,prevX,B2Width,ForRangeX:Integer;
-  NX,NNX,NY,NNY,DeltaY,DeltaX,Rarefaction,S,S1,S2:DWORD;
-  HorzSumNew,HorzSum,VertSumNew,VertSum,VertHorzSumNew,VertHorzSum,VertHorzSumHelper:DWORD;
+  NX,NNX,NY,NNY,DeltaY,DeltaX,Rarefaction,S,S1,S2:Cardinal;
+  HorzSumNew,HorzSum,VertSumNew,VertSum,VertHorzSumNew,VertHorzSum,VertHorzSumHelper:Cardinal;
   AlignToOri:double;
 var _HorzSum:array of integer;
 
@@ -295,11 +295,11 @@ begin
         //Note that Src = B2.PixelPtr[prevX+1, Q] holds
         for P := 1 to ForRangeX {prevX+1 to X-1} do
         begin
-          Inc(S1,DWORD(Src^ and $000000FF));
+          Inc(S1,Cardinal(Src^ and $000000FF));
           Inc(Src);
         end;
         if X<B2Width then //we could cancel this line, but the following read pixel could be B2.Pixels[B2.Width,B2.Height-1] which is an access violation
-         S2 := S2 + DWORD(Src^ and $000000FF);
+         S2 := S2 + Cardinal(Src^ and $000000FF);
         Inc(Src,B2Width-ForRangeX);
       end;
       S1:=S1;
@@ -316,11 +316,11 @@ begin
         //Note that Src = B2.PixelPtr[prevX+1, Y] holds
         for P := 1 to ForRangeX {prevX+1 to X-1} do
         begin
-          S1 := S1 + DWORD(Src^ and $000000FF);
+          S1 := S1 + Cardinal(Src^ and $000000FF);
           Inc(Src);
         end;
         if X<B2Width then //we could cancel this line, no access violation would be caused because we are not in the bottom line
-         S2 := DWORD(Src^ and $000000FF);
+         S2 := Cardinal(Src^ and $000000FF);
 
         VertHorzSumNew:=((DeltaX*DeltaY) div DeltaRange)*S2; //again, this "div" is just a shift operation
         HorzSumNew:=VertHorzSum+S1*DeltaY+VertHorzSumNew;

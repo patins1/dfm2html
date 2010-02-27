@@ -5,9 +5,9 @@ interface
 uses
   SysUtils, Classes, TypInfo,
 {$IFDEF CLX}
-  Qt, QGraphics,
+  QGraphics,
 {$ELSE}
-  Windows, Messages, Graphics,
+  Graphics,
 {$ENDIF}
   math,
   GR32,GR32_Transforms,gauss,GR32_Blend,GR32_LowLevel,dhBitmap32, dhStyles, dhColorUtils;
@@ -115,7 +115,7 @@ end;
 procedure MixAlpha(Src:TdhBitmap32);
 var P:PColor32;
     i:integer;
-    alpha,alpha_shifted:DWORD;
+    alpha,alpha_shifted:Cardinal;
 begin
  P:=Src.PixelPtr[0,0];
  alpha:=Src.MasterAlpha;
@@ -145,7 +145,7 @@ begin
   inc(P);
  end;
 
- gauss.Blur(PDWORD(_Src.PixelPtr[0, 0]),_Src.Width,_Src.Height,Blur.GetDoubleRadius,Blur.Flood/100,inv);
+ gauss.Blur(PCardinal(_Src.PixelPtr[0, 0]),_Src.Width,_Src.Height,Blur.GetDoubleRadius,Blur.Flood/100,inv);
 
  P:=Src.PixelPtr[0, 0];
  P2:=_Src.PixelPtr[0, 0];
@@ -161,8 +161,8 @@ procedure DoBlur(Src:TdhBitmap32; _Src:TdhBitmap32; Blur:TBlurEffect; inv:boolea
 var P,P2: PColor32;
     j,OffsX,OffsY{,Offs},count:integer;
     Alpha:double;
-    a:DWORD;
-    col:DWORD;
+    a:Cardinal;
+    col:TColor32;
     y,dx,dy:integer;
     R1,R2:TRect;
 begin
@@ -195,7 +195,7 @@ begin
  end;
  end;
 
- gauss.Blur(PDWORD(_Src.PixelPtr[0, 0]),_Src.Width,_Src.Height,Blur.GetDoubleRadius,Blur.Flood/100,inv);
+ gauss.Blur(PCardinal(_Src.PixelPtr[0, 0]),_Src.Width,_Src.Height,Blur.GetDoubleRadius,Blur.Flood/100,inv);
 
  P:=Src.PixelPtr[0, 0];
  P2:=_Src.PixelPtr[0, 0];

@@ -58,6 +58,7 @@ contains
   dhStyles in 'dhStyles.pas',
   BasicHTMLElements in 'BasicHTMLElements.pas',
   dhGraphicFormats in 'dhGraphicFormats.pas',
-  dhColorUtils in 'dhColorUtils.pas';
+  dhColorUtils in 'dhColorUtils.pas',
+  dhGraphicsAlgorithms in 'dhGraphicsAlgorithms.pas';
 
 end.

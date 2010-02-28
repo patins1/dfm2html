@@ -25,6 +25,9 @@ type
     { Published declarations }
   end;
 
+procedure FixDialogBorderStyle(Form:TForm);
+procedure FixDialogBorderStyleToTool(Form:TForm);
+
 procedure Register;
 
 implementation
@@ -54,6 +57,24 @@ end;
 procedure TMyForm.SkipValue(Reader: TReader);
 begin
  Reader.SkipValue;
+end;
+
+procedure FixDialogBorderStyle(Form:TForm);
+begin
+{$IFDEF CLX}
+ Form.BorderStyle:=fbsDialog;
+{$ELSE}
+ Form.BorderStyle:=bsDialog;
+{$ENDIF}
+end;
+
+procedure FixDialogBorderStyleToTool(Form:TForm);
+begin
+{$IFDEF CLX}
+ Form.BorderStyle:=fbsToolWindow;
+{$ELSE}
+ Form.BorderStyle:=bsToolWindow;
+{$ENDIF}
 end;
 
 end.

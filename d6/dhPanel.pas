@@ -723,8 +723,6 @@ function GetSimplifiedAnchors(Anchors:TAnchors; ParentAnchors:TAnchors; StopSimp
 function _RealAnchors(Anchors:TAnchors; img:boolean):TAnchors;
 
 procedure Browse(URL:TPathName; Viewer:TPathName; maxi:boolean; browse:boolean=false);
-procedure FixDialogBorderStyle(Form:TForm);
-procedure FixDialogBorderStyleToTool(Form:TForm);
 function ConsumeMouseWheel(c:TControl; WheelDelta: Integer):boolean;
 procedure InvalTrans(C:TControl); overload;
 
@@ -7359,24 +7357,6 @@ end;
 function TdhCustomPanel.IsAnchorsStored: Boolean;
 begin
   Result := Anchors <> AnchorAlign[Align];
-end;
-
-procedure FixDialogBorderStyle(Form:TForm);
-begin
-{$IFDEF CLX}
- Form.BorderStyle:=fbsDialog;
-{$ELSE}
- Form.BorderStyle:=bsDialog;
-{$ENDIF}
-end;
-
-procedure FixDialogBorderStyleToTool(Form:TForm);
-begin
-{$IFDEF CLX}
- Form.BorderStyle:=fbsToolWindow;
-{$ELSE}
- Form.BorderStyle:=bsToolWindow;
-{$ENDIF}
 end;
 
 function TdhCustomPanel.GetPreferDownStyles:boolean;

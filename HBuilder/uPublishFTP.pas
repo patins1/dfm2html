@@ -13,7 +13,7 @@ uses
   ShellAPI, Mask, ExtCtrls, StdCtrls, UnicodeCtrls,
 {$ENDIF}
   {$IFDEF MSWINDOWS}OverbyteIcsUrl,{$ELSE}{IcsUrl,}{$ENDIF}unit3, dhPanel,MyMaskEdit,
-  DKLang, dhLabel, MyPanel, dhStrUtils;
+  DKLang, dhLabel, MyPanel, dhStrUtils, MyForm;
 
 type
   TPublishFTP = class(TTntForm)

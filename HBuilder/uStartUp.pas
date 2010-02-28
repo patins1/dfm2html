@@ -9,7 +9,7 @@ uses
 {$ELSE}
   Controls, Windows, Messages, Graphics, Forms, ComCtrls, ExtCtrls, StdCtrls, UnicodeCtrls,
 {$ENDIF}
-  dhPanel, dhLabel, dhMenu, dhStyleSheet, DKLang;
+  dhPanel, dhLabel, dhMenu, dhStyleSheet, DKLang, MyForm;
 
 type
   TStartUpAction=(suNothing,suNewPage,suLastPage,suTutorial,suTemplates,su5minGuide,suOpen);

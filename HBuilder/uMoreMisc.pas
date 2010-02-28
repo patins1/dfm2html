@@ -9,7 +9,7 @@ uses
 {$ELSE}
   Controls, Windows, Messages, Graphics, Forms, ComCtrls, ExtCtrls, StdCtrls, UnicodeCtrls,
 {$ENDIF}
-  dhPanel, dhLabel, dhMenu, dhStyleSheet, hComboBox, hEdit, DKLang, dhStyles;
+  dhPanel, dhLabel, dhMenu, dhStyleSheet, hComboBox, hEdit, DKLang, dhStyles, MyForm;
 
 type
   TMoreMisc = class(TTntForm,IhLogReceiver)

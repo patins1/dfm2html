@@ -10,7 +10,7 @@ uses
   Controls, Windows, Messages, Graphics, Forms, Dialogs, StdCtrls, ComCtrls,
   ShellAPI, Mask, ExtCtrls,  clipbrd, Spin, UnicodeCtrls,
 {$ENDIF}
-  dhPanel, dhLabel, dhPageControl, MySpinEdit, MyPageControl, dhStyleSheet, DKLang, dhStrUtils;
+  dhPanel, dhLabel, dhPageControl, MySpinEdit, MyPageControl, dhStyleSheet, DKLang, dhStrUtils, MyForm;
 
             
 type TLaunchAction=(suaChoice,suaLast,suaNone);

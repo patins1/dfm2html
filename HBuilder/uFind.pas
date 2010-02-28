@@ -8,7 +8,7 @@ uses
   {$ELSE}
   Controls, Windows, Messages, Graphics, StdCtrls, ShellAPI, Mask, Forms, Buttons, Spin, ExtCtrls, UnicodeCtrls,
   {$ENDIF}
-  SysUtils, Classes, DKLang, dhPanel, dhLabel;
+  SysUtils, Classes, DKLang, dhPanel, dhLabel, MyForm;
 
 type
   TFindText = class(TTntForm)

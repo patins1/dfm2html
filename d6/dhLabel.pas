@@ -1720,9 +1720,9 @@ begin
 {$ELSE}
 {$IFDEF VER160}
     pi:=@P[vn];
-    GetTextExtentExPointW(Canvas.Handle, copy(gltext,vn,bs-vn),bs-vn, high(smallint), Fit, pi^{P[vn]}, Sz);
+    GetTextExtentExPointW(Canvas.Handle, copy(gltext,vn,bs-vn),bs-vn, high(integer), Fit, pi^{P[vn]}, Sz);
 {$ELSE}
-    GetTextExtentExPointW(Canvas.Handle, PWideChar(@gltext[vn]),bs-vn, high(smallint), @Fit, PInteger(@P[vn]), Sz);
+    GetTextExtentExPointW(Canvas.Handle, PWideChar(@gltext[vn]),bs-vn, high(integer), @Fit, PInteger(@P[vn]), Sz);
     if sz.cx=-20 then
     begin
      teil:=AnsiString(_WStr(PWideChar(@gltext[vn]),bs-vn));

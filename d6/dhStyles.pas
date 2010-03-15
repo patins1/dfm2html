@@ -13,7 +13,7 @@ uses
  {$IFDEF VER210}GIFImg{$ELSE}GIFImage{$ENDIF},Windows,Controls, Graphics, Dialogs,
 {$ENDIF}
   math{$IFDEF DEB},funcutils,jclDebug{$ENDIF},
-  GR32,BinList,dhBitmap32,dhStrUtils,WideStrUtils,dhGraphicFormats;
+  GR32,BinList,dhBitmap32,dhStrUtils,WideStrUtils,dhGraphicFormats,Consts;
 
 const
   CSSAlphaInverter=$FF000000;
@@ -1461,7 +1461,7 @@ end;
 
 function TLocationImage.RequestGraphic:TGraphic;
 var NewGraphic: TGraphic;
-    Filename:TPathName;
+    Filename,Ext:TPathName;
     ResourceBitmap:TBitmap;
 begin
  if GetGraphic<>nil then
@@ -1485,7 +1485,8 @@ begin
    end else
    begin
     Filename:=GetAbsolutePath;
-    if LowerCase(ExtractFileExt(Filename))='.gif' then
+    Ext:=ExtractFileExt(Filename);
+    if LowerCase(Ext)='.gif' then
     begin
      NewGraphic := TPatchedGifImage.Create;
      try
@@ -1494,6 +1495,11 @@ begin
      finally
        NewGraphic.Free;
      end;
+    end else
+    if Ext='' then
+    begin
+     // handle this case since TOleGraphic register empty extension otherwise and loads an empty image
+     raise EInvalidGraphic.CreateFmt(SUnknownExtension, [Ext]);
     end else
      FPicture.LoadFromFile(Filename);
    end;

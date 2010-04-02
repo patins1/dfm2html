@@ -38,14 +38,14 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
       'HTML editor, web page maker, web design creator, anti aliasing, ' +
       'mouse over buttons, WYSIWYG, absolute positioning, site manageme' +
       'nt, authoring'
-    FTPURL = 'ftp://p8288468:5yMTPDtZ@kiegeland.com/dfm2html_de/'
+    FTPURL = 'ftp://p8288468:5yMTPDtZ@kiegeland.com/dfm2html/'
     HTTPURL = 'http://www.dfm2html.com/'
     GeneratedImageFolder = 'images'
     GeneratedCSSFile = 'dfm2html'
     object Panel4: TdhPanel
-      Top = 4
+      Top = 36
       Width = 758
-      Height = 2540
+      Height = 544
       Style.Border.Width = 1
       Style.Border.Color = 15461355
       Style.Border.Style = cbsSolid
@@ -79,7 +79,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
         Top = 88
         Width = 24
         Height = 24
-        ActivePage = history
+        ActivePage = Page1
         FixedHeight = False
         object Page1: TdhPage
           Left = 192
@@ -143,7 +143,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
           object Link21: TdhLink
             Left = 24
             Top = 336
-            Width = 110
+            Width = 104
             Height = 16
             Text = #9658' <en>Version history</en><de>Versionshistorie</de>'
             Style.TextDecoration = [ctdNone]
@@ -1307,8 +1307,8 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
           object Label44: TdhLabel
             Left = 24
             Top = 648
-            Width = 442
-            Height = 64
+            Width = 386
+            Height = 49
             Text = 
               '<en><code>New in version 3.2:'#10'* The path of generated artifacts ' +
               'can be adapted'#10'* "Check for update" functionality</code></en>'#10'<d' +
@@ -1323,8 +1323,8 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
           object Label46: TdhLabel
             Left = 24
             Top = 560
-            Width = 322
-            Height = 80
+            Width = 346
+            Height = 65
             Text = 
               '<en><code>New in version 3.3:'#10'* Italian language is added '#10'  (th' +
               'anks to Rinaldo M. aka Whiteshark!)'#10'* Fixed bug with IE7 and aut' +
@@ -1339,8 +1339,8 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
           object Label50: TdhLabel
             Left = 24
             Top = 400
-            Width = 346
-            Height = 176
+            Width = 370
+            Height = 129
             Text = 
               '<en><code>New in version 3.4:'#10'* 83% Portuguese language support'#10 +
               '  (thanks to Alex Albino de Almeida Barros!)'#10'* adjusted dfm2html' +
@@ -1360,7 +1360,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
           object Label47: TdhLabel
             Left = 24
             Top = 240
-            Width = 370
+            Width = 394
             Height = 160
             Text = 
               '<en><code>New in version 3.5:'#10'* Spanish language is added '#10'  (th' +
@@ -1408,7 +1408,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
           Left = 192
           Top = 96
           Width = 488
-          Height = 1116
+          Height = 1228
           AutoSizeXY = asNone
           UseIFrame = False
           object Label3: TdhLabel
@@ -1424,7 +1424,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
             Left = 16
             Top = 56
             Width = 440
-            Height = 917
+            Height = 997
             Text = 
               '<en><FAQ_question>HTML pages do not properly display in my brows' +
               'er.</FAQ_question>'#10'<br/>'#10'You have to enabled JavaScript in the o' +
@@ -1538,7 +1538,15 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
               'nerieren der HTML-Seiten im Moment nicht speziell ber'#252'cksichtigt' +
               ' werden. Dies mu'#223' manuell gemacht werden, z.B. mit dem folgenden' +
               ' Konverter: <Link62>http://rishida.net/scripts/uniview/conversio' +
-              'n.php</Link62>'#10'<br/><br/></de>'
+              'n.php</Link62>'#10'<br/><br/></de>'#10#10'<en><FAQ_question>How can I add ' +
+              'a favorite icon to my website?</FAQ_question>'#10'<br/>'#10'You can crea' +
+              'te a file named "favicon.ico" with some graphics program and the' +
+              'n you can use a File object named <i>favicon</i> to upload this ' +
+              'file to your FTP directory.'#10'<br/><br/></en>'#10'<de><FAQ_question>Wi' +
+              'e kann man ein Icon f'#252'r die Website einrichten?</FAQ_question>'#10'<' +
+              'br/>'#10'Indem man eine Datei namens "favicon.ico" mit einem Grafikp' +
+              'rogramm erstellt und diese mit Hilfe eines Datei-Objekts names <' +
+              'i>favicon</i> auf den FTP-Server l'#228'd.'#10'<br/><br/></de>'
             Style.TextAlign = ctaJustify
             AutoSizeXY = asY
           end
@@ -2120,7 +2128,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
         object Link7: TdhLink
           Left = 0
           Top = 108
-          Height = 45
+          Height = 29
           Text = '<en>User Pages</en><de>Benutzer- seiten</de>'
           Use = Link3
           AutoSizeXY = asY
@@ -2132,7 +2140,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
         end
         object Link20: TdhLink
           Left = 0
-          Top = 153
+          Top = 137
           Height = 45
           Text = '<en>Version history</en>'#10'<de>Versions- historie</de>'
           Use = Link3
@@ -2145,7 +2153,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
         end
         object Link19: TdhLink
           Left = 0
-          Top = 198
+          Top = 182
           Height = 29
           Text = 'FAQ'
           Use = Link3
@@ -2158,7 +2166,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
         end
         object Link13: TdhLink
           Left = 0
-          Top = 227
+          Top = 211
           Height = 45
           Text = 'Tips & Tricks'
           Use = Link3
@@ -2171,7 +2179,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
         end
         object Link4: TdhLink
           Left = 0
-          Top = 272
+          Top = 256
           Height = 29
           Text = '<en>Contact</en><de>Impressum</de>'
           Use = Link3
@@ -2184,8 +2192,8 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
         end
         object TdhAnchor2: TdhLink
           Left = 0
-          Top = 301
-          Height = 45
+          Top = 285
+          Height = 29
           Text = '<en>Disclaimer</en>'#10'<de>Haftungs- ausschluss</de>'
           Use = Link3
           AutoSizeXY = asY
@@ -2200,7 +2208,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
         end
         object Link40: TdhLink
           Left = 0
-          Top = 346
+          Top = 314
           Height = 45
           Text = '<en>More Programs</en><de>Weitere Programme</de>'
           Use = Link3
@@ -2471,7 +2479,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
         Top = 0
         Height = 16
         Text = 'de'
-        Style.Display = cdsInline
+        Style.Display = cdsNone
         AutoSizeXY = asY
         Align = alTop
         Right = 0
@@ -2481,7 +2489,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
         Top = 16
         Height = 16
         Text = 'en'
-        Style.Display = cdsNone
+        Style.Display = cdsInline
         AutoSizeXY = asY
         Align = alTop
         Right = 0

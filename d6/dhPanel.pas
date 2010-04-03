@@ -11,7 +11,6 @@ interface
 {$UNSAFECODE ON}
 {$ENDIF}
 
-{.$DEFINE DEB}
 {.$DEFINE Q}
 {.$IFNDEF CLX}
 {.$DEFINE SYNC_PROP}
@@ -27,7 +26,7 @@ uses
   Controls, Forms, Windows, Messages, Graphics, Dialogs, ExtCtrls, appevnts{Application.OnIdle:= überschreiben mit eigenem code},
   ComCtrls, CommCtrl, StdCtrls, clipbrd,
 {$ENDIF}
-  math{$IFDEF DEB},funcutils,jclDebug{$ENDIF},
+  math,
   GR32,GR32_Transforms,gauss,GR32_Blend,GR32_LowLevel,Generics.Defaults,Generics.Collections,dhBitmap32,dhStrUtils,WideStrUtils, dhStyles, dhGraphicFormats, dhColorUtils, dhGraphicsAlgorithms;
 
 type TASXY=(asNone,asX,asY,asXY);
@@ -6699,32 +6698,10 @@ end;
 
 type TObjIdleProc=class
     procedure DoMouseIdle(Sender: TObject; var Done: Boolean);
-  private
-    procedure ApplicationEvents1Exception(Sender: TObject; E: Exception);
 end;
 
 var OldOnIdle:TIdleEvent;
     ObjIdleProc:TObjIdleProc;
-var glerrorlog:AnsiString;
-
-procedure TObjIdleProc.ApplicationEvents1Exception(Sender: TObject;
-  E: Exception);
-var s,ss:AnsiString;
-    sl:TStringList;
-begin
-{$IFDEF DEB}
- sl:=TStringList.Create;
- JclLastExceptStackListToStrings(sl,not false,not false,not false);
-
- s:=Format('Exception %s: %s at %s',
-    [E.ClassName, E.Message, {GetLocationInfoStr(ExceptAddr,true,true,true)}sl.Text]);
-
- glerrorlog:=glerrorlog+#13#10+#13#10+#13#10+timetostr(now)+#13#10+s;
- StringToFile('c:\z.txt',glerrorlog);
-
- sl.Free;
-{$ENDIF}
-end;
 
 procedure TObjIdleProc.DoMouseIdle(Sender: TObject; var Done: Boolean);
 var
@@ -7450,20 +7427,11 @@ end;
 initialization
 
  glIsDesignerSelected:=CustomIsDesignerSelected;
- try
+ if Application<>nil then
+ begin
  OldOnIdle:=Application.OnIdle;
  ObjIdleProc:=TObjIdleProc.Create;
  Application.OnIdle:=ObjIdleProc.DoMouseIdle;
-{$IFDEF DEB}
-  JclStartExceptionTracking;
-{$IFDEF ShowAllExceptions}
-  JclAddExceptNotifier(AnyExceptionNotify);
-{$ENDIF}
- Application.OnException:=ObjIdleProc.ApplicationEvents1Exception;
-{$ENDIF}
-
- except
- showmessage('exp in ini');
  end;
 
 // inttohex((GetBlendMemEx(i+{ $FF0000FF}$80008A84,$FFFFFFFF,{255 shl 16 div 255 + 1}255)),8);

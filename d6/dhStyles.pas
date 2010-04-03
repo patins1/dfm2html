@@ -12,7 +12,7 @@ uses
 {$ELSE}
  {$IFDEF VER210}GIFImg{$ELSE}GIFImage{$ENDIF},Windows,Controls, Graphics, Dialogs,
 {$ENDIF}
-  math{$IFDEF DEB},funcutils,jclDebug{$ENDIF},
+  math,
   GR32,dhBitmap32,dhStrUtils,WideStrUtils,dhGraphicFormats,Consts;
 
 const

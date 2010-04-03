@@ -14,7 +14,7 @@ uses
  {$IFDEF VER210}GIFImg{$ELSE}GIFImage{$ENDIF},Controls, Forms, Windows, Messages, Graphics, Dialogs, ExtCtrls, appevnts{Application.OnIdle:= überschreiben mit eigenem code},
   ComCtrls, CommCtrl, StdCtrls, clipbrd,
 {$ENDIF}
-  math{$IFDEF DEB},funcutils,jclDebug{$ENDIF},
+  math,
   GR32,GR32_Transforms,gauss,GR32_Blend,GR32_LowLevel,dhBitmap32,dhStrUtils,WideStrUtils;
 
 {$IFDEF VER210}

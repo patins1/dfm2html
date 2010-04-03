@@ -4,6 +4,11 @@ program DFM2HTML;
 {$IFNDEF CLX}
 
 uses
+  madExcept,
+  madLinkDisAsm,
+  madListHardware,
+  madListProcesses,
+  madListModules,
   uMutex,
   Forms,
   Dialogs,

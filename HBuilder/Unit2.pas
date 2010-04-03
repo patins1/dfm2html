@@ -12,7 +12,7 @@ uses
   ComCtrls, CommCtrl, StdCtrls, ShellAPI, RTLConsts,  Menus,
   Mask, ToolWin, ImgList, AppEvnts, Spin, UnicodeCtrls,
 {$ENDIF}
-   BinList,
+   Generics.Defaults,Generics.Collections,
    uChooseWide,
    dhLabel,
    dhPanel,
@@ -4849,20 +4849,20 @@ begin
  ActBoundsChanged;
 end;
 
-function SortHorz(Item1, Item2: Pointer): Integer;
+function SortHorz(const Item1, Item2: TControl): Integer;
 begin
- Result:=TControl(Item1).Left-TControl(Item2).Left;
+ Result:=Item1.Left-Item2.Left;
 end;
 
-function SortVert(Item1, Item2: Pointer): Integer;
+function SortVert(const Item1, Item2: TControl): Integer;
 begin
- Result:=TControl(Item1).Top-TControl(Item2).Top;
+ Result:=Item1.Top-Item2.Top;
 end;
 
 procedure TTabs.mEqualHorizontalClick(Sender: TObject);
 var i,w:integer;
     spacing,d:double;
-    SortedSel:TBinList;
+    SortedSel:TList<TControl>;
 begin
  w:=0;
  for i:=0 to Selection.Count-1 do
@@ -4875,12 +4875,13 @@ begin
  if Sender=mEqualHorizontal then
   spacing:=(GetSelectionBounds.Right-GetSelectionBounds.Left-w)/(Selection.Count-1) else
   spacing:=(GetSelectionBounds.Bottom-GetSelectionBounds.Top-w)/(Selection.Count-1);
- SortedSel:=TBinList.Create;
- try                    
-  for i:=Selection.Count-1 downto 0 do  
-  if Sender=mEqualHorizontal then
-   SortedSel.AddItem(SortHorz,Selection[i]) else
-   SortedSel.AddItem(SortVert,Selection[i]);
+ if Sender=mEqualHorizontal then
+  SortedSel:=TList<TControl>.Create(TComparer<TControl>.Construct(SortHorz)) else
+  SortedSel:=TList<TControl>.Create(TComparer<TControl>.Construct(SortVert));
+ try
+  for i:=Selection.Count-1 downto 0 do
+   SortedSel.Add(Selection[i]);
+  SortedSel.Sort;
   {SortedSel.Assign(Selection);
   if Sender=mEqualHorizontal then
    SortedSel.Sort(SortHorz) else
@@ -4889,7 +4890,7 @@ begin
    d:=GetSelectionBounds.Left else
    d:=GetSelectionBounds.Top;
   for i:=0 to Selection.Count-1 do
-  with TControl(SortedSel[i]) do
+  with SortedSel[i] do
   begin         
    if Sender=mEqualHorizontal then
     Left:=Round(d) else

@@ -28,7 +28,7 @@ uses
   ComCtrls, CommCtrl, StdCtrls, clipbrd,
 {$ENDIF}
   math{$IFDEF DEB},funcutils,jclDebug{$ENDIF},
-  GR32,GR32_Transforms,gauss,GR32_Blend,GR32_LowLevel,BinList,dhBitmap32,dhStrUtils,WideStrUtils, dhStyles, dhGraphicFormats, dhColorUtils, dhGraphicsAlgorithms;
+  GR32,GR32_Transforms,gauss,GR32_Blend,GR32_LowLevel,Generics.Defaults,Generics.Collections,dhBitmap32,dhStrUtils,WideStrUtils, dhStyles, dhGraphicFormats, dhColorUtils, dhGraphicsAlgorithms;
 
 type TASXY=(asNone,asX,asY,asXY);
 
@@ -776,7 +776,6 @@ const GetBoldFontWeight:array[boolean] of TCSSFontWeight=(cfwNormal,cfwBold);
 
 const rasterReason:array[TRasterType] of AString=(EmptyStr,'enabled Effects','rounded corners','RGBA colors','a semi-transparent image','the image type "Stretch"','the image type "Split"','enabled Effects (not applying to textual content)');
 
-var glBinList:TBinList;
 var PreventAlignControls:boolean=false;
 
 const MyDragThreshold=5;
@@ -4420,10 +4419,11 @@ var i:integer;
     ref_fixed,ref_scrolled,OriCutR:TRect;
     cZOrder:integer;
     c:TControl;
-    ObjHolder:TBinList;
+    ObjHolder:TList<TControl>;
+    glBinList:TDictionary<TControl,Integer>;
     FilledByChildren:boolean;
     cCutR:TRect;
-    scrolledInParent,DoCopyTop:boolean;  
+    scrolledInParent,DoCopyTop:boolean;
     ActiveAnchors:TAnchors;
 begin
 
@@ -4519,8 +4519,8 @@ begin
 
     if Self.NoSiblingsBackground then exit;
 
-    glBinList.ClearFast;
-    ObjHolder:=TBinList.Create;
+    glBinList:=TDictionary<TControl,Integer>.Create(_Parent.ControlCount);
+    ObjHolder:=TList<TControl>.Create;
     ObjHolder.Capacity:=_Parent.ControlCount;
     with _Parent do
     for I := 0 to ControlCount - 1 do
@@ -4529,8 +4529,22 @@ begin
      if not ((c is TWinControl) and FinalVisible(c) and not (csDestroying in c.ComponentState)) or (_Parent=Self.Parent) and (Self.Align in [alTop,alLeft,alBottom,alRight]) and (Self.Align=c.Align) then continue;
      cZOrder:=GetZOrder(c,i);
      if ({(Controls[I].Parent=Self.Parent)}(SelfZOrder<>-5555) and (cZOrder>=SelfZOrder)) then continue;
-     ObjHolder.Insert(glBinList.AddItemGetIndex(@PointerCompare,Pointer(cZOrder)),c);
+     glBinList.Add(c,cZOrder);
+     ObjHolder.Add(c);
     end;
+    ObjHolder.Sort(TComparer<TControl>.Construct(
+       function (const c1,c2:TControl):Integer
+       var Item1,Item2:Integer;
+       begin
+        Item1:=glBinList.Items[c1];
+        Item2:=glBinList.Items[c2];
+        if Item1>Item2 then
+         result:=1 else
+        if Item1=Item2 then
+        result:=0 else
+        result:=-1;
+       end
+    ));
     for i:=0 to ObjHolder.Count-1 do
     begin
      c:=ObjHolder[i];
@@ -4540,6 +4554,7 @@ begin
       ParentPaintTo(Self, TWinControl(c), false, R,SelfCBound,addheight,-5555);
     end;
     ObjHolder.Free;
+    glBinList.Free;
 
 end;
 
@@ -7451,12 +7466,9 @@ initialization
  showmessage('exp in ini');
  end;
 
- glBinList:=TBinList.Create;
-
 // inttohex((GetBlendMemEx(i+{ $FF0000FF}$80008A84,$FFFFFFFF,{255 shl 16 div 255 + 1}255)),8);
 
 finalization
- FreeAndNil(glBinList);
  if ObjIdleProc<>nil then
  begin
  Application.OnIdle:=OldOnIdle;

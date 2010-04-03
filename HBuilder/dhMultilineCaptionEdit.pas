@@ -69,7 +69,7 @@ implementation
 
 {$R *.dfm}
 
-uses SysUtils,  TypInfo, uChooseWide, BinList;
+uses SysUtils,  TypInfo, uChooseWide;
 
 procedure TdhMultilineCaptionEdit2.HelpButtonClick(Sender: TObject);
 begin      

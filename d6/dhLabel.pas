@@ -12,7 +12,7 @@ uses
   {$ELSE}
   Controls, Windows, Messages, Graphics, Forms,
   {$ENDIF}
-  SysUtils, Classes, dhPanel, math, types, BinList,GR32_Transforms,gr32,dhStrUtils,StrUtils,WideStrUtils,dhBitmap32,dhStyles,dhColorUtils;
+  SysUtils, Classes, dhPanel, math, types,Generics.Defaults,Generics.Collections, GR32_Transforms,gr32,dhStrUtils,StrUtils,WideStrUtils,dhBitmap32,dhStyles,dhColorUtils;
 
 
 {$IFDEF VER160}
@@ -220,8 +220,8 @@ implementation
 uses dhStyleSheet,BasicHTMLElements;
 
 
-var _Unicode,UnicodeByNumbers:TStringList;
-    UnicodeByNumbersList:TBinList;
+var _Unicode:TStringList;
+    UnicodeByNumbersList:TDictionary<Integer,String>;
 
 var HTMLTags:TStringList;
 
@@ -517,15 +517,8 @@ end;
 
 
 function HasUnicodeName(i:integer; var CharacterName:AString):boolean;
-var i2:integer;
 begin
-    i2:=UnicodeByNumbersList.SortedIndexOf(PointerCompare,Pointer(i));
-    if i2<>-1 then
-    begin
-     CharacterName:=UnicodeByNumbers[i2];
-     result:=true;
-    end else
-     result:=false;
+    Result:=UnicodeByNumbersList.TryGetValue(i,CharacterName);
 end;
 
 function WithoutComments(const s:HypeString; repl:HypeChar):HypeString;
@@ -3077,16 +3070,6 @@ begin
  result:=false;
 end;
 
-function SortUnicodeByNumbers(List: TStringList; Index1, Index2: Integer): Integer;
-begin
- result:=Integer(List.Objects[Index1])-Integer(List.Objects[Index2]);
-end;
-
-function PointerCompare(Item1, Item2: Pointer): Integer;
-begin
- result:=Integer(Item1)-Integer(Item2);
-end;
-
 procedure BuildUnicode; //{$IFDEF VER160}unsafe;{$ENDIF}
 var i:integer;
 begin
@@ -3103,13 +3086,10 @@ begin
 
  _Unicode.Sorted:=true;
 
- UnicodeByNumbers:=TStringList.Create;
- UnicodeByNumbers.Assign(_Unicode);
- UnicodeByNumbers.CustomSort(SortUnicodeByNumbers);
- UnicodeByNumbersList:=TBinList.Create;
- for i:=0 to UnicodeByNumbers.Count-1 do
+ UnicodeByNumbersList:=TDictionary<Integer,String>.Create(_Unicode.Count);
+ for i:=0 to _Unicode.Count-1 do
  begin
-  UnicodeByNumbersList.Add(UnicodeByNumbers.Objects[i]);
+  UnicodeByNumbersList.Add(Integer(_Unicode.Objects[i]),_Unicode[i]);
  end;
 
  for i:=0 to _Unicode.Count-1 do
@@ -3178,7 +3158,6 @@ finalization
   FreeAndNil(dhStrEditDlg);
  FreeAndNil(HTMLTags);
  FreeAndNil(_Unicode);
- FreeAndNil(UnicodeByNumbers);
  FreeAndNil(UnicodeByNumbersList);
  FreeAndNil(HelpB);
 end.

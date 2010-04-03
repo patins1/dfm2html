@@ -17,7 +17,7 @@ uses
 {$ENDIF}
 
   dhHTMLForm,MySiz, dhPanel,dhPageControl, funcutils, UseFastStrings, math, Contnrs, MySpinEdit, MyTrackBar,
-  hEdit,hComboBox,hMemo,dhMenu,dhStyleSheet,MySpeedButton,BinTree,uTemplates,
+  hEdit,hComboBox,hMemo,dhMenu,dhStyleSheet,MySpeedButton,uTemplates,
   dhLabel, dhCheckBox, dhRadioButton,UIConstants, MyForm, dhStrUtils, uMetaWriter, dhStyles;
 
 

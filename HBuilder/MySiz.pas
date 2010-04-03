@@ -21,7 +21,7 @@ uses
   dhMenu,dhLabel,dhPanel,dhHTMLForm,dhPageControl,
   dhStyleSheet, dhFile,
   dhRadioButton,dhCheckBox, dhMemo,dhEdit,
-  dhFileField,dhOleContainer,dhHiddenField,dhDirectHTML,bintree,binlist,uFind,gr32,UIConstants,dhStyles;
+  dhFileField,dhOleContainer,dhHiddenField,dhDirectHTML,Generics.Defaults,Generics.Collections,uFind,gr32,UIConstants,dhStyles;
 
 type
   TDragStyle = (dsMove, dsSizeTopLeft, dsSizeTopRight, dsSizeBottomLeft, dsSizeBottomRight,
@@ -1813,7 +1813,7 @@ begin
 end;
 
 
-function NestSortCompareInner(Item1, Item2: TControl): Integer;
+function NestSortCompareInner(const Item1, Item2: TControl): Integer;
 var abst:integer;
 begin
  result:=Item1.Top-Item2.Top;
@@ -1896,18 +1896,19 @@ end;
 function FindRec(p:TWinControl; oric:TControl=nil):boolean;
 var
     c:TControl;
-    ls:TBinTree;
-    node:PTreeNode;
+    ls:TList<TControl>;
+    node:Integer;
     i:integer;
 begin
- ls:=TBinTree.Create;
+ ls:=TList<TControl>.Create(TComparer<TControl>.Construct(NestSortCompareInner));
  try
  for i:=0 to p.ControlCount-1do
  begin
   c:=p.Controls[i];
   if (p.Owner=c.Owner) and (FindHidden or FinalVisible(c)) then
-   ls.AddItem(@NestSortCompareInner,c);
+   ls.Add(c);
  end;
+ ls.Sort;
 { FindLS:=ls;
  TFakeComponent(p).GetChildren(AddToOrderList,p.Owner);
  FindLS:=nil;
@@ -1916,16 +1917,16 @@ begin
  //from:=ls.IndexOf(oric);
  //for i:=from+1 to ls.Count-1 do
 
- node:=nil;
+ node:=-1;
  if oric<>nil then
-  node:=ls.GetTreeNode(@NestSortCompareInner,oric);
- if node=nil then
+  ls.BinarySearch(oric,node);
+ if node=-1 then
  if FindForward then
-  node:=ls.GetFirst else
-  node:=ls.GetLast;
- while node<>nil do
+  node:=0 else
+  node:=ls.Count-1;
+ while (node>=0) and (node<=ls.Count-1) do
  begin
-  c:=node.Item;
+  c:=ls[node];
   if (c<>oric) then
   begin
   if FindForward and HaveFound(c) then
@@ -1955,8 +1956,8 @@ begin
   end;
   end;
   if FindForward then
-   node:=ls.Succ[node] else
-   node:=ls.Pred[node];
+   node:=node+1 else
+   node:=node-1;
  end;
      
  result:=false;

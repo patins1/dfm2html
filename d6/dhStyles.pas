@@ -13,7 +13,7 @@ uses
  {$IFDEF VER210}GIFImg{$ELSE}GIFImage{$ENDIF},Windows,Controls, Graphics, Dialogs,
 {$ENDIF}
   math{$IFDEF DEB},funcutils,jclDebug{$ENDIF},
-  GR32,BinList,dhBitmap32,dhStrUtils,WideStrUtils,dhGraphicFormats,Consts;
+  GR32,dhBitmap32,dhStrUtils,WideStrUtils,dhGraphicFormats,Consts;
 
 const
   CSSAlphaInverter=$FF000000;

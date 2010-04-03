@@ -11,9 +11,15 @@ uses
   ShellAPI, Mask, ExtCtrls, StdCtrls,  Variants, clipbrd, Spin, Buttons, UnicodeCtrls,
 {$ENDIF}
   UseFastStrings,SysUtils, Classes, {$IFDEF MSWINDOWS}OverbyteIcsFtpCli,OverbyteIcsUrl,{$ELSE}{IcsUrl,}{$ENDIF} dhPageControl,
-  DKLang, UIConstants, MyForm,dhStrUtils, uOptions, uMetaWriter;
+  DKLang, UIConstants, MyForm,dhStrUtils, uOptions, uMetaWriter, Consts;
 
 type
+  TMyFtpClient = class(TFtpClient)
+  public
+    procedure PassAsync; override;
+  end;
+
+
   TPublishLog = class(TMyForm)
     RichEdit1: TTntMemo;
     bStopTransfer: TTntSpeedButton;
@@ -28,13 +34,14 @@ type
     FBusy: boolean;
     RootHostDirName,RasteringSaveDir:TPathName;
 {$IFNDEF CLX}
-    FtpClient1: TFtpClient;
+    FtpClient1: TMyFtpClient;
     procedure FtpClient1RequestDone(Sender: TObject; RqType: TFtpRequest;
       Error: Word);
     procedure FtpClient1OnDisplay(Sender: TObject; var Msg: String);
 {$ENDIF}
     procedure Log(Const Msg: WideString; Color: TColor=clBlack);
-    procedure SetBusy(const Value: boolean);     
+    procedure LogAndAbort(Const Msg: WideString; Color:TColor);
+    procedure SetBusy(const Value: boolean);
     function ExtractHostDirName(const path:TPathName):TPathName;
   public
     { Public declarations }
@@ -191,15 +198,14 @@ begin
  //Self.ToUpload.Assign(GeneratedFiles);
 
 {$IFDEF CLX}
- Log('FTP not available in Linux version yet, sorry.');
- bStopTransfer.Click;
+ LogAndAbort('FTP not available in Linux version yet, sorry.');
 {$ELSE}
  ParseURL(URL,Proto, Username, Password, Host, Port, Path);
  FtpClient1.Passive:=FuncSettings.FPassiveFTP;
  FtpClient1.HostName:=Host;
  FtpClient1.Port:=DefaultS(Port,'21');
  FtpClient1.Username:=DefaultS(Username,'anonymous');
- FtpClient1.Password:=DefaultS(Password,'non@email.com');
+ FtpClient1.Password:=Password;
  RootHostDirName:=Copy(Path,2,MaxInt);
  FtpClient1.HostDirName:=EmptyStr;
  FtpClient1.HostFileName:=EmptyStr;
@@ -225,7 +231,7 @@ begin
  RichEdit1.Anchors:=[akLeft,akTop,akRight,akBottom];
  bStopTransfer.Anchors:=[akRight,akBottom];
 {$IFNDEF CLX}
- FtpClient1:= TFtpClient.Create(Self);
+ FtpClient1:= TMyFtpClient.Create(Self);
  FtpClient1.OnRequestDone := FtpClient1RequestDone;
  FtpClient1.OnDisplay := FtpClient1OnDisplay;
 {$ENDIF}
@@ -259,8 +265,7 @@ begin
     Exit;
    end;
   end;
-  Log(FtpClient1.ErrorMessage,clRed);
-  bStopTransfer.Click;
+  LogAndAbort(FtpClient1.ErrorMessage,clRed);
   Exit;
  end;
 
@@ -282,8 +287,7 @@ begin
   end;
   if Error<>0 then
   begin
-   Log(FtpClient1.ErrorMessage,clRed);
-   bStopTransfer.Click;
+   LogAndAbort(FtpClient1.ErrorMessage,clRed);
    Exit;
   end;
   FtpClient1.CwdAsync;
@@ -332,16 +336,21 @@ begin
    Exit;
   end;
 
-  Log(DKFormat(FTPLOG_SUCCESS),clGreen);
-  bStopTransfer.Click;
+  LogAndAbort(DKFormat(FTPLOG_SUCCESS),clGreen);
 
 end;
 {$ENDIF}
 
 procedure TPublishLog.bStopTransferClick(Sender: TObject);
 begin
+ LogAndAbort(DKFormat(FTPLOG_ABORTEDBYUSER),clGreen);
+end;
+
+procedure TPublishLog.LogAndAbort(Const Msg: WideString; Color:TColor);
+begin
+ Log(Msg,Color);
  if FBusy then
- begin        
+ begin
 {$IFNDEF CLX}
   FtpClient1.AbortAsync;
 {$ENDIF}
@@ -374,6 +383,127 @@ begin
   Key:=#0;
  end;
 end;
+
+function GetAveCharSize(Canvas: TCanvas): TPoint;
+{$IF DEFINED(CLR)}
+var
+  I: Integer;
+  Buffer: string;
+  Size: TSize;
+begin
+  SetLength(Buffer, 52);
+  for I := 0 to 25 do Buffer[I + 1] := Chr(I + Ord('A'));
+  for I := 0 to 25 do Buffer[I + 27] := Chr(I + Ord('a'));
+  GetTextExtentPoint(Canvas.Handle, Buffer, 52, Size);
+  Result.X := Size.cx div 52;
+  Result.Y := Size.cy;
+end;
+{$ELSE}
+var
+  I: Integer;
+  Buffer: array[0..51] of Char;
+begin
+  for I := 0 to 25 do Buffer[I] := Chr(I + Ord('A'));
+  for I := 0 to 25 do Buffer[I + 26] := Chr(I + Ord('a'));
+  GetTextExtentPoint(Canvas.Handle, Buffer, 52, TSize(Result));
+  Result.X := Result.X div 52;
+end;
+{$IFEND}
+
+function InputPSWQuery(const ACaption, APrompt: string;
+  var Value: string): Boolean;
+var
+  Form: TForm;
+  Prompt: TLabel;
+  Edit: TEdit;
+  DialogUnits: TPoint;
+  ButtonTop, ButtonWidth, ButtonHeight: Integer;
+begin
+  Result := False;
+  Form := TForm.Create(Application);
+  with Form do
+    try
+      Canvas.Font := Font;
+      DialogUnits := GetAveCharSize(Canvas);
+      BorderStyle := bsDialog;
+      Caption := ACaption;
+      ClientWidth := MulDiv(180, DialogUnits.X, 4);
+      PopupMode := pmAuto;
+      Position := poScreenCenter;
+      Prompt := TLabel.Create(Form);
+      with Prompt do
+      begin
+        Parent := Form;
+        Caption := APrompt;
+        Left := MulDiv(8, DialogUnits.X, 4);
+        Top := MulDiv(8, DialogUnits.Y, 8);
+        Constraints.MaxWidth := MulDiv(164, DialogUnits.X, 4);
+        WordWrap := True;
+      end;
+      Edit := TEdit.Create(Form);
+      with Edit do
+      begin
+        PasswordChar:='*'; //!!
+        Parent := Form;
+        Left := Prompt.Left;
+        Top := Prompt.Top + Prompt.Height + 5;
+        Width := MulDiv(164, DialogUnits.X, 4);
+        MaxLength := 255;
+        Text := Value;
+        SelectAll;
+      end;
+      ButtonTop := Edit.Top + Edit.Height + 15;
+      ButtonWidth := MulDiv(50, DialogUnits.X, 4);
+      ButtonHeight := MulDiv(14, DialogUnits.Y, 8);
+      with TButton.Create(Form) do
+      begin
+        Parent := Form;
+        Caption := SMsgDlgOK;
+        ModalResult := mrOk;
+        Default := True;
+        SetBounds(MulDiv(38, DialogUnits.X, 4), ButtonTop, ButtonWidth,
+          ButtonHeight);
+      end;
+      with TButton.Create(Form) do
+      begin
+        Parent := Form;
+        Caption := SMsgDlgCancel;
+        ModalResult := mrCancel;
+        Cancel := True;
+        SetBounds(MulDiv(92, DialogUnits.X, 4), Edit.Top + Edit.Height + 15,
+          ButtonWidth, ButtonHeight);
+        Form.ClientHeight := Top + Height + 13;
+      end;
+      if ShowModal = mrOk then
+      begin
+        Value := Edit.Text;
+        Result := True;
+      end;
+    finally
+      Form.Free;
+    end;
+end;
+
+procedure TMyFtpClient.PassAsync;
+var
+    NewPass: String;
+begin
+    if Length(Password) <= 0 then
+    begin
+     if InputQuery(DKFormat(FTPLOG_PSWDIALOG_TITLE),DKFormat(FTPLOG_PSWDIALOG_PROMPT),NewPass) then
+     begin
+      Password:=NewPass;
+      if Length(Password) <= 0 then
+       Password:='non@email.com';
+     end else
+     begin
+      PublishLog.LogAndAbort(DKFormat(FTPLOG_ABORTEDBYUSER),clGreen);
+     end;
+    end;
+    Inherited;
+end;
+
+
 
 end.
 

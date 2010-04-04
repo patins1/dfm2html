@@ -46,3 +46,7 @@ donations, for any such copies, however made; and from
 distributing the software and/or documentation with other products
 (commercial or otherwise) without prior written permission.
 
+
+Third party software
+
+DFM2HTML uses madExcept, a great tool for bug reporting by Mathias Rauen

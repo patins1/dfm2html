@@ -323,7 +323,7 @@ type
     procedure SetDesignStyle(ds: TState; runtime: boolean);
     procedure SetSaveDir;
     procedure LoadFormElement(men: TMenuItem);
-    procedure LoadDragURL;
+    procedure LoadDragURL(LoadAsTitled:boolean);
     procedure DoStartUp;
     function UpdateRegistrationStatus(const RegString: String): boolean;
     procedure InvalAll;
@@ -2591,14 +2591,14 @@ begin
    end;
 {$ENDIF}
    DragURL:=AdjustURLPure(URLDecodeOctets(DragURL));
-   LoadDragURL;
+   LoadDragURL(false);
 end;
 
 
-procedure TdhMainForm.LoadDragURL;
+procedure TdhMainForm.LoadDragURL(LoadAsTitled:boolean);
 begin
    If LowerCase(ExtractFileExt(DragURL))='.dfm' then
-    Open(DragURL,true) else
+    Open(DragURL,LoadAsTitled) else
    if (cDragTarget=EmptyStr) then
     Tabs.LoadImage(DragURL) else
    if (Act<>nil) and (Act.FindComponent(cDragTarget) is TdhCustomPanel) then
@@ -2649,7 +2649,7 @@ begin
  if ErrCode=0 then
  begin
   StringToFile(DragURL,AsString(HttpCli1.RcvdStream as TMemoryStream));
-  LoadDragURL;
+  LoadDragURL(true);
   DeleteFile(PChar(DragURL));
  end;
   {  if HttpCli1<>nil then

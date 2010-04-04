@@ -1,4 +1,4 @@
-object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1
+object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1
   Left = -4
   Top = -23
   HorzScrollBar.Tracking = True
@@ -30,7 +30,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
     Right = 0
     Bottom = 0
     UseIFrame = False
-    Title = 'HTML Editor DFM2HTML Version 4.0'
+    Title = 'HTML Editor DFM2HTML Version 4.1'
     OutputDirectory = 'www2\'
     MetaAuthor = 'J'#246'rg Kiegeland'
     MetaDescription = 'An WYSIWYG HTML editor'
@@ -120,7 +120,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
             Top = 304
             Width = 224
             Height = 22
-            Text = 'Download DFM2HTML 4.0'
+            Text = 'Download DFM2HTML 4.1'
             Style.FontSize = '19'
             AutoSizeXY = asXY
             PreferDownStyles = True
@@ -1104,12 +1104,12 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
           Left = 192
           Top = 96
           Width = 488
-          Height = 2388
+          Height = 2612
           AutoSizeXY = asNone
           UseIFrame = False
           object Label5: TdhLabel
             Left = 24
-            Top = 2240
+            Top = 2400
             Width = 360
             Height = 80
             Text = 
@@ -1122,7 +1122,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
           end
           object Label25: TdhLabel
             Left = 24
-            Top = 2000
+            Top = 2160
             Width = 446
             Height = 212
             Text = 
@@ -1143,7 +1143,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
           end
           object Label20: TdhLabel
             Left = 24
-            Top = 1776
+            Top = 1936
             Width = 442
             Height = 193
             Text = 
@@ -1162,7 +1162,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
           end
           object Label21: TdhLabel
             Left = 24
-            Top = 1584
+            Top = 1744
             Width = 418
             Height = 161
             Text = 
@@ -1179,8 +1179,8 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
             AutoSizeXY = asXY
           end
           object Label28: TdhLabel
-            Left = 24
-            Top = 1472
+            Left = 32
+            Top = 1624
             Width = 434
             Height = 81
             Text = 
@@ -1194,7 +1194,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
           end
           object Label11: TdhLabel
             Left = 24
-            Top = 1264
+            Top = 1424
             Width = 354
             Height = 64
             Text = 
@@ -1208,7 +1208,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
           end
           object Label12: TdhLabel
             Left = 24
-            Top = 1360
+            Top = 1520
             Width = 330
             Height = 80
             Text = 
@@ -1222,7 +1222,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
           end
           object Label13: TdhLabel
             Left = 24
-            Top = 1144
+            Top = 1304
             Width = 450
             Height = 96
             Text = 
@@ -1237,7 +1237,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
           end
           object Label37: TdhLabel
             Left = 24
-            Top = 1072
+            Top = 1232
             Width = 426
             Height = 49
             Text = 
@@ -1250,7 +1250,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
           end
           object Label38: TdhLabel
             Left = 24
-            Top = 984
+            Top = 1144
             Width = 210
             Height = 65
             Text = 
@@ -1263,7 +1263,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
           end
           object Label41: TdhLabel
             Left = 24
-            Top = 912
+            Top = 1072
             Width = 338
             Height = 48
             Text = 
@@ -1276,7 +1276,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
           end
           object Label42: TdhLabel
             Left = 24
-            Top = 792
+            Top = 952
             Width = 426
             Height = 97
             Text = 
@@ -1292,7 +1292,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
           end
           object Label6: TdhLabel
             Left = 24
-            Top = 720
+            Top = 880
             Width = 442
             Height = 48
             Text = 
@@ -1306,7 +1306,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
           end
           object Label44: TdhLabel
             Left = 24
-            Top = 648
+            Top = 808
             Width = 386
             Height = 49
             Text = 
@@ -1322,7 +1322,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
           end
           object Label46: TdhLabel
             Left = 24
-            Top = 560
+            Top = 720
             Width = 346
             Height = 65
             Text = 
@@ -1338,7 +1338,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
           end
           object Label50: TdhLabel
             Left = 24
-            Top = 400
+            Top = 560
             Width = 370
             Height = 129
             Text = 
@@ -1359,7 +1359,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
           end
           object Label47: TdhLabel
             Left = 24
-            Top = 240
+            Top = 400
             Width = 394
             Height = 160
             Text = 
@@ -1381,7 +1381,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
           end
           object Label48: TdhLabel
             Left = 24
-            Top = 56
+            Top = 216
             Width = 386
             Height = 176
             Text = 
@@ -1398,6 +1398,27 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
               'utachten'#10'* Franz'#246'sische Sprache hinzugef'#252'gt'#10'  (dank Fernando Dea' +
               'mbrosio!)'#10'* Der "Ressource-Explorer" listet alle'#10'  Ressource-Abh' +
               #228'ngigkeiten auf'#10#10'</code></de>'
+            Style.PaddingRight = 2
+            Style.WhiteSpace = cwsPre
+            Style.Color = Black
+            AutoSizeXY = asXY
+          end
+          object Label23: TdhLabel
+            Left = 24
+            Top = 48
+            Width = 354
+            Height = 160
+            Text = 
+              '<en><code>New in version 4.1:'#10'* Afrikaans language is added '#10'  (' +
+              'thanks to J.Delport!)'#10'* Use madExcept for bug reporting'#10'  (writt' +
+              'en by Mathias Rauen)'#10'* Empty FTP password now means,'#10'  that the ' +
+              'password is queried from the user'#10'  each time the site is publis' +
+              'hed'#10'* Updated internal libraries, bug fixes'#10#10'</code></en><de><co' +
+              'de>Neu in version 4.1:'#10'* Afrikaans Sprache hinzugef'#252'gt'#10'  (dank J' +
+              '.Delport!)'#10'* Bug-reporting mittels madExcept'#10'  (von Mathias Raue' +
+              'n)'#10'* Leeres FTP-Passwort bedeutet, dass'#10'  bei jedem Hochladen ei' +
+              'n FTP-Passwort'#10'  vom Benutzer abgefragt wird'#10'* Interne Libraries' +
+              ' geupdatet, Bugfixes'#10#10'</code></de>'
             Style.PaddingRight = 2
             Style.WhiteSpace = cwsPre
             Style.Color = Red
@@ -2033,32 +2054,29 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1
             Top = 16
             Width = 224
             Height = 22
-            Text = 'Download DFM2HTML 4.0'
+            Text = 'Download DFM2HTML 4.1'
             Style.FontSize = '19'
             AutoSizeXY = asXY
             PreferDownStyles = True
             Options = [loDownIfMenu, loDownIfMouseDown, loDownIfURL]
             LinkAnchor = dfm2html_inst
           end
-          object Label43: TdhLabel
+          object Label27: TdhLabel
             Left = 24
-            Top = 56
-            Width = 386
-            Height = 176
+            Top = 72
+            Width = 354
+            Height = 160
             Text = 
-              '<en><code>New in version 4.0:'#10'* Alpha-channel support by new col' +
-              'or dialog'#10'  (http://www.eltima.com/products/color-picker/)'#10'* add' +
-              'ed CSS3 checkbox in the Output options,'#10'  to evaluate RGBA/round' +
-              'ed corners support'#10'  in CSS3 enabled browsers'#10'* added French lan' +
-              'guage/updated Spanish language'#10'  (thanks to Fernando Deambrosio!' +
-              ')'#10'* Added "Resource Explorer" menu item,'#10'  listing all resource ' +
-              'requirements'#10#10'</code></en><de><code>Neu in version 4.0:'#10'* Alpha-' +
-              'Channel-Support durch neuen Farbdialog'#10'  (http://www.eltima.com/' +
-              'products/color-picker/)'#10'* Mit der CSS3-Checkbox in den Optionen'#10 +
-              '  kann man RGBA/RundeEcken direkt in'#10'  CSS3-f'#228'higen Browsern beg' +
-              'utachten'#10'* Franz'#246'sische Sprache hinzugef'#252'gt'#10'  (dank Fernando Dea' +
-              'mbrosio!)'#10'* Der "Ressource-Explorer" listet alle'#10'  Ressource-Abh' +
-              #228'ngigkeiten auf'#10#10'</code></de>'
+              '<en><code>New in version 4.1:'#10'* Afrikaans language is added '#10'  (' +
+              'thanks to J.Delport!)'#10'* Use madExcept for bug reporting'#10'  (writt' +
+              'en by Mathias Rauen)'#10'* Empty FTP password now means,'#10'  that the ' +
+              'password is queried from the user'#10'  each time the site is publis' +
+              'hed'#10'* Updated internal libraries, bug fixes'#10#10'</code></en><de><co' +
+              'de>Neu in version 4.1:'#10'* Afrikaans Sprache hinzugef'#252'gt'#10'  (dank J' +
+              '.Delport!)'#10'* Bug-reporting mittels madExcept'#10'  (von Mathias Raue' +
+              'n)'#10'* Leeres FTP-Passwort bedeutet, dass'#10'  bei jedem Hochladen ei' +
+              'n FTP-Passwort'#10'  vom Benutzer abgefragt wird'#10'* Interne Libraries' +
+              ' geupdatet, Bugfixes'#10#10'</code></de>'
             Style.PaddingRight = 2
             Style.WhiteSpace = cwsPre
             Style.Color = Red

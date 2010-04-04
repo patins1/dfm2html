@@ -654,7 +654,7 @@ begin
  with IniFile do
  try
   Clear;
-  WriteString('Program','V','1.2');
+  WriteString('Program','V',DFM2HTML_VERSION);
   //WriteString('Program','R',EncodePsw(RegString));
 
   if Act<>nil then
@@ -2009,7 +2009,7 @@ end;
 
 procedure TdhMainForm.mAboutClick(Sender: TObject);
 begin
- ShowMessage(DFM2HTML_VERSION+#13#10+'Freeware'+#13#10+'Copyright 2003-2009'+#13#10+'Jörg Kiegeland'{+#13#10+#13#10+_if(Registered,'Registered version','Unregistered version')});
+ ShowMessage(DFM2HTML_VERSION+#13#10+'Freeware'+#13#10+'Copyright 2003-2010'+#13#10+'Jörg Kiegeland'{+#13#10+#13#10+_if(Registered,'Registered version','Unregistered version')});
 // showmessage(FindControl(GetFocus).classname);
 end;
 

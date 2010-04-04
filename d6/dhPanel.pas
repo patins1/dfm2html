@@ -3036,11 +3036,14 @@ end;
 
 procedure TdhCustomPanel.InvalTop(IncludeChildren,IncludeSelf:boolean);
 begin
+   if IncludeSelf then
+   begin
+    TransparentTopIsValid:=false;
+   end;
    if not TopIsValid then exit;
    if IncludeSelf then
    begin
     TopIsValid:=false;
-    TransparentTopIsValid:=false;
    end;
    Invalidate;
    InvalTrans(Self,GetCBound(Self),IncludeChildren);

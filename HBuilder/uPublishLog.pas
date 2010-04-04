@@ -245,8 +245,11 @@ end;
 {$IFNDEF CLX}
 
 procedure TPublishLog.FtpClient1OnDisplay(Sender: TObject; var Msg: String);
+const STARTSWITH_PASS='> PASS ';
 begin
-  Log('        '+Msg,clRed);
+  if SubEqual(STARTSWITH_PASS,Msg) then
+   Log('        '+STARTSWITH_PASS+StringOfChar('*',Length(Msg)-Length(STARTSWITH_PASS)),clRed) else
+   Log('        '+Msg,clRed);
 end;
 
 procedure TPublishLog.FtpClient1RequestDone(Sender: TObject;
@@ -485,19 +488,17 @@ begin
 end;
 
 procedure TMyFtpClient.PassAsync;
-var
-    NewPass: String;
+var NewPass: String;
 begin
-    if Length(Password) <= 0 then
+    while Length(Password) <= 0 do
     begin
-     if InputQuery(DKFormat(FTPLOG_PSWDIALOG_TITLE),DKFormat(FTPLOG_PSWDIALOG_PROMPT),NewPass) then
+     if InputPSWQuery(DKFormat(FTPLOG_PSWDIALOG_TITLE),DKFormat(FTPLOG_PSWDIALOG_PROMPT),NewPass) then
      begin
       Password:=NewPass;
-      if Length(Password) <= 0 then
-       Password:='non@email.com';
      end else
      begin
       PublishLog.LogAndAbort(DKFormat(FTPLOG_ABORTEDBYUSER),clGreen);
+      Exit;
      end;
     end;
     Inherited;

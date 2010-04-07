@@ -403,9 +403,12 @@ var
   var
     Buffer: array[0..255] of AnsiChar;
     Position: Integer;
+    Size:Longint;
   begin
     Position := S.Position;
-    Buffer[S.Read(Buffer, SizeOf(Buffer))-1] := #0;
+    Size:=S.Read(Buffer, SizeOf(Buffer));
+    if Size-1<0 then Size:=1;
+    Buffer[Size-1] := #0;
     S.Position := Position;
     Result := PossibleStream(string(Buffer));
   end;

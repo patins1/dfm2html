@@ -2092,7 +2092,7 @@ begin
     if SilentUpdateCheck then
      Root:='/autoupd' else
      Root:='/upd';
-    if FileCreateAge(Copy(UserOrRootDir(''),1,Length(UserOrRootDir(''))-1),FileDateTime) then
+    if FileCreateAge(Copy(RootDir(''),1,Length(RootDir(''))-1),FileDateTime) then
     begin
      HttpUpdateCli.URL:='http://www.dfm2html.com'+Root+'/'+DateToStr(FileDateTime,GetFormatSettings);
     end else

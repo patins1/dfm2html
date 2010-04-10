@@ -627,11 +627,7 @@ begin
  Result:=InputQuery(DKFormat(TEMPLATESAVEASCAPTION),DKFormat(TEMPLATESAVEASPROMPT),Value);
  if Result and (MySiz.FindBody<>nil) then
  begin
-  //MySiz.SaveAsImage(GetRootTemplatesDir+MyTemplatesDir+PathDelim+Value+'.png',true);
-
-  SaveAsImage(GetRootTemplatesDir+MyTemplatesDir+PathDelim+Value+'.png');
-
-  PhysicalSave(GetRootTemplatesDir+MyTemplatesDir+PathDelim+Value+'.dfm',false);
+  PhysicalSave(GetUserTemplatesDir+MyTemplatesDir+PathDelim+Value+'.dfm',false);
  end;
 end;
 
@@ -796,6 +792,7 @@ function TPageContainer.PhysicalSave(FileName:TPathName; DeleteHistory:boolean):
 begin
  result:=false;
  try
+  ForceDirectories(ExtractFilePath(FileName));
   StringToFile(FileName,GetDFMStr(true,false));
   if DeleteHistory then
    InitializeRedoUndo;

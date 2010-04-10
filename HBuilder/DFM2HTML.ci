@@ -68,7 +68,6 @@
 <_><src>C:\Delphi\HBuilder\Templates\Frames\*.dfm</><dest>custom</><custom>#setuppath#\Templates\Frames</><ifexist>overnewer</><recurs>0</></>
 <_><src>C:\Delphi\HBuilder\Templates\No Frames\*.dfm</><dest>custom</><custom>#setuppath#\Templates\No Frames</><ifexist>overnewer</><recurs>0</></>
 <_><src>C:\Delphi\HBuilder\Templates\Workshop</><dest>custom</><custom>#setuppath#\Templates</><ifexist>overnewer</><recurs>0</></>
-<_><src>C:\Delphi\HBuilder\Templates\My Templates\Readme.txt</><dest>custom</><custom>#setuppath#\Templates\My Templates</><ifexist>overnewer</><recurs>0</></>
 <_><src>C:\Delphi\HBuilder\DFM2HTML.dklang</><dest>inst</><custom></><ifexist>over</><recurs>0</></>
 <_><src>C:\Delphi\HBuilder\Language\German.lng</><dest>custom</><custom>#setuppath#\Language</><ifexist>overnewer</><recurs>0</></>
 <_><src>C:\Delphi\HBuilder\Language\Slovak.lng</><dest>custom</><custom>#setuppath#\Language</><ifexist>overnewer</><recurs>0</></>

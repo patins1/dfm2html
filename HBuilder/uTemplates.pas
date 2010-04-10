@@ -37,7 +37,6 @@ type
   private
     { Private declarations }
     ActDown:TPathName;
-    function GetDir: TPathName;
   public
     { Public declarations }
     function Prepare(var Filename:TPathName):boolean;
@@ -49,7 +48,7 @@ var
 const MyTemplatesDir='My Templates';
       preview='Preview';
 
-function GetRootTemplatesDir:TPathName;
+function GetUserTemplatesDir:TPathName;
 
 implementation
 
@@ -61,15 +60,13 @@ var OldIndex:integer=-1;
 
 function GetRootTemplatesDir:TPathName;
 begin
- result:=ExtractFilePath(Application.ExeName)+'Templates'+PathDelim;
+ result:=RootDir('Templates'+PathDelim);
 end;
 
-
-function TTemplatesWizard.GetDir:TPathName;
+function GetUserTemplatesDir:TPathName;
 begin
- result:=GetRootTemplatesDir+ListBox1.Items[ListBox1.ItemIndex]+PathDelim;
+ result:=UserDir('Templates'+PathDelim);
 end;
-
 
 procedure TTemplatesWizard.ListBox1Click(Sender: TObject);
 
@@ -140,38 +137,22 @@ begin
  end;
 end;
 
+var ItemIndex:integer;
+
+procedure FindTemplates(dir:TPathName);
 var SearchRec: TSearchRec;
     graph:TBitmap32;
     dfmfile,pngfile,purename:TPathName;
     pc:TPageContainer;
     c1,c2:int64;
     dfmfileAge,pngfileAge:TDateTime;
-    ItemIndex:integer;
-
 begin
- ItemIndex:=ListBox1.ItemIndex;
-{ if ListBox1.ItemIndex>0 then
- //dhMainForm.Open('C:\HBuilder\Tutorial.dfm',false,true);
- dhMainForm.Open('C:\HBuilder\Templates\Frames\Template1frames.dfm',false,true);
- exit;
- }
- //QueryPerformanceCounter(c1);
- if OldIndex=ItemIndex then exit;
- OldIndex:=ItemIndex;
-
- ActDown:='';
- Button1.Enabled:=false;
- while tt.ControlCount>0 do
-  tt.Controls[0].Free;
- if ItemIndex<0 then exit;
- lEmpty.Visible:=false;
- Update;
  try
- if FindFirst(GetDir+'*.dfm',faAnyFile,SearchRec)=0 then
+ if FindFirst(dir+'*.dfm',faAnyFile,SearchRec)=0 then
  repeat
-  dfmfile:=GetDir+SearchRec.Name;
+  dfmfile:=dir+SearchRec.Name;
   purename:=Copy(SearchRec.Name,1,Length(SearchRec.Name)-length('.dfm'));
-  pngfile:=GetRootTemplatesDir+preview+PathDelim+ListBox1.Items[ItemIndex]+'-'+purename+'.bmp';
+  pngfile:=GetUserTemplatesDir+preview+PathDelim+ListBox1.Items[ItemIndex]+'-'+purename+'.bmp';
   if FileAge(dfmfile,dfmfileAge) then
   try
   if not(FileAge(pngfile,pngfileAge) and (pngfileAge>=dfmfileAge)) then
@@ -202,6 +183,28 @@ begin
  finally
   SysUtils.FindClose(SearchRec);
  end;
+end;
+
+begin
+ ItemIndex:=ListBox1.ItemIndex;
+{ if ListBox1.ItemIndex>0 then
+ //dhMainForm.Open('C:\HBuilder\Tutorial.dfm',false,true);
+ dhMainForm.Open('C:\HBuilder\Templates\Frames\Template1frames.dfm',false,true);
+ exit;
+ }
+ //QueryPerformanceCounter(c1);
+ if OldIndex=ItemIndex then exit;
+ OldIndex:=ItemIndex;
+
+ ActDown:='';
+ Button1.Enabled:=false;
+ while tt.ControlCount>0 do
+  tt.Controls[0].Free;
+ if ItemIndex<0 then exit;
+ lEmpty.Visible:=false;
+ Update;
+ FindTemplates(RootDir('Templates'+PathDelim+ListBox1.Items[ListBox1.ItemIndex]+PathDelim));
+ FindTemplates(UserDir('Templates'+PathDelim+ListBox1.Items[ListBox1.ItemIndex]+PathDelim));
  lEmpty.Visible:=tt.ControlCount=0;
 
  //QueryPerformanceCounter(c2);
@@ -210,17 +213,24 @@ begin
 end;
 
 function TTemplatesWizard.Prepare(var Filename:TPathName):boolean;
+
+procedure AddToListBox(const dir:TPathName);
 var SearchRec: TSearchRec;
 begin
- ListBox1.Clear;
- if FindFirst(GetRootTemplatesDir+'*',faDirectory,SearchRec)=0 then
+ if FindFirst(dir+'*',faDirectory,SearchRec)=0 then
  repeat
   if (SearchRec.Name<>'') and (SearchRec.Name[1]<>'.') and (SearchRec.Name<>Preview) then
-  if SearchRec.Name=MyTemplatesDir then
-   ListBox1.Items.Insert(0,SearchRec.Name) else
+  if ListBox1.Items.IndexOf(SearchRec.Name)=-1 then
    ListBox1.Items.Add(SearchRec.Name);
  until FindNext(SearchRec)<>0;
  SysUtils.FindClose(SearchRec);
+end;
+
+begin
+ ListBox1.Clear;
+ ListBox1.Items.Add(MyTemplatesDir);
+ AddToListBox(GetRootTemplatesDir);
+ AddToListBox(GetUserTemplatesDir);
  ListBox1.ItemIndex:=OldIndex;
  if ListBox1.ItemIndex=-1 then
   ListBox1.ItemIndex:=0;
@@ -238,7 +248,7 @@ begin
  for i:=0 to tt.ControlCount-1 do
   (tt.Controls[i] as TdhLink).Down:=false;
  (Sender as TdhLink).Down:=true;
- ActDown:=GetDir+(Sender as TdhLink).Hint+'.dfm';
+ ActDown:=UserOrRootDir('Templates'+PathDelim+ListBox1.Items[ListBox1.ItemIndex]+PathDelim+(Sender as TdhLink).Hint+'.dfm');
  Button1.Enabled:=true;
 end;
 

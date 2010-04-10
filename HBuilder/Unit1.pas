@@ -25,7 +25,7 @@ uses
   MySiz, Unit3, uConversion,
   dhRadioButton, dhMemo, dhFileField,  MyToolButton,
   dhColorPicker,IniFiles,gr32, uOptions, menuhelper,
-  pngimage, Contnrs,hEdit,hComboBox,hMemo, UIConstants,DKLang, OpenSave,AColorPickerAX_TLB,dhStrUtils,WideStrUtils,uMetaWriter,dhStyles,dhGraphicFormats,dhColorUtils;
+  pngimage, Contnrs,hEdit,hComboBox,hMemo, UIConstants,DKLang, OpenSave,AColorPickerAX_TLB,dhStrUtils,WideStrUtils,uMetaWriter,dhStyles,dhGraphicFormats,dhColorUtils,shlobj;
 
 //const WM_PUSHUP=WM_USER+33;
 
@@ -365,6 +365,8 @@ type TFakeWinControl=class(TWinControl);
 function ExtractUrlAimedFilenameToWindowsFilename(const URL: TPathName): TPathName;
 function GetLanguageDFM(const prefix:TPathName):TPathName;
 function RootDir(const s:TPathName): TPathName;
+function UserDir(const s:TPathName): TPathName;
+function UserOrRootDir(const s:TPathName): TPathName;
 var
   CF_COMPONENTS: Word;
 const sCF_COMPONENTS={'Delphi Components'}'application/delphi.component';
@@ -406,6 +408,25 @@ begin
  result:=ExtractFilePath(Application.Exename)+s;
 end;
 
+function UserDir(const s:TPathName): TPathName;
+var
+   r: Bool;
+   path: array[0..Max_Path] of Char;
+begin
+   r := ShGetSpecialFolderPath(0, path, CSIDL_Personal, False) ;
+   if not r then raise Exception.Create('Could not find MyDocuments folder location.') ;
+   Result := GoodLocalPath(Path)+'DFM2HTML';
+   Result := Result+PathDelim+s;
+   ForceDirectories(ExtractFilePath(Result));
+end;
+
+function UserOrRootDir(const s:TPathName): TPathName;
+begin
+  Result:=UserDir(s);
+  if FileExists(Result) then exit;
+  Result:=RootDir(s);
+end;
+
 
 const sPropsAlign:array[TAlign] of string=('Horizontal', 'Top', 'Bottom', 'Left', 'Right', 'Vertical','x');
 
@@ -435,12 +456,6 @@ begin
   if result[i]<'a' then
    inc(result[i],ord('z')-ord('a')+1);
  end;
-end;
-var LngFile:TMemIniFile;
-
-procedure ReadLanguage;
-begin
- LngFile:=TMemIniFile.Create(RootDir(configFile));
 end;
 
 function GetFormatSettings:TFormatSettings;
@@ -472,11 +487,13 @@ var
     sLastUpdateCheck:String;
     ColorChar:Char;
     CustomColorName,CustomColorValue:String;
+    dir:TPathName;
 begin
   firststarted:=true;
   LastUpdateCheck:=NeverCheckedForUpdate;
+ dir:=UserOrRootDir(configFile);
  try
- IniFile:=TMemIniFile.Create(RootDir(configFile));
+ IniFile:=TMemIniFile.Create(dir);
 
  with IniFile do
  try
@@ -569,7 +586,7 @@ begin
 
  except
  on e:Exception do
-  showmessage('Cannot read '+RootDir(configFile)+endl+
+  showmessage('Cannot read '+dir+endl+
               'System error message:'+endl+
               e.Message);
  end;
@@ -591,7 +608,7 @@ begin
  try
  try
   if FuncSettings.FSmartPublishing then
-   sl.LoadFromFile(RootDir(crcFile));
+   sl.LoadFromFile(UserOrRootDir(crcFile));
   for i:=0 to sl.Count-1 do
   begin
    s:=sl[i];
@@ -635,7 +652,7 @@ begin
    sl.Add(FileName+'='+inttohex(CRC,8));
   end;
  end;
- sl.SaveToFile(RootDir(crcFile));
+ sl.SaveToFile(UserDir(crcFile));
  finally
   sl.Free;
  end;
@@ -647,9 +664,11 @@ var IniFile:TMemIniFile;
     DefaultFontStyle:integer;
     i,index:integer;
     s,CustomColor,CustomColorName,CustomColorValue:string;
+    dir:TPathName;
 begin
+ dir:=UserDir(configFile);
  try
- IniFile:=TMemIniFile.Create(RootDir(configFile));
+ IniFile:=TMemIniFile.Create(dir);
 
  with IniFile do
  try
@@ -722,7 +741,7 @@ begin
 
  except
  on e:Exception do
-  showmessage(DKFormat(SAVETOERROR,RootDir(configFile))+endl+
+  showmessage(DKFormat(SAVETOERROR,dir)+endl+
               DKFormat(SYSTEMERROR)+':'+endl+
               e.Message);
  end;
@@ -2006,7 +2025,6 @@ begin
 // Act.FormKeyDown(Sender,Key,Shift);
 end;
 
-
 procedure TdhMainForm.mAboutClick(Sender: TObject);
 begin
  ShowMessage(DFM2HTML_VERSION+#13#10+'Freeware'+#13#10+'Copyright 2003-2010'+#13#10+'Jörg Kiegeland'{+#13#10+#13#10+_if(Registered,'Registered version','Unregistered version')});
@@ -2067,14 +2085,14 @@ begin
     HttpUpdateCli:=THttpCli.Create(nil);
     HttpUpdateCli.OnRequestDone:=HttpUpdateCliRequestDone;
     HttpUpdateCli.RcvdStream:=TMemoryStream.Create;
-    if not FileAge(RootDir(configFile),FileDateTime) then
+    if not FileAge(UserOrRootDir(configFile),FileDateTime) then
     begin
      WriteConfig;
     end;
     if SilentUpdateCheck then
      Root:='/autoupd' else
      Root:='/upd';
-    if FileCreateAge(Copy(RootDir(''),1,Length(RootDir(''))-1),FileDateTime) then
+    if FileCreateAge(Copy(UserOrRootDir(''),1,Length(UserOrRootDir(''))-1),FileDateTime) then
     begin
      HttpUpdateCli.URL:='http://www.dfm2html.com'+Root+'/'+DateToStr(FileDateTime,GetFormatSettings);
     end else
@@ -2160,7 +2178,7 @@ begin
  propspc.PageControl1.EnableAlign;
                               }
 
- StringToFile(RootDir('tryx.txt'),'blabla');
+ StringToFile(UserOrRootDir('tryx.txt'),'blabla');
 
 // MessageDlg('X', mtWarning,[mbAbort, mbRetry, mbIgnore], 0);
 // (Act.MySiz.FindBody as TdhPage).FCommon.IsScrollArea:=not (Act.MySiz.FindBody as TdhPage).FCommon.IsScrollArea;

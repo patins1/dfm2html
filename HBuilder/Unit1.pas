@@ -2382,8 +2382,7 @@ procedure TdhMainForm.mPublishClick(Sender: TObject);
 var URL:TPathName;
 begin
  Tabs.CommitChanges;
- LateCreateForm(TPublishLog,PublishLog);
- if PublishLog.Busy then
+ if (PublishLog<>nil) and PublishLog.Busy then
  begin
   //showmessage('You can only have one upload running');
   PublishLog.Show;
@@ -2396,12 +2395,18 @@ begin
  begin
   LateCreateForm(TPublishFTP,PublishFTP);
   URL:=EmptyStr;
+  PublishFTP.RequireURL:=true;
+  try
   if PublishFTP.GetURL(URL) then
   begin
    Act.MySiz.FindBody.FTPURL:=URL;
   end else
    exit;
+  finally
+   PublishFTP.RequireURL:=false;
+  end;
  end;
+ LateCreateForm(TPublishLog,PublishLog);
  PublishLog.DoUpload(Act.MySiz.FindBody.FTPURL);
 end;
 

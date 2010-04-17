@@ -52,6 +52,7 @@ type
     function GetURL2(maskPassword:Boolean=false): TPathName;
     procedure UpdateAssembledURL;
   public
+    RequireURL:Boolean;
     { Public declarations }
     function GetURL(var URL:TPathName):boolean;
   end;
@@ -184,9 +185,12 @@ function TPublishFTP.URL_OK:boolean;
 begin
  if eHost.Text='' then
  begin
-  {showmessage('"Host" must not be empty');
-  result:=false;    }
-  result:=true;
+  if RequireURL then
+  begin
+   showmessage('"Host" must not be empty');
+   result:=false;
+  end else
+   result:=true;
  end else
  if (ePort.Text<>'') and not CheckInt(ePort.Text) then
  begin

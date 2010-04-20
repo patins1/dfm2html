@@ -32,7 +32,7 @@ type
     { Private declarations }
     ToUpload:TStringList;
     FBusy: boolean;
-    RootHostDirName,RasteringSaveDir:TPathName;
+    RootHostDirName,RasteringSaveDir,FTPShortcut:TPathName;
 {$IFNDEF CLX}
     FtpClient1: TMyFtpClient;
     procedure FtpClient1RequestDone(Sender: TObject; RqType: TFtpRequest;
@@ -169,6 +169,7 @@ begin
   Log(DKFormat(FPTLOG_GENERATE));
 
  Update;
+ FTPShortcut:=GetFTPShortcut(dhMainForm.Act.MySiz.FindBody);
  RasteringSaveDir:=dhMainForm.GeneratedHTML(False);
  Log(DKFormat(FTPLOG_GENERATED),clGreen);
 
@@ -180,7 +181,7 @@ begin
 
  ToUpload.Clear;
  for i:=0 to GeneratedFiles.Count-1 do
- if not FuncSettings.FSmartPublishing or not Find(GetFTPShortcut(dhMainForm.Act.MySiz.FindBody),ExtractFileName(GeneratedFiles[i]),DWORD(GeneratedFiles.Objects[i]),false) then
+ if not FuncSettings.FSmartPublishing or not Find(FTPShortcut,ExtractFileName(GeneratedFiles[i]),DWORD(GeneratedFiles.Objects[i]),false) then
    ToUpload.AddObject(GeneratedFiles[i],GeneratedFiles.Objects[i]);
 
  if GeneratedFiles.Count>ToUpload.Count then
@@ -299,7 +300,7 @@ begin
  ftpPutAsync:
  begin
   if FuncSettings.FSmartPublishing and (dhMainForm.Act<>nil) then
-   Find(GetFTPShortcut(dhMainForm.Act.MySiz.FindBody),ExtractFileName(ToUpload[0]),DWORD(ToUpload.Objects[0]),true);
+   Find(FTPShortcut,ExtractFileName(ToUpload[0]),DWORD(ToUpload.Objects[0]),true);
   ToUpload.Delete(0);
  end;
  end;

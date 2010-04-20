@@ -49,8 +49,8 @@ var i:integer;
 begin
  result:='';
  for i:=1 to length(s) do
- if (result[i] in ['"','<','>','%','\','^','[',']','`','+','$',','   ,';','/','?',':','@','=','&','#']) or (ord(result[i])<=31) or (ord(result[i])>=127) then
-  result:=result+'%'+inttohex(ord(result[i]),2) else
+ if (s[i] in ['"','<','>','%','\','^','[',']','`','+','$',','   ,';','/','?',':','@','=','&','#']) or (ord(s[i])<=31) or (ord(s[i])>=127) then
+  result:=result+'%'+inttohex(ord(s[i]),2) else
   result:=result+s[i];
 end;
 

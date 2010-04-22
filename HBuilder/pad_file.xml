@@ -34,19 +34,19 @@
 	</Company_Info>
 	<Program_Info>
 		<Program_Name>DFM2HTML</Program_Name>
-		<Program_Version>4.1</Program_Version>
+		<Program_Version>4.2</Program_Version>
 		<Program_Type>Freeware</Program_Type>
 		<Program_Release_Status>Minor Update</Program_Release_Status>
 		<Program_Category_Class>Web Development::HTML Tools</Program_Category_Class>
 		<Program_Release_Year>2010</Program_Release_Year>
-		<Program_Release_Month>10</Program_Release_Month>
-		<Program_Release_Day>04</Program_Release_Day>
+		<Program_Release_Month>04</Program_Release_Month>
+		<Program_Release_Day>22</Program_Release_Day>
 		<Program_Cost_Other>0.00</Program_Cost_Other>
 		<Program_Cost_Other_Code />
 		<Program_Cost_Dollars>0.00</Program_Cost_Dollars>
 		<Program_Categories />
 		<Program_Specific_Category>Development Tools</Program_Specific_Category>
-		<Program_Change_Info>added Afrikaans language, improved bug reporting</Program_Change_Info>
+		<Program_Change_Info>bug fixes</Program_Change_Info>
 		<Program_Language>German,English,French,Italian,Portuguese,Slovak,Spanish</Program_Language>
 		<Program_OS_Support>Win2000,Win7 x32,WinVista,WinVista x64,WinXP</Program_OS_Support>
 		<Program_Install_Support>Install and Uninstall</Program_Install_Support>
@@ -59,8 +59,8 @@
 			<Filename_Generic>dfm2html.exe</Filename_Generic>
 			<Filename_Versioned>dfm2v1_3.exe</Filename_Versioned>
 			<Filename_Previous>dfm2v1_3.exe</Filename_Previous>
-			<File_Size_Bytes>3680987</File_Size_Bytes>
-			<File_Size_K>3594</File_Size_K>
+			<File_Size_Bytes>3681373</File_Size_Bytes>
+			<File_Size_K>3595</File_Size_K>
 			<File_Size_MB>3.51</File_Size_MB>
 		</File_Info>
 		<Expire_Info>

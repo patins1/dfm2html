@@ -1754,6 +1754,16 @@ var Directory:{$IFDEF CLX}widestring{$ELSE}string{$ENDIF};
     FileName:TPathName;
     anyFilesToWrite:Boolean;
     anyFilesToShift:Boolean;
+    Warnings:TStringList;
+
+procedure AddWarning(const id,s:string);
+var ss:string;
+begin
+ ss:=id+' '+s;
+ if Warnings.IndexOf(ss)=-1 then
+  Warnings.Add(ss);
+end;
+
 begin
  anyFilesToWrite:=false;
  anyFilesToShift:=false;
@@ -1811,6 +1821,8 @@ begin
     ShowMessage(DKFormat(NOIMAGETOEXTERNALIZE));
     exit;
    end;
+   Warnings:=TStringList.Create;
+   try
    for I := 0 to Act.ComponentCount - 1 do
    begin
      if Act.Components[i] is TdhCustomPanel then
@@ -1822,8 +1834,9 @@ begin
        begin
         FileName:=sw+PureFileName(ProposedBackgroundFilename(pn.StyleArr[state]));
         if not BackgroundImage.HasPath and FileExists(FileName) and (StringFromFile(FileName)<>AsString(BackgroundImage.RequestGraphic)) or anyFilesToShift and BackgroundImage.HasPath and (LowerCase(BackgroundImage.GetAbsolutePath)<>LowerCase(FileName)) and FileExists(FileName) and (StringFromFile(FileName)<>StringFromFile(BackgroundImage.GetAbsolutePath)) then
-        begin
+        try
           if MessageDlg(DKFormat(EXTERNALIZEDIMAGEALREADYEXISTS,FileName),mtConfirmation,[mbYes, mbNo], 0)<>mrYes then exit;
+        except
         end;
        end;
      end;
@@ -1837,7 +1850,7 @@ begin
        for state:=low(TState) to high(TState) do
        if pn.StyleArr[state]<>nil then with pn.StyleArr[state] do
        if BackgroundImage.HasPicture then
-       begin
+       try
         FileName:=sw+PureFileName(ProposedBackgroundFilename(pn.StyleArr[state]));
         if not BackgroundImage.HasPath then
         begin
@@ -1849,10 +1862,22 @@ begin
          StringToFile(FileName,StringFromFile(BackgroundImage.GetAbsolutePath));
          LoadImage(FileName);
         end;
+       except
+       on e:Exception do
+         AddWarning(pn.Name,': '+e.Message);
        end;
      end;
    end;
    Tabs.Changed('Externalize Images');
+   if Warnings.Count<>0 then
+   begin
+    LateCreateForm(TFormWarnings,FormWarnings);
+    FormWarnings.Memo1.Lines.Assign(Warnings);
+    FormWarnings.Show;
+   end;
+   finally
+    FreeAndNil(Warnings);
+   end;
  end;
 end;
 

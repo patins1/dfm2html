@@ -5,8 +5,8 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1
   VertScrollBar.Tracking = True
   Anchors = [akLeft, akTop, akRight, akBottom]
   Caption = 'webpage.dfm'
-  ClientHeight = 776
-  ClientWidth = 1680
+  ClientHeight = 526
+  ClientWidth = 1280
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clBlack
   Font.Height = -13
@@ -38,7 +38,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1
       'HTML editor, web page maker, web design creator, anti aliasing, ' +
       'mouse over buttons, WYSIWYG, absolute positioning, site manageme' +
       'nt, authoring'
-    FTPURL = 'ftp://p8288468:5yMTPDtZ@kiegeland.com/dfm2html/'
+    FTPURL = 'ftp://p8288468:5yMTPDtZ@kiegeland.com/dfm2html_de/'
     HTTPURL = 'http://www.dfm2html.com/'
     GeneratedImageFolder = 'images'
     GeneratedCSSFile = 'dfm2html'
@@ -143,7 +143,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1
           object Link21: TdhLink
             Left = 24
             Top = 336
-            Width = 104
+            Width = 110
             Height = 16
             Text = #9658' <en>Version history</en><de>Versionshistorie</de>'
             Style.TextDecoration = [ctdNone]
@@ -252,6 +252,36 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1
             AutoSizeXY = asXY
             FileName = 'C:\Delphi\HBuilder\CurrentVersion.txt'
             Linked = True
+          end
+          object Donate: TdhDirectHTML
+            Left = 280
+            Top = 301
+            Width = 20
+            Height = 19
+            Use = en
+            AutoSizeXY = asXY
+            InnerHTML = 
+              '<form action="https://www.paypal.com/cgi-bin/webscr" method="pos' +
+              't">'#13#10'<input type="hidden" name="cmd" value="_s-xclick">'#13#10'<input ' +
+              'type="hidden" name="hosted_button_id" value="8714394">'#13#10'<input t' +
+              'ype="image" src="https://www.paypal.com/en_US/i/btn/btn_donate_L' +
+              'G.gif" border="0" name="submit" alt="PayPal - The safer, easier ' +
+              'way to pay online!">'#13#10'</form>'#13#10
+          end
+          object DonateDE: TdhDirectHTML
+            Left = 280
+            Top = 301
+            Width = 20
+            Height = 19
+            Use = de
+            AutoSizeXY = asXY
+            InnerHTML = 
+              '<form action="https://www.paypal.com/cgi-bin/webscr" method="pos' +
+              't">'#13#10'<input type="hidden" name="cmd" value="_s-xclick">'#13#10'<input ' +
+              'type="hidden" name="hosted_button_id" value="8718382">'#13#10'<input t' +
+              'ype="image" src="https://www.paypal.com/en_US/i/btn/btn_donate_L' +
+              'G.gif" border="0" name="submit" alt="PayPal - The safer, easier ' +
+              'way to pay online!">'#13#10'</form>'#13#10
           end
         end
         object register: TdhPage
@@ -2163,7 +2193,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1
         object Link7: TdhLink
           Left = 0
           Top = 108
-          Height = 29
+          Height = 45
           Text = '<en>User Pages</en><de>Benutzer- seiten</de>'
           Use = Link3
           AutoSizeXY = asY
@@ -2175,7 +2205,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1
         end
         object Link20: TdhLink
           Left = 0
-          Top = 137
+          Top = 153
           Height = 45
           Text = '<en>Version history</en>'#10'<de>Versions- historie</de>'
           Use = Link3
@@ -2188,7 +2218,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1
         end
         object Link19: TdhLink
           Left = 0
-          Top = 182
+          Top = 198
           Height = 29
           Text = 'FAQ'
           Use = Link3
@@ -2201,7 +2231,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1
         end
         object Link13: TdhLink
           Left = 0
-          Top = 211
+          Top = 227
           Height = 45
           Text = 'Tips & Tricks'
           Use = Link3
@@ -2214,7 +2244,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1
         end
         object Link4: TdhLink
           Left = 0
-          Top = 256
+          Top = 272
           Height = 29
           Text = '<en>Contact</en><de>Impressum</de>'
           Use = Link3
@@ -2227,8 +2257,8 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1
         end
         object TdhAnchor2: TdhLink
           Left = 0
-          Top = 285
-          Height = 29
+          Top = 301
+          Height = 45
           Text = '<en>Disclaimer</en>'#10'<de>Haftungs- ausschluss</de>'
           Use = Link3
           AutoSizeXY = asY
@@ -2243,7 +2273,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1
         end
         object Link40: TdhLink
           Left = 0
-          Top = 314
+          Top = 346
           Height = 45
           Text = '<en>More Programs</en><de>Weitere Programme</de>'
           Use = Link3
@@ -2503,18 +2533,15 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1
     object StyleSheet8: TdhStyleSheet
       Left = 8
       Top = 8
-      Width = 28
-      Height = 28
-      Expanded = False
-      ExpandedWidth = 232
-      ExpandedHeight = 296
-      Expanded = False
+      Width = 232
+      Height = 296
+      Expanded = True
       object de: TdhLabel
         Left = 0
         Top = 0
         Height = 16
         Text = 'de'
-        Style.Display = cdsNone
+        Style.Display = cdsInline
         AutoSizeXY = asY
         Align = alTop
         Right = 0
@@ -2524,7 +2551,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1
         Top = 16
         Height = 16
         Text = 'en'
-        Style.Display = cdsInline
+        Style.Display = cdsNone
         AutoSizeXY = asY
         Align = alTop
         Right = 0

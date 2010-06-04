@@ -148,7 +148,8 @@ end;
 
 procedure TdhColorPicker.DoPreviewColorChange;
 begin
-   TAColorDialog(ColorDialog).RGB_R:=TAColorDialog(ColorDialog).RGB_R; //update TAColorDialog.Alpha
+   if ColorDialog is TAColorDialog then
+    TAColorDialog(ColorDialog).RGB_R:=TAColorDialog(ColorDialog).RGB_R; //update TAColorDialog.Alpha
    Self.CSSColor:=GetCSSColorFromDialog;
    if Assigned(FOnPreviewColorChanged) then
     FOnPreviewColorChanged(Self);

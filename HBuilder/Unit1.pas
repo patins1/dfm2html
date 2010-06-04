@@ -2467,6 +2467,7 @@ begin
  if not Tabs.CommitChanges then exit;
  LateCreateForm(TPageWizard,PageWizard);
  PageWizard.PageControl1.ActivePage:=PageWizard.TabSheet1;
+ PageWizard.Panel1.Visible:=true; // required for the next line
  PageWizard.ActiveControl:=PageWizard.eHTTPURL;
  //showmessage('You have to specify a HTTP URL');
  ls:=TList.Create;

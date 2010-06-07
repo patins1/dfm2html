@@ -48,7 +48,6 @@ contains
   dhMemo in 'dhMemo.pas',
   dhSelect in 'dhSelect.pas',
   dhHiddenField in 'dhHiddenField.pas',
-  BinList in 'BinList.pas',
   dhPanel in 'dhPanel.pas',
   dhDirectHTML in 'dhDirectHTML.pas',
   dhBitmap32 in 'dhBitmap32.pas',

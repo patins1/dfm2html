@@ -10,7 +10,7 @@ uses
   Controls, Windows, Messages, Graphics, Forms, ComCtrls, Dialogs,
   ShellAPI, Mask, ExtCtrls, StdCtrls,  Variants, clipbrd, Spin, Buttons, UnicodeCtrls,
 {$ENDIF}
-  UseFastStrings,SysUtils, Classes, {$IFDEF MSWINDOWS}OverbyteIcsFtpCli,OverbyteIcsUrl,{$ELSE}{IcsUrl,}{$ENDIF} dhPageControl,
+  UseFastStrings,SysUtils, Classes, {$IFDEF MSWINDOWS}OverbyteIcsFtpCli,OverbyteIcsUrl,OverbyteIcsWSocket,OverbyteIcsFtpSrvT,{$ELSE}{IcsUrl,}{$ENDIF} dhPageControl,
   DKLang, UIConstants, MyForm,dhStrUtils, uOptions, uMetaWriter, Consts;
 
 type
@@ -32,6 +32,7 @@ type
     { Private declarations }
     ToUpload:TStringList;
     FBusy: boolean;
+    FBinaryNotInitialized: boolean;
     RootHostDirName,RasteringSaveDir,FTPShortcut:TPathName;
 {$IFNDEF CLX}
     FtpClient1: TMyFtpClient;
@@ -185,11 +186,11 @@ begin
    ToUpload.AddObject(GeneratedFiles[i],GeneratedFiles.Objects[i]);
 
  if GeneratedFiles.Count>ToUpload.Count then
- begin 
+ begin
   Log(DKFormat(FTPLOG_SAVING,[IntToStr(GeneratedFiles.Count-ToUpload.Count),IntToStr(GeneratedFiles.Count)]));
  end;
  if ToUpload.Count=0 then
- begin                                 
+ begin
   Log(DKFormat(FTPLOG_EMPTYSMARTUPLOAD));
   exit;
  end;
@@ -210,6 +211,7 @@ begin
  RootHostDirName:=Copy(Path,2,MaxInt);
  FtpClient1.HostDirName:=EmptyStr;
  FtpClient1.HostFileName:=EmptyStr;
+ FBinaryNotInitialized:=true;
  FtpClient1.ConnectAsync;
  Log(DKFormat(FTPLOG_CONNECTINGTO,Host));
 {$ENDIF}
@@ -253,10 +255,30 @@ begin
    Log('        '+Msg,clRed);
 end;
 
+type TMySocket=class(TWSocket)
+end;
+
+function GetFileSize(FileName : String) : TFtpBigInt; { V2.108 }
+var
+    SR : TSearchRec;
+    TempSize: TULargeInteger ;  // 64-bit integer record
+begin
+    if FindFirst(FileName, faReadOnly or faHidden or
+                 faSysFile or faArchive, SR) = 0 then begin
+        TempSize.LowPart  := SR.FindData.nFileSizeLow;
+        TempSize.HighPart := SR.FindData.nFileSizeHigh;
+        Result := TempSize.QuadPart;
+        FindClose(SR);
+    end
+    else
+        Result := -1;
+end;
+
 procedure TPublishLog.FtpClient1RequestDone(Sender: TObject;
   RqType: TFtpRequest; Error: Word);
 var i:integer;
     HostDirName:TPathName;
+    ExpectedSize,ActualSize:TFtpBigInt;
 begin
  if (Error<>0) and (RqType<>ftpMkdAsync) then
  begin
@@ -299,6 +321,13 @@ begin
  end;
  ftpPutAsync:
  begin
+  ExpectedSize:=GetFileSize(ToUpload[0]);
+  ActualSize:=TMySocket(FtpClient1.DataSocket).WriteCount;
+  if ExpectedSize<>ActualSize then
+  begin
+   LogAndAbort('File transfer not completed ('+inttostr(ActualSize)+' of '+inttostr(ExpectedSize)+' bytes)!',clRed);
+   Exit;
+  end;
   if FuncSettings.FSmartPublishing and (dhMainForm.Act<>nil) then
    Find(FTPShortcut,ExtractFileName(ToUpload[0]),DWORD(ToUpload.Objects[0]),true);
   ToUpload.Delete(0);
@@ -328,9 +357,10 @@ begin
     FtpClient1.CwdAsync;
     Exit;
    end;
-   if not FtpClient1.Binary then
+   if not FtpClient1.Binary or FBinaryNotInitialized then
    begin
     FtpClient1.TypeBinaryAsync;
+    FBinaryNotInitialized:=false;
     Exit;
    end;
    FtpClient1.HostFileName:=ExtractFileName(ToUpload[0]);

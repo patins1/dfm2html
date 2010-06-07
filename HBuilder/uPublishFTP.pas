@@ -127,7 +127,7 @@ begin
   if eHost.Items.IndexOf(Host)=-1 then
    eHost.Items.AddObject(Host,Pointer(i));
  end;
- 
+
  Prepare(URL);
 
  if ShowModal=mrOk then
@@ -239,7 +239,7 @@ end;
 procedure TPublishFTP.Button4Click(Sender: TObject);
 begin
  if URL_OK then
-  Browse(GetURL2,'',true);
+  Browse(GetURL2+'./'{handle case that dir is empty, which would open IE instead of Explorer when not adding ./},'',true);
 end;
 
 procedure TPublishFTP.FormCreate(Sender: TObject);

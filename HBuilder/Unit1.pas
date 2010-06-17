@@ -1389,7 +1389,7 @@ end;
 
 procedure TdhMainForm.mDonateClick(Sender: TObject);
 begin
-  Browse('http://www.dfm2html.'+GetTopLevelDomain+'/launch/',{'iexplore'}FuncSettings.FViewer,false);
+  Browse('https://www.paypal.com/cgi-bin/websc?cmd=_s-xclick&hosted_button_id=8714394',{'iexplore'}FuncSettings.FViewer,false);
 end;
 
 procedure TdhMainForm.mCutClick(Sender: TObject);

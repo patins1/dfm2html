@@ -3,7 +3,7 @@ object dhMainForm: TdhMainForm
   Left = 382
   Top = 93
   Caption = 'DFM2HTML'
-  ClientHeight = 829
+  ClientHeight = 766
   ClientWidth = 907
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -212,7 +212,6 @@ object dhMainForm: TdhMainForm
           Height = 21
           Hint = 'Object List'
           Style = csDropDownList
-          ItemHeight = 13
           TabOrder = 0
           OnChange = cbNameChange
           OnCloseUp = cbNameChange
@@ -333,7 +332,7 @@ object dhMainForm: TdhMainForm
   end
   object StatusBar: TStatusBar
     Left = 0
-    Top = 810
+    Top = 747
     Width = 907
     Height = 19
     Panels = <
@@ -349,7 +348,6 @@ object dhMainForm: TdhMainForm
       item
         Width = 50
       end>
-    ExplicitTop = 791
   end
   object STYLE_dhStyleSheet1: TdhStyleSheet
     Left = 576
@@ -517,7 +515,7 @@ object dhMainForm: TdhMainForm
     Left = 668
     Top = 48
     Bitmap = {
-      494C010121002200040018001800FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010121002300040018001800FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       000000000000360000002800000060000000D800000001002000000000000044
       0100000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -3478,6 +3476,10 @@ object dhMainForm: TdhMainForm
         Caption = 'About'
         OnClick = mAboutClick
       end
+      object mDonate: TMenuItem
+        Caption = 'Donate'
+        OnClick = mDonateClick
+      end
       object mRegister: TTntMenuItem
         Caption = 'Register'
         Visible = False
@@ -3690,7 +3692,7 @@ object dhMainForm: TdhMainForm
     Left = 464
     Top = 152
     LangData = {
-      0A0064684D61696E466F726D00019A0000000800646850616E656C3100000800
+      0A0064684D61696E466F726D00019B0000000800646850616E656C3100000800
       546F6F6C4261723100000F00636F6D7050616765436F6E74726F6C0101000000
       03000000040048696E74000800636F6D70506167650101000000050000000400
       48696E74000900636F6D7050616E656C010100000007000000040048696E7400
@@ -3806,7 +3808,8 @@ object dhMainForm: TdhMainForm
       0043617074696F6E000F006D4F626A6563744578706C6F72657201010000008A
       000000070043617074696F6E001100436F6C6F725072657669657754696D6572
       000011006D5265736F757263654578706C6F72657201010000008B0000000700
-      43617074696F6E00}
+      43617074696F6E0007006D446F6E61746501010000008C000000070043617074
+      696F6E00}
   end
   object GenerateTimer: TTimer
     Enabled = False

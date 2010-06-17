@@ -191,6 +191,7 @@ type
     mObjectExplorer: TTntMenuItem;
     ColorPreviewTimer: TTimer;
     mResourceExplorer: TTntMenuItem;
+    mDonate: TMenuItem;
     procedure mResourceExplorerClick(Sender: TObject);
     procedure ColorPreviewTimerTimer(Sender: TObject);
     procedure mObjectExplorerClick(Sender: TObject);
@@ -292,6 +293,7 @@ type
     procedure DEBUG_PosIE1Click(Sender: TObject);
     procedure DEBUG_PosFF1Click(Sender: TObject);
     procedure MenuTutorial1Click(Sender: TObject);
+    procedure mDonateClick(Sender: TObject);
   private
     LastFile:TPathName;
     FAct:TPageContainer;
@@ -1383,6 +1385,11 @@ end;
 procedure TdhMainForm.mDeleteClick(Sender: TObject);
 begin
  Act.MySiz.DeleteComponents;
+end;
+
+procedure TdhMainForm.mDonateClick(Sender: TObject);
+begin
+  Browse('http://www.dfm2html.'+GetTopLevelDomain+'/launch/',{'iexplore'}FuncSettings.FViewer,false);
 end;
 
 procedure TdhMainForm.mCutClick(Sender: TObject);

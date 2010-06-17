@@ -1,4 +1,4 @@
-object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1
+object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1
   Left = -4
   Top = -23
   HorzScrollBar.Tracking = True
@@ -18,6 +18,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1
   Scaled = False
   Visible = True
   WindowState = wsMaximized
+  ExplicitHeight = 683
   PixelsPerInch = 96
   TextHeight = 15
   object index: TdhPage
@@ -30,7 +31,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1
     Right = 0
     Bottom = 0
     UseIFrame = False
-    Title = 'HTML Editor DFM2HTML Version 4.2'
+    Title = 'Web Design Software DFM2HTML Version 4.3'
     OutputDirectory = 'www2\'
     MetaAuthor = 'J'#246'rg Kiegeland'
     MetaDescription = 'An WYSIWYG HTML editor'
@@ -38,7 +39,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1
       'HTML editor, web page maker, web design creator, anti aliasing, ' +
       'mouse over buttons, WYSIWYG, absolute positioning, site manageme' +
       'nt, authoring'
-    FTPURL = 'ftp://p8288468:5yMTPDtZ@kiegeland.com/dfm2html_de/'
+    FTPURL = 'ftp://p8288468:5yMTPDtZ@kiegeland.com/dfm2html/'
     HTTPURL = 'http://www.dfm2html.com/'
     GeneratedImageFolder = 'images'
     GeneratedCSSFile = 'dfm2html'
@@ -95,24 +96,24 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1
             Width = 456
             Height = 234
             Text = 
-              '<en>'#10'DFM2HTML is a wide-spread HTML editor specialized on genera' +
-              'ting sophisticated web sites with at least human effort possible' +
-              '. Features:'#10'<ul>'#10'<li><Label10>freeware</Label10></li>'#10'<li>WYSIWY' +
-              'G (What You See Is What You Get)</li>'#10'<li>stylesheet-based desig' +
-              'n</li> '#10'<li>manage many HTML pages in one document</li>'#10'<li>grap' +
-              'hical effects (e.g. anti-aliasing, shadow, glow, rounded corners' +
-              ')</li>'#10'<li>HTML forms</li>'#10'<li>CSS3 capable HTML code generation' +
-              '</li>'#10'<li>Unicode</li>'#10'<li>PHP</li>'#10'<li>JavaScript menus</li>'#10'<l' +
-              'i>RGBA colors</li>'#10'</ul>'#10'</en>'#10'<de>'#10'DFM2HTML ist ein HTML-Editor' +
-              ', dessen Ziel es ist, komplizierte Webseiten mit minimalen Aufwa' +
-              'nd erstellen zu k'#246'nnen. Features:'#10'<ul>'#10'<li><Label10>Freeware</La' +
-              'bel10></li>'#10'<li>WYSIWYG</li> '#10'<li>Wiederverwendung von Stilen '#252'b' +
-              'er Stylesheet-Objekte</li>'#10'<li>Mehrere HTML-Seiten k'#246'nnen in ein' +
-              'em Dokument verwaltet werden</li>'#10'<li>Graphische Effekte (z.B. A' +
-              'nti-Aliasing, Schatten, Runde Ecken)</li>'#10'<li>HTML-Formulare</li' +
-              '>'#10'<li>CSS3-f'#228'hige HTML-Code-Generierung</li>'#10'<li>Unicode</li>'#10'<l' +
-              'i>PHP</li>'#10'<li>JavaScript-Men'#252's</li>'#10'<li>RGBA-Farben</li>'#10'</ul>'#10 +
-              '</de>'
+              '<en>'#10'DFM2HTML is a wide-spread web design software specialized o' +
+              'n generating sophisticated web sites with at least effort possib' +
+              'le. Features:'#10'<ul>'#10'<li><Label10>freeware</Label10></li>'#10'<li>WYSI' +
+              'WYG (What You See Is What You Get)</li>'#10'<li>stylesheet-based des' +
+              'ign</li> '#10'<li>manage many HTML pages in one document</li>'#10'<li>gr' +
+              'aphical effects (e.g. anti-aliasing, shadow, glow, rounded corne' +
+              'rs)</li>'#10'<li>HTML forms</li>'#10'<li>CSS3 capable HTML code generati' +
+              'on</li>'#10'<li>Unicode</li>'#10'<li>PHP</li>'#10'<li>JavaScript menus</li>'#10 +
+              '<li>RGBA colors</li>'#10'</ul>'#10'</en>'#10'<de>'#10'DFM2HTML ist eine Webdesig' +
+              'n-Software, dessen Ziel es ist, komplizierte Webseiten mit minim' +
+              'alen Aufwand erstellen zu k'#246'nnen. Features:'#10'<ul>'#10'<li><Label10>Fr' +
+              'eeware</Label10></li>'#10'<li>WYSIWYG</li> '#10'<li>Wiederverwendung von' +
+              ' Stilen '#252'ber Stylesheet-Objekte</li>'#10'<li>Mehrere HTML-Seiten k'#246'n' +
+              'nen in einem Dokument verwaltet werden</li>'#10'<li>Graphische Effek' +
+              'te (z.B. Anti-Aliasing, Schatten, Runde Ecken)</li>'#10'<li>HTML-For' +
+              'mulare</li>'#10'<li>CSS3-f'#228'hige HTML-Code-Generierung</li>'#10'<li>Unico' +
+              'de</li>'#10'<li>PHP</li>'#10'<li>JavaScript-Men'#252's</li>'#10'<li>RGBA-Farben</' +
+              'li>'#10'</ul>'#10'</de>'
             AutoSizeXY = asY
           end
           object Link1: TdhLink
@@ -120,7 +121,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1
             Top = 304
             Width = 224
             Height = 22
-            Text = 'Download DFM2HTML 4.2'
+            Text = 'Download DFM2HTML 4.3'
             Style.FontSize = '19'
             AutoSizeXY = asXY
             PreferDownStyles = True
@@ -143,7 +144,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1
           object Link21: TdhLink
             Left = 24
             Top = 336
-            Width = 110
+            Width = 104
             Height = 16
             Text = #9658' <en>Version history</en><de>Versionshistorie</de>'
             Style.TextDecoration = [ctdNone]
@@ -1146,12 +1147,12 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1
           Left = 192
           Top = 96
           Width = 488
-          Height = 2612
+          Height = 2668
           AutoSizeXY = asNone
           UseIFrame = False
           object Label5: TdhLabel
             Left = 24
-            Top = 2472
+            Top = 2536
             Width = 360
             Height = 80
             Text = 
@@ -1164,7 +1165,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1
           end
           object Label25: TdhLabel
             Left = 24
-            Top = 2232
+            Top = 2296
             Width = 446
             Height = 212
             Text = 
@@ -1185,7 +1186,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1
           end
           object Label20: TdhLabel
             Left = 24
-            Top = 2008
+            Top = 2072
             Width = 442
             Height = 193
             Text = 
@@ -1204,7 +1205,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1
           end
           object Label21: TdhLabel
             Left = 24
-            Top = 1816
+            Top = 1880
             Width = 418
             Height = 161
             Text = 
@@ -1222,7 +1223,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1
           end
           object Label28: TdhLabel
             Left = 32
-            Top = 1696
+            Top = 1760
             Width = 434
             Height = 81
             Text = 
@@ -1236,7 +1237,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1
           end
           object Label11: TdhLabel
             Left = 24
-            Top = 1496
+            Top = 1560
             Width = 354
             Height = 64
             Text = 
@@ -1250,7 +1251,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1
           end
           object Label12: TdhLabel
             Left = 24
-            Top = 1592
+            Top = 1656
             Width = 330
             Height = 80
             Text = 
@@ -1264,7 +1265,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1
           end
           object Label13: TdhLabel
             Left = 24
-            Top = 1376
+            Top = 1440
             Width = 450
             Height = 96
             Text = 
@@ -1279,7 +1280,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1
           end
           object Label37: TdhLabel
             Left = 24
-            Top = 1304
+            Top = 1368
             Width = 426
             Height = 49
             Text = 
@@ -1292,7 +1293,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1
           end
           object Label38: TdhLabel
             Left = 24
-            Top = 1216
+            Top = 1280
             Width = 210
             Height = 65
             Text = 
@@ -1305,7 +1306,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1
           end
           object Label41: TdhLabel
             Left = 24
-            Top = 1144
+            Top = 1208
             Width = 338
             Height = 48
             Text = 
@@ -1318,7 +1319,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1
           end
           object Label42: TdhLabel
             Left = 24
-            Top = 1024
+            Top = 1088
             Width = 426
             Height = 97
             Text = 
@@ -1334,7 +1335,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1
           end
           object Label6: TdhLabel
             Left = 24
-            Top = 952
+            Top = 1016
             Width = 442
             Height = 48
             Text = 
@@ -1348,7 +1349,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1
           end
           object Label44: TdhLabel
             Left = 24
-            Top = 880
+            Top = 944
             Width = 386
             Height = 49
             Text = 
@@ -1364,7 +1365,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1
           end
           object Label46: TdhLabel
             Left = 24
-            Top = 792
+            Top = 856
             Width = 346
             Height = 65
             Text = 
@@ -1380,7 +1381,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1
           end
           object Label50: TdhLabel
             Left = 24
-            Top = 632
+            Top = 696
             Width = 370
             Height = 129
             Text = 
@@ -1401,7 +1402,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1
           end
           object Label47: TdhLabel
             Left = 24
-            Top = 472
+            Top = 536
             Width = 394
             Height = 160
             Text = 
@@ -1423,7 +1424,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1
           end
           object Label48: TdhLabel
             Left = 24
-            Top = 288
+            Top = 352
             Width = 386
             Height = 176
             Text = 
@@ -1447,7 +1448,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1
           end
           object Label23: TdhLabel
             Left = 24
-            Top = 120
+            Top = 184
             Width = 354
             Height = 160
             Text = 
@@ -1468,7 +1469,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1
           end
           object Label43: TdhLabel
             Left = 24
-            Top = 32
+            Top = 96
             Width = 402
             Height = 80
             Text = 
@@ -1479,6 +1480,21 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1
               'rzeichnis'#10'  gespeichert und nicht mehr im Programme-Verzeichnis,' +
               #10'  was unter Windows Vista zu einer Exception f'#252'hrte.'#10'</code></d' +
               'e>'
+            Style.PaddingRight = 2
+            Style.WhiteSpace = cwsPre
+            Style.Color = Black
+            AutoSizeXY = asXY
+          end
+          object Label45: TdhLabel
+            Left = 24
+            Top = 24
+            Width = 322
+            Height = 64
+            Text = 
+              '<en><code>New in version 4.3:'#10'* Fixed bugs with FTP component'#10'* ' +
+              'Updated Spanish and French translation'#10#10'</code></en><de><code>Ne' +
+              'u in version 4.3:'#10'* Bugs mit der FTP-Komponente gefixt'#10'* Spanisc' +
+              'he und franz'#246'sische Sprache geupdated'#10'</code></de>'
             Style.PaddingRight = 2
             Style.WhiteSpace = cwsPre
             Style.Color = Red
@@ -2143,6 +2159,37 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1
             AutoSizeXY = asXY
           end
         end
+        object chat: TdhPage
+          Left = 192
+          Top = 96
+          Width = 488
+          Height = 500
+          AutoSizeXY = asNone
+          UseIFrame = False
+          HTMLHead = 
+            '    <?php $chat->printJavascript(); ?>'#13#10'    <?php $chat->printSt' +
+            'yle(); ?>'
+          HTMLTop = 
+            '<?php'#13#10#13#10'require_once "src/phpfreechat.class.php";'#13#10#13#10'$params["s' +
+            'erverid"]      = md5(__FILE__); // calculate a unique id for thi' +
+            's chat'#13#10'$params["title"]         = "A chat with a customized sty' +
+            'lesheet";'#13#10'$params["height"]        = "500px";'#13#10'// do not uses w' +
+            'idth parameter because of a display bug in IE6'#13#10'//$params["width' +
+            '"]         = "480px";'#13#10'$params["max_msg"]       = 21;'#13#10'$params["' +
+            'theme_path"]    = dirname(__FILE__)."/demo5_customized_style_dat' +
+            'a";'#13#10'$params["theme"]         = "mytheme";'#13#10'$chat = new phpFreeC' +
+            'hat( $params );'#13#10#13#10'?>'
+          object DirectHTML1: TdhDirectHTML
+            Left = 0
+            Top = 0
+            Width = 20
+            Height = 19
+            AutoSizeXY = asXY
+            InnerHTML = 
+              '  <div style="width: 480px; margin: auto;">'#13#10'    <?php $chat->pr' +
+              'intChat(); ?>'#13#10'  </div>'
+          end
+        end
       end
       object Text3: TdhLabel
         Left = 24
@@ -2206,7 +2253,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1
         object Link7: TdhLink
           Left = 0
           Top = 108
-          Height = 45
+          Height = 29
           Text = '<en>User Pages</en><de>Benutzer- seiten</de>'
           Use = Link3
           AutoSizeXY = asY
@@ -2218,7 +2265,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1
         end
         object Link20: TdhLink
           Left = 0
-          Top = 153
+          Top = 137
           Height = 45
           Text = '<en>Version history</en>'#10'<de>Versions- historie</de>'
           Use = Link3
@@ -2231,7 +2278,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1
         end
         object Link19: TdhLink
           Left = 0
-          Top = 198
+          Top = 182
           Height = 29
           Text = 'FAQ'
           Use = Link3
@@ -2244,7 +2291,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1
         end
         object Link13: TdhLink
           Left = 0
-          Top = 227
+          Top = 211
           Height = 45
           Text = 'Tips & Tricks'
           Use = Link3
@@ -2257,7 +2304,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1
         end
         object Link4: TdhLink
           Left = 0
-          Top = 272
+          Top = 256
           Height = 29
           Text = '<en>Contact</en><de>Impressum</de>'
           Use = Link3
@@ -2270,8 +2317,8 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1
         end
         object TdhAnchor2: TdhLink
           Left = 0
-          Top = 301
-          Height = 45
+          Top = 285
+          Height = 29
           Text = '<en>Disclaimer</en>'#10'<de>Haftungs- ausschluss</de>'
           Use = Link3
           AutoSizeXY = asY
@@ -2286,7 +2333,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1
         end
         object Link40: TdhLink
           Left = 0
-          Top = 346
+          Top = 314
           Height = 45
           Text = '<en>More Programs</en><de>Weitere Programme</de>'
           Use = Link3
@@ -2296,6 +2343,21 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1
           PreferDownStyles = True
           Options = [loDownIfMenu, loDownIfMouseDown, loDownIfURL]
           LinkPage = more
+        end
+        object Link56: TdhLink
+          Left = 0
+          Top = 359
+          Height = 32
+          Text = 'Chat <sup><Label7>new</Label7></sup>'
+          Style.Display = cdsNone
+          Style.Visibility = cviHidden
+          Use = Link3
+          AutoSizeXY = asY
+          Align = alTop
+          Right = 0
+          PreferDownStyles = True
+          Options = [loDownIfMenu, loDownIfMouseDown, loDownIfURL]
+          LinkPage = chat
         end
       end
       object StyleSheet2: TdhStyleSheet
@@ -2546,18 +2608,15 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1
     object StyleSheet8: TdhStyleSheet
       Left = 8
       Top = 8
-      Width = 28
-      Height = 28
-      Expanded = False
-      ExpandedWidth = 232
-      ExpandedHeight = 296
-      Expanded = False
+      Width = 232
+      Height = 296
+      Expanded = True
       object de: TdhLabel
         Left = 0
         Top = 0
         Height = 16
         Text = 'de'
-        Style.Display = cdsInline
+        Style.Display = cdsNone
         AutoSizeXY = asY
         Align = alTop
         Right = 0
@@ -2567,7 +2626,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1
         Top = 16
         Height = 16
         Text = 'en'
-        Style.Display = cdsNone
+        Style.Display = cdsInline
         AutoSizeXY = asY
         Align = alTop
         Right = 0

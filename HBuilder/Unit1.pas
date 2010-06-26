@@ -2,8 +2,6 @@ unit Unit1;
 
 interface
 
-{$DEFINE FINALV}
-
 {$R DFM2HTML.dkl_const.res}
 
 uses
@@ -897,18 +895,7 @@ begin
  mSelectAllBelow.Enabled:=mCut.Enabled;
 
  mUndo.Enabled:=(Act<>nil) and Act.IsModified and not _RuntimeMode;
-{$IFNDEF FINALV}
- if mUndo.Enabled then
-  mUndo.Caption:='Undo "'+Act.UndoAction+'"' else
-  mUndo.Caption:='Undo';
-{$ENDIF}
-
  mRedo.Enabled:=(Act<>nil) and Act.CanRedo and not _RuntimeMode;
-{$IFNDEF FINALV}
- if mRedo.Enabled then
-  mRedo.Caption:='Redo "'+Act.RedoAction+'"' else
-  mRedo.Caption:='Redo';
-{$ENDIF}
 
  mFind.Enabled:=(Act<>nil) and not _RuntimeMode;
  mSearchAgain.Enabled:=mFind.Enabled;
@@ -1021,12 +1008,8 @@ begin
 
  ToolBar1.Flat:=true; //default is "false" in Delphi7 and "true" in Delphi2006, so set it explicitely to true!
 
-{$IFDEF FINALV}
  DEBUG_mDebug.Visible:=false;
  SpeedButton1.Transparent:=false;
- //mNewFromTemplate.Visible:=false;
- //mSaveAsTemplate.Visible:=false;
-{$ENDIF}
 
  ImageList1.Masked:=False;
 {
@@ -2784,19 +2767,14 @@ begin
  su:=suLastPage;
  if FuncSettings.LaunchAction=suaChoice then
  begin
-{$IFDEF FINALV}
  //Show;
  //LateCreateForm(TStartUp,StartUp);
  StartUp:=TStartUp.Create(Self);
  try
-{$IFDEF FINALV}
- //StartUp.cTemplate.Visible:=false;
-{$ENDIF}
   su:=StartUp.FirstAction;
  finally
   FreeAndNil(StartUp);
  end;
-{$ENDIF}
  end else
  if FuncSettings.LaunchAction=suaLast then
   su:=suLastPage else

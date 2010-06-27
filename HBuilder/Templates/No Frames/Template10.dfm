@@ -35,6 +35,7 @@ object PageContainer8: TPageContainer8
     Bottom = 0
     UseIFrame = False
     Title = 'MY LOGO'
+    GeneratedCSSFile = 'dfm2html.css'
     object Panel1: TdhPanel
       Top = 0
       Width = 800

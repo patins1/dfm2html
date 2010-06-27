@@ -27,6 +27,7 @@ object PageContainer3: TPageContainer3
     DesignSize = (
       1024
       492)
+    GeneratedCSSFile = 'dfm2html.css'
     object Panel6: TdhPanel
       Left = 0
       Top = 0

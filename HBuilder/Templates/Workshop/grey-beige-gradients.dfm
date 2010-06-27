@@ -31,6 +31,7 @@ object PageContainer20: TPageContainer20
     Bottom = 0
     UseIFrame = False
     Title = 'Unterseite01'
+    GeneratedCSSFile = 'dfm2html.css'
     object Panel9: TdhPanel
       Left = 17
       Top = 617

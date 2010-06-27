@@ -39,6 +39,7 @@ object PageContainer1: TPageContainer1
       492)
     Right = 0
     Bottom = 0
+    GeneratedCSSFile = 'dfm2html.css'
     object StyleSheet1: TdhStyleSheet
       Left = 24
       Top = 168

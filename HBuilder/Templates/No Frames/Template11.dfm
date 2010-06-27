@@ -29,6 +29,7 @@ object PageContainer1: TPageContainer1
     Right = 0
     Bottom = 0
     UseIFrame = False
+    GeneratedCSSFile = 'dfm2html.css'
     object Panel1: TdhPanel
       Left = 0
       Top = 0

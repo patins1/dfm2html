@@ -11,7 +11,7 @@ uses
   ShellAPI, Mask, ExtCtrls, StdCtrls,  Variants, clipbrd, Spin, Buttons, UnicodeCtrls,
 {$ENDIF}
   UseFastStrings,SysUtils, Classes, {$IFDEF MSWINDOWS}OverbyteIcsFtpCli,OverbyteIcsUrl,OverbyteIcsWSocket,OverbyteIcsFtpSrvT,{$ELSE}{IcsUrl,}{$ENDIF} dhPageControl,
-  DKLang, UIConstants, MyForm,dhStrUtils, uOptions, uMetaWriter, Consts;
+  DKLang, UIConstants, MyForm,dhStrUtils, uOptions, uMetaWriter, Consts, dhStyles, uConversion;
 
 type
   TMyFtpClient = class(TFtpClient)
@@ -40,7 +40,6 @@ type
       Error: Word);
     procedure FtpClient1OnDisplay(Sender: TObject; var Msg: String);
 {$ENDIF}
-    procedure Log(Const Msg: WideString; Color: TColor=clBlack);
     procedure LogAndAbort(Const Msg: WideString; Color:TColor);
     procedure SetBusy(const Value: boolean);
     function ExtractHostDirName(const path:TPathName):TPathName;
@@ -48,6 +47,7 @@ type
     { Public declarations }
     procedure DoUpload(const URL: TPathName);
     property Busy:boolean read FBusy write SetBusy;
+    procedure Log(Const Msg: WideString; Color: TColor=clBlack);
   end;
 
 var
@@ -164,6 +164,8 @@ begin
   RichEdit1.Lines.Add(EmptyStr);
 
  Show;
+ Busy:=true;
+ bStopTransfer.Visible:=True;
 
  if not dhMainForm.Act.IsUntitled then
   Log(DKFormat(FPTLOG_GENERATEFOR,ExtractFileName(dhMainForm.Act.FileName))) else
@@ -172,11 +174,12 @@ begin
  Update;
  FTPShortcut:=GetFTPShortcut(dhMainForm.Act.MySiz.FindBody);
  RasteringSaveDir:=dhMainForm.GeneratedHTML(False);
+ if not Busy then exit;
  Log(DKFormat(FTPLOG_GENERATED),clGreen);
 
  if GeneratedFiles.Count=0 then
  begin
-  Log(DKFormat(FTPLOG_EMPTYUPLOAD));
+  LogAndAbort(DKFormat(FTPLOG_EMPTYUPLOAD),clBlack);
   exit;
  end;
 
@@ -191,12 +194,10 @@ begin
  end;
  if ToUpload.Count=0 then
  begin
-  Log(DKFormat(FTPLOG_EMPTYSMARTUPLOAD));
+  LogAndAbort(DKFormat(FTPLOG_EMPTYSMARTUPLOAD),clBlack);
   exit;
  end;
 
- Busy:=true;
- bStopTransfer.Visible:=True;
  //Self.ToUpload.Assign(GeneratedFiles);
 
 {$IFDEF CLX}
@@ -225,6 +226,7 @@ begin
  RichEdit1.SelText:=Msg+#13#10;
  RichEdit1.Perform(EM_ScrollCaret, 0, 0);}
  RichEdit1.Lines.Add(Msg);
+ Application.ProcessMessages;
 end;
 
 
@@ -399,6 +401,11 @@ procedure TPublishLog.SetBusy(const Value: boolean);
 begin
   FBusy := Value;
   bStopTransfer.Visible:=FBusy;
+  if not Value then
+  begin
+   glOnDefineProperties:=nil;
+   glStringToFile:=nil;
+  end;
   {if FBusy then
    bStopTransfer.Caption:='Stop!' else
    bStopTransfer.Caption:='Publish';}

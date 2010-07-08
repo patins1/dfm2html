@@ -2495,7 +2495,7 @@ begin
  if Need1by1 then
  begin
   pre:='img'+IndentSpace+'{border-style:none}'+CRLF+pre;
-  glStringToFile('onebyone.gif',GetBackBinary(gif1by1));
+  if Assigned(glStringToFile) then glStringToFile('onebyone.gif',GetBackBinary(gif1by1));
  end;
 
  if NeedSplit then
@@ -2524,6 +2524,7 @@ end;
 begin
 // if not nest.IsPC or nest.HasSubTS then
 
+ if not Assigned(glStringToFile) then exit;
  s_cssfile:=cssfile;
  s_EverNeeded1by1:=EverNeeded1by1;
  s_EverNeededSplit:=EverNeededSplit;
@@ -2687,7 +2688,7 @@ begin
  end;
  *)
  if NeedJS then
-   glStringToFile(dfm2html_js,ShouldBeAnsi(men));
+   if Assigned(glStringToFile) then glStringToFile(dfm2html_js,ShouldBeAnsi(men));
 
  //http://groups.google.de/groups?q=%22utf-8%22+encoding+html&hl=de&lr=&ie=UTF-8&selm=wmiIc.90209%24sj4.1828%40news-server.bigpond.net.au&rnum=4
  ns:=AnsiSubstText(MaskQuotes,'"',ns);
@@ -2697,7 +2698,7 @@ begin
 // ns:=UTF8Encode(WideString(ns));
  {if pos(endl_space,ns)>0 then
   StringToFile(SaveDir+filename,SubstText(endl_main,endl,ns)) else }
- glStringToFile(filename,ShouldBeAnsi(AnsiSubstText(endl_main,endl,ns)));
+ if Assigned(glStringToFile) then glStringToFile(filename,ShouldBeAnsi(AnsiSubstText(endl_main,endl,ns)));
  AllPCs.Free;
  end;
 
@@ -2708,7 +2709,7 @@ begin
   if cssfile<>s_cssfile then
   begin
    InitAndStyles(nest,true);
-   glStringToFile(cssfile,ShouldBeAnsi(pre));
+   if Assigned(glStringToFile) then glStringToFile(cssfile,ShouldBeAnsi(pre));
    EverNeeded1by1:=s_EverNeeded1by1;
    EverNeededSplit:=s_EverNeededSplit;
    EverNeededButton:=s_EverNeededButton;
@@ -3487,6 +3488,7 @@ var edittag:string;
     FormButtonType:TFormButtonType;
 
 begin
+ if not Assigned(glStringToFile) then exit;
  ChildInfo:='';
  snest:=nil;
  Props:=TMyStringList.Create;

@@ -24,7 +24,8 @@ function ExtractRawFileName(const s:TPathName):TPathName;
 
 function SubEqual(const Substr,s:String; i:integer; StartFIND,LenFIND:integer):boolean; overload;
 function SubEqual(const Substr,s:String; i,bs:integer):boolean; overload;
-function SubEqual(const Substr,s:String; i:integer):boolean; overload;
+function SubEqual(const Substr,s:String; i:integer=1):boolean; overload;
+function SubEqualEnd(const Substr,s:String):boolean;
 function SubSame(const Substr,s:String; i:integer=1):boolean; overload;
 function SubSame(const Substr,s:String; i,l:integer):boolean;  overload;
 function SubSameEnd(const Substr,s:String):boolean;
@@ -110,11 +111,18 @@ begin
  result:=(bs-i=L) and not (L+i-1>length(s)) and ((L=0) or (StrLComp(PChar(Substr),PChar(Pointer(s))+i-1,L)=0));
 end;
 
-function SubEqual(const Substr,s:String; i:integer):boolean;
+function SubEqual(const Substr,s:String; i:integer=1):boolean;
 var L:integer;
 begin
  L:=length(Substr);
  result:=not (L+i-1>length(s)) and ((L=0) or (StrLComp(PChar(Substr),PChar(Pointer(s))+i-1,L)=0));
+end;
+
+function SubEqualEnd(const Substr,s:String):boolean;
+var i:integer;
+begin
+ i:=length(s)+1-length(Substr);
+ result:=(i>=1) and SubEqual(Substr,s,i);
 end;
 
 function SubSameEnd(const Substr,s:String):boolean;

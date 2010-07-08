@@ -1619,6 +1619,10 @@ var id_crc:DWORD;
     AbsoluteBaseRasteringFile:TPathName;
     age:TDateTime;
 begin
+  if (PublishLog<>nil) and PublishLog.Busy then
+  begin
+   PublishLog.Log('        '+RasteringFile);
+  end;
   NeedSave:=false;
   server_crc:=_crc;//calc_crc32_String(RasteringFile,_crc);
   RasteringFile:=CutCurrentDir(GoodWebPathDelimiters(RasteringFile));
@@ -1683,7 +1687,6 @@ var content:TFileContents;
 begin
  FreeAndNil(GeneratedFiles);
  GeneratedFiles:=TStringList.Create;
- try
  SetSaveDir;
  men:=Tabs.IGNORE_dhDirectHTML1.InnerHTML;
 
@@ -1693,8 +1696,10 @@ begin
  //GenerateTimer.Enabled:=true;
  try
   glSaveBin:=SaveBin;
+  glStringToFile:=CleverStringToFile;
   try
    Content:=Act.GetDFMStr(false,true);
+   if (PublishLog<>nil) and not PublishLog.Busy then exit;
    StartConverting(BaseDir,FuncSettings.Compress,nil);
    try
     DoConvertContent(PureFileName,content);
@@ -1710,6 +1715,7 @@ begin
    end;
   finally
    glSaveBin:=nil;
+   glStringToFile:=nil;
   end;
  finally
   GenerateTimer.Enabled:=false;
@@ -1718,10 +1724,6 @@ begin
  pa:=RasteringSaveDir+PureFileName;
  if View then
   Browse(pa,FuncSettings.FViewer,true);
- except
- on A:Exception do
-  showmessage(A.Message);
- end;
  Result:=RasteringSaveDir;
 end;
 
@@ -2425,7 +2427,7 @@ begin
  PublishLog.DoUpload(Act.MySiz.FindBody.FTPURL);
 end;
 
-procedure AfterSaveBin;      
+procedure AfterSaveBin;
 var age:TDateTime;
 begin                 
  if FileAge(AfterSaveBinI.FileName,age) then
@@ -3111,7 +3113,6 @@ initialization
  glPreAddCompo:=PreAddCompo;
  glPostAddCompo:=PostAddCompo;
  glAfterSaveBin:=AfterSaveBin;
- glStringToFile:=CleverStringToFile;
 
 //    WHook := SetWindowsHookEx(WH_CALLWNDPROCRET	 , @CallWndProcHook, 0, GetCurrentThreadId);
 

@@ -412,9 +412,10 @@ var gif_pre:TdhBitmap32;
     NeedSave:boolean;
     AbsoluteRasteringFile:TPathName;
 const ext:array[TPhysicalImageFormat] of AnsiString=('.gif','.png','.jpg');
+const extOfPath:array[TPhysicalImageFormat] of TPathName=('.gif','.png','.jpg');
 begin
 
-   RasteringFile:=RasteringFile+ext[PhysicalImageFormat];
+   RasteringFile:=RasteringFile+extOfPath[PhysicalImageFormat];
    _crc:=calc_crc32_String(ext[PhysicalImageFormat]);
    if AllowCutWhiteSpace then
    begin

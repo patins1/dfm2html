@@ -2,7 +2,7 @@ unit uSearchStr;
 
 interface
 
-uses UseFastStrings,dhStrUtils;
+uses UseFastStrings;
 
 const DomCommentTagName='!';
 

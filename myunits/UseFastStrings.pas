@@ -18,11 +18,13 @@ function CopyWithout(const s:String; von,bis:integer): String; overload;
 function CopyInsert(const s:String; von:integer; const Subst:String): String; overload;
 function CopyInsert(const s:String; von,bis:integer; const Subst:String): String; overload;
 procedure AbsDelete(var s:String; von,bis:integer);
+function AbsCopy(const s:String; von,bis:integer):String;
 
 function ExtractRawFileName(const s:TPathName):TPathName;
 
 function SubEqual(const Substr,s:String; i:integer; StartFIND,LenFIND:integer):boolean; overload;
 function SubEqual(const Substr,s:String; i,bs:integer):boolean; overload;
+function SubEqual(const Substr,s:String; i:integer):boolean; overload;
 function SubSame(const Substr,s:String; i:integer=1):boolean; overload;
 function SubSame(const Substr,s:String; i,l:integer):boolean;  overload;
 function SubSameEnd(const Substr,s:String):boolean;
@@ -106,6 +108,13 @@ var L:integer;
 begin
  L:=length(Substr);
  result:=(bs-i=L) and not (L+i-1>length(s)) and ((L=0) or (StrLComp(PChar(Substr),PChar(Pointer(s))+i-1,L)=0));
+end;
+
+function SubEqual(const Substr,s:String; i:integer):boolean;
+var L:integer;
+begin
+ L:=length(Substr);
+ result:=not (L+i-1>length(s)) and ((L=0) or (StrLComp(PChar(Substr),PChar(Pointer(s))+i-1,L)=0));
 end;
 
 function SubSameEnd(const Substr,s:String):boolean;
@@ -245,6 +254,12 @@ procedure AbsDelete(var s:String; von,bis:integer);
 begin
  assert(bis>=von);
  delete(s,von,bis-von);
+end;
+
+function AbsCopy(const s:String; von,bis:integer):String;
+begin
+ assert(bis>=von);
+ result:=Copy(s,von,bis-von);
 end;
 
 function LowerChar(ch:Char):Char;

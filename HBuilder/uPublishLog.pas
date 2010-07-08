@@ -226,7 +226,6 @@ begin
  RichEdit1.SelText:=Msg+#13#10;
  RichEdit1.Perform(EM_ScrollCaret, 0, 0);}
  RichEdit1.Lines.Add(Msg);
- Application.ProcessMessages;
 end;
 
 

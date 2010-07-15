@@ -5,7 +5,8 @@ interface
 type DWORD=cardinal;
 
 function calc_crc32(ByteCount:Integer; p:PByte; ResumeCrc:DWORD=0):DWORD;
-function calc_crc32_String(const s:AnsiString; ResumeCrc:DWORD=0):DWORD;
+function calc_crc32_String(const s:AnsiString; ResumeCrc:DWORD=0):DWORD; overload;
+function calc_crc32_String(const s:array of byte; ResumeCrc:DWORD=0):DWORD; overload;
 
 implementation
 
@@ -84,6 +85,11 @@ const
 function calc_crc32_String(const s:AnsiString; ResumeCrc:DWORD=0):DWORD;
 begin
  result:=calc_crc32(length(s),PByte(s),ResumeCrc);
+end;
+
+function calc_crc32_String(const s:array of byte; ResumeCrc:DWORD=0):DWORD;
+begin
+ result:=calc_crc32(length(s),@s,ResumeCrc);
 end;
 
 function calc_crc32(ByteCount:Integer; p:PByte; ResumeCrc:DWORD=0):DWORD;

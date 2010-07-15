@@ -60,12 +60,20 @@ var i:integer;
 begin
  setlength(result,length(ss) div 2);
  for i:=1 to length(result) do
-  result[i]:=AnsiChar(strtoint('$'+ss[i*2-1]+ss[i*2]));
+  result[i]:=FileContentsByte(strtoint('$'+ss[i*2-1]+ss[i*2]));
 end;
 
 function ShouldBeAnsi(const s:string):AnsiString;
 begin
   Result:=AnsiString(s);
+end;
+
+function ShouldBeFileContents(const ss:string):TFileContents;
+var i:integer;
+begin
+ setlength(result,length(ss));
+ for i:=1 to length(ss) do
+  result[FileContentsStart+i-1]:=FileContentsByte(ss[i]);
 end;
 
 //type TStat=(stMN,stDN,stOV,stOD);
@@ -831,10 +839,10 @@ begin
   attr:=AbsCopy(s,vn1+length(Substr)+length('="'),vn2);
 end;
 
-function GetXMLFile(const filename:TPathName; prefix:TComponentName): TFileContents; forward;
+function GetXMLFile(const filename:TPathName; prefix:TComponentName): string; forward;
 
-function GetXMLContent(const Content:TFileContents; prefix:TComponentName): TFileContents;
-var d:TMemoryStream;
+function GetXMLContent(const Content:TFileContents; prefix:TComponentName): string;
+var d:TStringStream;
     f,f2:TStringStream;
     dd:string;
     g:tg;
@@ -850,11 +858,11 @@ begin
     if TestStreamFormat(f)=sofText then //we need not Text but Resource format
      f:=_ObjectTextToResource(f);
     //convert to dfm to xml
-    d:=TMemoryStream.Create;
+    d:=TStringStream.Create;
     try
      AllObjs:='';
      ObjectResourceToXML(f,d);
-     dd:=AsString(d);
+     dd:=d.DataString;
     finally
      d.Free;
     end;
@@ -921,7 +929,7 @@ begin
        Subst:=Subst+AbsCopy(InlineS,vnInline,FindPropEnd(InlineS,vnInline));
        AsP:='';
        inc(vnFrame,length(Subst));
-      end;     
+      end;
       FrameS:=CopyInsert(FrameS,vnFrame3,vnFrame4,Subst);
       dec(vnFrame2,(vnFrame4-vnFrame3)-length(Subst));
      end;
@@ -941,7 +949,7 @@ begin
    result:=ShouldBeAnsi(dd);
 end;
 
-function GetXMLFile(const filename:TPathName; prefix:TComponentName): TFileContents;
+function GetXMLFile(const filename:TPathName; prefix:TComponentName): string;
 begin
  result:=GetXMLContent(StringFromFile({ResolveRelativeURL(}BaseDir+FileName{)}),prefix);
 end;
@@ -2688,7 +2696,7 @@ begin
  end;
  *)
  if NeedJS then
-   if Assigned(glStringToFile) then glStringToFile(dfm2html_js,ShouldBeAnsi(men));
+   if Assigned(glStringToFile) then glStringToFile(dfm2html_js,ShouldBeFileContents(men));
 
  //http://groups.google.de/groups?q=%22utf-8%22+encoding+html&hl=de&lr=&ie=UTF-8&selm=wmiIc.90209%24sj4.1828%40news-server.bigpond.net.au&rnum=4
  ns:=AnsiSubstText(MaskQuotes,'"',ns);
@@ -2698,7 +2706,7 @@ begin
 // ns:=UTF8Encode(WideString(ns));
  {if pos(endl_space,ns)>0 then
   StringToFile(SaveDir+filename,SubstText(endl_main,endl,ns)) else }
- if Assigned(glStringToFile) then glStringToFile(filename,ShouldBeAnsi(AnsiSubstText(endl_main,endl,ns)));
+ if Assigned(glStringToFile) then glStringToFile(filename,ShouldBeFileContents(AnsiSubstText(endl_main,endl,ns)));
  AllPCs.Free;
  end;
 
@@ -2709,7 +2717,7 @@ begin
   if cssfile<>s_cssfile then
   begin
    InitAndStyles(nest,true);
-   if Assigned(glStringToFile) then glStringToFile(cssfile,ShouldBeAnsi(pre));
+   if Assigned(glStringToFile) then glStringToFile(cssfile,ShouldBeFileContents(pre));
    EverNeeded1by1:=s_EverNeeded1by1;
    EverNeededSplit:=s_EverNeededSplit;
    EverNeededButton:=s_EverNeededButton;
@@ -4350,7 +4358,7 @@ begin
 end;
 
 
-procedure ConvertDFM(var PureFileName:TPathName; const Content:TFileContents);
+procedure ConvertDFM(var PureFileName:TPathName; const Content:string);
 
 procedure SetGln(nest:TNest);
 var i:integer;
@@ -4857,7 +4865,7 @@ end;
 }
 
 function DoConvertContent(var PureFileName:TPathName; const _Content:TFileContents):TFileContents;
-var Content:TFileContents;
+var Content:string;
 begin
 //   FormName:=PureFileName;
    Content:=GetXMLContent(_Content,'');

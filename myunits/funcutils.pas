@@ -760,8 +760,8 @@ begin
 end else
 begin
  result:=true;
-if s<>'' then
-blockwrite(f,s[1],length(s));
+if length(s)<>0 then
+blockwrite(f,s[FileContentsStart],length(s));
 CloseFile(f);
 end;
 
@@ -812,8 +812,8 @@ end else
 begin
  result:=true;
 setlength(s,filesize(f));
-if s<>'' then
- blockread(f,s[1],length(s));
+if Length(s)<>0 then
+ blockread(f,s[FileContentsStart],length(s));
 CloseFile(f);
 end;
 

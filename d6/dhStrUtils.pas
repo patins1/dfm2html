@@ -14,8 +14,23 @@ type AString=String;
      TColorName=AString; // a color as string
      TEnumName=AString; // an enumeration literal, as pure string or with hyphens, or a space separated list of those
      TPropertyName=AString; // a name of a VCL property
-     TFileContents=AnsiString; // the contents of a file
 
+{
+type
+     TFileContents=TBytes; // the contents of a file
+     FileContentsByte=Byte;
+
+const
+      FileContentsStart=0;
+}
+type
+     TFileContents=AnsiString; // the contents of a file
+     FileContentsByte=AnsiChar;
+
+const
+      FileContentsStart=1;
+
+type
 {$IFDEF VER210}
   WException=Exception;
 {$ELSE}
@@ -149,7 +164,7 @@ begin
     if Size<>0 then
     begin
      Stream.Position:=0;
-     Stream.Read(Result[1],Size);
+     Stream.Read(Result[FileContentsStart],Size);
     end;
 end;
 
@@ -172,7 +187,7 @@ begin
  try
   SetLength(Result,Size);
   if Size<>0 then
-   ReadBuffer(Result[1],Size);
+   ReadBuffer(Result[FileContentsStart],Size);
  finally
   Free;
  end;
@@ -183,7 +198,7 @@ begin
  with TFileStream.create(FileName,fmCreate) do
  try
   if length(s)<>0 then
-   WriteBuffer(s[1],length(s));
+   WriteBuffer(s[FileContentsStart],length(s));
  finally
   Free;
  end;

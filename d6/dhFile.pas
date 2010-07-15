@@ -136,7 +136,7 @@ begin
  end else
  begin
   StringFromFile(FileName);
-  FData:='';
+  SetLength(FData,0);
  end;
  FFileName:=FileName;
  FLinked:=Linked;

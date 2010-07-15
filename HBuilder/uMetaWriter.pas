@@ -380,14 +380,14 @@ begin
  if not Self.IsPictureStored then
   exit;
 
- StringContent:='';
+ SetLength(StringContent,0);
  if Self.FBackgroundImage.HasPath then
  try
   StringContent:=StringFromFile(Self.FBackgroundImage.GetAbsolutePath);
  except
   // let the dummy image be load next
  end;
- if StringContent='' then
+ if Length(StringContent)=0 then
   StringContent:=AsString(Self.FBackgroundImage.RequestGraphic);
 
  Self.BGImageFile:=ProposedBackgroundFilename(Self);

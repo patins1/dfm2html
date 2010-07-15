@@ -2101,7 +2101,7 @@ begin
     end;
     HttpUpdateCli:=THttpCli.Create(nil);
     HttpUpdateCli.OnRequestDone:=HttpUpdateCliRequestDone;
-    HttpUpdateCli.RcvdStream:=TMemoryStream.Create;
+    HttpUpdateCli.RcvdStream:=TStringStream.Create;
     if not FileAge(UserOrRootDir(configFile),FileDateTime) then
     begin
      WriteConfig;
@@ -2195,7 +2195,7 @@ begin
  propspc.PageControl1.EnableAlign;
                               }
 
- StringToFile(UserOrRootDir('tryx.txt'),'blabla');
+ //StringToFile(UserOrRootDir('tryx.txt'),'blabla');
 
 // MessageDlg('X', mtWarning,[mbAbort, mbRetry, mbIgnore], 0);
 // (Act.MySiz.FindBody as TdhPage).FCommon.IsScrollArea:=not (Act.MySiz.FindBody as TdhPage).FCommon.IsScrollArea;
@@ -2705,7 +2705,7 @@ end;
 
 {$IFNDEF CLX}
 procedure TdhMainForm.HttpUpdateCliRequestDone(Sender: TObject;
-  RqType: THttpRequest; ErrCode: Word);       
+  RqType: THttpRequest; ErrCode: Word);
 var VerList: TStringList;
     NewVersion:String;
 begin
@@ -2716,10 +2716,10 @@ begin
   Exit;
  end;
  VerList := TStringList.Create;
- VerList.Text:=AsString(HttpUpdateCli.RcvdStream as TMemoryStream);
+ VerList.Text:=(HttpUpdateCli.RcvdStream as TStringStream).DataString;
  NewVersion := VerList.Values['version'];
  if NewVersion = '' then
- begin                   
+ begin
   if not SilentUpdateCheck then
    MessageDlg(WideStringReplace(mCheckForUpdate.Caption,'&','',[])+':'+endl+HttpUpdateCli.ReasonPhrase,mtError,[mbOK], 0);
   Exit;

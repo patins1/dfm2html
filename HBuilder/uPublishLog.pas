@@ -159,6 +159,7 @@ end;
 procedure TPublishLog.DoUpload(const URL: TPathName);
 var Proto, Username, Password, Host, Port, Path : String;
     i:integer;
+    StartGeneration,StopGeneration:DWORD;
 begin
  if RichEdit1.Lines.Count<>0 then
   RichEdit1.Lines.Add(EmptyStr);
@@ -173,7 +174,11 @@ begin
 
  Update;
  FTPShortcut:=GetFTPShortcut(dhMainForm.Act.MySiz.FindBody);
+ StartGeneration:=GetTickCount;
  RasteringSaveDir:=dhMainForm.GeneratedHTML(False);
+ StopGeneration:=GetTickCount;
+ if StopGeneration>=StartGeneration then
+  log('        ('+inttostr(StopGeneration-StartGeneration)+' milliseconds)');
  if not Busy then exit;
  Log(DKFormat(FTPLOG_GENERATED),clGreen);
 

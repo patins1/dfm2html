@@ -190,6 +190,7 @@ type
     ColorPreviewTimer: TTimer;
     mResourceExplorer: TTntMenuItem;
     mDonate: TMenuItem;
+    mGetWebHost: TMenuItem;
     procedure mResourceExplorerClick(Sender: TObject);
     procedure ColorPreviewTimerTimer(Sender: TObject);
     procedure mObjectExplorerClick(Sender: TObject);
@@ -292,6 +293,7 @@ type
     procedure DEBUG_PosFF1Click(Sender: TObject);
     procedure MenuTutorial1Click(Sender: TObject);
     procedure mDonateClick(Sender: TObject);
+    procedure mGetWebHostClick(Sender: TObject);
   private
     LastFile:TPathName;
     FAct:TPageContainer;
@@ -2664,6 +2666,11 @@ begin
  Act.MySiz.CopyComponents(true);
 end;
 
+procedure TdhMainForm.mGetWebHostClick(Sender: TObject);
+begin
+   Browse('http://hosting.1und1.com/?kwk=33216',FuncSettings.FViewer,false);
+end;
+
 procedure TdhMainForm.mSaveAsTemplateClick(Sender: TObject);
 begin    
  Act.SaveAsTemplate;
@@ -3026,6 +3033,7 @@ begin
   Presets.Prepare(False);
   Presets.UpdateLanguage;
  end;
+ mGetWebHost.Visible:=_LANGID=LANGID_GERMAN;
 end;
 
 procedure TdhMainForm.UpdateOtherConstants;

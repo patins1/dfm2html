@@ -1,9 +1,9 @@
 object PageContainer3: TPageContainer3
   Left = -4
   Top = -23
-  Caption = 'TutorialGerman.dfm'
-  ClientHeight = 626
-  ClientWidth = 1600
+  Caption = 'Tutorial1031.dfm'
+  ClientHeight = 526
+  ClientWidth = 1280
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clBlack
   Font.Height = -13
@@ -54,7 +54,7 @@ object PageContainer3: TPageContainer3
       Style.Effects.AntiAliasing = True
       Style.Effects.Text = etInclude
       Style.Effects.InnerShadow.Alpha = 128
-      Style.Effects.InnerShadow.Radius = 2
+      Style.Effects.InnerShadow.DeciRadius = 20
       Style.Effects.InnerShadow.Color = White
       Style.Effects.InnerShadow.Degree = 131
       Style.Effects.InnerShadow.Distance = 1
@@ -342,7 +342,7 @@ object PageContainer3: TPageContainer3
         Style.Effects.Rotation = 120
         AutoSizeXY = asY
         Align = alTop
-        Right = 20
+        Right = 0
       end
       object chapter: TdhLink
         Left = 0
@@ -353,6 +353,7 @@ object PageContainer3: TPageContainer3
         Style.FontWeight = cfwBold
         AutoSizeXY = asXY
         Align = alTop
+        Right = 0
         PreferDownStyles = True
         Options = [loDownIfMenu, loDownIfMouseDown, loDownIfURL]
       end
@@ -364,7 +365,7 @@ object PageContainer3: TPageContainer3
         Style.Padding = 5
         AutoSizeXY = asY
         Align = alTop
-        Right = 16
+        Right = 0
       end
       object Label3: TdhLabel
         Left = 0
@@ -374,6 +375,7 @@ object PageContainer3: TPageContainer3
         Style.Color = Red
         AutoSizeXY = asY
         Align = alTop
+        Right = 0
       end
       object Link2: TdhLink
         Left = 0
@@ -392,8 +394,11 @@ object PageContainer3: TPageContainer3
         Style.TextDecoration = [ctdNone]
         AutoSizeXY = asXY
         Align = alTop
-        Right = 10
+        Right = 0
         StyleOver.BackgroundImage.Path = 'Images\Link2_ov.png'
+        StyleOver.BackgroundImage.State = isSemiTransparent
+        StyleOver.BackgroundImage.Width = 50
+        StyleOver.BackgroundImage.Height = 50
         StyleOver.BackgroundPosition = '0% 0%'
         StyleOver.TextDecoration = [ctdUnderline]
         PreferDownStyles = True
@@ -411,8 +416,11 @@ object PageContainer3: TPageContainer3
         Use = Link2
         AutoSizeXY = asXY
         Align = alTop
-        Right = 10
+        Right = 0
         StyleOver.BackgroundImage.Path = 'Images\Link7_ov.png'
+        StyleOver.BackgroundImage.State = isSemiTransparent
+        StyleOver.BackgroundImage.Width = 50
+        StyleOver.BackgroundImage.Height = 50
         PreferDownStyles = True
         Options = [loDownIfMenu, loDownIfMouseDown, loDownIfURL]
       end
@@ -633,7 +641,7 @@ object PageContainer3: TPageContainer3
         Style.Effects.Alpha = 194
         AutoSizeXY = asY
         Align = alTop
-        Right = 24
+        Right = 0
       end
     end
     object Panel4: TdhPanel
@@ -786,7 +794,7 @@ object PageContainer3: TPageContainer3
         Style.FontWeight = cfwBold
         AutoSizeXY = asY
         Align = alTop
-        Right = 8
+        Right = 0
       end
       object Link13: TdhLink
         Left = 0
@@ -796,7 +804,7 @@ object PageContainer3: TPageContainer3
         Style.VerticalAlign = 'middle'
         AutoSizeXY = asXY
         Align = alTop
-        Right = 4
+        Right = 0
         Layout = ltButton
         PreferDownStyles = True
         Options = [loDownIfMenu, loDownIfMouseDown, loDownIfURL]
@@ -900,11 +908,11 @@ object PageContainer3: TPageContainer3
       Style.Effects.Text = etInclude
       Style.Effects.OuterShadow.Enabled = True
       Style.Effects.OuterShadow.Alpha = 196
-      Style.Effects.OuterShadow.Radius = 7
+      Style.Effects.OuterShadow.DeciRadius = 70
       Style.Effects.OuterShadow.Distance = 9
       Style.Effects.OuterGlow.Enabled = True
       Style.Effects.OuterGlow.Alpha = 186
-      Style.Effects.OuterGlow.Radius = 2
+      Style.Effects.OuterGlow.DeciRadius = 20
       Style.Effects.OuterGlow.Color = Black
       Style.Effects.OuterGlow.Flood = 54
       AutoSizeXY = asXY
@@ -914,11 +922,11 @@ object PageContainer3: TPageContainer3
       StyleDown.Effects.Text = etInclude
       StyleDown.Effects.OuterShadow.Enabled = True
       StyleDown.Effects.OuterShadow.Alpha = 196
-      StyleDown.Effects.OuterShadow.Radius = 7
+      StyleDown.Effects.OuterShadow.DeciRadius = 70
       StyleDown.Effects.OuterShadow.Distance = 7
       StyleDown.Effects.OuterGlow.Enabled = True
       StyleDown.Effects.OuterGlow.Alpha = 186
-      StyleDown.Effects.OuterGlow.Radius = 2
+      StyleDown.Effects.OuterGlow.DeciRadius = 20
       StyleDown.Effects.OuterGlow.Color = Black
       StyleDown.Effects.OuterGlow.Flood = 54
       StyleOver.TextDecoration = [ctdUnderline]
@@ -944,7 +952,7 @@ object PageContainer3: TPageContainer3
       Style.Effects.Text = etInclude
       Style.Effects.OuterShadow.Enabled = True
       Style.Effects.OuterShadow.Alpha = 212
-      Style.Effects.OuterShadow.Radius = 7
+      Style.Effects.OuterShadow.DeciRadius = 70
       AutoSizeXY = asNone
     end
     object TdhLabel19: TdhLabel
@@ -1204,6 +1212,7 @@ object PageContainer3: TPageContainer3
         Text = 'Link22'
         AutoSizeXY = asXY
         Align = alTop
+        Right = 0
         PreferDownStyles = True
         Options = [loDownIfMenu, loDownIfMouseDown, loDownIfURL]
         LinkAnchor = Anchor11
@@ -1422,7 +1431,7 @@ object PageContainer3: TPageContainer3
         Style.LineHeight = '150%'
         AutoSizeXY = asY
         Align = alTop
-        Right = 24
+        Right = 0
       end
     end
     object Text2: TdhLabel
@@ -1531,7 +1540,7 @@ object PageContainer3: TPageContainer3
     object TdhLabel57: TdhLabel
       Left = 519
       Top = 5929
-      Width = 200
+      Width = 194
       Height = 88
       Text = #214'ffnen'
       Style.BackgroundRepeat = cbrNoRepeat
@@ -1545,20 +1554,20 @@ object PageContainer3: TPageContainer3
       Style.Effects.Text = etInclude
       Style.Effects.InnerShadow.Enabled = True
       Style.Effects.InnerShadow.Alpha = 255
-      Style.Effects.InnerShadow.Radius = 2
+      Style.Effects.InnerShadow.DeciRadius = 20
       Style.Effects.InnerShadow.Degree = 285
       Style.Effects.InnerShadow.Distance = 2
       Style.Effects.OuterShadow.Enabled = True
       Style.Effects.OuterShadow.Alpha = 255
       Style.Effects.InnerGlow.Enabled = True
       Style.Effects.InnerGlow.Alpha = 255
-      Style.Effects.InnerGlow.Radius = 2
+      Style.Effects.InnerGlow.DeciRadius = 20
       Style.Effects.InnerGlow.Flood = 83
       Style.Effects.OuterGlow.Alpha = 255
-      Style.Effects.OuterGlow.Radius = 3
+      Style.Effects.OuterGlow.DeciRadius = 30
       Style.Effects.OuterGlow.Color = Red
       Style.Effects.OuterGlow.Flood = 63
-      Style.Effects.Blur.Radius = 1
+      Style.Effects.Blur.DeciRadius = 10
       AutoSizeXY = asXY
     end
     object Anchor5: TdhLabel
@@ -1715,7 +1724,7 @@ object PageContainer3: TPageContainer3
       Style.Effects.InnerShadow.Degree = 119
       Style.Effects.OuterShadow.Enabled = True
       Style.Effects.OuterShadow.Alpha = 255
-      Style.Effects.OuterShadow.Radius = 3
+      Style.Effects.OuterShadow.DeciRadius = 30
       Style.Effects.OuterShadow.Flood = 100
       Style.Effects.OuterShadow.Distance = 0
       AutoSizeXY = asXY
@@ -1795,6 +1804,9 @@ object PageContainer3: TPageContainer3
       Style.Border.Color = 14540253
       Style.Border.Style = cbsSolid
       Style.BackgroundImage.Path = 'Images\Form1_nm.gif'
+      Style.BackgroundImage.State = isAnalyzed
+      Style.BackgroundImage.Width = 50
+      Style.BackgroundImage.Height = 49
       Style.FontFamily = 'Verdana'
       Style.FontWeight = cfwBold
       AutoSizeXY = asNone
@@ -1953,6 +1965,7 @@ object PageContainer3: TPageContainer3
           Style.TextAlign = ctaRight
           AutoSizeXY = asY
           Align = alTop
+          Right = 0
         end
         object Label2: TdhLabel
           Left = 0
@@ -1965,7 +1978,7 @@ object PageContainer3: TPageContainer3
           Style.BackgroundColor = 16777181
           AutoSizeXY = asY
           Align = alTop
-          Right = 24
+          Right = 0
         end
         object Edit3: TdhEdit
           Left = 0
@@ -1981,7 +1994,7 @@ object PageContainer3: TPageContainer3
           Style.FontWeight = cfwBold
           AutoSizeXY = asY
           Align = alTop
-          Right = 12
+          Right = 0
           Text = 'Next large city:'
         end
         object Submit3: TdhLink
@@ -2013,7 +2026,7 @@ object PageContainer3: TPageContainer3
           Style.FontWeight = cfwBold
           AutoSizeXY = asY
           Align = alTop
-          Right = 6
+          Right = 0
           Items = <>
           SelectType = stDropDown
         end
@@ -2117,6 +2130,9 @@ object PageContainer3: TPageContainer3
         Width = 696
         Height = 264
         Style.BackgroundImage.Path = 'Images\Page1_nm.png'
+        Style.BackgroundImage.State = isOnePixel
+        Style.BackgroundImage.Width = 1
+        Style.BackgroundImage.Height = 1
         Style.BackgroundRepeat = cbrRepeat
         Style.BackgroundColor = Transparent
         Use = Panel7
@@ -2165,6 +2181,9 @@ object PageContainer3: TPageContainer3
         Width = 696
         Height = 264
         Style.BackgroundImage.Path = 'Images\Page3_nm.png'
+        Style.BackgroundImage.State = isOnePixel
+        Style.BackgroundImage.Width = 1
+        Style.BackgroundImage.Height = 1
         Style.BackgroundRepeat = cbrRepeat
         Style.BackgroundColor = Transparent
         Use = Panel7
@@ -2218,6 +2237,7 @@ object PageContainer3: TPageContainer3
         Style.BorderRadius.All = '14'
         AutoSizeXY = asNone
         Align = alTop
+        Right = 0
       end
     end
     object Anchor2: TdhLink
@@ -2340,6 +2360,7 @@ object PageContainer3: TPageContainer3
         Text = 'googlelink'
         AutoSizeXY = asXY
         Align = alTop
+        Right = 0
         PreferDownStyles = True
         Options = [loDownIfMenu, loDownIfMouseDown, loDownIfURL]
         Link = 'http://www.google.de'
@@ -2351,6 +2372,7 @@ object PageContainer3: TPageContainer3
         Text = 'nav_example'
         AutoSizeXY = asXY
         Align = alTop
+        Right = 0
         PreferDownStyles = True
         Options = [loDownIfMenu, loDownIfMouseDown, loDownIfURL]
         LinkAnchor = TdhAnchor8
@@ -2466,7 +2488,7 @@ object PageContainer3: TPageContainer3
         Style.VerticalAlign = 'middle'
         AutoSizeXY = asXY
         Align = alTop
-        Right = 18
+        Right = 0
         Layout = ltButton
         PreferDownStyles = True
         Options = [loDownIfMenu, loDownIfMouseDown, loDownIfURL]
@@ -2479,6 +2501,7 @@ object PageContainer3: TPageContainer3
         Style.BackgroundColor = Red
         AutoSizeXY = asY
         Align = alTop
+        Right = 0
       end
     end
     object Label29: TdhLabel
@@ -2580,7 +2603,7 @@ object PageContainer3: TPageContainer3
         Style.LineHeight = '15'
         AutoSizeXY = asY
         Align = alTop
-        Right = 6
+        Right = 0
       end
     end
     object Label35: TdhLabel
@@ -2596,7 +2619,7 @@ object PageContainer3: TPageContainer3
       Left = 24
       Top = 8250
       Width = 672
-      Height = 314
+      Height = 330
       Text = 
         'Bevor du deine Webseite im Internet ver'#246'ffentlichst, '#10'solltest d' +
         'u die HTML-Seiten lokal begutachten via <nobr><b>Publizieren</b>' +
@@ -2611,23 +2634,24 @@ object PageContainer3: TPageContainer3
         #252'ber FTP verwaltet werden.'#10'DFM2HTML kann die HTML-Dateien auf Wu' +
         'nsch auf einen FTP-Server hochladen. Dazu m'#252'ssen zun'#228'chst die n'#246 +
         'tigen FTP-Daten in <b>Publizieren </b>| <b>Seiteneigenschaften</' +
-        'b> &rarr; <b>FTP-Verzeichnis</b> eingegeben werden. '#10'Danach kann' +
-        ' '#252'ber <nobr><b>Publizieren</b> | <b>Publizieren</b></nobr> der U' +
-        'pload-Prozess gestartet werden. '#10'Es kann noch zus'#228'tzlich eine HT' +
-        'TP-Adresse in <nobr><b>Publizieren </b>| <b>Seiteneigenschaften<' +
-        '/b></nobr> &rarr; <b>HTTP URL</b> angegeben werden,  die '#252'ber <n' +
-        'obr><b>Publizieren </b>| <b>Webseite online besuchen</b></nobr> ' +
-        'abgerufen werden kann, um die Webseite online zu betrachten.'#10'<br' +
-        '/><br/>'#10'Ein Geschwindigskeitsvorteil des integrierten FTP-Upload' +
-        '-Tools gegen'#252'ber dem manuellem Upload ist, da'#223' nur Dateien hochg' +
-        'eladen werden, die sich seit dem letzten Upload-Prozess ver'#228'nder' +
-        't haben '#10'(dieses Feature kann '#252'ber <b>Werkzeuge</b> | <b>Optione' +
-        'n</b> &rarr; <b>Publizieren</b> &rarr; <nobr><b>Benutze intellig' +
-        'entes Hochladen</b></nobr> deaktiviert werden).'#10'Alternativ k'#246'nne' +
-        'n die f'#252'r eine Vorschau generierten HTML-Dateien (<b>Publizieren' +
-        ' | Vorschauordner '#246'ffnen</b>) auch mit herk'#246'mmlichen FTP-Program' +
-        'men auf ein FTP-Server '#252'bertragen werden oder sie k'#246'nnen z.B. au' +
-        'f eine CD gebrannt werden.'
+        'b> &rarr; <b>FTP-Verzeichnis</b> eingegeben werden. '#10'Die FTP-Dat' +
+        'en k'#246'nnen Sie von Ihrem <Link24>Webhoster</Link24> erfahren. Dan' +
+        'ach kann '#252'ber <nobr><b>Publizieren</b> | <b>Publizieren</b></nob' +
+        'r> der Upload-Prozess gestartet werden. '#10'Es kann noch zus'#228'tzlich' +
+        ' eine HTTP-Adresse in <nobr><b>Publizieren </b>| <b>Seiteneigens' +
+        'chaften</b></nobr> &rarr; <b>HTTP URL</b> angegeben werden,  die' +
+        ' '#252'ber <nobr><b>Publizieren </b>| <b>Webseite online besuchen</b>' +
+        '</nobr> abgerufen werden kann, um die Webseite online zu betrach' +
+        'ten.'#10'<br/><br/>'#10'Ein Geschwindigskeitsvorteil des integrierten FT' +
+        'P-Upload-Tools gegen'#252'ber dem manuellem Upload ist, da'#223' nur Datei' +
+        'en hochgeladen werden, die sich seit dem letzten Upload-Prozess ' +
+        'ver'#228'ndert haben '#10'(dieses Feature kann '#252'ber <b>Werkzeuge</b> | <b' +
+        '>Optionen</b> &rarr; <b>Publizieren</b> &rarr; <nobr><b>Benutze ' +
+        'intelligentes Hochladen</b></nobr> deaktiviert werden).'#10'Alternat' +
+        'iv k'#246'nnen die f'#252'r eine Vorschau generierten HTML-Dateien (<b>Pub' +
+        'lizieren | Vorschauordner '#246'ffnen</b>) auch mit herk'#246'mmlichen FTP' +
+        '-Programmen auf ein FTP-Server '#252'bertragen werden oder sie k'#246'nnen' +
+        ' z.B. auf eine CD gebrannt werden.'
       Use = pad
       AutoSizeXY = asY
     end
@@ -2864,6 +2888,7 @@ object PageContainer3: TPageContainer3
         Text = 'Link21'
         AutoSizeXY = asXY
         Align = alTop
+        Right = 0
         PreferDownStyles = True
         Options = [loDownIfMenu, loDownIfMouseDown, loDownIfURL]
         LinkAnchor = Label45
@@ -2885,6 +2910,7 @@ object PageContainer3: TPageContainer3
         Text = 'Link23'
         AutoSizeXY = asXY
         Align = alTop
+        Right = 0
         PreferDownStyles = True
         Options = [loDownIfMenu, loDownIfMouseDown, loDownIfURL]
         LinkAnchor = Anchor5
@@ -2896,6 +2922,28 @@ object PageContainer3: TPageContainer3
       Width = 20
       Height = 19
       AutoSizeXY = asXY
+    end
+    object StyleSheet13: TdhStyleSheet
+      Left = 776
+      Top = 8280
+      Width = 28
+      Height = 28
+      Expanded = False
+      ExpandedWidth = 100
+      ExpandedHeight = 100
+      Expanded = False
+      object Link24: TdhLink
+        Left = 0
+        Top = 0
+        Height = 16
+        Text = 'webhoster'
+        AutoSizeXY = asXY
+        Align = alTop
+        Right = 0
+        PreferDownStyles = True
+        Options = [loDownIfMenu, loDownIfMouseDown, loDownIfURL]
+        Link = 'http://hosting.1und1.com/?kwk=33216'
+      end
     end
   end
 end

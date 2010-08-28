@@ -603,7 +603,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1
           object Label16: TdhLabel
             Left = 16
             Top = 24
-            Width = 274
+            Width = 115
             Height = 16
             Text = 
               #9658' <en>Contact us if your site shall be listed here</en><de>Benut' +
@@ -1086,7 +1086,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1
             Left = 24
             Top = 48
             Width = 288
-            Height = 622
+            Height = 638
             Text = 
               '<i><en>music</en><de>Musik</de></i>'#10'<ul>'#10'<li><Link18>http://www.' +
               'fool-house.com</Link18></li>'#10'<li><Link36>http://www.folkclub-hat' +
@@ -1104,20 +1104,21 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1
               '-ducati.de</Link52></li>'#10'<li><Link35>http://www.sitz-und-design.' +
               'de</Link35></li>'#10'<li><Link55>http://gianni65.interfree.it</Link5' +
               '5></li>'#10'<li><Link53>http://www.club500vomano.it</Link53></li>'#10'<l' +
-              'i><Link30>http://www.witches-of-monklake.de</Link30></li>'#10'<li><L' +
-              'ink69>http://www.kunstguss-ranft.de</Link69></li>'#10'<li><Link47>ht' +
-              'tp://www.bueroorganisation-roth.de</Link47></li>'#10'<li><Link57>htt' +
-              'p://www.rechtsanwalt-deibert.de</Link57></li>'#10'<li><Link43>http:/' +
-              '/www.haus-charlotte.de.ms</Link43></li>'#10'<li><Link44>http://www.s' +
-              'antamas.org</Link44></li>'#10'<li><Link42>http://www.ichrr.de</Link4' +
-              '2></li>'#10'<li><Link31>http://homepages.rtlnet.de/debecher07381/</L' +
-              'ink31></li>'#10'<li><Link46>http://www.steadystand.de</Link46></li>'#10 +
-              '<li><Link63>http://www.agip-piesche.de</Link63></li>'#10'<li><Link65' +
-              '>http://www.kronehattersheim.de</Link65></li>'#10'<li><Link68>http:/' +
-              '/poltech.110mb.com</Link68></li>'#10'<li><Link74>http://www.wasiwuse' +
-              'l.de</Link74></li>'#10'<li><Link17>http://www.wickedchins.nl</Link17' +
-              '></li>'#10'<li><Link48>http://www.qvinnovindar.se</Link48></li>'#10'<li>' +
-              '<Link51>http://www.marcosaporiti.it</Link51></li>'#10'</ul>'
+              'i><Link79>http://ibmklub-mainz.de</Link79></li>'#10'<li><Link30>http' +
+              '://www.witches-of-monklake.de</Link30></li>'#10'<li><Link69>http://w' +
+              'ww.kunstguss-ranft.de</Link69></li>'#10'<li><Link47>http://www.buero' +
+              'organisation-roth.de</Link47></li>'#10'<li><Link57>http://www.rechts' +
+              'anwalt-deibert.de</Link57></li>'#10'<li><Link43>http://www.haus-char' +
+              'lotte.de.ms</Link43></li>'#10'<li><Link44>http://www.santamas.org</L' +
+              'ink44></li>'#10'<li><Link42>http://www.ichrr.de</Link42></li>'#10'<li><L' +
+              'ink31>http://homepages.rtlnet.de/debecher07381/</Link31></li>'#10'<l' +
+              'i><Link46>http://www.steadystand.de</Link46></li>'#10'<li><Link63>ht' +
+              'tp://www.agip-piesche.de</Link63></li>'#10'<li><Link65>http://www.kr' +
+              'onehattersheim.de</Link65></li>'#10'<li><Link68>http://poltech.110mb' +
+              '.com</Link68></li>'#10'<li><Link74>http://www.wasiwusel.de</Link74><' +
+              '/li>'#10'<li><Link17>http://www.wickedchins.nl</Link17></li>'#10'<li><Li' +
+              'nk48>http://www.qvinnovindar.se</Link48></li>'#10'<li><Link51>http:/' +
+              '/www.marcosaporiti.it</Link51></li>'#10'</ul>'
             AutoSizeXY = asXY
           end
           object Link10: TdhLink
@@ -1519,11 +1520,11 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1
             Height = 80
             Text = 
               '<en><code>New in version 4.4:'#10'* Performance fix for HTML file ge' +
-              'neration'#10'* File generation is now logged when uploading'#10'* Use ne' +
-              'w color dialog'#10#10'</code></en><de><code>Neu in version 4.4:'#10'* Perf' +
-              'ormance-Fix f'#252'r die HTML-Dateigenerierung'#10'* Dateigenerierung wir' +
-              'd beim Upload gelogged'#10'* neuer Farbdialog wird benutzt'#10'</code></' +
-              'de>'
+              'neration'#10'* File generation is now logged when uploading'#10'* Bundle' +
+              'd with new color dialog'#10#10'</code></en><de><code>Neu in version 4.' +
+              '4:'#10'* Performance-Fix f'#252'r die HTML-Dateigenerierung'#10'* Dateigeneri' +
+              'erung wird beim Upload gelogged'#10'* enth'#228'lt neuen Farbdialog'#10'</cod' +
+              'e></de>'
             Style.PaddingRight = 2
             Style.WhiteSpace = cwsPre
             Style.Color = Red
@@ -1552,127 +1553,130 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1
             Width = 440
             Height = 997
             Text = 
-              '<en><FAQ_question>HTML pages do not properly display in my brows' +
-              'er.</FAQ_question>'#10'<br/>'#10'You have to enabled JavaScript in the o' +
-              'ptions of your browser. '#10'See instructions how to enable JavaScri' +
-              'pt for your browser <Link5>here</Link5>.'#10'<br/><br/></en>'#10'<de><FA' +
-              'Q_question>HTML-Seiten werden fehlerhaft im Browser angezeigt.</' +
-              'FAQ_question>'#10'<br/>'#10'JavaScript mu'#223' f'#252'r den Webbrowser aktiviert ' +
-              'sein. '#10'<Link5>Hier</Link5> sind Instruktionen zum Aktivieren von' +
-              ' JavaScript.'#10'<br/><br/></de>'#10#10#10#10'<en><FAQ_question>Is there no wa' +
-              'y to open and edit html-files?</FAQ_question>'#10'<br/>'#10'No and will ' +
-              'probably never be because many HTML constructs (like tables) can' +
-              'not be displayed in the DFM2HTML editor. DFM2HTML only generates' +
-              ' HTML documents from a DFM2HTML document, not the other directio' +
-              'n. Besides, DFM2HTML operates on a more abstract level, e.g. one' +
-              ' DFM2HTML object can be mapped to several HTML elements. DFM2HTM' +
-              'L offers the facility to include HTML code in a DFM2HTML documen' +
-              't, but this code is not interpreted by the WYSIWYG engine.'#10'<br/>' +
-              '<br/></en>'#10'<de><FAQ_question>Kann man HTML-Dateien editieren?</F' +
-              'AQ_question>'#10'<br/>'#10'Nein, da DFM2HTML auf einem abstrakterem Doku' +
-              'ment-Format basiert, welches u.a. keine HTML-Tabellen unterst'#252'tz' +
-              't. DFM2HTML kann aus diesem Format nur HTML-Seiten generieren, d' +
-              'ie andere Richtung ist nicht m'#246'glich. Es ist aber m'#246'glich, beste' +
-              'henden HTML-Code direkt in ein DFM2HTML-Document einzubetten, au' +
-              'ch wenn dieser mit dem DFM2HTML-Editor nicht grafisch angezeigt ' +
-              'werden kann.'#10'<br/><br/></de>'#10#10#10'<en><FAQ_question>I would like to' +
-              ' ask if there is a way to generate a menu or popup menu</FAQ_que' +
-              'stion>'#10'<br/>'#10'DHTML menus are now fully supported by DFM2HTML.'#10'<b' +
-              'r/><br/></en>'#10'<de><FAQ_question>Kann man mit DFM2HTML Men'#252's oder' +
-              ' Popup-Men'#252's generieren?</FAQ_question>'#10'<br/>'#10#220'ber Men'#252'-Objekte ' +
-              'ist dies m'#246'glich.'#10'<br/><br/></de>'#10#10#10'<en><FAQ_question>How can I ' +
-              'do contact forms or guest books?</FAQ_question>'#10'<br/>'#10'Form data ' +
-              'from a contact form can be emailed via PHP, see the <b>Tools | P' +
-              'resets | PHP</b> example. '#10'A guest book preset not yet exists.'#10'<' +
-              'br/><br/></en>'#10'<de><FAQ_question>Wie kann man Kontaktformulare o' +
-              'der G'#228'steb'#252'cher bauen?</FAQ_question>'#10'<br/>'#10'Der Inhalt eines Kon' +
-              'taktformulas kann '#252'ber PHP an eine Email-Adresse gesendet werden' +
-              ', siehe <b>Werkzeuge | Baukasten | PHP</b>. '#10'Ein G'#228'steb'#252'cher-Bei' +
-              'spiel existiert allerdings noch nicht.'#10'<br/><br/></de>'#10#10#10'<en><FA' +
-              'Q_question>How can I resize images?</FAQ_question>'#10'<br/>'#10'Select ' +
-              'Pos. tab and uncheck auto-height and auto-width. Then go to the ' +
-              'Image tab and set <i>Type</i> to <i>Stretch</i>.'#10'<br/><br/></en>' +
-              #10'<de><FAQ_question>Wie kann ich Bilder in der Gr'#246#223'e '#228'ndern?</FAQ' +
-              '_question>'#10'<br/>'#10'In der Pos.-Tab, deselektiere <i>Auto. Breite</' +
-              'i> und <i>Auto. H'#246'he</i>. Dann gehe zur Bild-Tab und setze <i>Ty' +
-              'p</i> auf <i>Dehnen</i>.'#10'<br/><br/></de>'#10#10'<en><FAQ_question>How ' +
-              'can I center objects?</FAQ_question>'#10'<br/>'#10'Select Pos. tab and u' +
-              'ncheck both <nobr><i>Right parent edge</i></nobr> and <nobr><i>L' +
-              'eft parent edge</i></nobr>.'#10'<br/><br/></en>'#10'<de><FAQ_question>Wi' +
-              'e k'#246'nnen Objekte zentriert werden?</FAQ_question>'#10'<br/>'#10'In der P' +
-              'os.-Tab einfach <nobr><i>Rechte Begrenzung</i></nobr> und <nobr>' +
-              '<i>Linke Begrenzung</i></nobr> deselektieren.'#10'<br/><br/></de>'#10#10'<' +
-              'en><FAQ_question>How can I mark a link to open in a new window?<' +
-              '/FAQ_question>'#10'<br/>'#10'Choose "_blank" in "Target" field of the "L' +
-              'ink" tab .'#10'<br/><br/></en>'#10'<de><FAQ_question>Wie kann ein Link i' +
-              'n einem neuen Fenster ge'#246'ffnet werden?</FAQ_question>'#10'<br/>'#10'W'#228'hl' +
-              'e "_blank" im "Zielfenster"-Feld in der "Link"-Tab .'#10'<br/><br/><' +
-              '/de>'#10#10'<en><FAQ_question>How can the user download files from my ' +
-              'web site?</FAQ_question>'#10'<br/>'#10'Put a file object on the document' +
-              ' and associate the desired file with it. Next, add a new link ob' +
-              'ject and set its <b>Within page</b> field on the file object. Th' +
-              'e file will be uploaded when publishing the site.'#10'<br/><br/></en' +
-              '>'#10'<de><FAQ_question>Meine Website ist fast fertig,'#10'allerdings ha' +
-              'be ich noch Schwierigkeiten im Downloadbereich Dateien mit'#10'einem' +
-              ' Link zu verkn'#252'pfen, damit sich der User diese herunterladen kan' +
-              'n. Wie'#10'geht das?</FAQ_question>'#10'<br/>'#10'Sie m'#252'ssen ein File-Objekt' +
-              ' aufs Dokument droppen, dann die entsprechende'#10'Datei assoziieren' +
-              '. Dann noch ein Link-Objekt aufs'#10'Dokument packen und dessen "Sei' +
-              'ten-intern"-Feld auf das File-Objekt'#10'setzen - fertig. Beim n'#228'chs' +
-              'ten Publizieren wird die Datei automatisch hochgeladen.'#10'<br/><br' +
-              '/></de>'#10#10'<en><FAQ_question>How can one show an external web page' +
-              ' in a page object?</FAQ_question>'#10'<br/>'#10'First, you have to choos' +
-              'e the <b>&lt;iframe&gt;</b> option for it. Now, in the page prop' +
-              'erties dialog, Meta Tags tab, you can choose a redirection URL.'#10 +
-              'However in order to immediately load the external web page witho' +
-              'ut redirection, you can specify the URL in the<nobr> <b>addition' +
-              'al HTML attributes</b></nobr> field (reachable from the <b>Misc<' +
-              '/b> tab, <nobr><b>Special Styles..</b></nobr>) by e.g. defining ' +
-              '<code>src='#8220'http://www.google.com'#8220'</code> .'#10'<br/><br/></en>'#10'<de><' +
-              'FAQ_question>Kann man in einem Seitenobjekt externe Webinhalte a' +
-              'nzeigen?</FAQ_question>'#10'<br/>'#10'Zun'#228'chst mu'#223' daf'#252'r dessen <b>&lt;i' +
-              'frame&gt;</b> Option angew'#228'hlt werden. Dann kann man im Seitenei' +
-              'genschaften-Dialog des Page-Objekts, Tab "Meta Tags", eine Weite' +
-              'rleitungs-URL angeben.'#10'Um allerdings die externe Seite ohne Umwe' +
-              'ge sofort zu laden, hilft z.B. folgende Angabe im <nobr> <b>zus'#228 +
-              'tzliche HTML-Attribute</b></nobr>-Feld (<b>Mehr</b> tab, <nobr><' +
-              'b>Spezielle Stile..</b></nobr>): <code>src='#8220'http://www.google.co' +
-              'm'#8220'</code> . Eine ausf'#252'hrlichere Beschreibung gibt es <Link54>hie' +
-              'r</Link54> (der Link kann in DFM2HTML mit der Maus hinein gezoge' +
-              'n werden, um ihn zu '#246'ffnen).'#10'<br/><br/></de>'#10#10'<en><FAQ_question>' +
-              'Why are generated HTML files saved in the temporary folder?</FAQ' +
-              '_question>'#10'<br/>'#10'You can choose a different folder at <nobr><b>P' +
-              'age Properties => General => Local Directory</b></nobr>.'#10'<br/><b' +
-              'r/></en>'#10'<de><FAQ_question>Warum werden erzeugte HTML-Seiten im ' +
-              'tempor'#228'ren Verzeichnis hinterlegt?</FAQ_question>'#10'<br/>'#10'Sie k'#246'nn' +
-              'en das Verzeichnis selbst bestimmen in den <nobr><b>Seiteneigens' +
-              'chaften => Allgemein => Lokaler Ordner</b></nobr>.'#10'<br/><br/></d' +
-              'e>'#10#10'<en><FAQ_question>Why are special characters in JavaScript s' +
-              'trings within <code>&lt;script&gt;</code> elements escaped using' +
-              ' the XML escaping mechanism (e.g. <code>&amp;#xE20;</code>) and ' +
-              'not using the JavaScript string escaping (e.g. <code>\u0E20</cod' +
-              'e>)?</FAQ_question>'#10'<br/>'#10'Generated HTML is encoded conforming t' +
-              'o <code>US-ASCII</code>, however JavaScript parts of the HTML pa' +
-              'ge are currently not recognized  and treated in special, so one ' +
-              'has to do the conversion manually, e.g. by using the tool at '#10'<L' +
-              'ink62>http://rishida.net/scripts/uniview/conversion.php</Link62>' +
-              '.'#10'<br/><br/></en>'#10'<de><FAQ_question>Warum werden JavaScript Stri' +
-              'ngs innerhalb von  <code>&lt;script&gt;</code>-Elementen '#252'ber de' +
-              'n XML-Mechanismus kodiert (z.B. <code>&amp;#xE20;</code> statt <' +
-              'code>\u0E20</code>) und nicht '#252'ber die Javascript-Kodierung f'#252'r ' +
-              'Strings?</FAQ_question>'#10'<br/>'#10'Weil JavaScript-Abschnitte beim Ge' +
-              'nerieren der HTML-Seiten im Moment nicht speziell ber'#252'cksichtigt' +
-              ' werden. Dies mu'#223' manuell gemacht werden, z.B. mit dem folgenden' +
-              ' Konverter: <Link62>http://rishida.net/scripts/uniview/conversio' +
-              'n.php</Link62>'#10'<br/><br/></de>'#10#10'<en><FAQ_question>How can I add ' +
-              'a favorite icon to my website?</FAQ_question>'#10'<br/>'#10'You can crea' +
-              'te a file named "favicon.ico" with some graphics program and the' +
-              'n you can use a File object named <i>favicon</i> to upload this ' +
-              'file to your FTP directory.'#10'<br/><br/></en>'#10'<de><FAQ_question>Wi' +
-              'e kann man ein Icon f'#252'r die Website einrichten?</FAQ_question>'#10'<' +
-              'br/>'#10'Indem man eine Datei namens "favicon.ico" mit einem Grafikp' +
-              'rogramm erstellt und diese mit Hilfe eines Datei-Objekts names <' +
-              'i>favicon</i> auf den FTP-Server l'#228'd.'#10'<br/><br/></de>'
+              '<de><FAQ_question>Wie kann ich meine Webseite ver'#246'ffentlichen?</' +
+              'FAQ_question>'#10'<br/>'#10'Dazu brauchen Sie ein Webhoster, wir empfehl' +
+              'en <Link78>1&1</Link78>.<br/><br/></de>'#10#10#10#10'<en><FAQ_question>HTM' +
+              'L pages do not properly display in my browser.</FAQ_question>'#10'<b' +
+              'r/>'#10'You have to enabled JavaScript in the options of your browse' +
+              'r. '#10'See instructions how to enable JavaScript for your browser <' +
+              'Link5>here</Link5>.'#10'<br/><br/></en>'#10'<de><FAQ_question>HTML-Seite' +
+              'n werden fehlerhaft im Browser angezeigt.</FAQ_question>'#10'<br/>'#10'J' +
+              'avaScript mu'#223' f'#252'r den Webbrowser aktiviert sein. '#10'<Link5>Hier</L' +
+              'ink5> sind Instruktionen zum Aktivieren von JavaScript.'#10'<br/><br' +
+              '/></de>'#10#10#10#10'<en><FAQ_question>Is there no way to open and edit ht' +
+              'ml-files?</FAQ_question>'#10'<br/>'#10'No and will probably never be bec' +
+              'ause many HTML constructs (like tables) cannot be displayed in t' +
+              'he DFM2HTML editor. DFM2HTML only generates HTML documents from ' +
+              'a DFM2HTML document, not the other direction. Besides, DFM2HTML ' +
+              'operates on a more abstract level, e.g. one DFM2HTML object can ' +
+              'be mapped to several HTML elements. DFM2HTML offers the facility' +
+              ' to include HTML code in a DFM2HTML document, but this code is n' +
+              'ot interpreted by the WYSIWYG engine.'#10'<br/><br/></en>'#10'<de><FAQ_q' +
+              'uestion>Kann man HTML-Dateien editieren?</FAQ_question>'#10'<br/>'#10'Ne' +
+              'in, da DFM2HTML auf einem abstrakterem Dokument-Format basiert, ' +
+              'welches u.a. keine HTML-Tabellen unterst'#252'tzt. DFM2HTML kann aus ' +
+              'diesem Format nur HTML-Seiten generieren, die andere Richtung is' +
+              't nicht m'#246'glich. Es ist aber m'#246'glich, bestehenden HTML-Code dire' +
+              'kt in ein DFM2HTML-Document einzubetten, auch wenn dieser mit de' +
+              'm DFM2HTML-Editor nicht grafisch angezeigt werden kann.'#10'<br/><br' +
+              '/></de>'#10#10#10'<en><FAQ_question>I would like to ask if there is a wa' +
+              'y to generate a menu or popup menu</FAQ_question>'#10'<br/>'#10'DHTML me' +
+              'nus are now fully supported by DFM2HTML.'#10'<br/><br/></en>'#10'<de><FA' +
+              'Q_question>Kann man mit DFM2HTML Men'#252's oder Popup-Men'#252's generier' +
+              'en?</FAQ_question>'#10'<br/>'#10#220'ber Men'#252'-Objekte ist dies m'#246'glich.'#10'<br' +
+              '/><br/></de>'#10#10#10'<en><FAQ_question>How can I do contact forms or g' +
+              'uest books?</FAQ_question>'#10'<br/>'#10'Form data from a contact form c' +
+              'an be emailed via PHP, see the <b>Tools | Presets | PHP</b> exam' +
+              'ple. '#10'A guest book preset not yet exists.'#10'<br/><br/></en>'#10'<de><F' +
+              'AQ_question>Wie kann man Kontaktformulare oder G'#228'steb'#252'cher bauen' +
+              '?</FAQ_question>'#10'<br/>'#10'Der Inhalt eines Kontaktformulas kann '#252'be' +
+              'r PHP an eine Email-Adresse gesendet werden, siehe <b>Werkzeuge ' +
+              '| Baukasten | PHP</b>. '#10'Ein G'#228'steb'#252'cher-Beispiel existiert aller' +
+              'dings noch nicht.'#10'<br/><br/></de>'#10#10#10'<en><FAQ_question>How can I ' +
+              'resize images?</FAQ_question>'#10'<br/>'#10'Select Pos. tab and uncheck ' +
+              'auto-height and auto-width. Then go to the Image tab and set <i>' +
+              'Type</i> to <i>Stretch</i>.'#10'<br/><br/></en>'#10'<de><FAQ_question>Wi' +
+              'e kann ich Bilder in der Gr'#246#223'e '#228'ndern?</FAQ_question>'#10'<br/>'#10'In d' +
+              'er Pos.-Tab, deselektiere <i>Auto. Breite</i> und <i>Auto. H'#246'he<' +
+              '/i>. Dann gehe zur Bild-Tab und setze <i>Typ</i> auf <i>Dehnen</' +
+              'i>.'#10'<br/><br/></de>'#10#10'<en><FAQ_question>How can I center objects?' +
+              '</FAQ_question>'#10'<br/>'#10'Select Pos. tab and uncheck both <nobr><i>' +
+              'Right parent edge</i></nobr> and <nobr><i>Left parent edge</i></' +
+              'nobr>.'#10'<br/><br/></en>'#10'<de><FAQ_question>Wie k'#246'nnen Objekte zent' +
+              'riert werden?</FAQ_question>'#10'<br/>'#10'In der Pos.-Tab einfach <nobr' +
+              '><i>Rechte Begrenzung</i></nobr> und <nobr><i>Linke Begrenzung</' +
+              'i></nobr> deselektieren.'#10'<br/><br/></de>'#10#10'<en><FAQ_question>How ' +
+              'can I mark a link to open in a new window?</FAQ_question>'#10'<br/>'#10 +
+              'Choose "_blank" in "Target" field of the "Link" tab .'#10'<br/><br/>' +
+              '</en>'#10'<de><FAQ_question>Wie kann ein Link in einem neuen Fenster' +
+              ' ge'#246'ffnet werden?</FAQ_question>'#10'<br/>'#10'W'#228'hle "_blank" im "Zielfe' +
+              'nster"-Feld in der "Link"-Tab .'#10'<br/><br/></de>'#10#10'<en><FAQ_questi' +
+              'on>How can the user download files from my web site?</FAQ_questi' +
+              'on>'#10'<br/>'#10'Put a file object on the document and associate the de' +
+              'sired file with it. Next, add a new link object and set its <b>W' +
+              'ithin page</b> field on the file object. The file will be upload' +
+              'ed when publishing the site.'#10'<br/><br/></en>'#10'<de><FAQ_question>M' +
+              'eine Website ist fast fertig,'#10'allerdings habe ich noch Schwierig' +
+              'keiten im Downloadbereich Dateien mit'#10'einem Link zu verkn'#252'pfen, ' +
+              'damit sich der User diese herunterladen kann. Wie'#10'geht das?</FAQ' +
+              '_question>'#10'<br/>'#10'Sie m'#252'ssen ein File-Objekt aufs Dokument droppe' +
+              'n, dann die entsprechende'#10'Datei assoziieren. Dann noch ein Link-' +
+              'Objekt aufs'#10'Dokument packen und dessen "Seiten-intern"-Feld auf ' +
+              'das File-Objekt'#10'setzen - fertig. Beim n'#228'chsten Publizieren wird ' +
+              'die Datei automatisch hochgeladen.'#10'<br/><br/></de>'#10#10'<en><FAQ_que' +
+              'stion>How can one show an external web page in a page object?</F' +
+              'AQ_question>'#10'<br/>'#10'First, you have to choose the <b>&lt;iframe&g' +
+              't;</b> option for it. Now, in the page properties dialog, Meta T' +
+              'ags tab, you can choose a redirection URL.'#10'However in order to i' +
+              'mmediately load the external web page without redirection, you c' +
+              'an specify the URL in the<nobr> <b>additional HTML attributes</b' +
+              '></nobr> field (reachable from the <b>Misc</b> tab, <nobr><b>Spe' +
+              'cial Styles..</b></nobr>) by e.g. defining <code>src='#8220'http://www' +
+              '.google.com'#8220'</code> .'#10'<br/><br/></en>'#10'<de><FAQ_question>Kann man' +
+              ' in einem Seitenobjekt externe Webinhalte anzeigen?</FAQ_questio' +
+              'n>'#10'<br/>'#10'Zun'#228'chst mu'#223' daf'#252'r dessen <b>&lt;iframe&gt;</b> Option ' +
+              'angew'#228'hlt werden. Dann kann man im Seiteneigenschaften-Dialog de' +
+              's Page-Objekts, Tab "Meta Tags", eine Weiterleitungs-URL angeben' +
+              '.'#10'Um allerdings die externe Seite ohne Umwege sofort zu laden, h' +
+              'ilft z.B. folgende Angabe im <nobr> <b>zus'#228'tzliche HTML-Attribut' +
+              'e</b></nobr>-Feld (<b>Mehr</b> tab, <nobr><b>Spezielle Stile..</' +
+              'b></nobr>): <code>src='#8220'http://www.google.com'#8220'</code> . Eine ausf' +
+              #252'hrlichere Beschreibung gibt es <Link54>hier</Link54> (der Link ' +
+              'kann in DFM2HTML mit der Maus hinein gezogen werden, um ihn zu '#246 +
+              'ffnen).'#10'<br/><br/></de>'#10#10'<en><FAQ_question>Why are generated HTM' +
+              'L files saved in the temporary folder?</FAQ_question>'#10'<br/>'#10'You ' +
+              'can choose a different folder at <nobr><b>Page Properties => Gen' +
+              'eral => Local Directory</b></nobr>.'#10'<br/><br/></en>'#10'<de><FAQ_que' +
+              'stion>Warum werden erzeugte HTML-Seiten im tempor'#228'ren Verzeichni' +
+              's hinterlegt?</FAQ_question>'#10'<br/>'#10'Sie k'#246'nnen das Verzeichnis se' +
+              'lbst bestimmen in den <nobr><b>Seiteneigenschaften => Allgemein ' +
+              '=> Lokaler Ordner</b></nobr>.'#10'<br/><br/></de>'#10#10'<en><FAQ_question' +
+              '>Why are special characters in JavaScript strings within <code>&' +
+              'lt;script&gt;</code> elements escaped using the XML escaping mec' +
+              'hanism (e.g. <code>&amp;#xE20;</code>) and not using the JavaScr' +
+              'ipt string escaping (e.g. <code>\u0E20</code>)?</FAQ_question>'#10'<' +
+              'br/>'#10'Generated HTML is encoded conforming to <code>US-ASCII</cod' +
+              'e>, however JavaScript parts of the HTML page are currently not ' +
+              'recognized  and treated in special, so one has to do the convers' +
+              'ion manually, e.g. by using the tool at '#10'<Link62>http://rishida.' +
+              'net/scripts/uniview/conversion.php</Link62>.'#10'<br/><br/></en>'#10'<de' +
+              '><FAQ_question>Warum werden JavaScript Strings innerhalb von  <c' +
+              'ode>&lt;script&gt;</code>-Elementen '#252'ber den XML-Mechanismus kod' +
+              'iert (z.B. <code>&amp;#xE20;</code> statt <code>\u0E20</code>) u' +
+              'nd nicht '#252'ber die Javascript-Kodierung f'#252'r Strings?</FAQ_questio' +
+              'n>'#10'<br/>'#10'Weil JavaScript-Abschnitte beim Generieren der HTML-Sei' +
+              'ten im Moment nicht speziell ber'#252'cksichtigt werden. Dies mu'#223' man' +
+              'uell gemacht werden, z.B. mit dem folgenden Konverter: <Link62>h' +
+              'ttp://rishida.net/scripts/uniview/conversion.php</Link62>'#10'<br/><' +
+              'br/></de>'#10#10'<en><FAQ_question>How can I add a favorite icon to my' +
+              ' website?</FAQ_question>'#10'<br/>'#10'You can create a file named "favi' +
+              'con.ico" with some graphics program and then you can use a File ' +
+              'object named <i>favicon</i> to upload this file to your FTP dire' +
+              'ctory.'#10'<br/><br/></en>'#10'<de><FAQ_question>Wie kann man ein Icon f' +
+              #252'r die Website einrichten?</FAQ_question>'#10'<br/>'#10'Indem man eine D' +
+              'atei namens "favicon.ico" mit einem Grafikprogramm erstellt und ' +
+              'diese mit Hilfe eines Datei-Objekts names <i>favicon</i> auf den' +
+              ' FTP-Server l'#228'd.'#10'<br/><br/></de>'
             Style.TextAlign = ctaJustify
             AutoSizeXY = asY
           end
@@ -1730,6 +1734,28 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1
             AutoSizeXY = asXY
             FileName = 'C:\Delphi\HBuilder\iFrames.dfm'
             Linked = True
+          end
+          object StyleSheet13: TdhStyleSheet
+            Left = 388
+            Top = 51
+            Width = 28
+            Height = 28
+            Expanded = False
+            ExpandedWidth = 100
+            ExpandedHeight = 100
+            Expanded = False
+            object Link78: TdhLink
+              Left = 0
+              Top = 0
+              Height = 16
+              Text = 'webhoster'
+              AutoSizeXY = asXY
+              Align = alTop
+              Right = 0
+              PreferDownStyles = True
+              Options = [loDownIfMenu, loDownIfMouseDown, loDownIfURL]
+              Link = 'http://hosting.1und1.com/?kwk=33216'
+            end
           end
         end
         object tips: TdhPage
@@ -2227,14 +2253,11 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1
       object Panel1: TdhPanel
         Left = 15
         Top = 15
-        Width = 104
+        Width = 120
         Style.BorderRight.Width = 0
         Style.BorderRight.Color = 14408667
         Style.BorderRight.Style = cbsSolid
         Style.BackgroundImage.Path = 'C:\Delphi\HBuilder\icon.gif'
-        Style.BackgroundImage.State = isAnalyzed
-        Style.BackgroundImage.Width = 32
-        Style.BackgroundImage.Height = 32
         Style.PaddingTop = 49
         AutoSizeXY = asNone
         Anchors = [akLeft, akTop, akBottom]
@@ -2310,7 +2333,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1
         object Link13: TdhLink
           Left = 0
           Top = 211
-          Height = 45
+          Height = 29
           Text = 'Tips & Tricks'
           Use = Link3
           AutoSizeXY = asY
@@ -2322,7 +2345,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1
         end
         object Link4: TdhLink
           Left = 0
-          Top = 256
+          Top = 240
           Height = 29
           Text = '<en>Contact</en><de>Impressum</de>'
           Use = Link3
@@ -2335,7 +2358,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1
         end
         object TdhAnchor2: TdhLink
           Left = 0
-          Top = 285
+          Top = 269
           Height = 29
           Text = '<en>Disclaimer</en>'#10'<de>Haftungs- ausschluss</de>'
           Use = Link3
@@ -2351,7 +2374,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1
         end
         object Link40: TdhLink
           Left = 0
-          Top = 314
+          Top = 298
           Height = 45
           Text = '<en>More Programs</en><de>Weitere Programme</de>'
           Use = Link3
@@ -2362,9 +2385,23 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1
           Options = [loDownIfMenu, loDownIfMouseDown, loDownIfURL]
           LinkPage = more
         end
+        object Link59: TdhLink
+          Left = 0
+          Top = 343
+          Height = 32
+          Text = 'Forum <sup><Label7>new</Label7></sup>'
+          Use = Link3
+          AutoSizeXY = asY
+          Align = alTop
+          Right = 0
+          PreferDownStyles = True
+          Options = [loDownIfMenu, loDownIfMouseDown, loDownIfURL]
+          Link = 'http://www.dfm2html.com/forum'
+          Target = '_blank'
+        end
         object Link56: TdhLink
           Left = 0
-          Top = 359
+          Top = 375
           Height = 32
           Text = 'Chat <sup><Label7>new</Label7></sup>'
           Style.Display = cdsNone
@@ -2521,13 +2558,13 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1
         Width = 28
         Height = 28
         Expanded = False
-        VertPosition = 24
+        VertPosition = 40
         ExpandedWidth = 100
         ExpandedHeight = 100
         Expanded = False
         object Label7: TdhLabel
           Left = 0
-          Top = -24
+          Top = -40
           Height = 16
           Text = 'Label7'
           Style.Color = Red
@@ -2537,7 +2574,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1
         end
         object Label8: TdhLabel
           Left = 0
-          Top = -8
+          Top = -24
           Height = 16
           Text = 'Label8'
           Style.Color = Black
@@ -2547,7 +2584,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1
         end
         object Link8: TdhLink
           Left = 0
-          Top = 8
+          Top = -8
           Height = 16
           Text = 'RegisterLink'
           AutoSizeXY = asXY
@@ -2561,7 +2598,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1
         end
         object FAQ_question: TdhLabel
           Left = 0
-          Top = 24
+          Top = 8
           Height = 32
           Text = 'FAQ question'
           Style.FontWeight = cfwBold
@@ -2571,7 +2608,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1
         end
         object Link23: TdhLink
           Left = 0
-          Top = 56
+          Top = 40
           Height = 16
           Text = 'feedback'
           AutoSizeXY = asXY
@@ -2580,6 +2617,18 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1
           PreferDownStyles = True
           Options = [loDownIfMenu, loDownIfMouseDown, loDownIfURL]
           LinkPage = feedback
+        end
+        object Link79: TdhLink
+          Left = 0
+          Top = 56
+          Height = 16
+          Text = 'http://ibmklub-mainz.de'
+          AutoSizeXY = asXY
+          Align = alTop
+          Right = 0
+          PreferDownStyles = True
+          Options = [loDownIfMenu, loDownIfMouseDown, loDownIfURL]
+          Link = 'http://ibmklub-mainz.de'
         end
       end
       object Panel3: TdhPanel

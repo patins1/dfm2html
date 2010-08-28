@@ -3462,7 +3462,6 @@ object dhMainForm: TdhMainForm
       end
       object mVisitForum: TTntMenuItem
         Caption = 'Visit Forum'
-        Visible = False
         OnClick = mVisitForumClick
       end
       object mTechnicalSupport: TTntMenuItem

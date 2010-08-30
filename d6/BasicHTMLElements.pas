@@ -86,6 +86,6 @@ var dhStrEditDlg:TBasicHTMLElements;
 
 implementation
 
-{$R BasicHTMLElements.dfm}
+{$R *.dfm}
 
 end.

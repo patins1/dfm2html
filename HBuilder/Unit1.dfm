@@ -3466,6 +3466,7 @@ object dhMainForm: TdhMainForm
       end
       object mTechnicalSupport: TTntMenuItem
         Caption = 'Get Technical Support'
+        Visible = False
         OnClick = mTechnicalSupportClick
       end
       object mCheckForUpdate: TTntMenuItem

@@ -2839,7 +2839,7 @@ procedure TTabs.EditText;
 var
   Temp: HypeString;
   i:integer;
-  Stored:array of WideString;
+  Stored:array of HypeString;
 begin
 
   LateCreateForm(TdhMultilineCaptionEdit2,dhMultilineCaptionEdit2);

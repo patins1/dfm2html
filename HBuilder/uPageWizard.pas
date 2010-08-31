@@ -12,7 +12,8 @@ uses
 {$ENDIF}
   SysUtils, Classes, htmlrout, MySpinEdit,
   dhPageControl, dhPanel, dhLabel, FuncUtils,UseFastStrings, MyPageControl, DKLang, MyForm,
-  MyGroupBox, dhStrUtils, uMetaWriter;
+  MyGroupBox, dhStrUtils, uMetaWriter, SynMemo, SynEdit, SynEditHighlighter,
+  SynHighlighterPHP, SynHighlighterHtml;
 
 type
   TPageWizard = class(TMyForm)
@@ -54,9 +55,9 @@ type
     TabSheetHTML1: TTntTabSheet;
     TabSheetHTML2: TTntTabSheet;
     TabSheetHTML3: TTntTabSheet;
-    eHead: TTntMemo;
-    eBody: TTntMemo;
-    eTop: TTntMemo;
+    eHead: TSynMemo;
+    eBody: TSynMemo;
+    eTop: TSynMemo;
     TabSheet4: TTntTabSheet;
     dhLabel1: TdhLabel;
     eImageFolder: TTntEdit;
@@ -69,7 +70,8 @@ type
     eCSSFile: TTntEdit;
     dhLabel7: TdhLabel;
     TabSheet5: TTabSheet;
-    eBodyClose: TTntMemo;
+    eBodyClose: TSynMemo;
+    SynHTMLSyn1: TSynHTMLSyn;
     procedure eCSSFileChange(Sender: TObject);
     procedure eImageFolderChange(Sender: TObject);
     procedure eJavaScriptFileChange(Sender: TObject);

@@ -26,7 +26,8 @@ uses
   dhOleContainer,dhFile,dhHiddenField,GR32,
   MyPageControl, MyFontDialog,
   MySpinEdit, MyTrackBar, hCheckBox, dhSelect, UseFastStrings, DKLang,UIConstants,
-  MyGroupBox, MyPanel, MyForm, Contnrs, dhStrUtils, uMetaWriter, dhStyles,dhGraphicFormats,dhColorUtils;
+  MyGroupBox, MyPanel, MyForm, Contnrs, dhStrUtils, uMetaWriter, dhStyles,dhGraphicFormats,dhColorUtils,
+  SynEditHighlighter, SynHighlighterHtml, SynEdit, SynMemo, hSynMemo;
 
 
 var PropsAlign:TAlign=alBottom;
@@ -377,7 +378,7 @@ type
     IGNORE_cDoAction: ThComboBox;
     IGNORE_Button9: TTntButton;
     Label31: TdhLabel;
-    eText: ThEdit;
+    eText: ThSynMemo;
     STYLE_Link2: TdhLink;
     STYLE_dhLabel10: TdhLabel;
     STYLE_Link14: TdhLink;
@@ -393,7 +394,7 @@ type
     dhPanel5: TdhPanel;
     AnchorPureHTML: TTntTabSheet;
     Label32: TdhLabel;
-    ePureHTML: ThMemo;
+    ePureHTML: ThSynMemo;
     IGNORE_dhDirectHTML1: TdhDirectHTML;
     STYLE_Label33: TdhLabel;
     EffectsTransformations_Border: TdhLabel;
@@ -447,6 +448,7 @@ type
     mSetBackgroundColorTransparent: TTntMenuItem;
     mCopyOverStylesToDownStyles: TTntMenuItem;
     mClearStyles: TTntMenuItem;
+    SynHTMLSyn1: TSynHTMLSyn;
     procedure mClearStylesClick(Sender: TObject);
     procedure cpBlurColorPreviewColorChanged(Sender: TObject);
     procedure cpBlurColorBackup(Sender: TObject; backup: TList;
@@ -3542,9 +3544,9 @@ begin
 end;
 
 procedure TTabs.UpdateTextDisplay;
-begin                      
+begin
  if DoNotUpdateDisplay then exit;
- eText.Font.Name:=(TObject(Selection[0]) as TdhLabel).NearestFontFamily;
+ //eText.Font.Name:=(TObject(Selection[0]) as TdhLabel).NearestFontFamily;
  eText.StoredText:=(TObject(Selection[0]) as TdhLabel).Text;
  //Edit1.Text:=(TObject(Selection[0]) as TdhLabel).Text;
 end;
@@ -4025,6 +4027,8 @@ begin
   Tabs.STYLE_Label33.Style.BorderTop.Style:=Tabs.STYLE_dhLabel11.Style.BorderTop.Style;
   Tabs.ePureHTML.Width:=500;
   Tabs.ePureHTML.Height:=89;
+  Tabs.eText.Width:=500;
+  Tabs.eText.Height:=89;
  end else
  begin
 //  PageControl1.TabPosition:=tpLeft;
@@ -4050,6 +4054,8 @@ begin
   Tabs.STYLE_Label33.Style.BorderLeft.Style:=Tabs.STYLE_dhLabel11.Style.BorderLeft.Style;
   Tabs.ePureHTML.Width:=209;
   Tabs.ePureHTML.Height:=289;
+  Tabs.eText.Width:=209;
+  Tabs.eText.Height:=289;
  end;
 
  Tabs.Panel1.Style.BorderLeft.Style:=NeedWhite[PropsAlign in [alRight]];
@@ -4514,6 +4520,8 @@ begin
   Changed((Sender as TMySpinEdit).ChangeReason,LogChange) else
  if Sender is ThMemo then
   Changed((Sender as ThMemo).ChangeReason,LogChange) else
+ if Sender is ThSynMemo then
+  Changed((Sender as ThSynMemo).ChangeReason,LogChange) else
  if Sender is ThComboBox then
   Changed((Sender as ThComboBox).ChangeReason,LogChange) else
  if Sender is ThCheckBox then

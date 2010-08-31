@@ -9,13 +9,14 @@ uses
   {$ELSE}
   Controls, Windows, Messages, Graphics, Forms, StdCtrls, Dialogs, Menus, Buttons, UnicodeCtrls,
   {$ENDIF}
-  Classes, dhStyleSheet, dhPanel, dhLabel, dhPageControl, dhMenu, UseFastStrings, Math, DKLang, MyForm,dhStrUtils,uMetaWriter;
+  Classes, dhStyleSheet, dhPanel, dhLabel, dhPageControl, dhMenu, UseFastStrings, Math, DKLang, MyForm,dhStrUtils,uMetaWriter,
+  SynEditHighlighter, SynHighlighterHtml, SynEdit, SynMemo;
 
 type
   TdhMultilineCaptionEdit2 = class(TMyForm)
     OKButton: TTntButton;
     CancelButton: TTntButton;
-    Memo1: TTntMemo;
+    Memo1: TSynMemo;
     SpeedButton1: TTntSpeedButton;
     SpeedButton2: TTntSpeedButton;
     SpeedButton3: TTntSpeedButton;
@@ -26,6 +27,7 @@ type
     SpeedButton8: TTntSpeedButton;
     DKLanguageController1: TDKLanguageController;
     TBasicHTMLElements1: TBasicHTMLElements;
+    SynHTMLSyn1: TSynHTMLSyn;
     procedure HelpButtonClick(Sender: TObject);
     procedure CodeWndBtnClick(Sender: TObject);
     procedure Memo1KeyDown(Sender: TObject; var Key: Word;
@@ -88,7 +90,7 @@ end;
 
 procedure TdhMultilineCaptionEdit2.Memo1KeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
-begin               
+begin
   if Key = VK_ESCAPE then
    CancelButton.Click;
 end;
@@ -252,6 +254,7 @@ function TdhMultilineCaptionEdit2.Execute(var NewStr:HypeString; vn:integer=0):b
 var ii:integer;
     line,col,CharNo:integer;
     comp:TComponent;
+    newPos:TBufferCoord;
 begin
  NewStr:=FirstComp.Text;
 //  c:=dhMultilineCaptionEdit2.TBasicHTMLElements1.dhStyleSheet1.Controls[dhMultilineCaptionEdit2.TBasicHTMLElements1.dhStyleSheet1.ControlCount-1];
@@ -272,7 +275,7 @@ begin
     //Temp2:=NewStr;
 
     Memo1.OnChange:=nil;
-    Memo1.Font.Name:=FirstComp.NearestFontFamily;
+    //Memo1.Font.Name:=FirstComp.NearestFontFamily;
 
     Memo1.Lines.Text:=NewStr;
     if vn>=1 then
@@ -285,13 +288,20 @@ begin
       inc(line);
       col:=vn-ii-1;
      end;
+     if Memo1 is TSynMemo then
+     begin
+       newPos.Char:=col+1;
+       newPos.Line:=line+1;
+       Memo1.CaretXY := newPos;
+     end else
+     begin
 {$IFDEF CLX}
      CharNo := Memo1.CaretPosToPos(CaretPos(line,0));
 {$ELSE}
      CharNo := Memo1.Perform(EM_LineIndex, line, 0);
 {$ENDIF}
      Memo1.SelStart:=CharNo+col;
-
+     end;
     end;
     //Memo1.MaxLength := GetEditLimit;
     Memo1.OnChange:=Memo1Change;

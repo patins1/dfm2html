@@ -63,6 +63,7 @@
 			<DCCReference Include="dbrtl.dcp"/>
 			<DCCReference Include="vcldb.dcp"/>
 			<DCCReference Include="ColorPackage.dcp"/>
+			<DCCReference Include="SynEdit_R2009.dcp"/>
 			<DCCReference Include="MyToolButton.pas"/>
 			<DCCReference Include="dhColorPicker.pas"/>
 			<DCCReference Include="hComboBox.pas"/>
@@ -84,6 +85,7 @@
 			<DCCReference Include="MyPanel.pas"/>
 			<DCCReference Include="MyForm.pas"/>
 			<DCCReference Include="UnicodeCtrls.pas"/>
+			<DCCReference Include="hSynMemo.pas"/>
 			<BuildConfiguration Include="Base">
 				<Key>Base</Key>
 			</BuildConfiguration>

@@ -120,7 +120,6 @@ object Tabs: TTabs
             Top = 16
             Width = 137
             Height = 21
-            ItemHeight = 13
             TabOrder = 6
             ValueChange = cFontFamilyValueChange
             ChangeReason = 'Change Font Family'
@@ -130,7 +129,6 @@ object Tabs: TTabs
             Top = 16
             Width = 49
             Height = 21
-            ItemHeight = 13
             TabOrder = 7
             Items.Strings = (
               '9'
@@ -555,7 +553,6 @@ object Tabs: TTabs
             Font.Height = -11
             Font.Name = 'MS Sans Serif'
             Font.Style = []
-            ItemHeight = 13
             ParentFont = False
             TabOrder = 3
             Items.Strings = (
@@ -778,7 +775,6 @@ object Tabs: TTabs
             Width = 177
             Height = 21
             Style = csDropDownList
-            ItemHeight = 13
             TabOrder = 0
             Items.Strings = (
               'Tile'
@@ -845,7 +841,6 @@ object Tabs: TTabs
             Font.Height = -11
             Font.Name = 'MS Sans Serif'
             Font.Style = []
-            ItemHeight = 13
             ItemIndex = 1
             ParentFont = False
             TabOrder = 3
@@ -897,7 +892,6 @@ object Tabs: TTabs
             Font.Height = -11
             Font.Name = 'MS Sans Serif'
             Font.Style = []
-            ItemHeight = 13
             ParentFont = False
             TabOrder = 8
             Items.Strings = (
@@ -933,7 +927,6 @@ object Tabs: TTabs
             Font.Height = -11
             Font.Name = 'MS Sans Serif'
             Font.Style = []
-            ItemHeight = 13
             ItemIndex = 1
             ParentFont = False
             TabOrder = 4
@@ -2219,7 +2212,6 @@ object Tabs: TTabs
             Height = 21
             Style = csDropDownList
             DropDownCount = 20
-            ItemHeight = 13
             TabOrder = 0
             OnDropDown = cbCursorDropDown
             Items.Strings = (
@@ -2249,7 +2241,6 @@ object Tabs: TTabs
             Width = 105
             Height = 21
             DropDownCount = 11
-            ItemHeight = 13
             TabOrder = 1
             Items.Strings = (
               '-5'
@@ -2272,7 +2263,6 @@ object Tabs: TTabs
             Width = 105
             Height = 21
             Style = csDropDownList
-            ItemHeight = 13
             TabOrder = 2
             Items.Strings = (
               '*CLEAR VALUE*'
@@ -2325,7 +2315,6 @@ object Tabs: TTabs
             Width = 105
             Height = 21
             DropDownCount = 10
-            ItemHeight = 13
             TabOrder = 0
             Items.Strings = (
               'baseline'
@@ -2344,7 +2333,6 @@ object Tabs: TTabs
             Top = 64
             Width = 105
             Height = 21
-            ItemHeight = 13
             TabOrder = 1
             Items.Strings = (
               '50px'
@@ -2360,7 +2348,6 @@ object Tabs: TTabs
             Width = 105
             Height = 21
             Style = csDropDownList
-            ItemHeight = 13
             TabOrder = 2
             Items.Strings = (
               '*CLEAR VALUE*'
@@ -2415,7 +2402,6 @@ object Tabs: TTabs
             Width = 105
             Height = 21
             Style = csDropDownList
-            ItemHeight = 13
             TabOrder = 0
             Items.Strings = (
               '*CLEAR VALUE*'
@@ -2432,7 +2418,6 @@ object Tabs: TTabs
             Width = 105
             Height = 21
             Style = csDropDownList
-            ItemHeight = 13
             TabOrder = 1
             Items.Strings = (
               '*CLEAR VALUE*'
@@ -2448,7 +2433,6 @@ object Tabs: TTabs
             Width = 105
             Height = 21
             Style = csDropDownList
-            ItemHeight = 13
             TabOrder = 2
             Items.Strings = (
               '*CLEAR VALUE*'
@@ -2578,7 +2562,6 @@ object Tabs: TTabs
             Top = 16
             Width = 89
             Height = 21
-            ItemHeight = 13
             TabOrder = 0
             ValueChange = cbUseValueChange
             ChangeReason = 'Change Use'
@@ -2623,7 +2606,6 @@ object Tabs: TTabs
           Height = 21
           Style = csDropDownList
           DropDownCount = 12
-          ItemHeight = 13
           ItemIndex = 9
           TabOrder = 3
           Text = 'Copy from over/down styles including Use'
@@ -2655,6 +2637,10 @@ object Tabs: TTabs
         Caption = 'Pos.'
         ImageIndex = -1
         OnShow = AnchorPositionShow
+        ExplicitLeft = 0
+        ExplicitTop = 0
+        ExplicitWidth = 0
+        ExplicitHeight = 0
         object GroupBox4: TMyGroupBox
           Left = 8
           Top = 0
@@ -2916,14 +2902,26 @@ object Tabs: TTabs
           Text = 'Quick edit:'
           AutoSizeXY = asXY
         end
-        object eText: ThEdit
-          Left = 88
-          Top = 8
+        object eText: ThSynMemo
+          Left = 81
+          Top = 3
           Width = 209
-          Height = 21
+          Height = 126
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -13
+          Font.Name = 'Courier New'
+          Font.Style = []
           TabOrder = 1
-          ValueChange = eTextValueChange
+          Gutter.Font.Charset = DEFAULT_CHARSET
+          Gutter.Font.Color = clWindowText
+          Gutter.Font.Height = -11
+          Gutter.Font.Name = 'Courier New'
+          Gutter.Font.Style = []
+          Gutter.Width = 0
+          Highlighter = SynHTMLSyn1
           ChangeReason = 'Edit Text'
+          ValueChange = eTextValueChange
         end
         object Button8: TTntButton
           Left = 312
@@ -3031,6 +3029,10 @@ object Tabs: TTabs
         Caption = 'Page'
         ImageIndex = -1
         OnShow = AnchorPageShow
+        ExplicitLeft = 0
+        ExplicitTop = 0
+        ExplicitWidth = 0
+        ExplicitHeight = 0
         object gPageProperties: TMyGroupBox
           Left = 16
           Top = 0
@@ -3114,6 +3116,10 @@ object Tabs: TTabs
         Caption = 'Edit'
         ImageIndex = -1
         OnShow = AnchorEditShow
+        ExplicitLeft = 0
+        ExplicitTop = 0
+        ExplicitWidth = 0
+        ExplicitHeight = 0
         object GroupBox15: TMyGroupBox
           Left = 8
           Top = 0
@@ -3162,6 +3168,10 @@ object Tabs: TTabs
         Caption = 'Memo'
         ImageIndex = -1
         OnShow = AnchorMemoShow
+        ExplicitLeft = 0
+        ExplicitTop = 0
+        ExplicitWidth = 0
+        ExplicitHeight = 0
         object Label35: TdhLabel
           Left = 8
           Top = 16
@@ -3212,6 +3222,10 @@ object Tabs: TTabs
         Caption = 'Check'
         ImageIndex = -1
         OnShow = AnchorCheckBoxShow
+        ExplicitLeft = 0
+        ExplicitTop = 0
+        ExplicitWidth = 0
+        ExplicitHeight = 0
         object IGNORE_cRightJustify: TTntCheckBox
           Left = 512
           Top = 32
@@ -3257,6 +3271,10 @@ object Tabs: TTabs
         Caption = 'Form'
         ImageIndex = -1
         OnShow = AnchorFormShow
+        ExplicitLeft = 0
+        ExplicitTop = 0
+        ExplicitWidth = 0
+        ExplicitHeight = 0
         object cbMethod: TTntRadioGroup
           Left = 8
           Top = 0
@@ -3312,7 +3330,6 @@ object Tabs: TTabs
             Width = 97
             Height = 21
             DropDownCount = 10
-            ItemHeight = 13
             TabOrder = 1
             Items.Strings = (
               '_blank'
@@ -3404,7 +3421,6 @@ object Tabs: TTabs
             Width = 121
             Height = 21
             Style = csDropDownList
-            ItemHeight = 13
             TabOrder = 0
             ValueChange = cbParentMenuItemValueChange
             ChangeReason = 'Opened By'
@@ -3532,7 +3548,6 @@ object Tabs: TTabs
             Font.Height = -11
             Font.Name = 'MS Sans Serif'
             Font.Style = []
-            ItemHeight = 13
             ParentFont = False
             TabOrder = 1
             ValueChange = cbLinkPageValueChange
@@ -3548,7 +3563,6 @@ object Tabs: TTabs
             Font.Height = -11
             Font.Name = 'MS Sans Serif'
             Font.Style = []
-            ItemHeight = 13
             ParentFont = False
             TabOrder = 2
             ValueChange = cbLinkPageValueChange
@@ -3598,7 +3612,6 @@ object Tabs: TTabs
             Width = 97
             Height = 21
             DropDownCount = 10
-            ItemHeight = 13
             TabOrder = 2
             Items.Strings = (
               '_blank'
@@ -3615,7 +3628,6 @@ object Tabs: TTabs
             Width = 145
             Height = 21
             DropDownCount = 10
-            ItemHeight = 13
             TabOrder = 3
             Items.Strings = (
               'http://'
@@ -3730,6 +3742,10 @@ object Tabs: TTabs
         Caption = 'Hidden'
         ImageIndex = -1
         OnShow = AnchorHiddenShow
+        ExplicitLeft = 0
+        ExplicitTop = 0
+        ExplicitWidth = 0
+        ExplicitHeight = 0
         object GroupBox31: TMyGroupBox
           Left = 8
           Top = 0
@@ -3752,6 +3768,10 @@ object Tabs: TTabs
         Caption = 'OLE '
         ImageIndex = -1
         OnShow = AnchorOleShow
+        ExplicitLeft = 0
+        ExplicitTop = 0
+        ExplicitWidth = 0
+        ExplicitHeight = 0
         object Button2: TTntButton
           Left = 8
           Top = 8
@@ -3806,6 +3826,10 @@ object Tabs: TTabs
         Caption = 'List'
         ImageIndex = -1
         OnShow = AnchorSelectShow
+        ExplicitLeft = 0
+        ExplicitTop = 0
+        ExplicitWidth = 0
+        ExplicitHeight = 0
         object GroupBox19: TMyGroupBox
           Left = 544
           Top = -1
@@ -3957,6 +3981,10 @@ object Tabs: TTabs
         Caption = 'HTML'
         ImageIndex = -1
         OnShow = AnchorPureHTMLShow
+        ExplicitLeft = 0
+        ExplicitTop = 0
+        ExplicitWidth = 0
+        ExplicitHeight = 0
         object Label32: TdhLabel
           Left = 8
           Top = 16
@@ -3965,13 +3993,24 @@ object Tabs: TTabs
           Text = 'Type HTML:'
           AutoSizeXY = asXY
         end
-        object ePureHTML: ThMemo
+        object ePureHTML: ThSynMemo
           Left = 80
           Top = 8
           Width = 209
           Height = 89
-          ScrollBars = ssBoth
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -13
+          Font.Name = 'Courier New'
+          Font.Style = []
           TabOrder = 0
+          Gutter.Font.Charset = DEFAULT_CHARSET
+          Gutter.Font.Color = clWindowText
+          Gutter.Font.Height = -11
+          Gutter.Font.Name = 'Courier New'
+          Gutter.Font.Style = []
+          Gutter.Width = 0
+          Highlighter = SynHTMLSyn1
           WantTabs = True
           ChangeReason = 'Edit Direct HTML'
           ValueChange = ePureHTMLValueChange
@@ -3990,6 +4029,10 @@ object Tabs: TTabs
         Caption = 'File'
         ImageIndex = -1
         OnShow = AnchorFileShow
+        ExplicitLeft = 0
+        ExplicitTop = 0
+        ExplicitWidth = 0
+        ExplicitHeight = 0
         object Panel7: TPanel
           Left = 8
           Top = 8
@@ -4339,7 +4382,7 @@ object Tabs: TTabs
     Left = 432
     Top = 144
     LangData = {
-      040054616273010100000025010000070043617074696F6E019D010000060050
+      040054616273010100000025010000070043617074696F6E019E010000060050
       616E656C3100000C0050616765436F6E74726F6C3100000A00416E63686F7246
       6F6E74010200000001000000070043617074696F6E2D010000040048696E7400
       090047726F7570426F7833010100000002000000070043617074696F6E000500
@@ -4664,6 +4707,10 @@ object Tabs: TTabs
       5472616E73706172656E74010100000035010000070043617074696F6E001B00
       6D436F70794F7665725374796C6573546F446F776E5374796C65730101000000
       36010000070043617074696F6E000C006D436C6561725374796C657301010000
-      0037010000070043617074696F6E00}
+      0037010000070043617074696F6E000B0053796E48544D4C53796E310000}
+  end
+  object SynHTMLSyn1: TSynHTMLSyn
+    Left = 400
+    Top = 144
   end
 end

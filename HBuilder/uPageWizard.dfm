@@ -258,47 +258,95 @@ object PageWizard: TPageWizard
         TabOrder = 0
         object TabSheetHTML3: TTntTabSheet
           Caption = 'At the very top'
-          object eTop: TTntMemo
+          object eTop: TSynMemo
             Left = 8
             Top = 8
             Width = 352
             Height = 149
-            ScrollBars = ssVertical
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clWindowText
+            Font.Height = -13
+            Font.Name = 'Courier New'
+            Font.Style = []
             TabOrder = 0
+            Gutter.Font.Charset = DEFAULT_CHARSET
+            Gutter.Font.Color = clWindowText
+            Gutter.Font.Height = -11
+            Gutter.Font.Name = 'Courier New'
+            Gutter.Font.Style = []
+            Gutter.Width = 0
+            Highlighter = SynHTMLSyn1
+            ScrollBars = ssVertical
           end
         end
         object TabSheetHTML1: TTntTabSheet
           Caption = 'Before </HEAD>'
-          object eHead: TTntMemo
+          object eHead: TSynMemo
             Left = 8
             Top = 8
             Width = 352
             Height = 149
-            ScrollBars = ssVertical
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clWindowText
+            Font.Height = -13
+            Font.Name = 'Courier New'
+            Font.Style = []
             TabOrder = 0
+            Gutter.Font.Charset = DEFAULT_CHARSET
+            Gutter.Font.Color = clWindowText
+            Gutter.Font.Height = -11
+            Gutter.Font.Name = 'Courier New'
+            Gutter.Font.Style = []
+            Gutter.Width = 0
+            Highlighter = SynHTMLSyn1
+            ScrollBars = ssVertical
           end
         end
         object TabSheetHTML2: TTntTabSheet
           Caption = 'After <BODY>'
-          object eBody: TTntMemo
+          object eBody: TSynMemo
             Left = 8
             Top = 8
             Width = 352
             Height = 149
-            ScrollBars = ssVertical
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clWindowText
+            Font.Height = -13
+            Font.Name = 'Courier New'
+            Font.Style = []
             TabOrder = 0
+            Gutter.Font.Charset = DEFAULT_CHARSET
+            Gutter.Font.Color = clWindowText
+            Gutter.Font.Height = -11
+            Gutter.Font.Name = 'Courier New'
+            Gutter.Font.Style = []
+            Gutter.Width = 0
+            Highlighter = SynHTMLSyn1
+            ScrollBars = ssVertical
           end
         end
         object TabSheet5: TTabSheet
           Caption = 'Before </BODY>'
           ImageIndex = 3
-          object eBodyClose: TTntMemo
+          object eBodyClose: TSynMemo
             Left = 8
             Top = 8
             Width = 352
             Height = 149
-            ScrollBars = ssVertical
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clWindowText
+            Font.Height = -13
+            Font.Name = 'Courier New'
+            Font.Style = []
             TabOrder = 0
+            Gutter.Font.Charset = DEFAULT_CHARSET
+            Gutter.Font.Color = clWindowText
+            Gutter.Font.Height = -11
+            Gutter.Font.Name = 'Courier New'
+            Gutter.Font.Style = []
+            Gutter.Width = 0
+            Highlighter = SynHTMLSyn1
+            ScrollBars = ssVertical
           end
         end
       end
@@ -420,7 +468,7 @@ object PageWizard: TPageWizard
     Left = 320
     Top = 8
     LangData = {
-      0A005061676557697A617264010100000001000000070043617074696F6E0135
+      0A005061676557697A617264010100000001000000070043617074696F6E0136
       0000000C0050616765436F6E74726F6C31000009005461625368656574310101
       00000002000000070043617074696F6E0006004C6162656C3601010000001900
       0000040054657874000600655469746C650000060050616E656C31000006004C
@@ -455,6 +503,10 @@ object PageWizard: TPageWizard
       684C6162656C350000080064684C6162656C3601010000003200000004005465
       78740008006543535346696C650000080064684C6162656C3700000900546162
       536865657435010100000033000000070043617074696F6E000A0065426F6479
-      436C6F73650000}
+      436C6F736500000B0053796E48544D4C53796E310000}
+  end
+  object SynHTMLSyn1: TSynHTMLSyn
+    Left = 360
+    Top = 8
   end
 end

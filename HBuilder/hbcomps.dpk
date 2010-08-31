@@ -35,7 +35,8 @@ requires
   dsnap,
   dbrtl,
   vcldb,
-  ColorPackage;
+  ColorPackage,
+  SynEdit_R2009;
 
 contains
   MyToolButton in 'MyToolButton.pas',
@@ -56,6 +57,7 @@ contains
   MyGroupBox in 'MyGroupBox.pas',
   MyPanel in 'MyPanel.pas',
   MyForm in 'MyForm.pas',
-  UnicodeCtrls in 'UnicodeCtrls.pas';
+  UnicodeCtrls in 'UnicodeCtrls.pas',
+  hSynMemo in 'hSynMemo.pas';
 
 end.

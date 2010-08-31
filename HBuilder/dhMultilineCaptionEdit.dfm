@@ -285,22 +285,27 @@ object dhMultilineCaptionEdit2: TdhMultilineCaptionEdit2
     ModalResult = 2
     TabOrder = 1
   end
-  object Memo1: TTntMemo
+  object Memo1: TSynMemo
     Left = 0
     Top = 0
     Width = 337
     Height = 406
     Anchors = [akLeft, akTop, akRight, akBottom]
-    Font.Charset = ANSI_CHARSET
+    Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
     Font.Height = -13
     Font.Name = 'Courier New'
     Font.Style = []
-    ParentFont = False
-    ScrollBars = ssBoth
     TabOrder = 2
     OnKeyDown = Memo1KeyDown
     OnMouseMove = Memo1MouseMove
+    Gutter.Font.Charset = DEFAULT_CHARSET
+    Gutter.Font.Color = clWindowText
+    Gutter.Font.Height = -11
+    Gutter.Font.Name = 'Courier New'
+    Gutter.Font.Style = []
+    Gutter.Width = 0
+    Highlighter = SynHTMLSyn1
   end
   inline TBasicHTMLElements1: TBasicHTMLElements
     Left = 336
@@ -314,255 +319,198 @@ object dhMultilineCaptionEdit2: TdhMultilineCaptionEdit2
     ExplicitWidth = 185
     ExplicitHeight = 407
     inherited dhStyleSheet1: TdhPage
+      Height = 1506
+      inherited dhLabel3: TdhLabel [0]
+      end
+      inherited dhLabel1: TdhLabel [2]
+      end
       inherited p: TdhLink
         OnClick = pClick
       end
-      inherited li: TdhLink
+      inherited dt: TdhLink [4]
         OnClick = pClick
       end
-      inherited ul: TdhLink
+      inherited dd: TdhLink [5]
         OnClick = pClick
       end
-      inherited blockquote: TdhLink
+      inherited dl: TdhLink [6]
         OnClick = pClick
       end
-      inherited address: TdhLink
+      inherited ul: TdhLink [7]
         OnClick = pClick
       end
-      inherited center: TdhLink
+      inherited ol: TdhLink [8]
         OnClick = pClick
       end
-      inherited h1: TdhLink
+      inherited menu: TdhLink [9]
         OnClick = pClick
       end
-      inherited h2: TdhLink
+      inherited dir: TdhLink [10]
         OnClick = pClick
       end
-      inherited h3: TdhLink
+      inherited li: TdhLink [11]
         OnClick = pClick
       end
-      inherited h4: TdhLink
+      inherited blockquote: TdhLink [12]
         OnClick = pClick
       end
-      inherited h5: TdhLink
+      inherited address: TdhLink [13]
         OnClick = pClick
       end
-      inherited h6: TdhLink
+      inherited center: TdhLink [14]
         OnClick = pClick
       end
-      inherited b: TdhLink
+      inherited h1: TdhLink [15]
         OnClick = pClick
       end
-      inherited strong: TdhLink
+      inherited h2: TdhLink [16]
         OnClick = pClick
       end
-      inherited i: TdhLink
+      inherited h3: TdhLink [17]
         OnClick = pClick
       end
-      inherited cite: TdhLink
+      inherited h4: TdhLink [18]
         OnClick = pClick
       end
-      inherited em: TdhLink
+      inherited h5: TdhLink [19]
         OnClick = pClick
       end
-      inherited dfn: TdhLink
+      inherited h6: TdhLink [20]
         OnClick = pClick
       end
-      inherited u: TdhLink
+      inherited b: TdhLink [21]
         OnClick = pClick
       end
-      inherited ins: TdhLink
+      inherited strong: TdhLink [22]
         OnClick = pClick
       end
-      inherited s: TdhLink
+      inherited i: TdhLink [23]
         OnClick = pClick
       end
-      inherited strike: TdhLink
+      inherited cite: TdhLink [24]
         OnClick = pClick
       end
-      inherited del: TdhLink
+      inherited em: TdhLink [25]
         OnClick = pClick
       end
-      inherited blink: TdhLink
+      inherited dfn: TdhLink [26]
         OnClick = pClick
       end
-      inherited big: TdhLink
+      inherited tt: TdhLink [27]
         OnClick = pClick
       end
-      inherited small: TdhLink
+      inherited code: TdhLink [28]
         OnClick = pClick
       end
-      inherited sup: TdhLink
+      inherited kbd: TdhLink [29]
         OnClick = pClick
       end
-      inherited sub: TdhLink
+      inherited samp: TdhLink [30]
         OnClick = pClick
       end
-      inherited nobr: TdhLink
+      inherited u: TdhLink [31]
         OnClick = pClick
       end
-      inherited hr: TdhLink
-        Top = 1488
-        OnClick = hrClick
+      inherited ins: TdhLink [32]
+        OnClick = pClick
       end
-      inherited unknown_element: TdhLink
+      inherited s: TdhLink [33]
+        OnClick = pClick
+      end
+      inherited strike: TdhLink [34]
+        OnClick = pClick
+      end
+      inherited del: TdhLink [35]
+        OnClick = pClick
+      end
+      inherited blink: TdhLink [36]
+        OnClick = pClick
+      end
+      inherited big: TdhLink [37]
+        OnClick = pClick
+      end
+      inherited small: TdhLink [38]
+        OnClick = pClick
+      end
+      inherited sup: TdhLink [39]
+        OnClick = pClick
+      end
+      inherited sub: TdhLink [40]
+        OnClick = pClick
+      end
+      inherited nobr: TdhLink [41]
+        OnClick = pClick
+      end
+      inherited unknown_element: TdhLink [42]
         Top = 1130
       end
-      inherited dd: TdhLink
-        OnClick = pClick
-      end
-      inherited dt: TdhLink
-        OnClick = pClick
-      end
-      inherited dl: TdhLink
-        OnClick = pClick
-      end
-      inherited tt: TdhLink
-        OnClick = pClick
-      end
-      inherited code: TdhLink
-        OnClick = pClick
-      end
-      inherited kbd: TdhLink
-        OnClick = pClick
-      end
-      inherited samp: TdhLink
-        OnClick = pClick
-      end
-      inherited menu: TdhLink
-        OnClick = pClick
-      end
-      inherited dir: TdhLink
-        OnClick = pClick
-      end
-      inherited ol: TdhLink
-        OnClick = pClick
+      inherited filebutton: TdhLink [43]
+        Top = 1149
       end
       inherited edit: TdhLink
         Top = 1177
       end
       inherited radiobuttonnormal: TdhLink
         Top = 1200
-        Style.BackgroundImage.Data = {
-          07544269746D6170E6010000424DE60100000000000036000000280000000C00
-          00000C0000000100180000000000B00100000000000000000000000000000000
-          00000000FF0000FF0000FF0000FFFFFFFFFFFFFFFFFFFFFFFFFF0000FF0000FF
-          0000FF0000FF0000FF0000FFFFFFFFFFFFFFC8D0D4C8D0D4C8D0D4C8D0D4FFFF
-          FFFFFFFF0000FF0000FF0000FF808080C8D0D4C8D0D4FFFFFFFFFFFFFFFFFFFF
-          FFFFC8D0D4C8D0D4FFFFFF0000FF0000FF808080404040FFFFFFFFFFFFFFFFFF
-          FFFFFFFFFFFFFFFFFFC8D0D4FFFFFF0000FF808080404040FFFFFFFFFFFFFFFF
-          FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFC8D0D4FFFFFF808080404040FFFFFFFF
-          FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFC8D0D4FFFFFF808080404040
-          FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFC8D0D4FFFFFF8080
-          80404040FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFC8D0D4FF
-          FFFF0000FF808080404040FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFC8D0D4
-          FFFFFF0000FF0000FF808080404040404040FFFFFFFFFFFFFFFFFFFFFFFF4040
-          40404040FFFFFF0000FF0000FF0000FF80808080808040404040404040404040
-          40408080808080800000FF0000FF0000FF0000FF0000FF0000FF808080808080
-          8080808080800000FF0000FF0000FF0000FF}
+        Style.BackgroundImage.State = isAnalyzed
+        Style.BackgroundImage.Width = 12
+        Style.BackgroundImage.Height = 12
       end
       inherited radiobuttondown: TdhLink
         Top = 1216
-        Style.BackgroundImage.Data = {
-          07544269746D6170E6010000424DE60100000000000036000000280000000C00
-          00000C0000000100180000000000B00100000000000000000000000000000000
-          00000000FF0000FF0000FF0000FFFFFFFFFFFFFFFFFFFFFFFFFF0000FF0000FF
-          0000FF0000FF0000FF0000FFFFFFFFFFFFFFC0C0C0C0C0C0C0C0C0C0C0C0FFFF
-          FFFFFFFF0000FF0000FF0000FF808080C0C0C0C0C0C0FFFFFFFFFFFFFFFFFFFF
-          FFFFC0C0C0C0C0C0FFFFFF0000FF0000FF808080000000FFFFFFFFFFFFFFFFFF
-          FFFFFFFFFFFFFFFFFFC0C0C0FFFFFF0000FF808080000000FFFFFFFFFFFFFFFF
-          FF000000000000FFFFFFFFFFFFFFFFFFC0C0C0FFFFFF808080000000FFFFFFFF
-          FFFF000000000000000000000000FFFFFFFFFFFFC0C0C0FFFFFF808080000000
-          FFFFFFFFFFFF000000000000000000000000FFFFFFFFFFFFC0C0C0FFFFFF8080
-          80000000FFFFFFFFFFFFFFFFFF000000000000FFFFFFFFFFFFFFFFFFC0C0C0FF
-          FFFF0000FF808080000000FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFC0C0C0
-          FFFFFF0000FF0000FF808080000000000000FFFFFFFFFFFFFFFFFFFFFFFF0000
-          00000000FFFFFF0000FF0000FF0000FF80808080808000000000000000000000
-          00008080808080800000FF0000FF0000FF0000FF0000FF0000FF808080808080
-          8080808080800000FF0000FF0000FF0000FF}
+        Style.BackgroundImage.State = isAnalyzed
+        Style.BackgroundImage.Width = 12
+        Style.BackgroundImage.Height = 12
       end
       inherited checkboxnormal: TdhLink
         Top = 1232
-        Style.BackgroundImage.Data = {
-          07544269746D61703E020000424D3E0200000000000036000000280000000D00
-          00000D0000000100180000000000080200000000000000000000000000000000
-          0000FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-          FFFFFFFFFFFFFFFFFF00808080C8D0D4C8D0D4C8D0D4C8D0D4C8D0D4C8D0D4C8
-          D0D4C8D0D4C8D0D4C8D0D4C8D0D4FFFFFF00808080404040FFFFFFFFFFFFFFFF
-          FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFC8D0D4FFFFFF00808080404040
-          FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFC8D0D4FFFF
-          FF00808080404040FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-          FFFFFFC8D0D4FFFFFF00808080404040FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-          FFFFFFFFFFFFFFFFFFFFFFC8D0D4FFFFFF00808080404040FFFFFFFFFFFFFFFF
-          FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFC8D0D4FFFFFF00808080404040
-          FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFC8D0D4FFFF
-          FF00808080404040FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-          FFFFFFC8D0D4FFFFFF00808080404040FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-          FFFFFFFFFFFFFFFFFFFFFFC8D0D4FFFFFF00808080404040FFFFFFFFFFFFFFFF
-          FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFC8D0D4FFFFFF00808080404040
-          404040404040404040404040404040404040404040404040404040C8D0D4FFFF
-          FF00808080808080808080808080808080808080808080808080808080808080
-          808080808080FFFFFF00}
+        Style.BackgroundImage.State = isAnalyzed
+        Style.BackgroundImage.Width = 13
+        Style.BackgroundImage.Height = 13
       end
       inherited checkboxdown: TdhLink
         Top = 1249
-        Style.BackgroundImage.Data = {
-          07544269746D61703E020000424D3E0200000000000036000000280000000D00
-          00000D0000000100180000000000080200000000000000000000000000000000
-          0000FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-          FFFFFFFFFFFFFFFFFF00808080C8D0D4C8D0D4C8D0D4C8D0D4C8D0D4C8D0D4C8
-          D0D4C8D0D4C8D0D4C8D0D4C8D0D4FFFFFF00808080404040FFFFFFFFFFFFFFFF
-          FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFC8D0D4FFFFFF00808080404040
-          FFFFFFFFFFFFFFFFFF000000FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFC8D0D4FFFF
-          FF00808080404040FFFFFFFFFFFF000000000000000000FFFFFFFFFFFFFFFFFF
-          FFFFFFC8D0D4FFFFFF00808080404040FFFFFF00000000000000000000000000
-          0000FFFFFFFFFFFFFFFFFFC8D0D4FFFFFF00808080404040FFFFFF0000000000
-          00FFFFFF000000000000000000FFFFFFFFFFFFC8D0D4FFFFFF00808080404040
-          FFFFFF000000FFFFFFFFFFFFFFFFFF000000000000000000FFFFFFC8D0D4FFFF
-          FF00808080404040FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF000000000000
-          FFFFFFC8D0D4FFFFFF00808080404040FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-          FFFFFFFFFF000000FFFFFFC8D0D4FFFFFF00808080404040FFFFFFFFFFFFFFFF
-          FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFC8D0D4FFFFFF00808080404040
-          404040404040404040404040404040404040404040404040404040C8D0D4FFFF
-          FF00808080808080808080808080808080808080808080808080808080808080
-          808080808080FFFFFF00}
+        Style.BackgroundImage.State = isAnalyzed
+        Style.BackgroundImage.Width = 13
+        Style.BackgroundImage.Height = 13
       end
       inherited newchar: TdhLink
         Top = 1266
         Style.Display = cdsNone
       end
-      inherited filebutton: TdhLink
-        Top = 1149
-      end
-      inherited button: TdhLink
+      inherited button: TdhLink [50]
         Top = 1285
       end
-      inherited memo: TdhLink
+      inherited memo: TdhLink [51]
         Top = 1309
+      end
+      inherited for_small_caps: TdhLabel [52]
+        Top = 1331
       end
       inherited a: TdhLink
         Top = 1346
       end
-      inherited for_small_caps: TdhLabel
-        Top = 1331
-      end
-      inherited uniw: TdhLabel
+      inherited uniw: TdhLabel [54]
         Top = 1365
       end
-      inherited listbox: TdhLabel
+      inherited listbox: TdhLabel [55]
         Top = 1384
       end
-      inherited selectedlistboxitem: TdhLabel
+      inherited selectedlistboxitem: TdhLabel [56]
         Top = 1406
       end
-      inherited listboxitem: TdhLabel
+      inherited listboxitem: TdhLabel [57]
         Top = 1425
       end
-      inherited menupopup: TdhLabel
+      inherited menupopup: TdhLabel [58]
         Top = 1444
       end
-      inherited hidden: TdhLabel
+      inherited hidden: TdhLabel [59]
         Top = 1469
+      end
+      inherited hr: TdhLink [60]
+        Top = 1488
+        OnClick = hrClick
       end
     end
   end
@@ -572,7 +520,7 @@ object dhMultilineCaptionEdit2: TdhMultilineCaptionEdit2
     Left = 248
     Top = 216
     LangData = {
-      170064684D756C74696C696E6543617074696F6E456469743200010C0000000C
+      170064684D756C74696C696E6543617074696F6E456469743200010D0000000C
       005370656564427574746F6E3100000C005370656564427574746F6E3200000C
       005370656564427574746F6E3300000C005370656564427574746F6E34010200
       000003000000070043617074696F6E02000000040048696E74000C0053706565
@@ -602,6 +550,10 @@ object dhMultilineCaptionEdit2: TdhMultilineCaptionEdit2
       0004006D656D6F000001006100000E00666F725F736D616C6C5F636170730000
       0400756E6977000007006C697374626F780000130073656C65637465646C6973
       74626F786974656D00000B006C697374626F786974656D000009006D656E7570
-      6F7075700000060068696464656E0000}
+      6F7075700000060068696464656E00000B0053796E48544D4C53796E310000}
+  end
+  object SynHTMLSyn1: TSynHTMLSyn
+    Left = 168
+    Top = 272
   end
 end

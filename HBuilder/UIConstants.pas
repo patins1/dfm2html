@@ -9,6 +9,8 @@ uses
   {$ENDIF}
   SysUtils,DKLang,dhLabel,dhPanel,dhStrUtils;
 
+type DKString=WideString;
+
 const CONFIRMDELETE='CONFIRMDELETE';
 const COPYEXISTINGFILES='COPYEXISTINGFILES';
 const DELETEINHERITEDERROR='DELETEINHERITEDERROR';
@@ -68,37 +70,36 @@ const UNKNOWNOBJECT='UNKNOWNOBJECT';
 const UNSUPPORTEDSTYLE='UNSUPPORTEDSTYLE';
 const UNTITLED='UNTITLED';
 
-function DKFormat(const c:string; const Args: array of const):WideString; overload;
-function DKFormat(const c:string; const s:string):WideString; overload;
-function DKFormat(const c:string):WideString; overload;
-procedure ShowMessage(const Msg: WideString);
+function DKFormat(const c:string; const Args: array of const):DKString; overload;
+function DKFormat(const c:string; const s:string):DKString; overload;
+function DKFormat(const c:string):DKString; overload;
+procedure ShowMessage(const Msg: DKString);
 
 {$IFNDEF CLX}
-function MessageDlg(const Msg: WideString; DlgType: TMsgDlgType; Buttons: TMsgDlgButtons; HelpCtx: Longint): Integer; overload;   
+function MessageDlg(const Msg: DKString; DlgType: TMsgDlgType; Buttons: TMsgDlgButtons; HelpCtx: Longint): Integer; overload;
 {$ENDIF}
 
 implementation
 
-function DKFormat(const c:string; const Args: array of const):WideString; overload;
-var cc:WideString;
+function DKFormat(const c:string; const Args: array of const):DKString; overload;
 begin
  result:=WFormat(DKLangConstW(c),Args);
 end;
 
-function DKFormat(const c:string; const s:string):WideString; overload;
+function DKFormat(const c:string; const s:string):DKString; overload;
 begin
  result:=DKFormat(c,[s])
 end;
 
-function DKFormat(const c:string):WideString; overload;
+function DKFormat(const c:string):DKString; overload;
 begin
  result:=DKFormat(c,[])
 end;
 
 {$IFNDEF CLX}
 
-function MessageDlg(const Msg: WideString; DlgType: TMsgDlgType; Buttons: TMsgDlgButtons; HelpCtx: Longint): Integer; overload;
-var Caption:WideString;
+function MessageDlg(const Msg: DKString; DlgType: TMsgDlgType; Buttons: TMsgDlgButtons; HelpCtx: Longint): Integer; overload;
+var Caption:DKString;
     uType: UINT;
 begin
  uType:=0;
@@ -149,7 +150,7 @@ end;
 
 {$ENDIF}
         
-procedure ShowMessage(const Msg: WideString);
+procedure ShowMessage(const Msg: DKString);
 begin
   MessageDlg(Msg, mtCustom, [mbOk], 0);
 end;

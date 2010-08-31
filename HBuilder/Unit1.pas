@@ -312,9 +312,6 @@ type
     procedure UpdateStatusBar;
     procedure WriteSmartPublishingCRCs;
     procedure ReadSmartPublishingCRCs;
-    procedure MyBeforeDrawItemEvent(Sender: TObject; Canvas: TCanvas; const Rect: TRect; Flags: Integer;
-      Enabled: Boolean; Bitmap: TBitmap; const Text: WideString; Length: Integer; Color: TColor;
-    var DefaultDraw: Boolean);
     procedure MyDrawTabEvent(Sender, Source: TObject; Canvas: TCanvas; Index, HorizonalPadding,
       VerticalPadding, Overlap: Integer; Selected: Boolean);
     procedure URLDropTarget1DragOver(Sender: TObject; var Accept: HRESULT);
@@ -973,13 +970,6 @@ SWP_NOACTIVATE or
 end;
 {$ENDIF}
 
-procedure TdhMainForm.MyBeforeDrawItemEvent(Sender: TObject; Canvas: TCanvas; const Rect: TRect; Flags: Integer;
-    Enabled: Boolean; Bitmap: TBitmap; const Text: WideString; Length: Integer; Color: TColor;
-    var DefaultDraw: Boolean);
-begin
-{ Canvas.Font.Style:=Canvas.Font.Style+[fsUnderline];
- DefaultDraw:=false;  }
-end;
 
 procedure TdhMainForm.MyDrawTabEvent(Sender, Source: TObject; Canvas: TCanvas; Index, HorizonalPadding,
     VerticalPadding, Overlap: Integer; Selected: Boolean);
@@ -1038,7 +1028,6 @@ begin
  Application.Style.DefaultStyle := dsQtSGI;
  Application.Style.DefaultStyle := dsPlatinum;
 {$ENDIF}
-// Application.Style.BeforeDrawItem := MyBeforeDrawItemEvent;
 // Application.Style.DrawTab := MyDrawTabEvent;
  mDelete.ShortCut:=4103;
  mGenerateHTML.ShortCut:=4148;

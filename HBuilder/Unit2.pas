@@ -1888,7 +1888,7 @@ procedure TTabs.UpdateSel;
 
 function HasCommon(ts:TTntTabSheet; c:Tclass; LookParent:boolean=false; menuitem:TMenuItem=nil; OnlyOne:boolean=false{; NotHide:boolean=false}{; AssertIsImage:boolean=false; IsImage:boolean=false}{; NotFrom:Tclass=nil}):boolean;
 var i:integer;
-    ws:WideString;
+    ws:TCaption;
 begin
  result:=(Selection.Count<>0);
  for i :=0 to Selection.Count-1  do
@@ -5286,7 +5286,7 @@ end;
 
 procedure TTabs.dhSelect1GetDisplayText(Sender: TObject;
   Item: TSelectOption; var DisplayText: WideString);
-begin      
+begin
  if (ActPn as TdhSelect).Items[Item.Index].Selected then
   DisplayText:=DisplayText+'<small> (selected)</small>';
 end;
@@ -5463,7 +5463,7 @@ end;
 
 procedure TTabs.UpdateFileDisplay;
 var f:TdhFile;
-    fileInfo:WideString;
+    fileInfo:DKString;
     fsize:integer;
     sfsize:String;
 begin               

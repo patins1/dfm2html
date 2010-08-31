@@ -2129,7 +2129,7 @@ end;
 
 
 function TPageContainer.CloseQuery: Boolean;
-var s:WideString;
+var s:DKString;
 begin
   Result:=Tabs.CommitChanges and inherited CloseQuery;
   if not Result then exit;

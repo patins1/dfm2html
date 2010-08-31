@@ -112,7 +112,7 @@
    <mreg listview >
       
    </mreg>
-   <macros> version= 4.4
+   <macros> version= 4.5
 appname = DFM2HTML v#version#
 progname = DFM2HTML</>
 </project>

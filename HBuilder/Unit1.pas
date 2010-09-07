@@ -23,7 +23,7 @@ uses
   MySiz, Unit3, uConversion,
   dhRadioButton, dhMemo, dhFileField,  MyToolButton,
   dhColorPicker,IniFiles,gr32, uOptions, menuhelper,
-  pngimage, Contnrs,hEdit,hComboBox,hMemo, UIConstants,DKLang, OpenSave,AColorPickerAX_TLB,dhStrUtils,WideStrUtils,uMetaWriter,dhStyles,dhGraphicFormats,dhColorUtils,shlobj;
+  pngimage, Contnrs,hEdit,hComboBox,hMemo,hSynMemo, UIConstants,DKLang, OpenSave,AColorPickerAX_TLB,dhStrUtils,WideStrUtils,uMetaWriter,dhStyles,dhGraphicFormats,dhColorUtils,shlobj;
 
 //const WM_PUSHUP=WM_USER+33;
 
@@ -1363,7 +1363,7 @@ end;
 
 procedure TdhMainForm.mDonateClick(Sender: TObject);
 begin
-  Browse('https://www.paypal.com/cgi-bin/websc?cmd=_s-xclick&hosted_button_id=8714394',{'iexplore'}FuncSettings.FViewer,false);
+  Browse('http://www.dfm2html.com/launch/donate.html?langid='+inttostr(_LANGID),{'iexplore'}FuncSettings.FViewer,false);
 end;
 
 procedure TdhMainForm.mCutClick(Sender: TObject);
@@ -2245,7 +2245,7 @@ GetClassName  (h,@s[1],200);
 }
  c:=ExtractActiveControl;
  //if (Tabs.ActiveEditControl<>nil) and not (Screen.ActiveForm is TPageContainer) then
- if ((c is TMySpinEdit) or (c is ThEdit) or (c is ThComboBox) or (c is ThMemo)) and not (c.Owner is TPageContainer) then
+ if ((c is TMySpinEdit) or (c is ThEdit) or (c is ThComboBox) or (c is ThMemo) or (c is ThSynMemo)) and not (c.Owner is TPageContainer) then
  begin
   Result:=False;
   exit;
@@ -2259,7 +2259,7 @@ GetClassName  (h,@s[1],200);
  end;                                  *)
 
  Result:=inherited IsShortCut(Message);
-end;                 
+end;
 {$ENDIF}
 
 procedure TdhMainForm.mSelectAllClick(Sender: TObject);
@@ -2281,7 +2281,7 @@ end;
 
 procedure TdhMainForm.mHomepageClick(Sender: TObject);
 begin
-  Browse('http://www.dfm2html.'+GetTopLevelDomain+'/launch/',{'iexplore'}FuncSettings.FViewer,false);
+  Browse('http://www.dfm2html.'+GetTopLevelDomain+'/launch/index.html?langid='+inttostr(_LANGID),{'iexplore'}FuncSettings.FViewer,false);
 end;
 
 procedure OnHistory(Sender:TControl){(Page:TdhPage; Anchor:TControl)};
@@ -2657,7 +2657,7 @@ end;
 
 procedure TdhMainForm.mGetWebHostClick(Sender: TObject);
 begin
-   Browse('http://hosting.1und1.com/?kwk=33216',FuncSettings.FViewer,false);
+   Browse('http://www.dfm2html.com/launch/host.html?langid='+inttostr(_LANGID),FuncSettings.FViewer,false);
 end;
 
 procedure TdhMainForm.mSaveAsTemplateClick(Sender: TObject);
@@ -2876,7 +2876,7 @@ end;
 
 procedure TdhMainForm.mVisitForumClick(Sender: TObject);
 begin
- Browse('http://www.dfm2html.com/launch/forum.html',FuncSettings.FViewer,false);
+ Browse('http://www.dfm2html.com/launch/forum.html?langid='+inttostr(_LANGID),FuncSettings.FViewer,false);
 end;
 
 procedure TdhMainForm.DEBUG_mUnregisterClick(Sender: TObject);
@@ -3022,7 +3022,6 @@ begin
   Presets.Prepare(False);
   Presets.UpdateLanguage;
  end;
- mGetWebHost.Visible:=_LANGID=LANGID_GERMAN;
 end;
 
 procedure TdhMainForm.UpdateOtherConstants;

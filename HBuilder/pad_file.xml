@@ -36,7 +36,7 @@
 		<Program_Name>DFM2HTML</Program_Name>
 		<Program_Version>4.5</Program_Version>
 		<Program_Type>Freeware</Program_Type>
-		<Program_Release_Status>Minor Update</Program_Release_Status>
+		<Program_Release_Status>Major Update</Program_Release_Status>
 		<Program_Category_Class>Web Development::HTML Tools</Program_Category_Class>
 		<Program_Release_Year>2010</Program_Release_Year>
 		<Program_Release_Month>08</Program_Release_Month>
@@ -59,8 +59,8 @@
 			<Filename_Generic>dfm2html.exe</Filename_Generic>
 			<Filename_Versioned>dfm2v1_3.exe</Filename_Versioned>
 			<Filename_Previous>dfm2v1_3.exe</Filename_Previous>
-			<File_Size_Bytes>3812261</File_Size_Bytes>
-			<File_Size_K>3722</File_Size_K>
+			<File_Size_Bytes>3813128</File_Size_Bytes>
+			<File_Size_K>3723</File_Size_K>
 			<File_Size_MB>3.64</File_Size_MB>
 		</File_Info>
 		<Expire_Info>

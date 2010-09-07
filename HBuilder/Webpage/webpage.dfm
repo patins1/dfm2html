@@ -5,7 +5,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1
   VertScrollBar.Tracking = True
   Anchors = [akLeft, akTop, akRight, akBottom]
   Caption = 'webpage.dfm'
-  ClientHeight = 526
+  ClientHeight = 501
   ClientWidth = 1280
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clBlack
@@ -45,7 +45,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1
     object Panel4: TdhPanel
       Top = 36
       Width = 758
-      Height = 544
+      Height = 504
       Style.Border.Width = 1
       Style.Border.Color = 15461355
       Style.Border.Style = cbsSolid
@@ -79,7 +79,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1
         Top = 88
         Width = 24
         Height = 24
-        ActivePage = Page1
+        ActivePage = update
         FixedHeight = False
         object Page1: TdhPage
           Left = 192
@@ -282,6 +282,23 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1
               'ype="image" src="https://www.paypal.com/en_US/i/btn/btn_donate_L' +
               'G.gif" border="0" name="submit" alt="PayPal - The safer, easier ' +
               'way to pay online!">'#13#10'</form>'#13#10
+          end
+          object Link60: TdhLink
+            Left = 160
+            Top = 344
+            Width = 198
+            Height = 46
+            Text = 'Excellent programmer required?<br>'#10'Contact me!'
+            Style.Border.Width = 2
+            Style.Border.Color = Blue
+            Style.Border.Style = cbsSolid
+            Style.Padding = 5
+            Style.TextAlign = ctaCenter
+            Style.BorderRadius.All = '12'
+            AutoSizeXY = asXY
+            PreferDownStyles = True
+            Options = [loDownIfMenu, loDownIfMouseDown, loDownIfURL]
+            LinkPage = feedback
           end
         end
         object register: TdhPage
@@ -1533,13 +1550,13 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1
           object Label53: TdhLabel
             Left = 24
             Top = 16
-            Width = 290
+            Width = 282
             Height = 64
             Text = 
               '<en><code>New in version 4.5:'#10'* Syntax highlighting for HTML cod' +
-              'es'#10'* Added Forum menu item'#10#10'</code></en><de><code>Neu in version' +
-              ' 4.5:'#10'* Syntaxhervorhebung f'#252'r HTML-Code   '#10'* Forum-Men'#252'punkt hi' +
-              'nzugef'#252'gt'#10'</code></de>'
+              'e'#10'* Added Forum menu item'#10#10'</code></en><de><code>Neu in version ' +
+              '4.5:'#10'* Syntaxhervorhebung f'#252'r HTML-Code   '#10'* Forum-Men'#252'punkt hin' +
+              'zugef'#252'gt'#10'</code></de>'
             Style.PaddingRight = 2
             Style.WhiteSpace = cwsPre
             Style.Color = Red
@@ -2189,7 +2206,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1
             Top = 16
             Width = 224
             Height = 22
-            Text = 'Download DFM2HTML 4.1'
+            Text = 'Download DFM2HTML 4.5'
             Style.FontSize = '19'
             AutoSizeXY = asXY
             PreferDownStyles = True
@@ -2198,20 +2215,14 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1
           end
           object Label27: TdhLabel
             Left = 24
-            Top = 72
-            Width = 354
-            Height = 160
+            Top = 80
+            Width = 282
+            Height = 64
             Text = 
-              '<en><code>New in version 4.1:'#10'* Afrikaans language is added '#10'  (' +
-              'thanks to J.Delport!)'#10'* Use madExcept for bug reporting'#10'  (writt' +
-              'en by Mathias Rauen)'#10'* Empty FTP password now means,'#10'  that the ' +
-              'password is queried from the user'#10'  each time the site is publis' +
-              'hed'#10'* Updated internal libraries, bug fixes'#10#10'</code></en><de><co' +
-              'de>Neu in version 4.1:'#10'* Afrikaans Sprache hinzugef'#252'gt'#10'  (dank J' +
-              '.Delport!)'#10'* Bug-reporting mittels madExcept'#10'  (von Mathias Raue' +
-              'n)'#10'* Leeres FTP-Passwort bedeutet, dass'#10'  bei jedem Hochladen ei' +
-              'n FTP-Passwort'#10'  vom Benutzer abgefragt wird'#10'* Interne Libraries' +
-              ' geupdatet, Bugfixes'#10#10'</code></de>'
+              '<en><code>New in version 4.5:'#10'* Syntax highlighting for HTML cod' +
+              'e'#10'* Added Forum menu item'#10#10'</code></en><de><code>Neu in version ' +
+              '4.5:'#10'* Syntaxhervorhebung f'#252'r HTML-Code   '#10'* Forum-Men'#252'punkt hin' +
+              'zugef'#252'gt'#10'</code></de>'
             Style.PaddingRight = 2
             Style.WhiteSpace = cwsPre
             Style.Color = Red

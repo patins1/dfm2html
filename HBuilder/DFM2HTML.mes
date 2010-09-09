@@ -54,7 +54,7 @@ OkBtnText=&OK
 DetailsBtnText=&Details
 PleaseWaitTitle=Information
 PleaseWaitText=Please wait a moment...
-MailSubject=DFM2HTML v4.5 bug report
+MailSubject=DFM2HTML v4.5.1 bug report
 MailBody=please find the bug report attached
 SendBoxTitle=Sending bug report...
 PrepareAttachMsg=Preparing attachments...
@@ -115,7 +115,7 @@ FormatDisassembly=0
 LimitDisassembly=5
 EnabledPlugins=modules|processes|hardware
 [Filters]
-Filter1ExceptionClasses=EDBEditError
+Filter1ExceptionClasses=EDBEditError, EFOpenError
 Filter1DontCreateBugReport=1
 Filter1DontCreateScreenshot=1
 Filter1DontSuspendThreads=1

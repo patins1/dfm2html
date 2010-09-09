@@ -2305,7 +2305,8 @@ end;
 procedure PostAddCompo(pn:TdhCustomPanel);
 begin
  if csDesigning in pn.ComponentState then
- (dhMainForm.Act as TPageContainer).MySiz.ObjectAdded(pn);
+ if dhMainForm.Act<>nil then
+  dhMainForm.Act.MySiz.ObjectAdded(pn);
  //dhMainForm.UpdateCommands(true,true);
 end;
 

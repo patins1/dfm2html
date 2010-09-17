@@ -955,6 +955,7 @@ var c:TControl;
 begin
   DecPt(ARect.TopLeft,GetCBoundClient(p).TopLeft);
   c:=nil;
+  try
   if gActDown=dhMainForm.compText then
   begin
    c:=TdhLabel.Create(Owner);
@@ -1083,6 +1084,8 @@ begin
    c.Name:=_GetUniqueName(c,'Page');
   end;
 
+  finally
+
   //SetDesignMode(c);
   if (ARect.Right<=10) and (ARect.Bottom<=10) then
    c.SetBounds(ARect.Left,ARect.Top,c.Width,c.Height) else
@@ -1107,6 +1110,8 @@ begin
   (gActDown as TToolButton).Down:=false;
   gActDown:=nil;
   ObjectAdded(c);
+
+  end;
   //bringtofront;
 end;
 

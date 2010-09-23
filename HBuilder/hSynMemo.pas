@@ -6,7 +6,7 @@ uses
   {$IFDEF CLX}
   QControls, QGraphics, Qt,
   {$ELSE}
-  Controls, Windows, Messages,
+  Controls, Windows, Messages, clipbrd,
   {$ENDIF}
   SysUtils, Classes, hComboBox, SynMemo, SynEdit;
 
@@ -30,6 +30,9 @@ type
     property StoredText:WideString read FStoredValue write SetStoredText;
     function Commit:boolean;
     procedure Abort;
+    procedure Copy;
+    procedure Delete;
+    procedure Paste;
   published
     { Published declarations }
     property ChangeReason:String read FChangeReason write FChangeReason;
@@ -118,6 +121,21 @@ begin
  if not FModified then exit;
  SetStoredText(FStoredValue);
  Select(lcAbort);
+end;
+
+procedure ThSynMemo.Copy;
+begin
+ Clipboard.AsText:=SelText;
+end;
+
+procedure ThSynMemo.Delete;
+begin
+ SelText:='';
+end;
+
+procedure ThSynMemo.Paste;
+begin
+ SelText:=Clipboard.AsText;
 end;
 
 end.

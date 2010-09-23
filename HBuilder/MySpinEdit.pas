@@ -6,7 +6,7 @@ uses
   {$IFDEF CLX}
   QControls, QGraphics, QStdCtrls, Qt, QComCtrls,
   {$ELSE}
-  Controls, Windows, Messages, StdCtrls, Spin,
+  Controls, Windows, Messages, StdCtrls, Spin, clipbrd,
   {$ENDIF}
   SysUtils, Classes,hComboBox,MyTrackBar, dhPanel,dhStrUtils;
 
@@ -48,6 +48,9 @@ type
     procedure Abort;
     property StoredValue:Integer read FStoredValue write SetStoredValue;
     procedure SetDetailedStoredValue(IsCleared:boolean; DisplayValue: Integer);
+    procedure Copy;
+    procedure Delete;
+    procedure Paste;
   published
     { Published declarations }
     property Alignment: TAlignment read FAlignment write SetAlignment default taLeftJustify;
@@ -305,12 +308,28 @@ procedure TMySpinEdit.Abort;
 begin
  if not FModified and InvalidValue then
  begin
-  SetDetailedStoredValue(FStoredCleared,FStoredValue); //just restore Text to originally valid value 
+  SetDetailedStoredValue(FStoredCleared,FStoredValue); //just restore Text to originally valid value
   exit;
  end;
  if not FModified then exit;
  SetDetailedStoredValue(FStoredCleared,FStoredValue);
  Select(lcAbort);
 end;
+
+procedure TMySpinEdit.Copy;
+begin
+ Clipboard.AsText:=SelText;
+end;
+
+procedure TMySpinEdit.Delete;
+begin
+ SelText:='';
+end;
+
+procedure TMySpinEdit.Paste;
+begin
+ SelText:=Clipboard.AsText;
+end;
+
 
 end.

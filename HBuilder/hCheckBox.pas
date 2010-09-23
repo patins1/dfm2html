@@ -29,11 +29,14 @@ type
   protected
     { Protected declarations }
   public
-    { Public declarations }                            
+    { Public declarations }
     procedure SetDetailedStoredValue(IsCleared:boolean; const Value: boolean);
     property StoredValue:boolean write SetStoredValue;
+    procedure Copy;
+    procedure Delete;
+    procedure Paste;
   published
-    { Published declarations }  
+    { Published declarations }
     property ValueChange:TMyValueChange read FValueChange write FValueChange;
     property ChangeReason:String read FChangeReason write FChangeReason;
   end;
@@ -129,7 +132,7 @@ begin
 end;
 
 procedure ThCheckBox.Abort;
-begin                   
+begin
  if not FModified then exit;
  SetDetailedStoredValue(FStoredCleared,FStoredValue);
  Select(lcAbort);
@@ -140,13 +143,25 @@ procedure ThCheckBox.SetDetailedStoredValue(IsCleared: boolean;
 begin
   if not InEvent then
   begin
-   FStoredValue := Value;   
+   FStoredValue := Value;
    FStoredCleared:=IsCleared;
    FModified:=false;
   end;
   Updating:=true;
   Checked:=Value;
   Updating:=false;
+end;
+
+procedure ThCheckBox.Copy;
+begin
+end;
+
+procedure ThCheckBox.Delete;
+begin
+end;
+
+procedure ThCheckBox.Paste;
+begin
 end;
 
 end.

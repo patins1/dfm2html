@@ -2,11 +2,11 @@ unit hComboBox;
 
 interface
 
-uses        
+uses
   {$IFDEF CLX}
   QForms, QControls, QGraphics, QStdCtrls, QMask, Qt, QDialogs, QTntStdCtrls,
   {$ELSE}
-  Forms, Controls, Windows, Messages, Graphics, StdCtrls, ShellAPI, Mask, Dialogs, UnicodeCtrls,
+  Forms, Controls, Windows, Messages, Graphics, StdCtrls, ShellAPI, Mask, Dialogs, UnicodeCtrls, clipbrd,
   {$ENDIF}
   SysUtils, Classes,UIConstants,dhPanel,dhStrUtils;
 
@@ -14,6 +14,9 @@ type IhCommitable=interface
  ['{12C954E2-1883-46E2-A923-67DE1CC22DC8}']
  function Commit:boolean;
  procedure Abort;
+ procedure Copy;
+ procedure Delete;
+ procedure Paste;
 end;
 
 type
@@ -59,6 +62,9 @@ type
     property StoredItemIndex:integer write SetStoredItemIndex;
     function Commit:boolean;
     procedure Abort;
+    procedure Copy;
+    procedure Delete;
+    procedure Paste;
   published
     { Published declarations }
     property ValueChange:TMyValueChange read FValueChange write FValueChange;
@@ -280,6 +286,21 @@ begin
  if Value<>-1 then
   SetDetailedStoredValue(IsCleared,Items[Value]) else //Items[-1] not allowed in CLX
   SetDetailedStoredValue(IsCleared,'');
+end;
+
+procedure ThComboBox.Copy;
+begin
+ Clipboard.AsText:=SelText;
+end;
+
+procedure ThComboBox.Delete;
+begin
+ SelText:='';
+end;
+
+procedure ThComboBox.Paste;
+begin
+ SelText:=Clipboard.AsText;
 end;
 
 end.

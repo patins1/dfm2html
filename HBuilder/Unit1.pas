@@ -458,7 +458,7 @@ begin
 end;
 
 function GetFormatSettings:TFormatSettings;
-begin           
+begin
    Result.ShortDateFormat:='YYYY-MM-DD';
    Result.LongDateFormat:='YYYY-MM-DD';
    Result.DateSeparator:='-';
@@ -472,6 +472,20 @@ begin
  if FileExists(Result) then
   Exit;
  Result:=StartsWith+'.dfm';
+end;
+
+function ActiveEditControl: IhCommitable;
+var c:TControl;
+begin
+ c:=ExtractActiveControl;
+ //if (Tabs.ActiveEditControl<>nil) and not (Screen.ActiveForm is TPageContainer) then
+ if ((c is TMySpinEdit) or (c is ThEdit) or (c is ThComboBox) or (c is ThMemo) or (c is ThSynMemo)) and not (c.Owner is TPageContainer) then
+ if Supports(c,IhCommitable) then
+ begin
+  Result:=(TControl(c) as IhCommitable);
+  exit;
+ end;
+ Result:=nil;
 end;
 
 procedure TdhMainForm.ReadConfig;
@@ -1016,7 +1030,7 @@ begin
  with TApplicationEvents.Create(Owner) do
  begin
   OnMessage := ApplicationEvents1Message;
- end;  
+ end;
  with TURLDropTarget.Create(Self) do
  begin
   OnDragOver:=URLDropTarget1DragOver;
@@ -1184,13 +1198,21 @@ end;
 
 
 procedure TdhMainForm.mCopyClick(Sender: TObject);
+var c:IhCommitable;
 begin
- Act.MySiz.CopyComponents(false);
+ c:=ActiveEditControl;
+ if c<>nil then
+  c.Copy else
+  Act.MySiz.CopyComponents(false);
 end;
 
 procedure TdhMainForm.mPasteClick(Sender: TObject);
-begin    
- Act.PasteComponents(nil);
+var c:IhCommitable;
+begin
+ c:=ActiveEditControl;
+ if c<>nil then
+  c.Paste else
+  Act.PasteComponents(nil);
 end;
 
 
@@ -1357,8 +1379,12 @@ begin
 end;
  }
 procedure TdhMainForm.mDeleteClick(Sender: TObject);
+var c:IhCommitable;
 begin
- Act.MySiz.DeleteComponents;
+ c:=ActiveEditControl;
+ if c<>nil then
+  c.Delete else
+  Act.MySiz.DeleteComponents;
 end;
 
 procedure TdhMainForm.mDonateClick(Sender: TObject);
@@ -1372,6 +1398,7 @@ procedure TdhMainForm.mCutClick(Sender: TObject);
     i:integer;
     x,y:integer;
     gif:TGifImage;  }
+var c:IhCommitable;
 begin
 
 //cbName.Clear;
@@ -1414,9 +1441,16 @@ exit;             }
 // png.CreateAlpha;
 // png.Header.Height:=png.Header.Height;
 // png.Filters
-
- mCopyClick(Sender);
- mDeleteClick(Sender);
+ c:=ActiveEditControl;
+ if c<>nil then
+ begin
+  c.Copy;
+  c.Delete;
+ end else
+ begin
+  mCopyClick(Sender);
+  mDeleteClick(Sender);
+ end;
 end;
 
 procedure TdhMainForm.Button3Click(Sender: TObject);
@@ -2235,29 +2269,15 @@ end;
 {$IFNDEF CLX}
 function TdhMainForm.IsShortCut(var Message: TWMKey): Boolean;
 var c:TControl;
-//    h:HWND;
 begin
  if (Message.CharCode=VK_DELETE) or (Message.CharCode=ord('C')) or (Message.CharCode=ord('X')) or (Message.CharCode=ord('V')) then
  begin
-{h:= GetFocus;
-GetClassName  (h,@s[1],200);
-GetClassName  (h,@s[1],200);
-}
- c:=ExtractActiveControl;
- //if (Tabs.ActiveEditControl<>nil) and not (Screen.ActiveForm is TPageContainer) then
- if ((c is TMySpinEdit) or (c is ThEdit) or (c is ThComboBox) or (c is ThMemo) or (c is ThSynMemo)) and not (c.Owner is TPageContainer) then
+ if ActiveEditControl<>nil then
  begin
   Result:=False;
   exit;
  end;
  end;
-
-(* if {(ActiveControl is TCustomEdit) or (ActiveControl is TCustomComboBox) or }(Screen.ActiveForm<>Self) and not (Screen.ActiveForm is TPageContainer) then
- begin
-  Result:=False;
-  exit;
- end;                                  *)
-
  Result:=inherited IsShortCut(Message);
 end;
 {$ENDIF}
@@ -2652,8 +2672,12 @@ begin
 end;
 
 procedure TdhMainForm.mFullCopyClick(Sender: TObject);
+var c:IhCommitable;
 begin
- Act.MySiz.CopyComponents(true);
+ c:=ActiveEditControl;
+ if c<>nil then
+  c.Copy else
+  Act.MySiz.CopyComponents(true);
 end;
 
 procedure TdhMainForm.mGetWebHostClick(Sender: TObject);

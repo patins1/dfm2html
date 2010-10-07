@@ -2272,7 +2272,7 @@ var c:TControl;
 begin
  if (Message.CharCode=VK_DELETE) or (Message.CharCode=ord('C')) or (Message.CharCode=ord('X')) or (Message.CharCode=ord('V')) then
  begin
- if ActiveEditControl<>nil then
+ if (ActiveEditControl<>nil) or (Screen.ActiveForm is TPublishLog) then
  begin
   Result:=False;
   exit;

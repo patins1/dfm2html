@@ -1,6 +1,6 @@
                  DFM2HTML
                  =========================================
-                                Version 4.5.1
+                                Version 4.5.2
 
 
 DFM2HTML is a perfect easy to use HTML editor supporting WYSIWYG.

@@ -7430,7 +7430,7 @@ begin
               Caret := CaretXY;
               if Command = ecLineBreak then
               begin
-                if SpaceCount2 > 0 then
+                if SpaceCount2 >={custom code, instead of >} 0 then
                 begin
                   SpaceBuffer := Copy(Lines[BackCounter], 1, SpaceCount2);
                   InternalCaretXY := BufferCoord(1, CaretY +1);

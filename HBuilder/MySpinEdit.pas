@@ -13,7 +13,7 @@ uses
 type
   TMySpinEdit = class(TSpinEdit,IhCommitable)
   private
-    { Private declarations }  
+    { Private declarations }
     FAlignment: TAlignment;
     FOnChange: TNotifyEvent;
     FStoredValue:Integer;
@@ -95,7 +95,7 @@ begin
   begin
     FAlignment:=Value;
 {$IFNDEF CLX}
-    RecreateWnd;         
+    RecreateWnd;
 {$ENDIF}
   end;
 end;
@@ -154,13 +154,13 @@ end;
 
 procedure TMySpinEdit.Change{$IFDEF CLX}(AValue: Integer){$ENDIF};
 begin
+ if InvalidValue then exit;
  inherited;
  if (Parent=nil) or (csLoading in ComponentState) or (csLoading in Parent.ComponentState{for CLX}) or not Visible then exit;
 {$IFDEF CLX}
 // if Showing then
  if Assigned(FOnChange) then FOnChange(Self);
 {$ENDIF}
- if InvalidValue then exit;
  UpdateTrackBar;
  if Updating then exit;
  FModified:=true;
@@ -221,11 +221,13 @@ begin
     on E:WException do
     begin
      ShowInputError(E.Message);
+     SetFocus;
      Result:=false;
     end;
     on E:Exception do
     begin
      ShowInputError(E.Message);
+     SetFocus;
      Result:=false;
     end;
    end;
@@ -270,7 +272,7 @@ const
 {$ENDIF}
 
 procedure TMySpinEdit.KeyPress(var Key: Char);
-begin      
+begin
  if Ord(Key)=VK_RETURN then
  begin
   Key:=#0;

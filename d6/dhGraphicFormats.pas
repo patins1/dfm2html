@@ -408,7 +408,6 @@ var P: PColor32;
     bp:pngimage.pByteArray;
     x,y:integer;
     TransparentColor:TColor;
-    sl:pRGBLine;
 begin
   result:=TdhBitmap32.Create;
   case png.TransparencyMode of
@@ -419,11 +418,9 @@ begin
    for Y:=0 to png.Height-1 do
    begin
     bp:=png.AlphaScanline[Y];
-    sl:=pRGBLine(png.Scanline[Y]);
     for X:=0 to png.Width-1 do
     begin
-     with sl[X] do
-      P^:=Color32(rgbtRed,rgbtGreen,rgbtBlue,bp^[X]);
+     P^:=SetAlpha(Color32(png.Pixels[X,Y]),bp^[X]);
      inc(P);
     end;
    end;

@@ -1826,6 +1826,10 @@ begin
  begin
   result:=Item1.Left-Item2.Left;
  end;
+ if result=0 then
+ begin
+  result:=GetChildPosition(Item1)-GetChildPosition(Item2);
+ end;
 end;
 
                        

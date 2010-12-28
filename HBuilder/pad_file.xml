@@ -34,7 +34,7 @@
 	</Company_Info>
 	<Program_Info>
 		<Program_Name>DFM2HTML</Program_Name>
-		<Program_Version>4.5.2</Program_Version>
+		<Program_Version>4.5.3</Program_Version>
 		<Program_Type>Freeware</Program_Type>
 		<Program_Release_Status>Minor Update</Program_Release_Status>
 		<Program_Category_Class>Web Development::HTML Tools</Program_Category_Class>
@@ -46,7 +46,7 @@
 		<Program_Cost_Dollars>0.00</Program_Cost_Dollars>
 		<Program_Categories />
 		<Program_Specific_Category>Development Tools</Program_Specific_Category>
-		<Program_Change_Info>Menu items Copy/Paste/Delete can now be used in the text editors</Program_Change_Info>
+		<Program_Change_Info>Added context menu to new text editor</Program_Change_Info>
 		<Program_Language>German,English,French,Italian,Portuguese,Slovak,Spanish</Program_Language>
 		<Program_OS_Support>Win2000,Win7 x32,WinVista,WinVista x64,WinXP</Program_OS_Support>
 		<Program_Install_Support>Install and Uninstall</Program_Install_Support>
@@ -59,7 +59,7 @@
 			<Filename_Generic>dfm2html.exe</Filename_Generic>
 			<Filename_Versioned>dfm2v1_3.exe</Filename_Versioned>
 			<Filename_Previous>dfm2v1_3.exe</Filename_Previous>
-			<File_Size_Bytes>3813466</File_Size_Bytes>
+			<File_Size_Bytes>3814370</File_Size_Bytes>
 			<File_Size_K>3724</File_Size_K>
 			<File_Size_MB>3.64</File_Size_MB>
 		</File_Info>

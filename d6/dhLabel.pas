@@ -2306,7 +2306,9 @@ begin
    inc(y,ActLine.offs.Top);
    ActLine.y:=y;
    ActLine.RealOffsX:=0;
-   kuchen:=ActLine.lineavail-ActLine.LineWidth;
+   if ActLine.lineavail=maxint then
+    kuchen:=ActLine.lineavail else
+    kuchen:=ActLine.lineavail-ActLine.LineWidth;
    if _TextAlign=ctaRight then
     ActLine.RealOffsX:=max(kuchen,0) else
    if _TextAlign=ctaCenter then

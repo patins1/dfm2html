@@ -23,7 +23,7 @@ uses
   MySiz, Unit3, uConversion,
   dhRadioButton, dhMemo, dhFileField,  MyToolButton,
   dhColorPicker,IniFiles,gr32, uOptions, menuhelper,
-  pngimage, Contnrs,hEdit,hComboBox,hMemo,hSynMemo, UIConstants,DKLang, OpenSave,AColorPickerAX_TLB,dhStrUtils,WideStrUtils,uMetaWriter,dhStyles,dhGraphicFormats,dhColorUtils,shlobj;
+  pngimage, Contnrs,hEdit,hComboBox,hMemo,hSynMemo,SynMemo, UIConstants,DKLang, OpenSave,AColorPickerAX_TLB,dhStrUtils,WideStrUtils,uMetaWriter,dhStyles,dhGraphicFormats,dhColorUtils,shlobj;
 
 //const WM_PUSHUP=WM_USER+33;
 
@@ -191,6 +191,15 @@ type
     mResourceExplorer: TTntMenuItem;
     mDonate: TMenuItem;
     mGetWebHost: TMenuItem;
+    mEditorPopupMenu: TPopupMenu;
+    IGNORE_mEditorCut: TMenuItem;
+    IGNORE_mEditorCopy: TMenuItem;
+    IGNORE_mEditorPaste: TMenuItem;
+    IGNORE_mEditorDelete: TMenuItem;
+    IGNORE_mEditorSelectAll: TMenuItem;
+    N17: TMenuItem;
+    IGNORE_mEditorUndo: TMenuItem;
+    N18: TMenuItem;
     procedure mResourceExplorerClick(Sender: TObject);
     procedure ColorPreviewTimerTimer(Sender: TObject);
     procedure mObjectExplorerClick(Sender: TObject);
@@ -294,6 +303,12 @@ type
     procedure MenuTutorial1Click(Sender: TObject);
     procedure mDonateClick(Sender: TObject);
     procedure mGetWebHostClick(Sender: TObject);
+    procedure IGNORE_mEditorUndoClick(Sender: TObject);
+    procedure IGNORE_mEditorCutClick(Sender: TObject);
+    procedure IGNORE_mEditorCopyClick(Sender: TObject);
+    procedure IGNORE_mEditorPasteClick(Sender: TObject);
+    procedure IGNORE_mEditorDeleteClick(Sender: TObject);
+    procedure IGNORE_mEditorSelectAllClick(Sender: TObject);
   private
     LastFile:TPathName;
     FAct:TPageContainer;
@@ -1367,7 +1382,7 @@ begin
      TPageContainer(cw.Owner).MySiz.CheckBlacks(cw);
     end;
   End;*)
-end;         
+end;
 {$ENDIF}
 
 
@@ -1390,6 +1405,42 @@ end;
 procedure TdhMainForm.mDonateClick(Sender: TObject);
 begin
   Browse('http://www.dfm2html.com/launch/donate.html?langid='+inttostr(_LANGID),{'iexplore'}FuncSettings.FViewer,false);
+end;
+
+procedure TdhMainForm.IGNORE_mEditorCopyClick(Sender: TObject);
+begin
+ with ExtractActiveControl as TSynMemo do
+ Clipboard.AsText:=SelText;
+end;
+
+procedure TdhMainForm.IGNORE_mEditorCutClick(Sender: TObject);
+begin
+ IGNORE_mEditorCopyClick(Sender);
+ IGNORE_mEditorDeleteClick(Sender);
+end;
+
+procedure TdhMainForm.IGNORE_mEditorDeleteClick(Sender: TObject);
+begin
+ with ExtractActiveControl as TSynMemo do
+ SelText:='';
+end;
+
+procedure TdhMainForm.IGNORE_mEditorPasteClick(Sender: TObject);
+begin
+ with ExtractActiveControl as TSynMemo do
+ SelText:=Clipboard.AsText;
+end;
+
+procedure TdhMainForm.IGNORE_mEditorSelectAllClick(Sender: TObject);
+begin
+ with ExtractActiveControl as TSynMemo do
+ SelectAll;
+end;
+
+procedure TdhMainForm.IGNORE_mEditorUndoClick(Sender: TObject);
+begin
+ with ExtractActiveControl as TSynMemo do
+ Undo;
 end;
 
 procedure TdhMainForm.mCutClick(Sender: TObject);
@@ -1539,8 +1590,12 @@ begin
 end;
 
 procedure TdhMainForm.mUndoClick(Sender: TObject);
+var c:IhCommitable;
 begin
- Act.Undo;
+ c:=ActiveEditControl;
+ if c<>nil then
+  c.Undo else
+  Act.Undo;
 end;
 
 procedure TdhMainForm.mRedoClick(Sender: TObject);
@@ -2283,8 +2338,12 @@ end;
 {$ENDIF}
 
 procedure TdhMainForm.mSelectAllClick(Sender: TObject);
+var c:IhCommitable;
 begin
- Act.MySiz.Select(Sender=mSelectAll,Sender=mSelectAllBelow);
+ c:=ActiveEditControl;
+ if c<>nil then
+  c.SelectAll else
+  Act.MySiz.Select(Sender=mSelectAll,Sender=mSelectAllBelow);
 end;
 
 procedure TdhMainForm.mTutorialClick(Sender: TObject);
@@ -2441,7 +2500,7 @@ end;
 
 procedure AfterSaveBin;
 var age:TDateTime;
-begin                 
+begin
  if FileAge(AfterSaveBinI.FileName,age) then
   AfterSaveBinI.FileAge:=age else
   AfterSaveBinI.FileAge:=-1;
@@ -2878,7 +2937,7 @@ begin
    showmessage('Thank you for registering DFM2HTML');
    WriteConfig;
   end else
-  begin              
+  begin
    showmessage('Wrong password');
   end;
  end;  }
@@ -3054,6 +3113,12 @@ begin
  QUOTEINVALIDVALUE_STR:=DKLangConstW(QUOTEINVALIDVALUE);
  REFOBJECT_STR:=DKLangConstW(REFOBJECT);
  INVALIDMENUNESTING_STR:=DKLangConstW(INVALIDMENUNESTING);
+ IGNORE_mEditorUndo.Caption:=mUndo.Caption;
+ IGNORE_mEditorCut.Caption:=mCut.Caption;
+ IGNORE_mEditorCopy.Caption:=mCopy.Caption;
+ IGNORE_mEditorPaste.Caption:=mPaste.Caption;
+ IGNORE_mEditorDelete.Caption:=mDelete.Caption;
+ IGNORE_mEditorSelectAll.Caption:=mSelectAll.Caption;
 end;
 
 procedure TdhMainForm.UpdateStatusBar;

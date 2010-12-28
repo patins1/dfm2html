@@ -2894,6 +2894,10 @@ object Tabs: TTabs
         Caption = 'Text'
         ImageIndex = -1
         OnShow = AnchorTextShow
+        ExplicitLeft = 0
+        ExplicitTop = 0
+        ExplicitWidth = 0
+        ExplicitHeight = 0
         object Label31: TdhLabel
           Left = 24
           Top = 16
@@ -2912,6 +2916,7 @@ object Tabs: TTabs
           Font.Height = -13
           Font.Name = 'Courier New'
           Font.Style = []
+          PopupMenu = dhMainForm.mEditorPopupMenu
           TabOrder = 1
           Gutter.Font.Charset = DEFAULT_CHARSET
           Gutter.Font.Color = clWindowText
@@ -3981,10 +3986,6 @@ object Tabs: TTabs
         Caption = 'HTML'
         ImageIndex = -1
         OnShow = AnchorPureHTMLShow
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
         object Label32: TdhLabel
           Left = 8
           Top = 16
@@ -4003,6 +4004,7 @@ object Tabs: TTabs
           Font.Height = -13
           Font.Name = 'Courier New'
           Font.Style = []
+          PopupMenu = dhMainForm.mEditorPopupMenu
           TabOrder = 0
           Gutter.Font.Charset = DEFAULT_CHARSET
           Gutter.Font.Color = clWindowText

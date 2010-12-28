@@ -17,6 +17,8 @@ type IhCommitable=interface
  procedure Copy;
  procedure Delete;
  procedure Paste;
+ procedure SelectAll;
+ procedure Undo;
 end;
 
 type
@@ -65,6 +67,7 @@ type
     procedure Copy;
     procedure Delete;
     procedure Paste;
+    procedure Undo;
   published
     { Published declarations }
     property ValueChange:TMyValueChange read FValueChange write FValueChange;
@@ -301,6 +304,11 @@ end;
 procedure ThComboBox.Paste;
 begin
  SelText:=Clipboard.AsText;
+end;
+
+procedure ThComboBox.Undo;
+begin
+  SendMessage(FEditHandle, WM_UNDO, 0, 0);
 end;
 
 end.

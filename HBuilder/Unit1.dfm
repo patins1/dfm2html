@@ -3696,7 +3696,7 @@ object dhMainForm: TdhMainForm
     Left = 464
     Top = 152
     LangData = {
-      0A0064684D61696E466F726D00019C0000000800646850616E656C3100000800
+      0A0064684D61696E466F726D0001A50000000800646850616E656C3100000800
       546F6F6C4261723100000F00636F6D7050616765436F6E74726F6C0101000000
       03000000040048696E74000800636F6D70506167650101000000050000000400
       48696E74000900636F6D7050616E656C010100000007000000040048696E7400
@@ -3814,7 +3814,12 @@ object dhMainForm: TdhMainForm
       000011006D5265736F757263654578706C6F72657201010000008B0000000700
       43617074696F6E0007006D446F6E61746501010000008C000000070043617074
       696F6E000B006D476574576562486F737401010000008D000000070043617074
-      696F6E00}
+      696F6E0010006D456469746F72506F7075704D656E750000110049474E4F5245
+      5F6D456469746F724375740000120049474E4F52455F6D456469746F72436F70
+      790000130049474E4F52455F6D456469746F7250617374650000140049474E4F
+      52455F6D456469746F7244656C6574650000170049474E4F52455F6D45646974
+      6F7253656C656374416C6C000003004E31370000120049474E4F52455F6D4564
+      69746F72556E646F000003004E31380000}
   end
   object GenerateTimer: TTimer
     Enabled = False
@@ -3834,5 +3839,39 @@ object dhMainForm: TdhMainForm
     OnTimer = ColorPreviewTimerTimer
     Left = 744
     Top = 208
+  end
+  object mEditorPopupMenu: TPopupMenu
+    Left = 216
+    Top = 128
+    object IGNORE_mEditorUndo: TMenuItem
+      Caption = 'Undo'
+      OnClick = IGNORE_mEditorUndoClick
+    end
+    object N18: TMenuItem
+      Caption = '-'
+    end
+    object IGNORE_mEditorCut: TMenuItem
+      Caption = 'Cut'
+      OnClick = IGNORE_mEditorCutClick
+    end
+    object IGNORE_mEditorCopy: TMenuItem
+      Caption = 'Copy'
+      OnClick = IGNORE_mEditorCopyClick
+    end
+    object IGNORE_mEditorPaste: TMenuItem
+      Caption = 'Paste'
+      OnClick = IGNORE_mEditorPasteClick
+    end
+    object IGNORE_mEditorDelete: TMenuItem
+      Caption = 'Delete'
+      OnClick = IGNORE_mEditorDeleteClick
+    end
+    object N17: TMenuItem
+      Caption = '-'
+    end
+    object IGNORE_mEditorSelectAll: TMenuItem
+      Caption = 'Select all'
+      OnClick = IGNORE_mEditorSelectAllClick
+    end
   end
 end

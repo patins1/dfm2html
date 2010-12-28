@@ -268,6 +268,7 @@ object PageWizard: TPageWizard
             Font.Height = -13
             Font.Name = 'Courier New'
             Font.Style = []
+            PopupMenu = dhMainForm.mEditorPopupMenu
             TabOrder = 0
             Gutter.Font.Charset = DEFAULT_CHARSET
             Gutter.Font.Color = clWindowText
@@ -291,6 +292,7 @@ object PageWizard: TPageWizard
             Font.Height = -13
             Font.Name = 'Courier New'
             Font.Style = []
+            PopupMenu = dhMainForm.mEditorPopupMenu
             TabOrder = 0
             Gutter.Font.Charset = DEFAULT_CHARSET
             Gutter.Font.Color = clWindowText
@@ -314,6 +316,7 @@ object PageWizard: TPageWizard
             Font.Height = -13
             Font.Name = 'Courier New'
             Font.Style = []
+            PopupMenu = dhMainForm.mEditorPopupMenu
             TabOrder = 0
             Gutter.Font.Charset = DEFAULT_CHARSET
             Gutter.Font.Color = clWindowText
@@ -338,6 +341,7 @@ object PageWizard: TPageWizard
             Font.Height = -13
             Font.Name = 'Courier New'
             Font.Style = []
+            PopupMenu = dhMainForm.mEditorPopupMenu
             TabOrder = 0
             Gutter.Font.Charset = DEFAULT_CHARSET
             Gutter.Font.Color = clWindowText

@@ -35,6 +35,8 @@ type
     procedure Copy;
     procedure Delete;
     procedure Paste;
+    procedure SelectAll;
+    procedure Undo;
   published
     { Published declarations }
     property ValueChange:TMyValueChange read FValueChange write FValueChange;
@@ -161,6 +163,14 @@ begin
 end;
 
 procedure ThCheckBox.Paste;
+begin
+end;
+
+procedure ThCheckBox.SelectAll;
+begin
+end;
+
+procedure ThCheckBox.Undo;
 begin
 end;
 

@@ -2843,6 +2843,7 @@ var
 begin
 
   LateCreateForm(TdhMultilineCaptionEdit2,dhMultilineCaptionEdit2);
+  dhMultilineCaptionEdit2.Memo1.PopupMenu:=dhMainForm.mEditorPopupMenu;
 
   if TdhMultilineCaptionEdit2.Prepare2({GetComponent(0) as TdhLabel,}Selection) then
   begin

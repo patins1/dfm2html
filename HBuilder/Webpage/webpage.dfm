@@ -38,14 +38,14 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1
       'HTML editor, web page maker, web design creator, anti aliasing, ' +
       'mouse over buttons, WYSIWYG, absolute positioning, site manageme' +
       'nt, authoring'
-    FTPURL = 'ftp://p8288468:5yMTPDtZ@kiegeland.com/dfm2html/'
+    FTPURL = 'ftp://p8288468:5yMTPDtZ@kiegeland.com/dfm2html_de/'
     HTTPURL = 'http://www.dfm2html.com/'
     GeneratedImageFolder = 'images'
     GeneratedCSSFile = 'dfm2html'
     object Panel4: TdhPanel
       Top = 36
       Width = 758
-      Height = 2988
+      Height = 3288
       Style.Border.Width = 1
       Style.Border.Color = 15461355
       Style.Border.Style = cbsSolid
@@ -1203,7 +1203,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1
           Left = 192
           Top = 96
           Width = 488
-          Height = 2836
+          Height = 3136
           AutoSizeXY = asNone
           UseIFrame = False
           object Label5: TdhLabel
@@ -1406,8 +1406,8 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1
           object Label44: TdhLabel
             Left = 24
             Top = 1296
-            Width = 386
-            Height = 49
+            Width = 442
+            Height = 64
             Text = 
               '<en><code>New in version 3.2:'#10'* The path of generated artifacts ' +
               'can be adapted'#10'* "Check for update" functionality</code></en>'#10'<d' +
@@ -1422,8 +1422,8 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1
           object Label46: TdhLabel
             Left = 24
             Top = 1208
-            Width = 346
-            Height = 65
+            Width = 322
+            Height = 80
             Text = 
               '<en><code>New in version 3.3:'#10'* Italian language is added '#10'  (th' +
               'anks to Rinaldo M. aka Whiteshark!)'#10'* Fixed bug with IE7 and aut' +
@@ -1438,8 +1438,8 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1
           object Label50: TdhLabel
             Left = 24
             Top = 1048
-            Width = 370
-            Height = 129
+            Width = 346
+            Height = 176
             Text = 
               '<en><code>New in version 3.4:'#10'* 83% Portuguese language support'#10 +
               '  (thanks to Alex Albino de Almeida Barros!)'#10'* adjusted dfm2html' +
@@ -1459,7 +1459,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1
           object Label47: TdhLabel
             Left = 24
             Top = 888
-            Width = 394
+            Width = 370
             Height = 160
             Text = 
               '<en><code>New in version 3.5:'#10'* Spanish language is added '#10'  (th' +
@@ -1505,7 +1505,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1
           object Label23: TdhLabel
             Left = 24
             Top = 536
-            Width = 354
+            Width = 314
             Height = 160
             Text = 
               '<en><code>New in version 4.1:'#10'* Afrikaans language is added '#10'  (' +
@@ -1526,8 +1526,8 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1
           object Label43: TdhLabel
             Left = 24
             Top = 448
-            Width = 402
-            Height = 80
+            Width = 434
+            Height = 64
             Text = 
               '<en><code>New in version 4.2:'#10'* Fixed "Access is denied" bug whe' +
               'n writing'#10'  user files under Windows Vista. User data is '#10'  now ' +
@@ -1544,8 +1544,8 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1
           object Label45: TdhLabel
             Left = 24
             Top = 376
-            Width = 322
-            Height = 64
+            Width = 370
+            Height = 48
             Text = 
               '<en><code>New in version 4.3:'#10'* Fixed bugs with FTP component'#10'* ' +
               'Updated Spanish and French translation'#10#10'</code></en><de><code>Ne' +
@@ -1559,8 +1559,8 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1
           object Label49: TdhLabel
             Left = 24
             Top = 288
-            Width = 370
-            Height = 80
+            Width = 378
+            Height = 64
             Text = 
               '<en><code>New in version 4.4:'#10'* Performance fix for HTML file ge' +
               'neration'#10'* File generation is now logged when uploading'#10'* Bundle' +
@@ -1576,13 +1576,13 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1
           object Label53: TdhLabel
             Left = 24
             Top = 216
-            Width = 282
-            Height = 64
+            Width = 298
+            Height = 48
             Text = 
-              '<en><code>New in version 4.5:'#10'* Syntax highlighting for HTML cod' +
-              'e'#10'* Added Forum menu item'#10#10'</code></en><de><code>Neu in version ' +
-              '4.5:'#10'* Syntaxhervorhebung f'#252'r HTML-Code   '#10'* Forum-Men'#252'punkt hin' +
-              'zugef'#252'gt'#10'</code></de>'
+              '<en><code>New in version 4.5:'#10'* New text editor with syntax high' +
+              'lighting'#10'* Added Forum menu item'#10#10'</code></en><de><code>Neu in v' +
+              'ersion 4.5:'#10'* Syntaxhervorhebung f'#252'r HTML-Code   '#10'* Forum-Men'#252'pu' +
+              'nkt hinzugef'#252'gt'#10'</code></de>'
             Style.PaddingRight = 2
             Style.WhiteSpace = cwsPre
             Style.Color = Black
@@ -1590,14 +1590,14 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1
           end
           object Label54: TdhLabel
             Left = 24
-            Top = 160
-            Width = 362
-            Height = 32
+            Top = 152
+            Width = 338
+            Height = 48
             Text = 
               '<en><code>New in version 4.5.1'#10'* Fixed bug with insert/delete in' +
               ' new editors'#10'</code></en><de><code>Neu in version 4.5.1:'#10'* Bug-f' +
-              'ix f'#252'r Einf'#252'gen/Entfernen-Kommandos in den neuen Editoren'#10'</code' +
-              '></de>'
+              'ix f'#252'r Einf'#252'gen/Entfernen-Kommandos'#10'  in den neuen Editoren'#10'</co' +
+              'de></de>'
             Style.PaddingRight = 2
             Style.WhiteSpace = cwsPre
             Style.Color = Black
@@ -1606,13 +1606,13 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1
           object Label55: TdhLabel
             Left = 24
             Top = 88
-            Width = 314
+            Width = 434
             Height = 48
             Text = 
               '<en><code>New in version 4.5.2'#10'* Menu items Copy/Paste/Delete ca' +
-              'n now '#10'  be used in the text editors'#10'</code></en><de><code>Neu i' +
-              'n version 4.5.2:'#10'* Men'#252'punkte Kopieren/Einf'#252'gen/L'#246'schen k'#246'nnen n' +
-              'un auch'#10'  auf die Texteditoren angewandt werden'#10'</code></de>'
+              'n now '#10'  be used in new editors'#10'</code></en><de><code>Neu in ver' +
+              'sion 4.5.2:'#10'* Men'#252'punkte Kopieren/Einf'#252'gen/L'#246'schen k'#246'nnen nun au' +
+              'ch'#10'  auf die neuen Editoren angewandt werden'#10'</code></de>'
             Style.PaddingRight = 2
             Style.WhiteSpace = cwsPre
             Style.Color = Black
@@ -1621,12 +1621,12 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1
           object Label57: TdhLabel
             Left = 24
             Top = 32
-            Width = 314
+            Width = 306
             Height = 32
             Text = 
-              '<en><code>New in version 4.5.3'#10'* Added context menu to new text ' +
-              'editor'#10'</code></en><de><code>Neu in version 4.5.3:'#10'* Neuer Texte' +
-              'ditor hat nun ein Kontextmen'#252#10'</code></de>'
+              '<en><code>New in version 4.5.3'#10'* Added context menu to new edito' +
+              'rs'#10'</code></en><de><code>Neu in version 4.5.3:'#10'* Neue Editoren h' +
+              'aben nun Kontextmen'#252's'#10'</code></de>'
             Style.PaddingRight = 2
             Style.WhiteSpace = cwsPre
             Style.Color = Red
@@ -2392,7 +2392,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1
         object Link7: TdhLink
           Left = 0
           Top = 108
-          Height = 29
+          Height = 45
           Text = '<en>User Pages</en><de>Benutzer- seiten</de>'
           Use = Link3
           AutoSizeXY = asY
@@ -2404,7 +2404,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1
         end
         object Link20: TdhLink
           Left = 0
-          Top = 137
+          Top = 153
           Height = 45
           Text = '<en>Version history</en>'#10'<de>Versions- historie</de>'
           Use = Link3
@@ -2417,7 +2417,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1
         end
         object Link19: TdhLink
           Left = 0
-          Top = 182
+          Top = 198
           Height = 29
           Text = 'FAQ'
           Use = Link3
@@ -2430,7 +2430,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1
         end
         object Link13: TdhLink
           Left = 0
-          Top = 211
+          Top = 227
           Height = 29
           Text = 'Tips & Tricks'
           Use = Link3
@@ -2443,7 +2443,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1
         end
         object Link4: TdhLink
           Left = 0
-          Top = 240
+          Top = 256
           Height = 29
           Text = '<en>Contact</en><de>Impressum</de>'
           Use = Link3
@@ -2456,8 +2456,8 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1
         end
         object TdhAnchor2: TdhLink
           Left = 0
-          Top = 269
-          Height = 29
+          Top = 285
+          Height = 45
           Text = '<en>Disclaimer</en>'#10'<de>Haftungs- ausschluss</de>'
           Use = Link3
           AutoSizeXY = asY
@@ -2472,7 +2472,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1
         end
         object Link40: TdhLink
           Left = 0
-          Top = 298
+          Top = 330
           Height = 45
           Text = '<en>More Programs</en><de>Weitere Programme</de>'
           Use = Link3
@@ -2485,7 +2485,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1
         end
         object Link59: TdhLink
           Left = 0
-          Top = 343
+          Top = 375
           Height = 32
           Text = 'Forum <sup><Label7>new</Label7></sup>'
           Use = Link3
@@ -2499,7 +2499,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1
         end
         object Link56: TdhLink
           Left = 0
-          Top = 375
+          Top = 407
           Height = 32
           Text = 'Chat <sup><Label7>new</Label7></sup>'
           Style.Display = cdsNone
@@ -2551,7 +2551,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1
           Style.Effects.AntiAliasing = True
           AutoSizeXY = asXY
           Align = alTop
-          Right = 0
+          Right = -13
           StyleDown.BackgroundColor = 9041148
           StyleOver.TextDecoration = [ctdUnderline]
           PreferDownStyles = True
@@ -2781,7 +2781,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1
         Top = 0
         Height = 16
         Text = 'de'
-        Style.Display = cdsNone
+        Style.Display = cdsInline
         AutoSizeXY = asY
         Align = alTop
         Right = 0
@@ -2791,7 +2791,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1
         Top = 16
         Height = 16
         Text = 'en'
-        Style.Display = cdsInline
+        Style.Display = cdsNone
         AutoSizeXY = asY
         Align = alTop
         Right = 0

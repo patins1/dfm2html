@@ -1409,7 +1409,7 @@ end;
 
 procedure TdhMainForm.IGNORE_mEditorCopyClick(Sender: TObject);
 begin
- with ExtractActiveControl as TSynMemo do
+ with mEditorPopupMenu.PopupComponent as TSynMemo do
  Clipboard.AsText:=SelText;
 end;
 
@@ -1421,25 +1421,25 @@ end;
 
 procedure TdhMainForm.IGNORE_mEditorDeleteClick(Sender: TObject);
 begin
- with ExtractActiveControl as TSynMemo do
+ with mEditorPopupMenu.PopupComponent as TSynMemo do
  SelText:='';
 end;
 
 procedure TdhMainForm.IGNORE_mEditorPasteClick(Sender: TObject);
 begin
- with ExtractActiveControl as TSynMemo do
+ with mEditorPopupMenu.PopupComponent as TSynMemo do
  SelText:=Clipboard.AsText;
 end;
 
 procedure TdhMainForm.IGNORE_mEditorSelectAllClick(Sender: TObject);
 begin
- with ExtractActiveControl as TSynMemo do
+ with mEditorPopupMenu.PopupComponent as TSynMemo do
  SelectAll;
 end;
 
 procedure TdhMainForm.IGNORE_mEditorUndoClick(Sender: TObject);
 begin
- with ExtractActiveControl as TSynMemo do
+ with mEditorPopupMenu.PopupComponent as TSynMemo do
  Undo;
 end;
 

@@ -135,7 +135,8 @@ begin
   FData:=StringFromFile(FileName);
  end else
  begin
-  StringFromFile(FileName);
+  if not FileExists(FileName) then
+   StringFromFile(FileName); // produce exception
   SetLength(FData,0);
  end;
  FFileName:=FileName;

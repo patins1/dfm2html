@@ -3280,7 +3280,7 @@ begin
   if (SelStart>=Low(TrackChar)) and (SelStart<=High(TrackChar)) then
   with TrackChar[SelStart] do
     Result:=Copy(FHTMLText,vn,bs-vn) else
-    Result:='';
+    Result:=' ';
 end;
 
 begin

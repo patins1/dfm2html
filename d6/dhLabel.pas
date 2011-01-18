@@ -82,6 +82,9 @@ type
     procedure PaintListItem(Canvas:TCanvas; const brct:TRect);
     procedure CalcCharHeights(StyleTree:TStyleTree; Canvas:TCanvas);
     procedure CalcVertOffsetAccumulate(StyleTree, RefStyleTree: TStyleTree);
+{$IFNDEF CLX}
+    procedure WMGetDlgCode(var Message: TWMGetDlgCode); message WM_GETDLGCODE;
+{$ENDIF}
   protected
     FHTMLText:HypeString;
     function PreventFull(Cause:TTransformations):boolean; override;
@@ -141,8 +144,16 @@ type
     function SomethingIsScrolled: boolean; override;
     procedure ProcessMouseMove(StateChanged:boolean); override;
     function NeedPadding(HasRastering:TRasterType): boolean; override;
+    procedure KeyPress(var Key: AChar); override;
+    procedure KeyDown(var Key: Word; Shift: TShiftState); override;
+    procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
+    function CharToCoord(pos:Integer):TPoint;
+    function CharOfLine(line:Integer):Integer;
+    function AfterLastCharOfLine(line:Integer):Integer;
+   function CoordToChar(const Coord:TPoint):Integer;
   public
     TrackChar:TTrackChar;
+    SelStart:Integer;
     procedure TryBrokenReferences(sl:TStringList); override;
     procedure CopyDependencies(CopyList:TList); override;
     function RenderedText:WideString;
@@ -948,7 +959,7 @@ var i,i2,c:integer;
     s,ss:HypeString;
     wtext:WideString;
     sec,sec2:WideChar;
-    IsUpper:boolean;      
+    IsUpper:boolean;
 var StyleTree2:TStyleTree;
 
 procedure SetStyleTree(vn,bs:integer; StyleTree:TStyleTree);
@@ -1119,7 +1130,7 @@ begin
 
  SetLength(self.TrackChar,0);
  SetLength(Ptree,1);
-                   
+
  NoneStyle:=nil;
  PutNew(false);
 
@@ -1132,6 +1143,14 @@ begin
   begin
    text:='';
    PushText(vn_old,true);
+   vn_old:=vn;
+   with TrackChar[High(TrackChar)] do
+   begin
+    if Closing then
+     vn:=itag-2 else
+     vn:=itag-1;
+    bs:=vn_old;
+   end;
   end else
   if Closing then
   begin
@@ -1904,7 +1923,7 @@ var
     _WrapAlways:boolean;
     delta,bs:integer;
 
-begin                      
+begin
   UseStyleTree:=nil;
   _WrapAlways:=WrapAlways;
 
@@ -2031,7 +2050,7 @@ begin
     ActLine.vn:=StartChar;
     ActLine.bs:=ii;
 
-    
+
     bs:=Actline.bs;
     while (bs>Actline.vn) and (gltext[bs-1]=markupBreak) do
      dec(bs);
@@ -2186,7 +2205,7 @@ var line,w,le:integer;
 begin
  for line:=0 to high(Lines) do
  begin
-  ActLine:=@Lines[line];   
+  ActLine:=@Lines[line];
   StyleTree:=nil;
   for w:=ActLine.vn to ActLine.bs-1 do
   if StyleTree<>Ptree[w] then //speed
@@ -3146,6 +3165,176 @@ begin
   result:=ClientStyleTree_starttag[0] else
   result:=0;
 end;
+
+
+function TdhCustomLabel.CharToCoord(pos:Integer):TPoint;
+var l,vn:Integer;
+    ActLine:PLineInfo;
+begin
+  if pos>High(TrackChar) then
+  begin
+    Result.Y:=High(Lines);
+    Result.X:=AfterLastCharOfLine(Result.Y)-CharOfLine(Result.Y);
+    exit;
+  end;
+  vn:=pos+1;
+  for l:=high(Lines) downto 0 do
+  begin
+   ActLine:=@Lines[l];
+   if (vn>=ActLine.vn) then
+   begin
+    result.Y:=l;
+    result.X:=pos-CharOfLine(l);
+    exit;
+   end;
+  end;
+  result.Y:=-1;
+end;
+
+function TdhCustomLabel.CharOfLine(line:Integer):Integer;
+begin
+  result:=Lines[line].vn-1;
+end;
+
+function TdhCustomLabel.AfterLastCharOfLine(line:Integer):Integer;
+var ActLine:PLineInfo;
+    bs:integer;
+begin
+    ActLine:=@Lines[line];
+    bs:=ActLine.bs;
+    while (bs>Actline.vn) and (gltext[bs-1]=markupBreak) do
+     dec(bs);
+    result:=bs-1;
+end;
+
+function TdhCustomLabel.CoordToChar(const Coord:TPoint):Integer;
+var i:Integer;
+begin
+  Result:=Min(CharOfLine(Coord.Y)+Coord.X,AfterLastCharOfLine(Coord.Y));
+end;
+
+procedure TdhCustomLabel.KeyDown(var Key: Word; Shift: TShiftState);
+var StartRow,StartRow2,StartRow3:Integer;
+    Coord:TPoint;
+begin
+ inherited;
+ case (Key) of
+ VK_UP:
+ begin
+  Coord:=CharToCoord(SelStart);
+  if (Coord.Y=-1) or (Coord.Y=0) then
+   exit;
+  Dec(Coord.Y);
+  SelStart:=CoordToChar(Coord);
+ end;
+ VK_DOWN:
+ begin
+  Coord:=CharToCoord(SelStart);
+  if (Coord.Y=-1) or (Coord.Y=High(Lines)) then
+   exit;
+  Inc(Coord.Y);
+  SelStart:=CoordToChar(Coord);
+ end;
+ VK_HOME:
+ begin
+  Coord:=CharToCoord(SelStart);
+  if Coord.Y=-1 then
+   exit;
+  Coord.X:=0;
+  SelStart:=CoordToChar(Coord);
+ end;
+ VK_END:
+ begin
+  Coord:=CharToCoord(SelStart);
+  if Coord.Y=-1 then
+   exit;
+  Coord.X:=High(TrackChar)+1;
+  SelStart:=CoordToChar(Coord);
+ end;
+ VK_RIGHT:
+ begin
+  if SelStart+1<=High(TrackChar)+1 then
+   SelStart:=SelStart+1;
+ end;
+ VK_LEFT:
+ begin
+  if SelStart-1>=Low(TrackChar) then
+   SelStart:=SelStart-1;
+ end;
+ VK_DELETE:
+ if (SelStart>=Low(TrackChar)) and (SelStart<=High(TrackChar)) then
+ with TrackChar[SelStart] do
+ begin
+   SetHTMLText(Copy(FHTMLText,1,vn-1)+Copy(FHTMLText,bs,MaxInt));
+ end;
+ end;
+end;
+
+procedure TdhCustomLabel.KeyPress(var Key: AChar);
+var vn:Integer;
+    ToInsert:HypeString;
+    StyleTree:TStyleTree;
+
+function GetCodeForChar(SelStart:Integer):HypeString;
+begin
+  if (SelStart>=Low(TrackChar)) and (SelStart<=High(TrackChar)) then
+  with TrackChar[SelStart] do
+    Result:=Copy(FHTMLText,vn,bs-vn) else
+    Result:='';
+end;
+
+begin
+ if Char(VK_BACK)=Key then
+ begin
+   if (SelStart-1>=Low(TrackChar)) and (SelStart-1<=High(TrackChar)) then
+   with TrackChar[SelStart-1] do
+   begin
+    SetHTMLText(Copy(FHTMLText,1,vn-1)+Copy(FHTMLText,bs,MaxInt));
+    Dec(SelStart);
+   end;
+   exit;
+ end;
+ if (SelStart>=Low(TrackChar)) and (SelStart<=High(TrackChar)) then
+  vn:=TrackChar[SelStart].vn else
+  vn:=Length(FHTMLText)+1;
+ StyleTree:=Ptree[Min(SelStart+1,High(Ptree))];
+ if Char(VK_SPACE)=Key then
+ begin
+  ToInsert:=Key;
+  if StyleTree.WhiteSpace<>cwsPre then
+  if (GetCodeForChar(SelStart-1)=' ') or (GetCodeForChar(SelStart-1)='&nbsp;') or (GetCodeForChar(SelStart)=' ') or (GetCodeForChar(SelStart)='&nbsp;')  then
+   ToInsert:='&nbsp;';
+ end else
+ if Char(VK_RETURN)=Key then
+ begin
+   if StyleTree.WhiteSpace=cwsPre then
+    ToInsert:=#10 else
+    ToInsert:='<br/>';
+ end else
+  ToInsert:=Key;
+ SetHTMLText(Copy(FHTMLText,1,vn-1)+ToInsert+Copy(FHTMLText,vn,MaxInt));
+ inc(SelStart);
+ inherited;
+end;
+
+procedure TdhCustomLabel.MouseDown(Button: TMouseButton; Shift: TShiftState; X,
+  Y: Integer);
+begin
+ Inherited;
+ if not (csDesigning in ComponentState) then
+ begin
+  SetFocus;
+  SelStart:=Max(0,CharPos-1);
+ end;
+end;
+
+{$IFNDEF CLX}
+procedure TdhCustomLabel.WMGetDlgCode(var Message: TWMGetDlgCode);
+begin
+  Message.Result:=DLGC_WANTARROWS;
+end;
+{$ENDIF}
+
 
 initialization
  BuildUnicode;

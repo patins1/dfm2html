@@ -1484,11 +1484,25 @@ end;
 function TMySiz.DesignMouseDown(Button: TMouseButton; Shift: TShiftState):boolean;
 var c:TControl;
     l:TdhLabel;
+    cl:TdhCustomLabel;
     cp:integer;
 begin
  result:=false;
  //Parent.SetFocus;
- if _RuntimeMode or (ssDouble in Shift) then exit;
+ if _RuntimeMode then exit;
+
+ if ssDouble in Shift then
+ begin
+  c:=GetRealC(Mouse.CursorPos);
+  if not EditableControl(c,false) or not (c is TdhCustomLabel) then
+  begin
+   exit;
+  end;
+  cl:=TdhCustomLabel(c);
+  cl.SelStart:=l.CharPos-1;
+  cl.SetFocus;
+  exit;
+ end;
 
  if not Tabs.CommitChanges then exit;
 
@@ -1507,7 +1521,7 @@ begin
    exit;
   end;
   FChildList.Clear;
-//  ClipSizing:=GetCBound();   
+//  ClipSizing:=GetCBound();
   FDragStyle:=dsSizeBottomRight;
   StartDragging(c);
   result:=true;
@@ -2236,7 +2250,7 @@ begin
   begin
    c2:=CopyList.Count;
    TdhCustomPanel(CopyList[i]).CopyDependencies(CopyList);
-   for i2:=c2 to CopyList.Count-1 do                   
+   for i2:=c2 to CopyList.Count-1 do
    begin
     CopyList.AddChildren(TComponent(CopyList[i2]));
     if (TComponent(CopyList[i2]) is TdhCustomPanel) then
@@ -2418,7 +2432,7 @@ begin
   if (TObject(Ptr) is TdhCustomPanel) and not (csDestroying in TdhCustomPanel(Ptr).ComponentState) then
    TdhCustomPanel(Ptr).CheckDesignState;
 end;
-  
+
         {
 type TFakeWidgetControl=class(TWidgetControl);
 function TMySiz.EventFilter(Sender: QObjectH; Event: QEventH): Boolean;

@@ -135,7 +135,7 @@ procedure TdhCustomEdit.GetModifiedText(var pre, s, suc: HypeString);
 begin
   if (s='') then
    s:=' ';
-  s:=ConvertWideStringToUnicode(s,true);
+  s:=ConvertWideStringToUnicode(s,true)+#10;
 end;
 
 procedure TdhCustomEdit.Loaded;

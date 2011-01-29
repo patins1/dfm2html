@@ -3014,15 +3014,19 @@ begin
   for l:=high(Lines) downto 0 do
   begin
    ActLine:=@Lines[l];
-   if not ((p.y>=ActLine.y) and (p.y<=ActLine.y+ActLine.maxheight)) then continue;
+   if not (p.y>=ActLine.y) then continue;
    x:=ActLine.RealOffsX+ActLine.offs.Left;
    for w:=ActLine.vn to ActLine.bs-1 do
-   if (p.x>=x) and (p.x<x+Pall[w]) then
    begin
-    result:=w;
-    exit;
-   end else
     inc(x,Pall[w]);
+    if p.x<x then
+    begin
+     result:=w;
+     exit;
+    end;
+   end;
+   result:=AfterLastCharOfLine(l)+1;
+   exit;
   end;
   result:=0;
 end;

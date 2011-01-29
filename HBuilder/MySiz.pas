@@ -1568,7 +1568,7 @@ begin
     l:=TdhLabel(c);
     cp:=l.CharPos;
     if cp<>0 then
-     Tabs.EditText(l.TrackChar[cp-1].vn) else
+     Tabs.EditText(l.CharPosToSourcePos(cp)) else
      Tabs.EditText;
    end;
   end else

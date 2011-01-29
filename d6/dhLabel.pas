@@ -160,6 +160,7 @@ type
   public
     TrackChar:TTrackChar;
     SelStart:Integer;
+    function CharPosToSourcePos(const pos:integer):integer;
     procedure TryBrokenReferences(sl:TStringList); override;
     procedure CopyDependencies(CopyList:TList); override;
     function RenderedText:WideString;
@@ -3344,6 +3345,13 @@ begin
  end;
 end;
 
+function TdhCustomLabel.CharPosToSourcePos(const pos:integer):integer;
+begin
+ if (pos-1>=Low(TrackChar)) and (pos-1<=High(TrackChar)) then
+  result:=TrackChar[pos-1].vn else
+  result:=Length(FHTMLText)+1;
+end;
+
 procedure TdhCustomLabel.KeyPress(var Key: AChar);
 var vn:Integer;
     ToInsert:HypeString;
@@ -3368,9 +3376,7 @@ begin
    end;
    exit;
  end;
- if (SelStart>=Low(TrackChar)) and (SelStart<=High(TrackChar)) then
-  vn:=TrackChar[SelStart].vn else
-  vn:=Length(FHTMLText)+1;
+ vn:=CharPosToSourcePos(SelStart+1);
  StyleTree:=Ptree[Min(SelStart+1,High(Ptree))];
  if Char(VK_SPACE)=Key then
  begin

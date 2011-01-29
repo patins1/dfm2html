@@ -80,6 +80,7 @@ type
     listboxitem: TdhLabel;
     menupopup: TdhLabel;
     hidden: TdhLabel;
+    cursor: TdhLabel;
   end;
 
 var dhStrEditDlg:TBasicHTMLElements;

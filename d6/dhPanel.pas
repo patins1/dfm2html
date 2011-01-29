@@ -255,9 +255,9 @@ type
     function ItGetVal(state:TState; PropChoose:TPropChoose; {var Value:TCSSProp; }const Align:TEdgeAlign=ealNone):boolean;
     procedure InvDesigner;
     function ActStyle:TStyle;
-    procedure Frame3D(Border:TEdgeAlign; Points: array of TPoint);
+    procedure Frame3D(Border:TEdgeAlign; Points: array of TPoint; PixelCombineEvent:TPixelCombineEvent);
     procedure SpecialBg(const ref_scrolled,ref_fixed:TRect; Src:TdhBitmap32; const brct: TRect; IsFixed:boolean);
-    procedure SpecialPaintBorder(const rct,brct: TRect);
+    procedure SpecialPaintBorder(const rct,brct: TRect; PixelCombineEvent:TPixelCombineEvent=nil);
     function IsAbsolutePositioned:boolean;
     function GetStyleByName(const name:TPropertyName; var r:TStyle):boolean;
     procedure SetIsOver(Value:boolean);
@@ -4084,7 +4084,7 @@ begin
   result:=clWhiteCSS;
 end;
 
-procedure TdhCustomPanel.Frame3D(Border:TEdgeAlign; Points: array of TPoint);
+procedure TdhCustomPanel.Frame3D(Border:TEdgeAlign; Points: array of TPoint; PixelCombineEvent:TPixelCombineEvent);
 var BottomRight:boolean;
     bs:TCSSBorderStyle;
     bc:TColor;
@@ -4250,13 +4250,13 @@ begin
 
  if DisplayBorderWidth(Border)=0 then exit;
 
- if not IsOpaqueColor(BorderColor(Border)) then
+ if not IsOpaqueColor(BorderColor(Border)) or Assigned(PixelCombineEvent) then
  begin
   bitmap:=TBitmap32.Create;
   try
     bitmap.SetSize(ActTopGraph.Width,ActTopGraph.Height);
     bitmap.Clear($FF000000);
- 
+
     DrawToCanvas(bitmap.Canvas);
 
     Alpha32:=CSSColorToColor32(BorderColor(Border)) and $FF000000;
@@ -4267,14 +4267,19 @@ begin
       if C and $FF000000 = $FF000000 then
       begin
         P^ := 0;
-      end else 
+      end else
       begin
-        P^:=C or Alpha32; 
+        P^:=C or Alpha32;
       end;
       Inc(P);
     end;
 
     bitmap.DrawMode := dmBlend;
+    if Assigned(PixelCombineEvent) then
+    begin
+     bitmap.DrawMode := dmCustom;
+     bitmap.OnPixelCombine := PixelCombineEvent;
+    end;
     bitmap.DrawTo(ActTopGraph, 0, 0);
   finally
    bitmap.Free;
@@ -4978,24 +4983,24 @@ begin
  result.Right:=MarginWidth(ealRight);
 end;
 
-procedure TdhCustomPanel.SpecialPaintBorder(const rct,brct: TRect);
+procedure TdhCustomPanel.SpecialPaintBorder(const rct,brct: TRect; PixelCombineEvent:TPixelCombineEvent);
 begin
   if BorderStyle(ealLeft)<cbsSolid then
-   Frame3D(ealLeft,[Point(rct.Left,rct.Bottom),rct.TopLeft,brct.TopLeft,Point(brct.Left,brct.Bottom)]);
+   Frame3D(ealLeft,[Point(rct.Left,rct.Bottom),rct.TopLeft,brct.TopLeft,Point(brct.Left,brct.Bottom)],PixelCombineEvent);
   if BorderStyle(ealRight)<cbsSolid then
-   Frame3D(ealRight,[Point(rct.Right, rct.Top),rct.BottomRight,brct.BottomRight,Point(brct.Right,brct.Top)]);
+   Frame3D(ealRight,[Point(rct.Right, rct.Top),rct.BottomRight,brct.BottomRight,Point(brct.Right,brct.Top)],PixelCombineEvent);
   if BorderStyle(ealBottom)<cbsSolid then
-   Frame3D(ealBottom,[rct.BottomRight,Point(rct.Left,rct.Bottom),Point(brct.Left,brct.Bottom),brct.BottomRight]);
+   Frame3D(ealBottom,[rct.BottomRight,Point(rct.Left,rct.Bottom),Point(brct.Left,brct.Bottom),brct.BottomRight],PixelCombineEvent);
   if BorderStyle(ealTop)<cbsSolid then
-   Frame3D(ealTop,[rct.TopLeft,Point(rct.Right,rct.Top),Point(brct.Right,brct.Top), Point(brct.Left,brct.Top)]);
+   Frame3D(ealTop,[rct.TopLeft,Point(rct.Right,rct.Top),Point(brct.Right,brct.Top), Point(brct.Left,brct.Top)],PixelCombineEvent);
   if BorderStyle(ealLeft)>=cbsSolid then
-   Frame3D(ealLeft,[Point(rct.Left,rct.Bottom),rct.TopLeft,brct.TopLeft,Point(brct.Left,brct.Bottom)]);
+   Frame3D(ealLeft,[Point(rct.Left,rct.Bottom),rct.TopLeft,brct.TopLeft,Point(brct.Left,brct.Bottom)],PixelCombineEvent);
   if BorderStyle(ealRight)>=cbsSolid then
-   Frame3D(ealRight,[Point(rct.Right, rct.Top),rct.BottomRight,brct.BottomRight,Point(brct.Right,brct.Top)]);
+   Frame3D(ealRight,[Point(rct.Right, rct.Top),rct.BottomRight,brct.BottomRight,Point(brct.Right,brct.Top)],PixelCombineEvent);
   if BorderStyle(ealBottom)>=cbsSolid then
-   Frame3D(ealBottom,[rct.BottomRight,Point(rct.Left,rct.Bottom),Point(brct.Left,brct.Bottom),brct.BottomRight]);
+   Frame3D(ealBottom,[rct.BottomRight,Point(rct.Left,rct.Bottom),Point(brct.Left,brct.Bottom),brct.BottomRight],PixelCombineEvent);
   if BorderStyle(ealTop)>=cbsSolid then
-   Frame3D(ealTop,[rct.TopLeft,Point(rct.Right,rct.Top),Point(brct.Right,brct.Top), Point(brct.Left,brct.Top)]);
+   Frame3D(ealTop,[rct.TopLeft,Point(rct.Right,rct.Top),Point(brct.Right,brct.Top), Point(brct.Left,brct.Top)],PixelCombineEvent);
 end;
 
 procedure TdhCustomPanel.PaintBorder;

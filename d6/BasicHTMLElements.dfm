@@ -912,6 +912,21 @@ object BasicHTMLElements: TBasicHTMLElements
       Align = alTop
       Right = 0
     end
+    object cursor: TdhLabel
+      Left = 0
+      Top = 119
+      Height = 19
+      Text = 'cursor'
+      Style.Border.Color = White
+      Style.BorderLeft.Style = cbsSolid
+      Style.BorderRight.Style = cbsSolid
+      Style.MarginLeft = '-1'
+      Style.MarginRight = '-1'
+      Visible = False
+      AutoSizeXY = asY
+      Align = alTop
+      Right = 0
+    end
     object listboxitem: TdhLabel
       Left = 0
       Top = 1443

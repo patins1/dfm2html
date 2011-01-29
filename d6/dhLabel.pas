@@ -12,7 +12,7 @@ uses
   {$ELSE}
   Controls, Windows, Messages, Graphics, Forms,
   {$ENDIF}
-  SysUtils, Classes, dhPanel, math, types,Generics.Defaults,Generics.Collections, GR32_Transforms,gr32,dhStrUtils,StrUtils,WideStrUtils,dhBitmap32,dhStyles,dhColorUtils;
+  SysUtils, Classes, dhPanel, math, types,Generics.Defaults,Generics.Collections, GR32_Transforms,gr32,gr32_Blend,dhStrUtils,StrUtils,WideStrUtils,dhBitmap32,dhStyles,dhColorUtils;
 
 
 {$IFDEF VER160}
@@ -48,6 +48,7 @@ type
     Blocking:boolean;
     IsBut:boolean;
     img_width:integer;
+    HasBorder:boolean;
 
     procedure Clear; override;
     function GetBottomLeading: integer;
@@ -85,6 +86,7 @@ type
 {$IFNDEF CLX}
     procedure WMGetDlgCode(var Message: TWMGetDlgCode); message WM_GETDLGCODE;
 {$ENDIF}
+    procedure PC_Cursor(F: TColor32; var B: TColor32; M: TColor32);
   protected
     FHTMLText:HypeString;
     function PreventFull(Cause:TTransformations):boolean; override;
@@ -150,7 +152,10 @@ type
     function CharToCoord(pos:Integer):TPoint;
     function CharOfLine(line:Integer):Integer;
     function AfterLastCharOfLine(line:Integer):Integer;
-   function CoordToChar(const Coord:TPoint):Integer;
+    function CoordToChar(const Coord:TPoint):Integer;
+    procedure SetSelStart(value:integer);
+    procedure OnSetFocus(var Msg: TWMSetFocus); message WM_SETFOCUS;
+    procedure OnKillFocus(var Msg: TWMKillFocus); message WM_KILLFOCUS;
   public
     TrackChar:TTrackChar;
     SelStart:Integer;
@@ -1005,7 +1010,7 @@ begin
    if (s<>'') and (s[1]=' ') and (SkipNextSpace or WhiteSpaceAtBlockBeginning(StyleTree)) then
     s[1]:=#1;
    ss:=HypeSubstText(#1,'',s);
-   SkipNextSpace:=(ss='') and SkipNextSpace or (ss<>'') and (ss[length(ss)]=' ');
+   SkipNextSpace:=(ss='') and SkipNextSpace or (ss<>'') and (ss[length(ss)]=' ') or IsBreak;
   end else
   begin
    ss:=s;
@@ -1103,6 +1108,27 @@ begin
  StyleTree.IsImg:=AllowImg and HasImage;
 end;
 
+procedure AdjustForEditing;
+var i:integer;
+begin  
+ for i := 1 to length(gltext) do
+ case gltext[i]of 
+ markupBreak:
+ begin
+  // set TTrackChar.bs not only after <br/> but also after following superfluous whitespaces
+  if i+1<=length(gltext) then
+   TrackChar[i-1].bs:=TrackChar[i-1+1].vn;
+   TrackChar[i-1].bs:=length(FHTMLText)+1;  
+ end;
+ markupEmptyEle:
+ begin
+   // enclose starting and ending tag
+   TrackChar[i-1].vn:=Ptree[i].starttag-1;
+   TrackChar[i-1].bs:=Ptree[i].endtag+length(Ptree[i].TagName)+1;
+ end;
+ end;
+end;
+
 var TagIndex,itagbs:integer;
 begin
  if (TopStyleTree<>nil) then exit;
@@ -1142,15 +1168,10 @@ begin
   if tag='br' then
   begin
    text:='';
+   if Closing then
+    vn_old:=itag-2 else
+    vn_old:=itag-1;
    PushText(vn_old,true);
-   vn_old:=vn;
-   with TrackChar[High(TrackChar)] do
-   begin
-    if Closing then
-     vn:=itag-2 else
-     vn:=itag-1;
-    bs:=vn_old;
-   end;
   end else
   if Closing then
   begin
@@ -1226,6 +1247,7 @@ begin
  end;
 
  UseStyleTree:=nil;
+ AdjustForEditing;
 end;
 
 
@@ -2234,7 +2256,7 @@ begin
   result:=true;
   exit;
  end;
- result:=not IsNullRect(StyleTree.AllEdgesPure) and not StyleTree.Blocking;
+ result:=(StyleTree.HasBorder or not IsNullRect(StyleTree.AllEdgesPure)) and not StyleTree.Blocking;
 end;
 
 
@@ -2362,6 +2384,7 @@ begin
   StyleTree.FontSize:=GetComputedFontSize else
   StyleTree.FontSize:=GetFontSizePixels(FontSize,StyleTree.ParentStyle.FontSize);
  StyleTree.AllEdgesPure:=AllEdgesPure;
+ StyleTree.HasBorder:=not IsNullRect(BorderPure);
  StyleTree.IsBut:=Referer.TotalInlineBox and (StyleTree.ParentStyle<>nil);
  if StyleTree.IsImg and HasImage(StyleTree.img_width,StyleTree.ContentHeight) then
  begin
@@ -2567,13 +2590,14 @@ var line,ti,x,y,vn,bs:integer;
     StyleElement:ICon;
     ClpRct:TRect;
     _AntiAliasing:boolean;
-{$IFNDEF CLX}     
-  LogFont: TLogFont;        
+{$IFNDEF CLX}
+  LogFont: TLogFont;
   fh:HFont;
 {$ENDIF}
   Canvas:TCanvas;
   OldClipRect:TRect;
   level:Integer;
+  Coord:TPoint;
 begin
  ParseHTML;
  if TopStyleTree<>nil then
@@ -2595,6 +2619,9 @@ begin
   _AntiAliasing:=AntiAliasing;
   Canvas:=GetCanvas;
   ClpRct:=ConstraintsRect;
+  if Focused then
+   Coord:=CharToCoord(SelStart) else
+   Coord.Y:=-1;
   for line:=0 to high(Lines) do
   begin
    ActLine:=@Lines[line];
@@ -2726,6 +2753,27 @@ begin
     end;
     inc(x,AddP(vn,bs));
    end;
+    if Coord.Y=line then
+    begin
+     x:=ConstraintsRect.Left+ActLine.offs.Left-HPos;
+     vn:=ActLine.vn+Coord.X;
+     if vn<ActLine.bs then inc(x,Ppre[vn]);
+     UseStyleTree:=Ptree[Min(vn,High(Ptree))];
+     TextRct:=Bounds(ActLine.RealOffsX+x+AddP(ActLine.vn,vn), UseStyleTree.ry+y, 0, UseStyleTree.LineHeight);
+     BoxToContent(StyleTree,TextRct);
+     try
+      UseStyleTree:=TStyleTree.Create;
+      UseStyleTree.StyleElement:=dhStrEditDlg.cursor;
+      brct:=TextRct;
+      rct:=InflRect(brct,BorderPure);
+      SpecialPaintBorder(rct,brct,PC_Cursor);
+      rct3:=brct;
+      IntersectRect(brct,brct,ClpRct);
+      SpecialBg(rct3,rct3,ActTopGraph,brct,false);
+     finally
+       FreeAndNil(UseStyleTree);
+     end; 
+    end;
   end;
   end;
 
@@ -3225,7 +3273,7 @@ begin
   if (Coord.Y=-1) or (Coord.Y=0) then
    exit;
   Dec(Coord.Y);
-  SelStart:=CoordToChar(Coord);
+  SetSelStart(CoordToChar(Coord));
  end;
  VK_DOWN:
  begin
@@ -3233,7 +3281,7 @@ begin
   if (Coord.Y=-1) or (Coord.Y=High(Lines)) then
    exit;
   Inc(Coord.Y);
-  SelStart:=CoordToChar(Coord);
+  SetSelStart(CoordToChar(Coord));
  end;
  VK_HOME:
  begin
@@ -3241,7 +3289,7 @@ begin
   if Coord.Y=-1 then
    exit;
   Coord.X:=0;
-  SelStart:=CoordToChar(Coord);
+  SetSelStart(CoordToChar(Coord));
  end;
  VK_END:
  begin
@@ -3249,17 +3297,17 @@ begin
   if Coord.Y=-1 then
    exit;
   Coord.X:=High(TrackChar)+1;
-  SelStart:=CoordToChar(Coord);
+  SetSelStart(CoordToChar(Coord));
  end;
  VK_RIGHT:
  begin
   if SelStart+1<=High(TrackChar)+1 then
-   SelStart:=SelStart+1;
+   SetSelStart(SelStart+1);
  end;
  VK_LEFT:
  begin
   if SelStart-1>=Low(TrackChar) then
-   SelStart:=SelStart-1;
+   SetSelStart(SelStart-1);
  end;
  VK_DELETE:
  if (SelStart>=Low(TrackChar)) and (SelStart<=High(TrackChar)) then
@@ -3277,7 +3325,7 @@ var vn:Integer;
 
 function GetCodeForChar(SelStart:Integer):HypeString;
 begin
-  if (SelStart>=Low(TrackChar)) and (SelStart<=High(TrackChar)) then
+  if (SelStart>=Low(TrackChar)) and (SelStart<=High(TrackChar)) and (gltext[SelStart+1]<>markupBreak) then
   with TrackChar[SelStart] do
     Result:=Copy(FHTMLText,vn,bs-vn) else
     Result:=' ';
@@ -3324,7 +3372,7 @@ begin
  if not (csDesigning in ComponentState) then
  begin
   SetFocus;
-  SelStart:=Max(0,CharPos-1);
+  SetSelStart(Max(0,CharPos-1));
  end;
 end;
 
@@ -3335,6 +3383,32 @@ begin
 end;
 {$ENDIF}
 
+procedure TdhCustomLabel.PC_Cursor(F: TColor32; var B: TColor32; M: TColor32);
+begin
+  if IsOpaqueColor(Color32ToCSSColor(F)) then
+    B := B xor (F and $00FFFFFF);
+end;
+
+procedure TdhCustomLabel.SetSelStart(value:integer);
+begin
+  if SelStart<>value then
+  begin
+    SelStart:=value;
+    NotifyCSSChanged([wcNoOwnCSS]);
+  end;
+end;
+
+procedure TdhCustomlabel.OnSetFocus(var Msg: TWMSetFocus); 
+begin
+    Inherited;
+    NotifyCSSChanged([wcNoOwnCSS]);
+end;
+
+procedure TdhCustomlabel.OnKillFocus(var Msg: TWMKillFocus); 
+begin
+    Inherited;
+    NotifyCSSChanged([wcNoOwnCSS]);
+end;
 
 initialization
  BuildUnicode;

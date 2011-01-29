@@ -1499,7 +1499,7 @@ begin
    exit;
   end;
   cl:=TdhCustomLabel(c);
-  cl.SelStart:=l.CharPos-1;
+  cl.SetSelStart(Max(0,l.CharPos-1));
   cl.SetFocus;
   exit;
  end;
@@ -1568,7 +1568,7 @@ begin
     l:=TdhLabel(c);
     cp:=l.CharPos;
     if cp<>0 then
-     Tabs.EditText(l.CharPosToSourcePos(cp)) else
+     Tabs.EditText(l.CharPosToTrackChar(cp).vn) else
      Tabs.EditText;
    end;
   end else

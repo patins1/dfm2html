@@ -76,7 +76,7 @@ begin
  cp:=IGNORE_dhLabel1.CharPos;
  if (cp<>0) then
  begin
-  with IGNORE_dhLabel1.TrackChar[cp-1] do
+  with IGNORE_dhLabel1.CharPosToTrackChar(cp) do
    s:=abscopy(IGNORE_dhLabel1.Text,vn,bs);
   if (s<>'') then
   begin

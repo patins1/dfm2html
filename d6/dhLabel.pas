@@ -59,7 +59,8 @@ type
  TLineInfo=record RealOffsX,y:integer; offs:TRect; OffsX,lineavail,lmin,maxHeight,LineWidth,vn,bs:integer; AllTrees:TList; InlineBreak:boolean; endat:integer; end;
  PLineInfo=^TLineInfo;
 
-  TTrackChar=array of record vn,bs:integer; end;
+  TOneTrackChar=record vn,bs:integer; end;
+  TTrackChar=array of TOneTrackChar;
 
   TdhCustomLabel = class(TdhCustomPanel,ICon)
   private
@@ -71,6 +72,8 @@ type
     P,Pall,Ppre,Psuc:TIntegerDynArray;
     avail,availY,TotalHeight,MaxWidth:integer;
     ClientStyleTree_starttag:array of integer;
+    TrackChar:TTrackChar;
+    SelStart:Integer;
     procedure InvalInline;
     procedure CalcCharWidths;
     procedure CalcLineBreaks;
@@ -154,13 +157,11 @@ type
     function CharOfLine(line:Integer):Integer;
     function AfterLastCharOfLine(line:Integer):Integer;
     function CoordToChar(const Coord:TPoint):Integer;
-    procedure SetSelStart(value:integer);
     procedure OnSetFocus(var Msg: TWMSetFocus); message WM_SETFOCUS;
     procedure OnKillFocus(var Msg: TWMKillFocus); message WM_KILLFOCUS;
   public
-    TrackChar:TTrackChar;
-    SelStart:Integer;
-    function CharPosToSourcePos(const pos:integer):integer;
+    procedure SetSelStart(value:integer);
+    function CharPosToTrackChar(const pos:integer):TOneTrackChar;
     procedure TryBrokenReferences(sl:TStringList); override;
     procedure CopyDependencies(CopyList:TList); override;
     function RenderedText:WideString;
@@ -1135,7 +1136,7 @@ begin
   // set TTrackChar.bs not only after <br/> but also after following superfluous whitespaces
   if i+1<=length(gltext) then
    TrackChar[i-1].bs:=TrackChar[i-1+1].vn;
-   TrackChar[i-1].bs:=length(FHTMLText)+1;  
+   TrackChar[i-1].bs:=length(FHTMLText)+1;
  end;
  markupEmptyEle:
  begin
@@ -3345,11 +3346,14 @@ begin
  end;
 end;
 
-function TdhCustomLabel.CharPosToSourcePos(const pos:integer):integer;
+function TdhCustomLabel.CharPosToTrackChar(const pos:integer):TOneTrackChar;
 begin
  if (pos-1>=Low(TrackChar)) and (pos-1<=High(TrackChar)) then
-  result:=TrackChar[pos-1].vn else
-  result:=Length(FHTMLText)+1;
+  result:=TrackChar[pos-1] else
+  begin
+  result.vn:=Length(FHTMLText)+1;
+  result.bs:=Length(FHTMLText)+1;
+  end;
 end;
 
 procedure TdhCustomLabel.KeyPress(var Key: AChar);
@@ -3376,7 +3380,7 @@ begin
    end;
    exit;
  end;
- vn:=CharPosToSourcePos(SelStart+1);
+ vn:=CharPosToTrackChar(SelStart+1).vn;
  StyleTree:=Ptree[Min(SelStart+1,High(Ptree))];
  if Char(VK_SPACE)=Key then
  begin

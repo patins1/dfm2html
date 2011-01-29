@@ -82,6 +82,7 @@ type
     procedure Loaded; override;
     function GetFinal: ICon; override;
     procedure GetModifiedText(var pre,s,suc:HypeString); override;
+    function InterpreteDirectly:Boolean; override;
     function IncludeBorderAndPadding:boolean; override;
     procedure GetRowsCols(AllowModifyX,AllowModifyY:boolean; var NewWidth, NewHeight, Rows, Cols: Integer); override;
     procedure DoCSSToWinControl(WhatChanged: TWhatChanged); override;
@@ -236,6 +237,11 @@ end;
 procedure TdhSelect.GetModifiedText(var pre, s, suc: HypeString);
 begin
  //do nothing
+end;
+
+function TdhSelect.InterpreteDirectly:Boolean;
+begin
+  result:=false;
 end;
 
 function TdhSelect.IncludeBorderAndPadding:boolean;

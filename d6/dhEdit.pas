@@ -14,6 +14,7 @@ type
     procedure NearestMod(m,frame:integer; var n,times:integer);
     procedure Loaded; override;
     procedure GetModifiedText(var pre,s,suc:HypeString); override;
+    function InterpreteDirectly:Boolean; override;
     function NeedPadding(HasRastering:TRasterType): boolean; override;
     function EffectsAllowed: boolean; override;
     procedure GetAutoRect(AllowModifyX,AllowModifyY:boolean; var NewWidth, NewHeight: Integer); override;
@@ -133,7 +134,12 @@ end;
 
 procedure TdhCustomEdit.GetModifiedText(var pre, s, suc: HypeString);
 begin
-  s:=ConvertWideStringToUnicode(s,true)+#10;
+  suc:=#10;
+end;
+
+function TdhCustomEdit.InterpreteDirectly:Boolean;
+begin
+  result:=true;
 end;
 
 procedure TdhCustomEdit.Loaded;

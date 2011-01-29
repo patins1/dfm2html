@@ -99,6 +99,7 @@ type
     function Referer:TdhCustomPanel; override;
     function WrapAlways: boolean; virtual;
     procedure GetModifiedText(var pre,s,suc:HypeString); virtual;
+    function InterpreteDirectly:Boolean; virtual;
     function DelegateClick:boolean;
     procedure DoStateTransition(OldState:TState); override;
     function EmptyContent:boolean;
@@ -848,7 +849,7 @@ begin
   result:=result+s[i];
 end;
 
-function ConvertUnicodeToWideStringExt(const s:HypeString; var TrackChar:TTrackChar; offs:integer; mislegit:HypeChar):WideString;
+function ConvertUnicodeToWideStringExt(const s:HypeString; var TrackChar:TTrackChar; offs:integer; mislegit:HypeChar; InterpreteDirectly:Boolean):WideString;
 var i,o,old_i,ri,ti:integer;
     ch:WideChar;
 begin
@@ -857,6 +858,20 @@ begin
  ti:=length(TrackChar);
  setlength(result,length(s));
  setlength(TrackChar,length(TrackChar)+length(s));
+ if InterpreteDirectly then
+ begin
+ while i<=length(s) do
+ begin
+  old_i:=i;
+  result[ri]:=s[i];
+  inc(ri);
+  inc(i);
+  TrackChar[ti].vn:=offs+old_i;
+  TrackChar[ti].bs:=offs+i;
+  inc(ti);
+ end;
+ end else
+ begin
  while (i<=length(s)) and (s[i]=mislegit) do
   inc(i);
  while i<=length(s) do
@@ -889,6 +904,7 @@ begin
   TrackChar[ti].bs:=offs+i;
   inc(ti);
  end;
+ end;
  setlength(TrackChar,ti);
  setlength(result,ri-1);
 end;
@@ -897,7 +913,7 @@ end;
 function ConvertUnicodeToWideString_(const s:WideString):WideString;
 var TrackChar:TTrackChar;
 begin
- result:=ConvertUnicodeToWideStringExt(s,TrackChar,0,#0);
+ result:=ConvertUnicodeToWideStringExt(s,TrackChar,0,#0,false);
 end;
 
 
@@ -1024,7 +1040,7 @@ begin
   begin
    s:=markupEmptyEle;
   end;
-  wtext:=ConvertUnicodeToWideStringExt(s,TrackChar,vn-1-length(spre),#1);
+  wtext:=ConvertUnicodeToWideStringExt(s,TrackChar,vn-1-length(spre),#1,InterpreteDirectly);
   end;
 
  c:=length(Ptree);
@@ -1162,6 +1178,7 @@ begin
 
  vn:=1;
  vn_old:=vn;
+ if not InterpreteDirectly then
  while getTag2(s,vn,itag,itagbs,tag,text,Closing,EmptyEle) and (StyleTree<>nil) do
  begin
   PushText(vn_old);
@@ -3046,6 +3063,11 @@ begin
   s:=' ';
 end;
 
+function TdhCustomLabel.InterpreteDirectly:Boolean;
+begin
+  result:=false;
+end;
+
 function TdhCustomLabel.GetActCursor:TCursor;
 begin
             Result := Screen.Cursor;
@@ -3353,17 +3375,19 @@ begin
  if Char(VK_SPACE)=Key then
  begin
   ToInsert:=Key;
-  if StyleTree.WhiteSpace<>cwsPre then
+  if (StyleTree.WhiteSpace<>cwsPre) and not InterpreteDirectly then
   if (GetCodeForChar(SelStart-1)=' ') or (GetCodeForChar(SelStart-1)='&nbsp;') or (GetCodeForChar(SelStart)=' ') or (GetCodeForChar(SelStart)='&nbsp;')  then
    ToInsert:='&nbsp;';
  end else
  if Char(VK_RETURN)=Key then
  begin
-   if StyleTree.WhiteSpace=cwsPre then
+   if (StyleTree.WhiteSpace=cwsPre) or InterpreteDirectly then
     ToInsert:=#10 else
     ToInsert:='<br/>';
  end else
-  ToInsert:=Key;
+ if InterpreteDirectly then
+  ToInsert:=Key else
+  ToInsert:=ConvertWideStringToUnicode(Key,false);
  SetHTMLText(Copy(FHTMLText,1,vn-1)+ToInsert+Copy(FHTMLText,vn,MaxInt));
  inc(SelStart);
  inherited;

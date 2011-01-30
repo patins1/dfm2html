@@ -1136,7 +1136,7 @@ begin
  markupBreak:
  begin
   // set TTrackChar.bs not only after <br/> but also after following superfluous whitespaces
-  TrackChar[i-1].bs:=CharPosToTrackChar(i-1+1).vn;
+  TrackChar[i-1].bs:=CharPosToTrackChar(i+1).vn;
  end;
  markupEmptyEle:
  begin

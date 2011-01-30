@@ -1504,6 +1504,7 @@ begin
    exit;
   end;
   cl:=TdhCustomLabel(c);
+  SetControlTo(c,true,true);
   cl.StartOrContinueEditingAtMousePosition;
   exit;
  end;

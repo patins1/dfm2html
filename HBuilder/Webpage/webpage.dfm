@@ -5,7 +5,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1
   VertScrollBar.Tracking = True
   Anchors = [akLeft, akTop, akRight, akBottom]
   Caption = 'webpage.dfm'
-  ClientHeight = 501
+  ClientHeight = 526
   ClientWidth = 1280
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clBlack
@@ -42,10 +42,11 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1
     HTTPURL = 'http://www.dfm2html.com/'
     GeneratedImageFolder = 'images'
     GeneratedCSSFile = 'dfm2html'
+    VertPosition = 122
     object Panel4: TdhPanel
-      Top = 36
+      Top = -86
       Width = 758
-      Height = 3288
+      Height = 1592
       Style.Border.Width = 1
       Style.Border.Color = 15461355
       Style.Border.Style = cbsSolid
@@ -79,7 +80,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1
         Top = 88
         Width = 24
         Height = 24
-        ActivePage = history
+        ActivePage = tips
         FixedHeight = False
         object Page1: TdhPage
           Left = 192
@@ -1864,7 +1865,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1
           Left = 192
           Top = 96
           Width = 488
-          Height = 1240
+          Height = 1440
           AutoSizeXY = asNone
           UseIFrame = False
           object Label26: TdhLabel
@@ -1880,7 +1881,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1
             Left = 16
             Top = 56
             Width = 440
-            Height = 209
+            Height = 273
             Text = 
               '<en>'#10'<FAQ_question>Hot keys for a selected object:</FAQ_question' +
               '>'#10'<br/>'#10'<b>ESC</b> : Selects the object'#39's parent<br/>'#10'<b>CTRL</b' +
@@ -1889,34 +1890,41 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1
               'object by the grid'#39's width<br/>'#10'<b>SHIFT</b>+<b>Arrow key</b> : ' +
               'Resizes the selected object by one pixel<br/>'#10'<b>ALT</b> + <b>Le' +
               'ft mouse click</b> on textual content : Opens the text editor wi' +
-              'th the edit cursor set to the clicked text position.<br/>'#10'<br/>'#10 +
-              '</en>'#10'<de>'#10'<FAQ_question>Tastenk'#252'rzel f'#252'r ein selektiertes Objek' +
-              't:</FAQ_question>'#10'<br/>'#10'<b>ESC</b> : Selektiert das Elternobjekt' +
-              '<br/>'#10'<b>STRG</b>+<b>Pfeiltaste</b> : Verschiebt das Objekt um e' +
-              'inen Pixel<br/>'#10'<b>STRG</b>+<b>SHIFT</b>+<b>Pfeiltaste</b> : Ver' +
-              'schiebt das Objekt um die Breite des Gitters<br/>'#10'<b>SHIFT</b>+<' +
-              'b>Pfeiltaste</b> : '#196'ndert die Gr'#246#223'e des Objekts um einen Pixel<b' +
-              'r/>'#10'<b>ALT</b> + <b>linker Mausklick</b> auf textuellen Inhalt :' +
-              ' '#214'ffnet den Texteditor an der Stelle der angeklickten Textpositi' +
-              'on.<br/>'#10'<br/>'#10'</de>'#10#10'<en>'#10'<FAQ_question>Round corners for image' +
-              's with borders</FAQ_question>'#10'<br/>'#10'When you have a rectangular ' +
-              'image with build-in borders, you can round the corners with resp' +
-              'ect to the image-contained borders!'#10'Do it by defining a <code>hi' +
-              'dden</code> border (Edges tab -> Border) of appropriate size and' +
-              ' by defining a border radius, like in the following example:'#10'</e' +
-              'n>'#10'<de>'#10'<FAQ_question>Runde Ecken f'#252'r Bilder mit Rahmen</FAQ_que' +
-              'stion>'#10'<br/>'#10'Rechteckige Bilder k'#246'nnen entlang eines definierten' +
-              ' Rahmens gerundet werden!!'#10'W'#228'hle daf'#252'r den <code>unsichtbaren Ra' +
-              'hmen</code> Typ (Rand-Tab -> Rahmen) mit geeigneter Rahmenbreite' +
-              ' und definiere den gew'#252'nschten Rundungsradius, wie im folgenden ' +
-              'Beispiel geschehen:'#10'</de>'
+              'th the edit cursor set to the clicked text position.<br/>'#10'<b>CTR' +
+              'L</b> + <b>ALT</b> + <b>Left mouse click</b> on textual content ' +
+              ': Edits the text direct at the clicked text position.<br/>'#10'<b>CT' +
+              'RL</b> + <b>Left mouse click</b>: Draw a selection rectangle wit' +
+              'h the mouse.<br/>'#10'<br/>'#10'</en>'#10'<de>'#10'<FAQ_question>Tastenk'#252'rzel f'#252 +
+              'r ein selektiertes Objekt:</FAQ_question>'#10'<br/>'#10'<b>ESC</b> : Sel' +
+              'ektiert das Elternobjekt<br/>'#10'<b>STRG</b>+<b>Pfeiltaste</b> : Ve' +
+              'rschiebt das Objekt um einen Pixel<br/>'#10'<b>STRG</b>+<b>SHIFT</b>' +
+              '+<b>Pfeiltaste</b> : Verschiebt das Objekt um die Breite des Git' +
+              'ters<br/>'#10'<b>SHIFT</b>+<b>Pfeiltaste</b> : '#196'ndert die Gr'#246#223'e des ' +
+              'Objekts um einen Pixel<br/>'#10'<b>ALT</b> + <b>linker Mausklick</b>' +
+              ' auf textuellen Inhalt : '#214'ffnet den Texteditor an der Stelle der' +
+              ' angeklickten Textposition.<br/>'#10'<b>CTRL</b> + <b>ALT</b> + <b>l' +
+              'inker Mausklick</b> auf textuellen Inhalt : Editiert den Text di' +
+              'rekt der angeklickten Textposition.<br/>'#10'<b>CTRL</b> + <b>linker' +
+              ' Mausklick</b>: Alle Objekte innerhalb des mit der Maus gezogene' +
+              'n Rechtecks k'#246'nnen selektiert werden.<br/>'#10'<br/>'#10'</de>'#10#10'<en>'#10'<FA' +
+              'Q_question>Round corners for images with borders</FAQ_question>'#10 +
+              '<br/>'#10'When you have a rectangular image with build-in borders, y' +
+              'ou can round the corners with respect to the image-contained bor' +
+              'ders!'#10'Do it by defining a <code>hidden</code> border (Edges tab ' +
+              '-> Border) of appropriate size and by defining a border radius, ' +
+              'like in the following example:'#10'</en>'#10'<de>'#10'<FAQ_question>Runde Ec' +
+              'ken f'#252'r Bilder mit Rahmen</FAQ_question>'#10'<br/>'#10'Rechteckige Bilde' +
+              'r k'#246'nnen entlang eines definierten Rahmens gerundet werden!!'#10'W'#228'h' +
+              'le daf'#252'r den <code>unsichtbaren Rahmen</code> Typ (Rand-Tab -> R' +
+              'ahmen) mit geeigneter Rahmenbreite und definiere den gew'#252'nschten' +
+              ' Rundungsradius, wie im folgenden Beispiel geschehen:'#10'</de>'
             Style.BackgroundColor = Transparent
             Style.TextAlign = ctaJustify
             AutoSizeXY = asY
           end
           object Link15: TdhLink
             Left = 18
-            Top = 293
+            Top = 373
             Width = 88
             Height = 31
             Text = 'Your Text'
@@ -1945,7 +1953,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1
           end
           object Label30: TdhLabel
             Left = 136
-            Top = 304
+            Top = 384
             Width = 16
             Height = 16
             Text = '=>'
@@ -1953,7 +1961,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1
           end
           object Link22: TdhLink
             Left = 194
-            Top = 293
+            Top = 373
             Width = 88
             Height = 31
             Text = 'Your Text'
@@ -1985,7 +1993,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1
           end
           object Label2: TdhLabel
             Left = 16
-            Top = 352
+            Top = 432
             Width = 440
             Height = 48
             Text = 
@@ -2001,7 +2009,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1
           end
           object Label39: TdhLabel
             Left = 16
-            Top = 416
+            Top = 496
             Width = 440
             Height = 65
             Text = 
@@ -2017,7 +2025,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1
           end
           object Label40: TdhLabel
             Left = 16
-            Top = 496
+            Top = 576
             Width = 440
             Height = 48
             Text = 
@@ -2033,7 +2041,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1
           end
           object Label36: TdhLabel
             Left = 16
-            Top = 640
+            Top = 720
             Width = 440
             Height = 472
             Text = 
@@ -2147,7 +2155,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1
           end
           object Label51: TdhLabel
             Left = 24
-            Top = 1136
+            Top = 1216
             Width = 464
             Height = 90
             Text = 
@@ -2164,7 +2172,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1
           end
           object Label52: TdhLabel
             Left = 16
-            Top = 568
+            Top = 648
             Width = 440
             Height = 48
             Text = 
@@ -2772,10 +2780,13 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1
     end
     object StyleSheet8: TdhStyleSheet
       Left = 8
-      Top = 8
-      Width = 232
-      Height = 296
-      Expanded = True
+      Top = -114
+      Width = 28
+      Height = 28
+      Expanded = False
+      ExpandedWidth = 232
+      ExpandedHeight = 296
+      Expanded = False
       object de: TdhLabel
         Left = 0
         Top = 0

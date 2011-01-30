@@ -973,6 +973,17 @@ begin
  result:=false;
 end;
 
+procedure ChangedContent(Control:TControl; commit:boolean);
+begin
+ if _RuntimeMode then exit;
+ if commit then
+ begin
+  if Control.Owner is TPageContainer then
+    TPageContainer(Control.Owner).SetModified('Typing');
+ end else
+  Tabs.ActContentChanged;
+end;
+
 
 {$IFNDEF CLX}
 procedure ShowMDIClientEdge(ClientHandle: THandle; ShowEdge: Boolean);
@@ -1154,7 +1165,7 @@ begin
 end;      }
 
 procedure TdhMainForm.csEndSize(Sender: TObject);
-begin             
+begin
  Sender:=Sender
 // cs.Control.Visible:=true;
 end;
@@ -3199,6 +3210,7 @@ initialization
  glPreAddCompo:=PreAddCompo;
  glPostAddCompo:=PostAddCompo;
  glAfterSaveBin:=AfterSaveBin;
+ glChangedContent:=ChangedContent;
 
 //    WHook := SetWindowsHookEx(WH_CALLWNDPROCRET	 , @CallWndProcHook, 0, GetCurrentThreadId);
 

@@ -767,6 +767,7 @@ type
     procedure LoadImage(URL: TPathName); overload;
     procedure LoadImageExt(URL: TPathName; pn:TdhCustomPanel); overload;
     procedure ActBoundsChanged;
+    procedure ActContentChanged;
     procedure WriteTransformations(tt: TTransformations);
     procedure UpdateSel;
     constructor Create(AOwner: TComponent); override;
@@ -1046,7 +1047,7 @@ begin
 end;
 
 begin
-  //PageControl1.Invalidate;      
+  //PageControl1.Invalidate;
   setUnd(AnchorFont,IsFontCleared);
   setUnd(AnchorBorder,IsAllEdgeCleared);
   setUnd(AnchorBackground,IsImageCleared);
@@ -1108,6 +1109,12 @@ procedure TTabs.ActBoundsChanged;
 begin
  if AnchorPosition.TabVisible and (Selection.Count<>0) then
   UpdatePositionDisplay;
+end;
+
+procedure TTabs.ActContentChanged;
+begin
+ if (Selection.Count<>0) and (PageControl1.ActivePage<>nil) and PageControl1.ActivePage.TabVisible and Assigned(PageControl1.ActivePage) then
+  PageControl1.ActivePage.OnShow(nil);
 end;
 
 function AbsIncr(c:TControl):TPoint;
@@ -3570,7 +3577,7 @@ begin
   result:=FindControl(GetParent(h));
  if result is TForm then
   result:=nil;
-{$ENDIF}  
+{$ENDIF}
 end;
 
 

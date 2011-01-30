@@ -2167,15 +2167,21 @@ begin
 end;
 
 procedure TPageContainer.KeyDown(var Key: Word; Shift: TShiftState);
+var c:TControl;
 begin
-  inherited;   
+  inherited;
+  C:=ExtractActiveControl;
+  if (C is TdhCustomLabel) and (C.Owner=Self) then exit;
 // if not dhMainForm.Menu.IsShortCut() then
   MySiz.DoKeyDown(Key,Shift);
 end;
 
 procedure TPageContainer.KeyUp(var Key: Word; Shift: TShiftState);
+var c:TControl;
 begin
  inherited;
+  C:=ExtractActiveControl;
+  if (C is TdhCustomLabel) and (C.Owner=Self) then exit;
  MySiz.DoKeyUp(Key,Shift);
 end;
 

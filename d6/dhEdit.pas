@@ -3,7 +3,7 @@ unit dhEdit;
 interface
 
 uses
-   Types, SysUtils, Classes, dhPanel, dhLabel, dhStrUtils, dhStyles;
+   Types, SysUtils, Classes, dhPanel, dhLabel, dhStrUtils, dhStyles, Controls;
 
 type
   TdhCustomEdit = class(TdhCustomLabel)
@@ -19,6 +19,7 @@ type
     function EffectsAllowed: boolean; override;
     procedure GetAutoRect(AllowModifyX,AllowModifyY:boolean; var NewWidth, NewHeight: Integer); override;
     procedure GetRowsCols(AllowModifyX,AllowModifyY:boolean; var NewWidth, NewHeight, Rows, Cols: Integer); virtual;
+    procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
   public
     property ReadOnly:boolean read FReadOnly write FReadOnly default False;
     procedure Reset;
@@ -182,6 +183,16 @@ begin
  if FPassword then
   s:=StringOfChar('*',length(s));
  inherited;
+end;
+
+procedure TdhCustomEdit.MouseDown(Button: TMouseButton; Shift: TShiftState; X,
+  Y: Integer);
+begin
+ Inherited;
+ if not (csDesigning in ComponentState) then
+ begin
+  StartOrContinueEditingAtMousePosition;
+ end;
 end;
 
 end.

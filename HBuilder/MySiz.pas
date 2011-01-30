@@ -305,7 +305,7 @@ var
   W: TWriter;
   I: Integer;
 begin
-  S := TMemoryStream.Create;         
+  S := TMemoryStream.Create;
   try
     IsCopying:=true;
     try
@@ -383,7 +383,7 @@ end;
 
 function GetPClip(c:TControl):TRect;
 var p:TWinControl;
-begin                                 
+begin
  result:=Rect(0,0,maxint,maxint);
  p:=c.Parent;
  while (p<>nil) do
@@ -1394,7 +1394,7 @@ begin
    QueryPerformanceCounter(Int64((@c2)^));
    showmessage(inttostr((c2-c1) div 1000));
   end;}
-{$ENDIF}  
+{$ENDIF}
 
 end;
 
@@ -1412,6 +1412,9 @@ begin
  if not (not All and Att and (FChildList.IndexOf(c)<>-1) and
     not((dhMainForm.Act<>nil) and (Tabs.Selection.Count=0)))  then
  begin
+ cc:=ExtractActiveControl;
+ if (cc is TdhCustomLabel) and (cc.Owner=Owner) then
+  TdhCustomLabel(cc).StopEditing;
  if All then
   FChildList.Clear;
  if Att then
@@ -1419,7 +1422,7 @@ begin
   Detach(c);
  for i:=FChildList.Count-1 downto 0 do
  if csDestroying in TComponent(FChildList[i]).ComponentState then
-  FChildList.Delete(i); 
+  FChildList.Delete(i);
  if Att and (c=nil) and (FChildList.Count<>0) then
   c:=FChildList[0];
  if Att and (c<>nil) and not _RuntimeMode then
@@ -1491,7 +1494,9 @@ begin
  //Parent.SetFocus;
  if _RuntimeMode then exit;
 
- if ssDouble in Shift then
+ if not Tabs.CommitChanges then exit;
+
+ if (ssCtrl in GetShiftState) and (ssAlt in GetShiftState) and (Button=mbLeft) then
  begin
   c:=GetRealC(Mouse.CursorPos);
   if not EditableControl(c,false) or not (c is TdhCustomLabel) then
@@ -1499,12 +1504,9 @@ begin
    exit;
   end;
   cl:=TdhCustomLabel(c);
-  cl.SetSelStart(Max(0,l.CharPos-1));
-  cl.SetFocus;
+  cl.StartOrContinueEditingAtMousePosition;
   exit;
  end;
-
- if not Tabs.CommitChanges then exit;
 
  if FDragging then
  begin
@@ -1735,7 +1737,7 @@ begin
      FHintWindow.Color:=DefHintColor;
      {
      FHintWindow.ActivateHint(HintWinRect, HintStr);  }
-    end;    
+    end;
     HintWinRect := FHintWindow.CalcHintRect(Screen.Width, HintStr, nil);  
     OffsetRect(HintWinRect,Mouse.CursorPos.X,Mouse.CursorPos.Y+20);
        if First then
@@ -2286,7 +2288,7 @@ end;
 
 procedure TMySiz.CopyComponents(CopyDependencies:boolean; _WithMeta:boolean);
 var CopyList:TList;
-begin              
+begin
   if not Tabs.CommitChanges then exit;
 
   assert(not WithMeta);
@@ -2390,7 +2392,7 @@ end;
 
 procedure TMySiz.SelCheckDesignState;
 var i:integer;
-begin                            
+begin
  {if _RuntimeMode then
  begin
   if SavedSel=nil then

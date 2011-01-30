@@ -747,6 +747,7 @@ var
     glPreAddCompo:TPreAddCompo;
     glPostAddCompo:TPostAddCompo;
     glIsDesignerSelected:function (Control:TControl):boolean;
+    glChangedContent:procedure (Control:TControl; commit:boolean);
     _RuntimeMode:boolean=false;
     DesignStyle:TState=hsNormal;
     NotifyDebug:procedure(s:AString);

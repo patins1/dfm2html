@@ -91,6 +91,7 @@ type
 {$ENDIF}
     procedure PC_Cursor(F: TColor32; var B: TColor32; M: TColor32);
   protected
+    FOldHTMLText:HypeString;
     FHTMLText:HypeString;
     function PreventFull(Cause:TTransformations):boolean; override;
     function AllowAutoSizeY:boolean; override;
@@ -152,7 +153,6 @@ type
     function NeedPadding(HasRastering:TRasterType): boolean; override;
     procedure KeyPress(var Key: AChar); override;
     procedure KeyDown(var Key: Word; Shift: TShiftState); override;
-    procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
     function CharToCoord(pos:Integer):TPoint;
     function CharOfLine(line:Integer):Integer;
     function AfterLastCharOfLine(line:Integer):Integer;
@@ -160,6 +160,8 @@ type
     procedure OnSetFocus(var Msg: TWMSetFocus); message WM_SETFOCUS;
     procedure OnKillFocus(var Msg: TWMKillFocus); message WM_KILLFOCUS;
   public
+    procedure StartOrContinueEditingAtMousePosition;
+    procedure StopEditing;
     procedure SetSelStart(value:integer);
     function CharPosToTrackChar(const pos:integer):TOneTrackChar;
     procedure TryBrokenReferences(sl:TStringList); override;
@@ -3049,7 +3051,6 @@ begin
 end;
 
 begin
- inherited;
  P:=Mouse.CursorPos;
  DecPt(P,GetCBound(Self).TopLeft);
  IncPt(P,Point(HPos,VPos));
@@ -3340,6 +3341,7 @@ begin
  with TrackChar[SelStart] do
  begin
    SetHTMLText(Copy(FHTMLText,1,vn-1)+Copy(FHTMLText,bs,MaxInt));
+   if Assigned(glChangedContent) then glChangedContent(Self,false);
  end;
  end;
 end;
@@ -3368,6 +3370,7 @@ begin
 end;
 
 begin
+ inherited;
  if Char(VK_BACK)=Key then
  begin
    if (SelStart-1>=Low(TrackChar)) and (SelStart-1<=High(TrackChar)) then
@@ -3375,14 +3378,15 @@ begin
    begin
     SetHTMLText(Copy(FHTMLText,1,vn-1)+Copy(FHTMLText,bs,MaxInt));
     Dec(SelStart);
-   end;
-   exit;
- end;
+   end else
+    exit;
+ end else
+ begin
  vn:=CharPosToTrackChar(SelStart+1).vn;
  StyleTree:=Ptree[Min(SelStart+1,High(Ptree))];
- if Char(VK_SPACE)=Key then
+ if (Char(VK_SPACE)=Key) or (Char(VK_TAB)=Key) then
  begin
-  ToInsert:=Key;
+  ToInsert:=' ';
   if (StyleTree.WhiteSpace<>cwsPre) and not InterpreteDirectly then
   if (GetCodeForChar(SelStart-1)=' ') or (GetCodeForChar(SelStart-1)='&nbsp;') or (GetCodeForChar(SelStart)=' ') or (GetCodeForChar(SelStart)='&nbsp;')  then
    ToInsert:='&nbsp;';
@@ -3393,23 +3397,31 @@ begin
     ToInsert:=#10 else
     ToInsert:='<br/>';
  end else
+ if Char(VK_ESCAPE)=Key then
+ begin
+   StopEditing;
+   Exit;
+ end else
+ if Char(0)=Key then exit else
  if InterpreteDirectly then
   ToInsert:=Key else
   ToInsert:=ConvertWideStringToUnicode(Key,false);
  SetHTMLText(Copy(FHTMLText,1,vn-1)+ToInsert+Copy(FHTMLText,vn,MaxInt));
  inc(SelStart);
- inherited;
+ end;
+ if Assigned(glChangedContent) then glChangedContent(Self,false);
 end;
 
-procedure TdhCustomLabel.MouseDown(Button: TMouseButton; Shift: TShiftState; X,
-  Y: Integer);
+procedure TdhCustomLabel.StartOrContinueEditingAtMousePosition;
 begin
- Inherited;
- if not (csDesigning in ComponentState) then
- begin
-  SetFocus;
   SetSelStart(Max(0,CharPos-1));
- end;
+  Windows.SetFocus(Handle);
+end;
+
+procedure TdhCustomLabel.StopEditing;
+begin
+ if Parent<>nil then
+  Parent.SetFocus;
 end;
 
 {$IFNDEF CLX}
@@ -3434,15 +3446,18 @@ begin
   end;
 end;
 
-procedure TdhCustomlabel.OnSetFocus(var Msg: TWMSetFocus); 
+procedure TdhCustomlabel.OnSetFocus(var Msg: TWMSetFocus);
 begin
     Inherited;
+    FOldHTMLText:=FHTMLText;
     NotifyCSSChanged([wcNoOwnCSS]);
 end;
 
-procedure TdhCustomlabel.OnKillFocus(var Msg: TWMKillFocus); 
+procedure TdhCustomlabel.OnKillFocus(var Msg: TWMKillFocus);
 begin
     Inherited;
+    if (FOldHTMLText<>FHTMLText) and Assigned(glChangedContent) then
+     glChangedContent(Self,true);
     NotifyCSSChanged([wcNoOwnCSS]);
 end;
 

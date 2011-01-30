@@ -282,7 +282,7 @@ begin
     begin
      line:=0;
      col:=vn-1;
-     for ii:=1 to Math.min(vn,length(NewStr)) do
+     for ii:=1 to Math.min(vn-1,length(NewStr)) do
      if NewStr[ii]=endl_main then
      begin
       inc(line);

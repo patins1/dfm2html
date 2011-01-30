@@ -1128,15 +1128,13 @@ end;
 
 procedure AdjustForEditing;
 var i:integer;
-begin  
+begin
  for i := 1 to length(gltext) do
- case gltext[i]of 
+ case gltext[i]of
  markupBreak:
  begin
   // set TTrackChar.bs not only after <br/> but also after following superfluous whitespaces
-  if i+1<=length(gltext) then
-   TrackChar[i-1].bs:=TrackChar[i-1+1].vn;
-   TrackChar[i-1].bs:=length(FHTMLText)+1;
+  TrackChar[i-1].bs:=CharPosToTrackChar(i-1+1).vn;
  end;
  markupEmptyEle:
  begin

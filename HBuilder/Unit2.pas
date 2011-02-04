@@ -3599,7 +3599,11 @@ end;
 
 
 function TTabs.CommitChanges:boolean;
+var cc:TControl;
 begin
+ cc:=ExtractActiveControl;
+ if cc is TdhCustomLabel then
+  TdhCustomLabel(cc).StopEditing;
  if (ActiveEditControl=nil) then
  begin
   result:=true;

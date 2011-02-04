@@ -325,7 +325,7 @@ begin
        blue_alpha:=$FF + (Black shr 16 and $FF) - (White shr 16 and $FF);
        if not(red_alpha<=255) or not(green_alpha<=255) or not(blue_alpha<=255) then
        begin
-        result:=Black;
+        result:=White;
         exit;
        end;
        if (red_alpha=0) or (green_alpha=0) or (blue_alpha=0) then

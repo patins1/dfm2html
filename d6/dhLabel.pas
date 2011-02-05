@@ -3420,8 +3420,8 @@ end;
 
 procedure TdhCustomLabel.StopEditing;
 begin
- if Parent<>nil then
-  Parent.SetFocus;
+ if Windows.GetFocus=Handle then
+  Windows.SetFocus(0);
 end;
 
 {$IFNDEF CLX}

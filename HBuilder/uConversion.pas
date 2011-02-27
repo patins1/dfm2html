@@ -3001,6 +3001,9 @@ begin
   gnest:=snest;
  end;
 
+ if HTMLTags.IndexOf(id)<>-1 then
+   tagName:=id;
+
  snest.hclass:=glClass;
  snest.dclass:=classname;
  snest.tag:=tagName;

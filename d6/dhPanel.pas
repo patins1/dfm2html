@@ -207,7 +207,7 @@ type
     procedure CursorHasChanged;
     procedure ParentFontHasChanged;
     procedure ParentColorHasChanged;
-    procedure NameChanged;
+    procedure NameChanged; virtual;
     function FontWeight: TCSSFontWeight;
     function FontVariant: TCSSFontVariant;
     function FontStyle: TCSSFontStyle;
@@ -2379,10 +2379,7 @@ end;
 
 procedure TdhCustomPanel.NameChanged;
 begin
-  if not (csDestroying in ComponentState) and not (csLoading in ComponentState) then
-  begin
    NotifyInlineUsedByList([wcName]);
-  end;
 end;
 
 procedure TdhCustomPanel.UpdateMouse(MouseEnter:boolean);
@@ -6104,7 +6101,8 @@ begin
   if not (csDestroying in ComponentState) and (not IsValidIdent(Value)) then
    raise WException.Create(WFormat(QUOTEINVALIDVALUE_STR,[Value]));
   Inherited;
-  NameChanged;
+  if not (csDestroying in ComponentState) and not (csLoading in ComponentState) then
+   NameChanged;
  end;
 end;          
 

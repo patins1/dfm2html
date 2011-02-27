@@ -159,7 +159,9 @@ type
     function CoordToChar(const Coord:TPoint):Integer;
     procedure OnSetFocus(var Msg: TWMSetFocus); message WM_SETFOCUS;
     procedure OnKillFocus(var Msg: TWMKillFocus); message WM_KILLFOCUS;
+    function GetFinal: ICon; override;
   public
+    procedure NameChanged; override;
     procedure StartOrContinueEditingAtMousePosition;
     procedure StopEditing;
     procedure SetSelStart(value:integer);
@@ -233,6 +235,7 @@ function HasUnicodeName(i:integer; var CharacterName:AString):boolean;
 function AssertTags2:boolean;
 
 var RenamedNames:TStringList;
+var HTMLTags:TStringList;
 
 procedure Register;
 
@@ -243,8 +246,6 @@ uses dhStyleSheet,BasicHTMLElements;
 
 var _Unicode:TStringList;
     UnicodeByNumbersList:TDictionary<Integer,String>;
-
-var HTMLTags:TStringList;
 
 {$IFDEF CLX}
 const IsCLX=true;
@@ -3459,6 +3460,21 @@ begin
     if (FOldHTMLText<>FHTMLText) and Assigned(glChangedContent) then
      glChangedContent(Self,true);
     NotifyCSSChanged([wcNoOwnCSS]);
+end;
+
+function TdhCustomLabel.GetFinal: ICon;
+var TagIndex:Integer;
+begin
+ if AssertTags2 then
+ if not IsDlg and HTMLTags.Find(Name,TagIndex) then
+   result:=TdhCustomPanel(HTMLTags.Objects[TagIndex]) else
+   result:=nil;
+end;
+
+procedure TdhCustomLabel.NameChanged;
+begin
+  inherited;
+  NotifyCSSChanged(AllChanged); // see TdhCustomLabel.GetFinal
 end;
 
 initialization

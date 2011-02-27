@@ -3928,8 +3928,6 @@ begin
   result:=Rect(0,0,0,0);
   exit;
  end;
- result:=MarginPure;
- if not IsNullRect(result) then exit;
  result.Left:=SemiTransparencyOfBorderWidth(ealLeft);
  result.Top:=SemiTransparencyOfBorderWidth(ealTop);
  result.Bottom:=SemiTransparencyOfBorderWidth(ealBottom);

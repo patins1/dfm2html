@@ -931,7 +931,7 @@ end;
 
 class function TMySiz.ZGridAdjust(GridBase,Y,FGrid:integer): integer;
 begin
- if {KeyPressed(VK_MENU)}{IsAlt}ssAlt in GetShiftState then
+ if (FGrid<=0) or (ssAlt in GetShiftState) then
   FGrid:=1;
  result:=Y - GridBase + FGrid div 2;
  if result<0 then

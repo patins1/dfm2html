@@ -115,7 +115,7 @@ FormatDisassembly=0
 LimitDisassembly=5
 EnabledPlugins=modules|processes|hardware
 [Filters]
-Filter1ExceptionClasses=EDBEditError, EFOpenError
+Filter1ExceptionClasses=EDBEditError, EFOpenError, EFCreateError
 Filter1DontCreateBugReport=1
 Filter1DontCreateScreenshot=1
 Filter1DontSuspendThreads=1

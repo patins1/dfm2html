@@ -18,7 +18,7 @@ uses
 
   dhHTMLForm,MySiz, dhPanel,dhPageControl, funcutils, UseFastStrings, math, Contnrs, MySpinEdit, MyTrackBar,
   hEdit,hComboBox,hMemo,dhMenu,dhStyleSheet,MySpeedButton,uTemplates,
-  dhLabel, dhCheckBox, dhRadioButton,UIConstants, MyForm, dhStrUtils, uMetaWriter, dhStyles;
+  dhLabel, dhCheckBox, dhRadioButton,UIConstants, MyForm, dhStrUtils, uMetaWriter, dhStyles,Generics.Collections;
 
 
 type
@@ -50,7 +50,8 @@ type
   private
     { Private declarations }
     FFileName:TPathName;
-    FUndo,FRedo,FBackHistory,FForwardHistory:TObjectList;
+    FUndo,FRedo:TObjectList<TModifyStep>;
+    FBackHistory,FForwardHistory:TObjectList<THistoryStep>;
     NewDFM,PreDFM:TFileContents;
     procedure ComponentRead(Component: TComponent);
     procedure ComponentReadAdjustPos(Component: TComponent);
@@ -1333,7 +1334,7 @@ begin
   dhMainForm.UpdateCommands(true,true);}
   exit;
  end;
- NewStep:=FUndo.Last as TModifyStep;
+ NewStep:=FUndo.Last;
  OldDFM:=NewStep.GetOriginal(NewDFM);
  NewStep.SetRepl(NewDFM);
  NewDFM:=OldDFM;
@@ -1359,7 +1360,7 @@ procedure TPageContainer.Redo;
 var OldDFM:TFileContents;
     NewStep:TModifyStep;
 begin
- NewStep:=FRedo.Last as TModifyStep;
+ NewStep:=FRedo.Last;
  OldDFM:=NewStep.GetOriginal(NewDFM);
  NewStep.SetRepl(NewDFM);
  NewDFM:=OldDFM;
@@ -1376,14 +1377,14 @@ begin
   result:=LiveReason;
   exit;
  end;
- NewStep:=FUndo.Last as TModifyStep;
+ NewStep:=FUndo.Last;
  result:=NewStep.Reason;
 end;
 
 function TPageContainer.RedoAction:TReason;
 var NewStep:TModifyStep;
 begin
- NewStep:=FRedo.Last as TModifyStep;
+ NewStep:=FRedo.Last;
  result:=NewStep.Reason;
 end;
 
@@ -1593,7 +1594,7 @@ begin
  try
  assert(CanGoBack);
  FForwardHistory.Add(GetHistoryStep);
- step:=FBackHistory.Last as THistoryStep;
+ step:=FBackHistory.Last;
  GotoHistoryStep(step);
  FBackHistory.Delete(FBackHistory.Count-1);
  dhMainForm.UpdateHistory;
@@ -1622,7 +1623,7 @@ begin
  try
  assert(CanGoForward);
  FBackHistory.Add(GetHistoryStep);
- step:=FForwardHistory.Last as THistoryStep;
+ step:=FForwardHistory.Last;
  GotoHistoryStep(step);
  FForwardHistory.Delete(FForwardHistory.Count-1);
  dhMainForm.UpdateHistory;
@@ -1870,10 +1871,10 @@ begin
   Visible:=false;
   //Name:='PageContainer';//_GetUniqueName(Self,'PageContainer');//'PageContainer_1';
 
-  FUndo:=TObjectList.Create;
-  FRedo:=TObjectList.Create;
-  FBackHistory:=TObjectList.Create;
-  FForwardHistory:=TObjectList.Create;
+  FUndo:=TObjectList<TModifyStep>.Create;
+  FRedo:=TObjectList<TModifyStep>.Create;
+  FBackHistory:=TObjectList<THistoryStep>.Create;
+  FForwardHistory:=TObjectList<THistoryStep>.Create;
 
   MySiz:=TMySiz.Create(Self);
   MySiz.Parent:=Self;

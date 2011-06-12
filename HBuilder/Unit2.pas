@@ -2176,14 +2176,14 @@ end;
 
 
 procedure TTabs.dhAnchor4Click(Sender: TObject);
-var backup:TObjectList;
+var backup:TObjectList<TStyle>;
     backupItem:TStyle;
     i:integer;
     pn:TdhCustomPanel;
     backupImageType:array of TImageType;
 begin
  LateCreateForm(TGradientWizard,GradientWizard);
- backup:=TObjectList.Create;
+ backup:=TObjectList<TStyle>.Create;
  SetLength(backupImageType,Selection.Count);
  GradientWizard.LivePreview:=TList.Create;
  try
@@ -2208,7 +2208,7 @@ begin
   for i:=0 to Selection.Count-1 do
   begin
    pn:=TObject(Selection[i]) as TdhCustomPanel;
-   pn.ActStyle.Assign(TPersistent(backup[i]));
+   pn.ActStyle.Assign(backup[i]);
    pn.ImageType:=backupImageType[i];
   end;
  end;

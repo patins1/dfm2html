@@ -23,7 +23,7 @@ uses
   MySiz, Unit3, uConversion,
   dhRadioButton, dhMemo, dhFileField,  MyToolButton,
   dhColorPicker,IniFiles,gr32, uOptions, menuhelper,
-  pngimage, Contnrs,hEdit,hComboBox,hMemo,hSynMemo,SynMemo, UIConstants,DKLang, OpenSave,AColorPickerAX_TLB,dhStrUtils,WideStrUtils,uMetaWriter,dhStyles,dhGraphicFormats,dhColorUtils,shlobj;
+  pngimage, Contnrs,hEdit,hComboBox,hMemo,hSynMemo,SynMemo, UIConstants,DKLang, OpenSave,AColorPickerAX_TLB,dhStrUtils,WideStrUtils,uMetaWriter,dhStyles,dhGraphicFormats,dhColorUtils,shlobj,Generics.Collections;
 
 //const WM_PUSHUP=WM_USER+33;
 
@@ -401,9 +401,16 @@ uses uWarnings, uPublishLog, uPublishFTP, uTemplates, uPresets, uStartUp,
 {$R *.dfm}
 
 
+type TSaveBinItem=class
+      id_crc:DWORD;
+      data_crc:DWORD;
+      FileAge:TDateTime;
+      FileName:TPathName;
+     end;
+
 var RasteringSaveDir:TPathName;
 
-var CrcList:TObjectList;
+var CrcList:TObjectList<TSaveBinItem>;
 
 
 
@@ -1668,23 +1675,15 @@ begin
  end;
 end;
 
-
-type TSaveBinItem=class
-      id_crc:DWORD;
-      data_crc:DWORD;
-      FileAge:TDateTime;
-      FileName:TPathName;
-     end;
-
 var AfterSaveBinI:TSaveBinItem;
 
 function FindIdCrc(const id_crc:DWORD):TSaveBinItem;
 var i:integer;
 begin
   for i:=0 to CrcList.Count-1 do
-  if TSaveBinItem(CrcList[i]).id_crc=id_crc then
+  if CrcList[i].id_crc=id_crc then
   begin
-   result:=TSaveBinItem(CrcList[i]);
+   result:=CrcList[i];
    exit;
   end;
   result:=nil;
@@ -1694,9 +1693,9 @@ function FindFilename(const Filename:TPathName):TSaveBinItem;
 var i:integer;
 begin
   for i:=0 to CrcList.Count-1 do
-  if SameText(TSaveBinItem(CrcList[i]).Filename,Filename) then
+  if SameText(CrcList[i].Filename,Filename) then
   begin
-   result:=TSaveBinItem(CrcList[i]);
+   result:=CrcList[i];
    exit;
   end;
   result:=nil;
@@ -3201,7 +3200,7 @@ initialization
  lookup_url_char['?']:=3;
 
 
- CrcList:=TObjectList.Create;
+ CrcList:=TObjectList<TSaveBinItem>.Create;
 
 
  glIsDesignerSelected:=IsDesignerSelected;

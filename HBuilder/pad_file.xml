@@ -36,7 +36,7 @@
 		<Program_Name>DFM2HTML</Program_Name>
 		<Program_Version>5</Program_Version>
 		<Program_Type>Freeware</Program_Type>
-		<Program_Release_Status>Minor Update</Program_Release_Status>
+		<Program_Release_Status>Major Update</Program_Release_Status>
 		<Program_Category_Class>Web Development::HTML Tools</Program_Category_Class>
 		<Program_Release_Year>2011</Program_Release_Year>
 		<Program_Release_Month>01</Program_Release_Month>
@@ -46,7 +46,7 @@
 		<Program_Cost_Dollars>0.00</Program_Cost_Dollars>
 		<Program_Categories />
 		<Program_Specific_Category>Development Tools</Program_Specific_Category>
-		<Program_Change_Info>Added context menu to new text editor</Program_Change_Info>
+		<Program_Change_Info>Textual objects can now be edited directly (for shortcuts see Tips &amp; Tricks section)</Program_Change_Info>
 		<Program_Language>German,English,French,Italian,Portuguese,Slovak,Spanish</Program_Language>
 		<Program_OS_Support>Win2000,Win7 x32,WinVista,WinVista x64,WinXP</Program_OS_Support>
 		<Program_Install_Support>Install and Uninstall</Program_Install_Support>

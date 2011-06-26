@@ -50,6 +50,7 @@ type
   private
     { Private declarations }
     FFileName:TPathName;
+    FDirty:boolean;
     FUndo,FRedo:TObjectList<TModifyStep>;
     FBackHistory,FForwardHistory:TObjectList<THistoryStep>;
     NewDFM,PreDFM:TFileContents;
@@ -129,6 +130,7 @@ type
     function UndoAction: TReason;
     procedure Redo;
     function RedoAction: TReason;
+    function CanUndo:boolean;
     function CanRedo:boolean;
     function HasSelectedComponents: boolean;
                                  
@@ -482,14 +484,13 @@ begin
  body.GeneratedCSSFile:='dfm2html.css';
  body.Parent:=Self;
  //body.Font.Assign(FuncSettings.DefaultFont);
- Self.Font.Assign(FuncSettings.DefaultFont);  
+ Self.Font.Assign(FuncSettings.DefaultFont);
  SetDesigning(not _RuntimeMode,false);
  //SetControlDesigning(body,true,false);
  MySiz.BringToFront;
  Visible:=true;
 
  InitializeRedoUndo;
- ActDFM;
 end;
 
 procedure TMyReader.ReaderSetName(Reader: TReader; Component: TComponent; var Name: string);
@@ -810,7 +811,8 @@ begin
   FRedo.Clear;
   FUndo.Clear;
   NewDFM:=EmptyStr;
-  SetModified('INITIALIZATION');
+  ActDFM;
+  FDirty:=false;
 end;
 
 function CorrectOldFormats(Content:TFileContents):TFileContents;
@@ -1284,6 +1286,9 @@ begin
  end;
 
  FRedo.Clear;
+ FDirty:=true;
+ if FuncSettings.FUndoLimit>0 then
+ begin
  NewStep:=TModifyStep.Create;
  NewStep.Reason:=Reason;
  NewStep.left_ok:=min(length(NewDFM),length(OldDFM));
@@ -1302,6 +1307,11 @@ begin
  end;
  NewStep.SetRepl(OldDFM);
  FUndo.Add(NewStep);
+ end;
+ if (FuncSettings.FUndoLimit<=20) and (FUndo.Count>FuncSettings.FUndoLimit) or (FuncSettings.FUndoLimit>20) and (FUndo.Count>FuncSettings.FUndoLimit+15) then
+ begin
+  FUndo.DeleteRange(0,FUndo.Count-FuncSettings.FUndoLimit);
+ end;
  end;
  dhMainForm.UpdateCommands(false,false);
 end;
@@ -1391,7 +1401,7 @@ end;
 
 function TPageContainer.GetIsModified: boolean;
 begin
- result:=(FUndo.Count>=2) or IsLiveModified;
+ result:=FDirty or IsLiveModified;
 end;
 
 function TPageContainer.IsLiveModified:boolean;
@@ -1399,8 +1409,10 @@ begin
  result:=LiveReason<>EmptyStr;
 end;
 
-
-
+function TPageContainer.CanUndo: boolean;
+begin
+ result:=FUndo.Count<>0;
+end;
 
 function TPageContainer.CanRedo: boolean;
 begin

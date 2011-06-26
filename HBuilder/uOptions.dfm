@@ -27,10 +27,6 @@ object Options: TOptions
     TabStop = False
     object TabSheet1: TTntTabSheet
       Caption = 'Grid'
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Label2: TdhLabel
         Left = 8
         Top = 88
@@ -95,7 +91,6 @@ object Options: TOptions
         Width = 89
         Height = 21
         Style = csDropDownList
-        ItemHeight = 13
         TabOrder = 2
         OnChange = spGridXChange
         Items.Strings = (
@@ -108,10 +103,6 @@ object Options: TOptions
     object TabSheet2: TTntTabSheet
       Caption = 'Font'
       ImageIndex = 1
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Label5: TdhLabel
         Left = 8
         Top = 8
@@ -144,10 +135,6 @@ object Options: TOptions
     object TabSheet3: TTntTabSheet
       Caption = 'Output'
       ImageIndex = 2
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Label4: TdhLabel
         Left = 111
         Top = 8
@@ -191,7 +178,6 @@ object Options: TOptions
         Top = 128
         Width = 169
         Height = 21
-        ItemHeight = 13
         TabOrder = 2
         OnChange = eViewerChange
         Items.Strings = (
@@ -222,10 +208,6 @@ object Options: TOptions
     object TabSheet4: TTntTabSheet
       Caption = 'Publish'
       ImageIndex = 3
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Label8: TdhLabel
         Left = 32
         Top = 32
@@ -343,10 +325,6 @@ object Options: TOptions
     object TabSheet5: TTntTabSheet
       Caption = 'Appearance'
       ImageIndex = 4
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object RadioGroup1: TTntRadioGroup
         Left = 6
         Top = 8
@@ -378,11 +356,7 @@ object Options: TOptions
       end
     end
     object TabSheet6: TTntTabSheet
-      Caption = 'Update'
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
+      Caption = 'Misc'
       object cAutoUpdate: TTntCheckBox
         Left = 16
         Top = 16
@@ -391,6 +365,26 @@ object Options: TOptions
         Caption = 'Monthly check for updates'
         TabOrder = 0
         OnClick = cSmartPublishingClick
+      end
+      object spUndoLimit: TMySpinEdit
+        Left = 16
+        Top = 96
+        Width = 65
+        Height = 22
+        MaxValue = 999999
+        MinValue = 0
+        TabOrder = 1
+        Value = 1
+        Alignment = taRightJustify
+        ValueChange = spGridXValueChange
+      end
+      object Label10: TdhLabel
+        Left = 16
+        Top = 77
+        Width = 49
+        Height = 13
+        Text = 'Undo limit:'
+        AutoSizeXY = asXY
       end
     end
   end
@@ -411,8 +405,8 @@ object Options: TOptions
     Font.Height = -11
     Font.Name = 'MS Sans Serif'
     Font.Style = []
-    Left = 268
-    Top = 2
+    Left = 68
+    Top = 210
   end
   object OpenDialog1: TOpenDialog
     DefaultExt = 'dfm'
@@ -430,7 +424,7 @@ object Options: TOptions
     Left = 32
     Top = 208
     LangData = {
-      07004F7074696F6E73010100000001000000070043617074696F6E0129000000
+      07004F7074696F6E73010100000001000000070043617074696F6E012B000000
       0D0050616765436F6E74726F6C31310000090054616253686565743101010000
       0002000000070043617074696F6E0006004C6162656C31010100000021000000
       0400546578740006004C6162656C320101000000220000000400546578740006
@@ -464,6 +458,7 @@ object Options: TOptions
       0000070043617074696F6E000E006753746172745570416374696F6E01020000
       002C000000070043617074696F6E2D00000005004974656D7300050063435353
       3301010000002E000000070043617074696F6E000C006C435353335761726E69
-      6E6701010000002F00000004005465787400}
+      6E6701010000002F000000040054657874000B007370556E646F4C696D697400
+      0007004C6162656C313001010000003000000004005465787400}
   end
 end

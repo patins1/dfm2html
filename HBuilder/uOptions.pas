@@ -23,6 +23,7 @@ type TFuncSettings=object
      FSmartPublishing:boolean;
      FPassiveFTP:boolean;
      FAutoUpdate:boolean;
+     FUndoLimit:integer;
 end;
 
 type
@@ -69,6 +70,8 @@ type
     gStartUpAction: TTntRadioGroup;
     cCSS3: TTntCheckBox;
     lCSS3Warning: TdhLabel;
+    spUndoLimit: TMySpinEdit;
+    Label10: TdhLabel;
     procedure cCSS3Click(Sender: TObject);
     procedure spGridXChange(Sender: TObject);
     procedure Button2Click(Sender: TObject);
@@ -144,6 +147,7 @@ begin
   end else
    lDirectoryCache.Text:='';
   cAutoUpdate.Checked:=FAutoUpdate;
+  spUndoLimit.StoredValue:=FUndoLimit;
  end;
  Adjusting:=false;
 end;
@@ -176,6 +180,7 @@ begin
   if not FSmartPublishing then
    SetLength(Uploaded,0);
   FAutoUpdate:=cAutoUpdate.Checked;
+  FUndoLimit:=spUndoLimit.Value;
  end;
 
 end;

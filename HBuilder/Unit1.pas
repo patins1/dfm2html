@@ -564,8 +564,9 @@ begin
   FuncSettings.DefaultFont.Size:=ReadInteger('General','Default Font Size',12);
   DefaultFontStyle:=ReadInteger('General','Default Font Style',0);
   FuncSettings.DefaultFont.Style:=PFontStyles(@DefaultFontStyle)^;
+  FuncSettings.FUndoLimit:=ReadInteger('General','Undo Limit',100);
 
-  
+
   _LANGID:=ReadInteger('General','LANGID',{$IFDEF CLX}LangManager.LanguageIDs[0]{$ELSE}GetSystemDefaultLangID{$ENDIF});
 
   //FuncSettings.DefaultFont.Charset:=ReadInteger('General','Default Font Charset',DEFAULT_CHARSET);
@@ -582,7 +583,7 @@ begin
   for iPropsAlign:=Low(TAlign) to High(PropsAlign) do
   if sPropsAlign[iPropsAlign]=s then
    PropsAlign:=iPropsAlign;
-   
+
   s:=ReadString('General','StartUpAction',EmptyStr);
   for iLaunchAction:=Low(TLaunchAction) to High(TLaunchAction) do
   if sLaunchAction[iLaunchAction]=s then
@@ -748,6 +749,7 @@ begin
   WriteString('General','StartUpAction',sLaunchAction[FuncSettings.LaunchAction]);
 
   WriteInteger('General','LANGID',_LANGID);
+  WriteInteger('General','Undo Limit',FuncSettings.FUndoLimit);
 
   if ColorDialog is TColorDialog then
   begin
@@ -929,7 +931,7 @@ begin
  mSelectAllAbove.Enabled:=mCut.Enabled;
  mSelectAllBelow.Enabled:=mCut.Enabled;
 
- mUndo.Enabled:=(Act<>nil) and Act.IsModified and not _RuntimeMode;
+ mUndo.Enabled:=(Act<>nil) and Act.CanUndo and not _RuntimeMode;
  mRedo.Enabled:=(Act<>nil) and Act.CanRedo and not _RuntimeMode;
 
  mFind.Enabled:=(Act<>nil) and not _RuntimeMode;

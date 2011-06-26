@@ -45,7 +45,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1
     object Panel4: TdhPanel
       Top = 36
       Width = 758
-      Height = 504
+      Height = 1592
       Style.Border.Width = 1
       Style.Border.Color = 15461355
       Style.Border.Style = cbsSolid
@@ -79,7 +79,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1
         Top = 88
         Width = 24
         Height = 24
-        ActivePage = update
+        ActivePage = tips
         FixedHeight = False
         object Page1: TdhPage
           Left = 192
@@ -1897,41 +1897,41 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1
             Width = 440
             Height = 273
             Text = 
-              '<en>'#10'<FAQ_question>Hot keys for a selected object:</FAQ_question' +
-              '>'#10'<br/>'#10'<b>ESC</b> : Selects the object'#39's parent<br/>'#10'<b>CTRL</b' +
-              '>+<b>Arrow key</b> : Moves the selected object by one pixel<br/>' +
-              #10'<b>CTRL</b>+<b>SHIFT</b>+<b>Arrow key</b> : Moves the selected ' +
-              'object by the grid'#39's width<br/>'#10'<b>SHIFT</b>+<b>Arrow key</b> : ' +
-              'Resizes the selected object by one pixel<br/>'#10'<b>ALT</b> + <b>Le' +
-              'ft mouse click</b> on textual content : Opens the text editor wi' +
-              'th the edit cursor set to the clicked text position.<br/>'#10'<b>CTR' +
-              'L</b> + <b>ALT</b> + <b>Left mouse click</b> on textual content ' +
-              ': Edits the text direct at the clicked text position.<br/>'#10'<b>CT' +
-              'RL</b> + <b>Left mouse click</b>: Draw a selection rectangle wit' +
-              'h the mouse.<br/>'#10'<br/>'#10'</en>'#10'<de>'#10'<FAQ_question>Tastenk'#252'rzel f'#252 +
-              'r ein selektiertes Objekt:</FAQ_question>'#10'<br/>'#10'<b>ESC</b> : Sel' +
-              'ektiert das Elternobjekt<br/>'#10'<b>STRG</b>+<b>Pfeiltaste</b> : Ve' +
-              'rschiebt das Objekt um einen Pixel<br/>'#10'<b>STRG</b>+<b>SHIFT</b>' +
-              '+<b>Pfeiltaste</b> : Verschiebt das Objekt um die Breite des Git' +
-              'ters<br/>'#10'<b>SHIFT</b>+<b>Pfeiltaste</b> : '#196'ndert die Gr'#246#223'e des ' +
-              'Objekts um einen Pixel<br/>'#10'<b>ALT</b> + <b>linker Mausklick</b>' +
-              ' auf textuellen Inhalt : '#214'ffnet den Texteditor an der Stelle der' +
-              ' angeklickten Textposition.<br/>'#10'<b>CTRL</b> + <b>ALT</b> + <b>l' +
-              'inker Mausklick</b> auf textuellen Inhalt : Editiert den Text di' +
-              'rekt der angeklickten Textposition.<br/>'#10'<b>CTRL</b> + <b>linker' +
-              ' Mausklick</b>: Alle Objekte innerhalb des mit der Maus gezogene' +
-              'n Rechtecks k'#246'nnen selektiert werden.<br/>'#10'<br/>'#10'</de>'#10#10'<en>'#10'<FA' +
-              'Q_question>Round corners for images with borders</FAQ_question>'#10 +
-              '<br/>'#10'When you have a rectangular image with build-in borders, y' +
-              'ou can round the corners with respect to the image-contained bor' +
-              'ders!'#10'Do it by defining a <code>hidden</code> border (Edges tab ' +
-              '-> Border) of appropriate size and by defining a border radius, ' +
-              'like in the following example:'#10'</en>'#10'<de>'#10'<FAQ_question>Runde Ec' +
-              'ken f'#252'r Bilder mit Rahmen</FAQ_question>'#10'<br/>'#10'Rechteckige Bilde' +
-              'r k'#246'nnen entlang eines definierten Rahmens gerundet werden!!'#10'W'#228'h' +
-              'le daf'#252'r den <code>unsichtbaren Rahmen</code> Typ (Rand-Tab -> R' +
-              'ahmen) mit geeigneter Rahmenbreite und definiere den gew'#252'nschten' +
-              ' Rundungsradius, wie im folgenden Beispiel geschehen:'#10'</de>'
+              '<en>'#10'<FAQ_question>Hot keys:</FAQ_question>'#10'<br/>'#10'<b>ESC</b> : S' +
+              'elects the object'#39's parent<br/>'#10'<b>CTRL</b>+<b>Arrow key</b> : M' +
+              'oves the selected object by one pixel<br/>'#10'<b>CTRL</b>+<b>SHIFT<' +
+              '/b>+<b>Arrow key</b> : Moves the selected object by the grid'#39's w' +
+              'idth<br/>'#10'<b>SHIFT</b>+<b>Arrow key</b> : Resizes the selected o' +
+              'bject by one pixel<br/>'#10'<b>ALT</b> + <b>Left mouse click</b> on ' +
+              'textual content : Opens the text editor with the edit cursor set' +
+              ' to the clicked text position.<br/>'#10'<b>CTRL</b> + <b>ALT</b> + <' +
+              'b>Left mouse click</b> on textual content : Edits the text direc' +
+              't at the clicked text position.<br/>'#10'<b>CTRL</b> + <b>Left mouse' +
+              ' click</b>: Draw a selection rectangle with the mouse.<br/>'#10'<br/' +
+              '>'#10'</en>'#10'<de>'#10'<FAQ_question>Tastenk'#252'rzel f'#252'r ein selektiertes Obj' +
+              'ekt:</FAQ_question>'#10'<br/>'#10'<b>ESC</b> : Selektiert das Elternobje' +
+              'kt<br/>'#10'<b>STRG</b>+<b>Pfeiltaste</b> : Verschiebt das Objekt um' +
+              ' einen Pixel<br/>'#10'<b>STRG</b>+<b>SHIFT</b>+<b>Pfeiltaste</b> : V' +
+              'erschiebt das Objekt um die Breite des Gitters<br/>'#10'<b>SHIFT</b>' +
+              '+<b>Pfeiltaste</b> : '#196'ndert die Gr'#246#223'e des Objekts um einen Pixel' +
+              '<br/>'#10'<b>ALT</b> + <b>linker Mausklick</b> auf textuellen Inhalt' +
+              ' : '#214'ffnet den Texteditor an der Stelle der angeklickten Textposi' +
+              'tion.<br/>'#10'<b>CTRL</b> + <b>ALT</b> + <b>linker Mausklick</b> au' +
+              'f textuellen Inhalt : Editiert den Text direkt der angeklickten ' +
+              'Textposition.<br/>'#10'<b>CTRL</b> + <b>linker Mausklick</b>: Alle O' +
+              'bjekte innerhalb des mit der Maus gezogenen Rechtecks k'#246'nnen sel' +
+              'ektiert werden.<br/>'#10'<br/>'#10'</de>'#10#10'<en>'#10'<FAQ_question>Round corne' +
+              'rs for images with borders</FAQ_question>'#10'<br/>'#10'When you have a ' +
+              'rectangular image with build-in borders, you can round the corne' +
+              'rs with respect to the image-contained borders!'#10'Do it by definin' +
+              'g a <code>hidden</code> border (Edges tab -> Border) of appropri' +
+              'ate size and by defining a border radius, like in the following ' +
+              'example:'#10'</en>'#10'<de>'#10'<FAQ_question>Runde Ecken f'#252'r Bilder mit Rah' +
+              'men</FAQ_question>'#10'<br/>'#10'Rechteckige Bilder k'#246'nnen entlang eines' +
+              ' definierten Rahmens gerundet werden!!'#10'W'#228'hle daf'#252'r den <code>uns' +
+              'ichtbaren Rahmen</code> Typ (Rand-Tab -> Rahmen) mit geeigneter ' +
+              'Rahmenbreite und definiere den gew'#252'nschten Rundungsradius, wie i' +
+              'm folgenden Beispiel geschehen:'#10'</de>'
             Style.BackgroundColor = Transparent
             Style.TextAlign = ctaJustify
             AutoSizeXY = asY
@@ -2308,7 +2308,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1
           object Label27: TdhLabel
             Left = 24
             Top = 80
-            Width = 386
+            Width = 354
             Height = 48
             Text = 
               '<en><code>New in version 5'#10'* Textual objects can now be edited d' +
@@ -2761,6 +2761,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1
           Right = 0
           PreferDownStyles = True
           Options = [loDownIfMenu, loDownIfMouseDown, loDownIfURL]
+          LinkPage = tips
           LinkAnchor = shortcuts
         end
       end

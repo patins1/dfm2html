@@ -2095,7 +2095,11 @@ begin
 end;
 
 procedure TStyle.SetFontFamily(Value:TCSSFontFamily);
+var I: Integer;
 begin
+ for I := 1 to Length(Value) do
+   if (Value[I]>='0') and (Value[I]<='9') then
+     raise WException.Create(WFormat(QUOTEINVALIDVALUE_STR,[Value]));
  FFontFamily:=Value;
  pc(pcFontFamily);
 end;

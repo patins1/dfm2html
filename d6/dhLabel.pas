@@ -1021,9 +1021,10 @@ begin
    wtext:='';
   end else
   begin
-  if StyleTree.WhiteSpace<>cwsPre then
+  if not (StyleTree.WhiteSpace in [cwsPre,cwsPreWrap]) then
   begin
    s:=HypeSubstText(#9,' ',s);
+   if StyleTree.WhiteSpace<>cwsPreLine then
    s:=HypeSubstText(endl_main,' ',s);
    for i:=length(s) downto 2 do
    if (s[i]=' ') and (s[i-1]=' ') then
@@ -2033,7 +2034,7 @@ begin
      _WrapAlways and not((gltext[i2-1]=' ') and (gltext[i2]<>' ')) or
      not _WrapAlways and
      not ((Ptree[i2].IsImg or (gltext[i2]=' ') and (Ptree[i2].WhiteSpace<>cwsPre)) and
-         ((Ptree[i2-1].WhiteSpace=cwsNormal) or (Ptree[i2].WhiteSpace=cwsNormal) or (i2+1<=high(Ptree)) and (Ptree[i2+1].WhiteSpace=cwsNormal)))) do
+         ((Ptree[i2-1].WhiteSpace in [cwsNormal,cwsPreWrap,cwsPreLine]) or (Ptree[i2].WhiteSpace in [cwsNormal,cwsPreWrap,cwsPreLine]) or (i2+1<=high(Ptree)) and (Ptree[i2+1].WhiteSpace in [cwsNormal,cwsPreWrap,cwsPreLine])))) do
       dec(i2);
 
     ii:=i2;
@@ -3388,13 +3389,13 @@ begin
  if (Char(VK_SPACE)=Key) or (Char(VK_TAB)=Key) then
  begin
   ToInsert:=' ';
-  if (StyleTree.WhiteSpace<>cwsPre) and not InterpreteDirectly then
+  if not (StyleTree.WhiteSpace in [cwsPre,cwsPreWrap]) and not InterpreteDirectly then
   if (GetCodeForChar(SelStart-1)=' ') or (GetCodeForChar(SelStart-1)='&nbsp;') or (GetCodeForChar(SelStart)=' ') or (GetCodeForChar(SelStart)='&nbsp;')  then
    ToInsert:='&nbsp;';
  end else
  if Char(VK_RETURN)=Key then
  begin
-   if (StyleTree.WhiteSpace=cwsPre) or InterpreteDirectly then
+   if (StyleTree.WhiteSpace in [cwsPre,cwsPreWrap]) or InterpreteDirectly then
     ToInsert:=#10 else
     ToInsert:='<br/>';
  end else

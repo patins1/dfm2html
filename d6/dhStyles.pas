@@ -99,7 +99,7 @@ type
   TCSSBorderStyle=(cbsInherit,cbsNone,cbsHidden,cbsDotted,cbsDashed,cbsSolid,cbsDouble,cbsGroove,cbsRidge,cbsInset,cbsOutset);
   TCSSTextTransform=(cttInherit,cttCapitalize,cttUppercase,cttLowercase,cttNone);
   TCSSTextAlign=(ctaInherit,ctaLeft,ctaRight,ctaCenter,ctaJustify);
-  TCSSWhiteSpace=(cwsInherit,cwsNormal,cwsPre,cwsNowrap);
+  TCSSWhiteSpace=(cwsInherit,cwsNormal,cwsPre,cwsNowrap,cwsPreWrap,cwsPreLine);
   TCSSDirection=(cdiInherit,cdiLtr,cdiRtl);
   TCSSFontStyle=(cfsInherit,cfsNormal,cfsItalic,cfsOblique);
   TCSSFontWeight=(cfwInherit,cfwNormal,cfwBold,cfwBolder,cfwLighter,cfw100,cfw200,cfw300,cfw400,cfw500,cfw600,cfw700,cfw800,cfw900);
@@ -597,6 +597,7 @@ function GetBorderRadiusPixels(Value:TCSSRadius; var res:TPoint):boolean;overloa
 function GetBorderRadiusPixels(Value:TCSSRadius; var res:TPoint; var IsDouble:boolean):boolean; overload;
 function GetShorter(const Top,Right,Bottom,Left:AString):AString;
 function GetMarginPixels(Value:TCSSMargin; const FontSize:single):integer;
+function GetPixels(const Value:TCSSStringValue):integer;
 
 function GetImageBitmap:TGraphic;
 
@@ -653,6 +654,11 @@ begin
   negate:=false;
  end;
  r:=pos('.',s);
+ if r=1 then
+ begin
+   inc(r);
+   s:='0'+s;
+ end;
  if r=0 then
   result:=strtoint(s) else
   result:=strtoint(copy(s,1,r-1))+strtoint(copy(s,r+1,maxint))/IntPower(10,length(s)-r);
@@ -679,7 +685,7 @@ function GetPixVal2(const Value:TCSSStringValue; range:integer):integer;
 begin
  if SubEqualEnd('%',Value) then
   result:=Round(strtoint(CopyLess(Value,1))/100*range) else
-  result:=strtoint(Value);
+  result:=GetPixels(Value);
 end;
 
 function GetBorderRadiusPixels(Value:TCSSRadius; var res:TPoint; var IsDouble:boolean):boolean; overload;
@@ -750,9 +756,16 @@ end;
 
 function GetLengthPixels(const Value:TCSSStringValue; const FontSize:single):single;
 begin
- if not SubEqualEnd('em',Value) then
-  result:=strtoint(Value) else
-  result:=MyStrToFloat(CopyLess(Value,2))*FontSize;
+ if SubEqualEnd('em',Value) then
+  result:=MyStrToFloat(CopyLess(Value,2))*FontSize else
+  result:=GetPixels(Value);
+end;
+
+function GetPixels(const Value:TCSSStringValue):integer;
+begin
+ if SubEqualEnd('px',Value)  then
+  result:=strtoint(CopyLess(Value,2)) else
+  result:=strtoint(Value);
 end;
 
 function GetWordSpacing(const Value:TCSSWordSpacing; FontSize:single):Integer;
@@ -784,6 +797,8 @@ begin
   result:=GetLengthPixels('0.66em',ParentFontSize) else
  if Value='larger' then
   result:=GetLengthPixels({'1.54em'}'1.37em',ParentFontSize) else
+ if SubEqualEnd('%',Value) then
+  result:=MyStrToFloat(CopyLess(Value,1))/100*ParentFontSize else
   result:=GetLengthPixels(Value,ParentFontSize);
 end;
 

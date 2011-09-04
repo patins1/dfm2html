@@ -551,6 +551,7 @@ type
     VariableHeight:boolean;
     SUse:TComponentName;
     DragEnabled:boolean;
+    class function IsValidIdent(const Ident: TComponentName): Boolean;
     procedure MyRealign;
     function GetWantedSize:TPoint;
     function ShallBeAnchor:boolean; virtual;
@@ -6080,9 +6081,7 @@ end;
 
 {$ENDIF}
 
-procedure TdhCustomPanel.SetName(const Value: TComponentName);
-
-function IsValidIdent(const Ident: TComponentName): Boolean;
+class function TdhCustomPanel.IsValidIdent(const Ident: TComponentName): Boolean;
 const
   Alpha = ['A'..'Z', 'a'..'z', '_'];
   AlphaNumeric = Alpha + ['0'..'9'];
@@ -6095,6 +6094,7 @@ begin
   Result := True;
 end;
 
+procedure TdhCustomPanel.SetName(const Value: TComponentName);
 begin
  if Name<>Value then
  begin

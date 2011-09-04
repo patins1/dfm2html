@@ -449,6 +449,8 @@ type
     mCopyOverStylesToDownStyles: TTntMenuItem;
     mClearStyles: TTntMenuItem;
     SynHTMLSyn1: TSynHTMLSyn;
+    mLoadStylesheet: TMenuItem;
+    OpenCSSDialog: TOpenDialog;
     procedure mClearStylesClick(Sender: TObject);
     procedure cpBlurColorPreviewColorChanged(Sender: TObject);
     procedure cpBlurColorBackup(Sender: TObject; backup: TList;
@@ -660,6 +662,7 @@ type
     procedure cMenuAutoClick(Sender: TObject);
     procedure mSetBackgroundColorTransparentClick(Sender: TObject);
     procedure mCopyOverStylesToDownStylesClick(Sender: TObject);
+    procedure mLoadStylesheetClick(Sender: TObject);
   private
     FAdjusting:boolean;
 
@@ -811,7 +814,7 @@ implementation
 
 uses {Unit1,}MySiz, Unit1, {uTransparencyWizard,} uStyleInfo, uPageWizard,
   uColorizeImg, uTransparencyWizard, uBorderRadiusWizard,uMoreMisc,
-  uObjectExplorer;
+  uObjectExplorer,uStyleImport;
 
 {$R *.dfm}
 
@@ -1900,7 +1903,7 @@ begin
  result:=(Selection.Count<>0);
  for i :=0 to Selection.Count-1  do
  if not (csDestroying in TComponent(Selection[i]).ComponentState) and not (TObject(Selection[i]).InheritsFrom(c) and
- not((ts.PageIndex<PAGE_STYLES) and ((TObject(Selection[i]) is TdhPageControl) or (TObject(Selection[i]) is TdhStyleSheet) or (TObject(Selection[i]) is TdhHiddenField))) and
+ not((ts<>nil) and (ts.PageIndex<PAGE_STYLES) and ((TObject(Selection[i]) is TdhPageControl) or (TObject(Selection[i]) is TdhStyleSheet) or (TObject(Selection[i]) is TdhHiddenField))) and
  not((ts=AnchorText) and (TObject(Selection[i]) is TdhEdit)) or LookParent and GetVirtualParent(TObject(Selection[i]) as TControl).InheritsFrom(c))
  (* or ((TObject(Selection[i]) is TdhPageControl) and not ((ts=AnchorName) or (ts=AnchorPageControl))){ or AssertIsImage and (IsImage<>(TObject(Selection[i]) as TdhCustomPanel).IsImage)}*) then
  begin
@@ -1917,7 +1920,7 @@ begin
    ts.ImageIndex:=ts.ImageIndex mod 5;
 
   end; }
-  
+  if ts<>nil then
   if Result and ts.Visible and Assigned(ts.OnShow) then
   begin
    ts.OnShow(nil);
@@ -2061,6 +2064,9 @@ begin
  if HasCommon(AnchorFile,TdhFile,false,mLoadFromFile) then
  begin
  end;
+ if HasCommon(nil,TdhStylesheet,false,mLoadStylesheet) then
+ begin
+ end;
  if dhMainForm.compMenu.Visible then
   HasCommon(AnchorLink,TdhLink,false,mSubMenu,true) else
   HasCommon(AnchorLink,TdhLink);
@@ -2099,7 +2105,7 @@ begin
  begin
  end;
  if (LastAct<>nil) and LastAct.TabVisible then
- begin                              
+ begin
   if PageControl1.ActivePage<>LastAct then
    PageControl1.ActivePage:=LastAct;
  end else
@@ -4935,6 +4941,21 @@ begin
   dhMainForm.ImageFromURL(s,nil);
 end;
 
+procedure TTabs.mLoadStylesheetClick(Sender: TObject);
+var stylesheet:TdhStylesheet;
+    i:integer;
+begin
+ if OpenCSSDialog.Execute then
+ begin
+   for i:=0 to Selection.Count-1 do
+   begin
+    stylesheet:=TObject(Selection[i]) as TdhStylesheet;
+    ImportFromStylesheet(stylesheet,OpenCSSDialog.FileName);
+   end;
+  Changed('Load stylesheet');
+ end;
+end;
+
 procedure TTabs.bMoreMiscClick(Sender: TObject);
 begin
  LateCreateForm(TMoreMisc,MoreMisc);
@@ -5423,7 +5444,7 @@ begin
  begin
   OpenDialog1.FileName:=f.GetAbsolutePath
  end else
- begin                                                         
+ begin
   OpenDialog1.FileName:=EmptyStr;
   OpenDialog1.InitialDir:=ExtractFilePath(OpenDialog1.FileName);
  end;

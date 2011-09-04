@@ -1,3 +1,4 @@
+//modifications: removed CSSstrings dependency; fixed bug that styles required semicolon
 {*************************************************************}
 {            seCSSParser component for Delphi 32              }
 { Version:   1.0                                              }
@@ -35,7 +36,7 @@ unit seCSSParser;
 interface
 
 uses
-  SysUtils, Classes, CSSstrings, Dialogs;
+  SysUtils, Classes, Dialogs;
 
 type
 
@@ -137,7 +138,19 @@ procedure Register;
 
 implementation
 
+Uses StrUtils;
 
+function FastPos(const aSourceString, aFindString : string; const aSourceLen, aFindLen, StartPos : Integer) : Integer;
+begin
+  result:=PosEx(aFindString,aSourceString,StartPos);
+end;
+
+function FastReplace(const aSourceString : string; const aFindString, aReplaceString : string; CaseSensitive : Boolean = False) : string;
+begin
+ if CaseSensitive then
+  result:=StringReplace(aSourceString,aFindString,aReplaceString,[rfReplaceAll]) else
+  result:=StringReplace(aSourceString,aFindString,aReplaceString,[rfReplaceAll,rfIgnoreCase]);
+end;
 
 procedure Register;
 begin
@@ -399,7 +412,8 @@ Var
 
 begin
   result := false;
-
+  if (CSSLine<>'') and (CSSLine[Length(CSSLine)]='}') then
+    Insert(';',CSSLine,Length(CSSLine));
   // First Extract Name and Value
   try
   pEnd := fastpos(CSSLine, ';', length(CSSLine), 1, 1);

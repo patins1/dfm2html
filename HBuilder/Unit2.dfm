@@ -2423,7 +2423,9 @@ object Tabs: TTabs
               '*CLEAR VALUE*'
               'normal'
               'pre'
-              'nowrap')
+              'nowrap'
+              'pre-wrap'
+              'pre-line')
             ValueChange = cbWhiteSpaceValueChange
             ChangeReason = 'Change White-Space'
           end
@@ -2637,10 +2639,6 @@ object Tabs: TTabs
         Caption = 'Pos.'
         ImageIndex = -1
         OnShow = AnchorPositionShow
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
         object GroupBox4: TMyGroupBox
           Left = 8
           Top = 0
@@ -2894,10 +2892,6 @@ object Tabs: TTabs
         Caption = 'Text'
         ImageIndex = -1
         OnShow = AnchorTextShow
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
         object Label31: TdhLabel
           Left = 24
           Top = 16
@@ -3034,10 +3028,6 @@ object Tabs: TTabs
         Caption = 'Page'
         ImageIndex = -1
         OnShow = AnchorPageShow
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
         object gPageProperties: TMyGroupBox
           Left = 16
           Top = 0
@@ -3121,10 +3111,6 @@ object Tabs: TTabs
         Caption = 'Edit'
         ImageIndex = -1
         OnShow = AnchorEditShow
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
         object GroupBox15: TMyGroupBox
           Left = 8
           Top = 0
@@ -3173,10 +3159,6 @@ object Tabs: TTabs
         Caption = 'Memo'
         ImageIndex = -1
         OnShow = AnchorMemoShow
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
         object Label35: TdhLabel
           Left = 8
           Top = 16
@@ -3227,10 +3209,6 @@ object Tabs: TTabs
         Caption = 'Check'
         ImageIndex = -1
         OnShow = AnchorCheckBoxShow
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
         object IGNORE_cRightJustify: TTntCheckBox
           Left = 512
           Top = 32
@@ -3276,10 +3254,6 @@ object Tabs: TTabs
         Caption = 'Form'
         ImageIndex = -1
         OnShow = AnchorFormShow
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
         object cbMethod: TTntRadioGroup
           Left = 8
           Top = 0
@@ -3747,10 +3721,6 @@ object Tabs: TTabs
         Caption = 'Hidden'
         ImageIndex = -1
         OnShow = AnchorHiddenShow
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
         object GroupBox31: TMyGroupBox
           Left = 8
           Top = 0
@@ -3773,10 +3743,6 @@ object Tabs: TTabs
         Caption = 'OLE '
         ImageIndex = -1
         OnShow = AnchorOleShow
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
         object Button2: TTntButton
           Left = 8
           Top = 8
@@ -3831,10 +3797,6 @@ object Tabs: TTabs
         Caption = 'List'
         ImageIndex = -1
         OnShow = AnchorSelectShow
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
         object GroupBox19: TMyGroupBox
           Left = 544
           Top = -1
@@ -4031,10 +3993,6 @@ object Tabs: TTabs
         Caption = 'File'
         ImageIndex = -1
         OnShow = AnchorFileShow
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
         object Panel7: TPanel
           Left = 8
           Top = 8
@@ -4158,6 +4116,10 @@ object Tabs: TTabs
   object PopupMenu2: TTntPopupMenu
     Left = 560
     Top = 144
+    object mLoadStylesheet: TMenuItem
+      Caption = 'Load from stylesheet file'
+      OnClick = mLoadStylesheetClick
+    end
     object mLoadFromFile: TTntMenuItem
       Caption = 'Load from file'
       OnClick = Button15Click
@@ -4384,7 +4346,7 @@ object Tabs: TTabs
     Left = 432
     Top = 144
     LangData = {
-      040054616273010100000025010000070043617074696F6E019E010000060050
+      040054616273010100000025010000070043617074696F6E01A0010000060050
       616E656C3100000C0050616765436F6E74726F6C3100000A00416E63686F7246
       6F6E74010200000001000000070043617074696F6E2D010000040048696E7400
       090047726F7570426F7833010100000002000000070043617074696F6E000500
@@ -4709,10 +4671,18 @@ object Tabs: TTabs
       5472616E73706172656E74010100000035010000070043617074696F6E001B00
       6D436F70794F7665725374796C6573546F446F776E5374796C65730101000000
       36010000070043617074696F6E000C006D436C6561725374796C657301010000
-      0037010000070043617074696F6E000B0053796E48544D4C53796E310000}
+      0037010000070043617074696F6E000B0053796E48544D4C53796E3100000F00
+      6D4C6F61645374796C65736865657401010000003D010000070043617074696F
+      6E000D004F70656E4353534469616C6F6701010000003C010000060046696C74
+      657200}
   end
   object SynHTMLSyn1: TSynHTMLSyn
     Left = 400
     Top = 144
+  end
+  object OpenCSSDialog: TOpenDialog
+    Filter = 'Stylesheet (*.css)|*.css'
+    Left = 832
+    Top = 128
   end
 end

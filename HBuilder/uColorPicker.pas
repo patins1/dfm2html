@@ -45,6 +45,8 @@ type
 var
   ColorPicker: TColorPicker;
 
+function GetColorFromString(s:String; var Color:TCSSColor):boolean;
+
 implementation
 
 {$R *.dfm}
@@ -164,13 +166,13 @@ begin
  Clipboard.AsText:=dhColorUtils.ColorToString(picker.CSSColor);
 end;
 
-procedure TColorPicker.GetColorfromClipboard1Click(Sender: TObject);
+function GetColorFromString(s:String; var Color:TCSSColor):boolean;
 var icol:Longint;
-    s,sred,sblue,sgreen,salpha:string;
+    sred,sblue,sgreen,salpha:string;
     g:tg;
     SaveSeparator:Char;
 begin
- s:=LowerCase(Trim(Clipboard.AsText));
+ s:=LowerCase(Trim(s));
  if not dhColorUtils.IdentToColor(s,icol) then
  if (s<>'') and (s[1]='#') and TryStrToInt('$'+Copy(s,2,maxint),icol) then
  begin
@@ -186,18 +188,29 @@ begin
     DecimalSeparator := SaveSeparator;
    end;
  end else
- if not TryStrToInt(s,icol) then
+ begin
+  result:=false;
+  exit;
+ end;
+ color:=TCSSColor(icol);
+ result:=true;
+end;
+
+procedure TColorPicker.GetColorfromClipboard1Click(Sender: TObject);
+var Color:TCSSColor;
+begin
+ if not GetColorFromString(Clipboard.AsText,color) then
  begin
   ShowMessage('Found no HTML color format in clipboard. The format must be #RRGGBB, rgba(0 - 255,0 - 255,0 - 255,0.0 - 1.0) or a valid color name.');
   exit;
  end;
- (PopupMenu1.PopupComponent as TdhColorPicker).DoColorChange(TCSSColor(icol));
+ (PopupMenu1.PopupComponent as TdhColorPicker).DoColorChange(color);
 end;
 
 
 
 procedure TColorPicker.FormCreate(Sender: TObject);
-begin     
+begin
  FixDialogBorderStyle(Self);
 end;
 

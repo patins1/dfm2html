@@ -5777,7 +5777,11 @@ begin
  begin
    if BackGraph=nil then
     BackGraph:=TdhBitmap32.Create;
-   BackGraph.SetSize(nWidth,nHeight);
+   try
+    BackGraph.SetSize(nWidth,nHeight);
+   except
+    BackGraph.SetSize(0,0); // out of memory
+   end;
    PaintOnlyBg:=glPaintOnlyBg;
    glPaintOnlyBg:=false;
    try
@@ -5807,7 +5811,11 @@ begin
    TopGraph:=BackGraph else
    TopGraph:=TdhBitmap32.Create;
 
-  TopGraph.SetSize(nWidth,nHeight);
+  try
+   TopGraph.SetSize(nWidth,nHeight);
+  except
+    TopGraph.SetSize(0,0); // out of memory
+  end;
   if BackIsValid and (BackGraph<>TopGraph) then
    BackGraph.DrawTo(TopGraph);
  end;

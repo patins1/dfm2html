@@ -30,7 +30,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1
     Right = 0
     Bottom = 0
     UseIFrame = False
-    Title = 'Web Design Software DFM2HTML Version 5'
+    Title = 'Web Design Software DFM2HTML Version 6'
     OutputDirectory = 'www2\'
     MetaAuthor = 'J'#246'rg Kiegeland'
     MetaDescription = 'An WYSIWYG HTML editor'
@@ -38,15 +38,14 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1
       'HTML editor, web page maker, web design creator, anti aliasing, ' +
       'mouse over buttons, WYSIWYG, absolute positioning, site manageme' +
       'nt, authoring'
-    FTPURL = 'ftp://p8288468:5yMTPDtZ@kiegeland.com/dfm2html_de/'
+    FTPURL = 'ftp://p8288468:5yMTPDtZ@kiegeland.com/dfm2html/'
     HTTPURL = 'http://www.dfm2html.com/'
     GeneratedImageFolder = 'images'
     GeneratedCSSFile = 'dfm2html'
-    VertPosition = 54
     object Panel4: TdhPanel
-      Top = -18
+      Top = 36
       Width = 758
-      Height = 3288
+      Height = 544
       Style.Border.Width = 1
       Style.Border.Color = 15461355
       Style.Border.Style = cbsSolid
@@ -80,7 +79,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1
         Top = 88
         Width = 24
         Height = 24
-        ActivePage = history
+        ActivePage = Page1
         FixedHeight = False
         object Page1: TdhPage
           Left = 192
@@ -119,9 +118,9 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1
           object Link1: TdhLink
             Left = 16
             Top = 304
-            Width = 224
+            Width = 208
             Height = 22
-            Text = 'Download DFM2HTML 5.1'
+            Text = 'Download DFM2HTML 6'
             Style.FontSize = '19'
             AutoSizeXY = asXY
             PreferDownStyles = True
@@ -144,7 +143,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1
           object Link21: TdhLink
             Left = 24
             Top = 336
-            Width = 110
+            Width = 104
             Height = 16
             Text = #9658' <en>Version history</en><de>Versionshistorie</de>'
             Style.TextDecoration = [ctdNone]
@@ -1209,7 +1208,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1
           UseIFrame = False
           object Label5: TdhLabel
             Left = 24
-            Top = 3016
+            Top = 3072
             Width = 360
             Height = 80
             Text = 
@@ -1222,7 +1221,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1
           end
           object Label25: TdhLabel
             Left = 24
-            Top = 2776
+            Top = 2832
             Width = 446
             Height = 212
             Text = 
@@ -1243,7 +1242,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1
           end
           object Label20: TdhLabel
             Left = 24
-            Top = 2552
+            Top = 2608
             Width = 442
             Height = 193
             Text = 
@@ -1262,7 +1261,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1
           end
           object Label21: TdhLabel
             Left = 24
-            Top = 2360
+            Top = 2416
             Width = 418
             Height = 161
             Text = 
@@ -1280,7 +1279,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1
           end
           object Label28: TdhLabel
             Left = 32
-            Top = 2240
+            Top = 2296
             Width = 434
             Height = 81
             Text = 
@@ -1294,7 +1293,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1
           end
           object Label11: TdhLabel
             Left = 24
-            Top = 2040
+            Top = 2096
             Width = 354
             Height = 64
             Text = 
@@ -1308,7 +1307,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1
           end
           object Label12: TdhLabel
             Left = 24
-            Top = 2136
+            Top = 2192
             Width = 330
             Height = 80
             Text = 
@@ -1322,7 +1321,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1
           end
           object Label13: TdhLabel
             Left = 24
-            Top = 1920
+            Top = 1976
             Width = 450
             Height = 96
             Text = 
@@ -1337,7 +1336,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1
           end
           object Label37: TdhLabel
             Left = 24
-            Top = 1848
+            Top = 1904
             Width = 426
             Height = 49
             Text = 
@@ -1350,7 +1349,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1
           end
           object Label38: TdhLabel
             Left = 24
-            Top = 1760
+            Top = 1816
             Width = 210
             Height = 65
             Text = 
@@ -1363,7 +1362,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1
           end
           object Label41: TdhLabel
             Left = 24
-            Top = 1688
+            Top = 1744
             Width = 338
             Height = 48
             Text = 
@@ -1376,7 +1375,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1
           end
           object Label42: TdhLabel
             Left = 24
-            Top = 1568
+            Top = 1624
             Width = 426
             Height = 97
             Text = 
@@ -1392,7 +1391,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1
           end
           object Label6: TdhLabel
             Left = 24
-            Top = 1496
+            Top = 1552
             Width = 442
             Height = 48
             Text = 
@@ -1406,9 +1405,9 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1
           end
           object Label44: TdhLabel
             Left = 24
-            Top = 1424
-            Width = 442
-            Height = 64
+            Top = 1480
+            Width = 386
+            Height = 49
             Text = 
               '<en><code>New in version 3.2:'#10'* The path of generated artifacts ' +
               'can be adapted'#10'* "Check for update" functionality</code></en>'#10'<d' +
@@ -1422,9 +1421,9 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1
           end
           object Label46: TdhLabel
             Left = 24
-            Top = 1336
-            Width = 322
-            Height = 80
+            Top = 1392
+            Width = 346
+            Height = 65
             Text = 
               '<en><code>New in version 3.3:'#10'* Italian language is added '#10'  (th' +
               'anks to Rinaldo M. aka Whiteshark!)'#10'* Fixed bug with IE7 and aut' +
@@ -1438,9 +1437,9 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1
           end
           object Label50: TdhLabel
             Left = 24
-            Top = 1176
-            Width = 346
-            Height = 176
+            Top = 1232
+            Width = 370
+            Height = 129
             Text = 
               '<en><code>New in version 3.4:'#10'* 83% Portuguese language support'#10 +
               '  (thanks to Alex Albino de Almeida Barros!)'#10'* adjusted dfm2html' +
@@ -1459,8 +1458,8 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1
           end
           object Label47: TdhLabel
             Left = 24
-            Top = 1016
-            Width = 370
+            Top = 1072
+            Width = 394
             Height = 160
             Text = 
               '<en><code>New in version 3.5:'#10'* Spanish language is added '#10'  (th' +
@@ -1481,7 +1480,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1
           end
           object Label48: TdhLabel
             Left = 24
-            Top = 832
+            Top = 888
             Width = 386
             Height = 176
             Text = 
@@ -1505,8 +1504,8 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1
           end
           object Label23: TdhLabel
             Left = 24
-            Top = 664
-            Width = 314
+            Top = 720
+            Width = 354
             Height = 160
             Text = 
               '<en><code>New in version 4.1:'#10'* Afrikaans language is added '#10'  (' +
@@ -1526,9 +1525,9 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1
           end
           object Label43: TdhLabel
             Left = 24
-            Top = 576
-            Width = 434
-            Height = 64
+            Top = 632
+            Width = 402
+            Height = 80
             Text = 
               '<en><code>New in version 4.2:'#10'* Fixed "Access is denied" bug whe' +
               'n writing'#10'  user files under Windows Vista. User data is '#10'  now ' +
@@ -1544,9 +1543,9 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1
           end
           object Label45: TdhLabel
             Left = 24
-            Top = 504
-            Width = 370
-            Height = 48
+            Top = 560
+            Width = 322
+            Height = 64
             Text = 
               '<en><code>New in version 4.3:'#10'* Fixed bugs with FTP component'#10'* ' +
               'Updated Spanish and French translation'#10#10'</code></en><de><code>Ne' +
@@ -1559,9 +1558,9 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1
           end
           object Label49: TdhLabel
             Left = 24
-            Top = 416
-            Width = 378
-            Height = 64
+            Top = 472
+            Width = 370
+            Height = 80
             Text = 
               '<en><code>New in version 4.4:'#10'* Performance fix for HTML file ge' +
               'neration'#10'* File generation is now logged when uploading'#10'* Bundle' +
@@ -1576,9 +1575,9 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1
           end
           object Label53: TdhLabel
             Left = 24
-            Top = 344
-            Width = 298
-            Height = 48
+            Top = 400
+            Width = 338
+            Height = 64
             Text = 
               '<en><code>New in version 4.5:'#10'* New text editor with syntax high' +
               'lighting'#10'* Added Forum menu item'#10#10'</code></en><de><code>Neu in v' +
@@ -1591,9 +1590,9 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1
           end
           object Label54: TdhLabel
             Left = 24
-            Top = 280
-            Width = 338
-            Height = 48
+            Top = 336
+            Width = 362
+            Height = 32
             Text = 
               '<en><code>New in version 4.5.1'#10'* Fixed bug with insert/delete in' +
               ' new editors'#10'</code></en><de><code>Neu in version 4.5.1:'#10'* Bug-f' +
@@ -1606,8 +1605,8 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1
           end
           object Label55: TdhLabel
             Left = 24
-            Top = 216
-            Width = 434
+            Top = 272
+            Width = 314
             Height = 48
             Text = 
               '<en><code>New in version 4.5.2'#10'* Menu items Copy/Paste/Delete ca' +
@@ -1621,8 +1620,8 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1
           end
           object Label57: TdhLabel
             Left = 24
-            Top = 160
-            Width = 306
+            Top = 216
+            Width = 282
             Height = 32
             Text = 
               '<en><code>New in version 4.5.3'#10'* Added context menu to new edito' +
@@ -1635,8 +1634,8 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1
           end
           object Label56: TdhLabel
             Left = 24
-            Top = 96
-            Width = 386
+            Top = 152
+            Width = 354
             Height = 48
             Text = 
               '<en><code>New in version 5'#10'* Textual objects can now be edited d' +
@@ -1650,14 +1649,29 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1
           end
           object Label29: TdhLabel
             Left = 24
-            Top = 32
-            Width = 370
-            Height = 48
+            Top = 88
+            Width = 314
+            Height = 32
             Text = 
               '<en><code>New in version 5.1'#10'* Undo limit editable in Options di' +
               'alog'#10'</code></en><de><code>Neu in version 5.1:'#10'* Anzahl der r'#252'ck' +
               'g'#228'ngig zu machenden Schritte '#10'  einstellbar im Optionen-Dialog'#10'<' +
               '/code></de>'
+            Style.PaddingRight = 2
+            Style.WhiteSpace = cwsPre
+            Style.Color = Black
+            AutoSizeXY = asXY
+          end
+          object Label58: TdhLabel
+            Left = 24
+            Top = 24
+            Width = 314
+            Height = 48
+            Text = 
+              '<en><code>New in version 6'#10'* Import styles from a stylesheet fil' +
+              'e '#10'  (context menu on stylesheet object)'#10'</code></en><de><code>N' +
+              'eu in version 6:'#10'* Styheet-Datei kann importiert werden '#10'  (im K' +
+              'ontextmen'#252' des Stylesheetobjects)'#10'</code></de>'
             Style.PaddingRight = 2
             Style.WhiteSpace = cwsPre
             Style.Color = Red
@@ -2312,9 +2326,9 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1
           object Link61: TdhLink
             Left = 16
             Top = 16
-            Width = 224
+            Width = 208
             Height = 22
-            Text = 'Download DFM2HTML 5.1<br/>'
+            Text = 'Download DFM2HTML 6<br/>'
             Style.FontSize = '19'
             AutoSizeXY = asXY
             PreferDownStyles = True
@@ -2322,15 +2336,15 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1
             LinkAnchor = dfm2html_inst
           end
           object Label27: TdhLabel
-            Left = 16
-            Top = 80
-            Width = 370
+            Left = 24
+            Top = 88
+            Width = 314
             Height = 48
             Text = 
-              '<en><code>New in version 5.1'#10'* Undo Limit editable in Options di' +
-              'alog'#10'</code></en><de><code>Neu in version 5.1:'#10'* Anzahl der r'#252'ck' +
-              'g'#228'ngig zu machenden Schritte '#10'  einstellbar im Optionen-Dialog'#10'<' +
-              '/code></de>'
+              '<en><code>New in version 6'#10'* Import styles from a stylesheet fil' +
+              'e '#10'  (context menu on stylesheet object)'#10'</code></en><de><code>N' +
+              'eu in version 6:'#10'* Styheet-Datei kann importiert werden '#10'  (im K' +
+              'ontextmen'#252' des Stylesheetobjects)'#10'</code></de>'
             Style.PaddingRight = 2
             Style.WhiteSpace = cwsPre
             Style.Color = Red
@@ -2431,7 +2445,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1
         object Link7: TdhLink
           Left = 0
           Top = 108
-          Height = 45
+          Height = 29
           Text = '<en>User Pages</en><de>Benutzer- seiten</de>'
           Use = Link3
           AutoSizeXY = asY
@@ -2443,7 +2457,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1
         end
         object Link20: TdhLink
           Left = 0
-          Top = 153
+          Top = 137
           Height = 45
           Text = '<en>Version history</en>'#10'<de>Versions- historie</de>'
           Use = Link3
@@ -2456,7 +2470,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1
         end
         object Link19: TdhLink
           Left = 0
-          Top = 198
+          Top = 182
           Height = 29
           Text = 'FAQ'
           Use = Link3
@@ -2469,7 +2483,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1
         end
         object Link13: TdhLink
           Left = 0
-          Top = 227
+          Top = 211
           Height = 29
           Text = 'Tips & Tricks'
           Use = Link3
@@ -2482,7 +2496,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1
         end
         object Link4: TdhLink
           Left = 0
-          Top = 256
+          Top = 240
           Height = 29
           Text = '<en>Contact</en><de>Impressum</de>'
           Use = Link3
@@ -2495,8 +2509,8 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1
         end
         object TdhAnchor2: TdhLink
           Left = 0
-          Top = 285
-          Height = 45
+          Top = 269
+          Height = 29
           Text = '<en>Disclaimer</en>'#10'<de>Haftungs- ausschluss</de>'
           Use = Link3
           AutoSizeXY = asY
@@ -2511,7 +2525,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1
         end
         object Link40: TdhLink
           Left = 0
-          Top = 330
+          Top = 298
           Height = 45
           Text = '<en>More Programs</en><de>Weitere Programme</de>'
           Use = Link3
@@ -2524,7 +2538,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1
         end
         object Link59: TdhLink
           Left = 0
-          Top = 375
+          Top = 343
           Height = 32
           Text = 'Forum <sup><Label7>new</Label7></sup>'
           Use = Link3
@@ -2538,7 +2552,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1
         end
         object Link56: TdhLink
           Left = 0
-          Top = 407
+          Top = 375
           Height = 32
           Text = 'Chat <sup><Label7>new</Label7></sup>'
           Style.Display = cdsNone
@@ -2824,19 +2838,17 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1
     end
     object StyleSheet8: TdhStyleSheet
       Left = 8
-      Top = -46
-      Width = 28
-      Height = 28
-      Expanded = False
-      ExpandedWidth = 232
-      ExpandedHeight = 296
-      Expanded = False
+      Top = 8
+      Width = 232
+      Height = 296
+      Expanded = True
       object de: TdhLabel
         Left = 0
         Top = 0
         Height = 16
         Text = 'de'
-        Style.Display = cdsInline
+        Style.LineHeight = 'normal'
+        Style.Display = cdsNone
         AutoSizeXY = asY
         Align = alTop
         Right = 0
@@ -2846,7 +2858,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1
         Top = 16
         Height = 16
         Text = 'en'
-        Style.Display = cdsNone
+        Style.Display = cdsInline
         AutoSizeXY = asY
         Align = alTop
         Right = 0

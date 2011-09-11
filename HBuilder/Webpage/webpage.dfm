@@ -45,7 +45,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1
     object Panel4: TdhPanel
       Top = 36
       Width = 758
-      Height = 544
+      Height = 3388
       Style.Border.Width = 1
       Style.Border.Color = 15461355
       Style.Border.Style = cbsSolid
@@ -79,7 +79,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1
         Top = 88
         Width = 24
         Height = 24
-        ActivePage = Page1
+        ActivePage = history
         FixedHeight = False
         object Page1: TdhPage
           Left = 192
@@ -286,7 +286,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1
           object Link60: TdhLink
             Left = 160
             Top = 344
-            Width = 198
+            Width = 216
             Height = 46
             Text = 'Excellent programmer required?<br>'#10'Contact me!'
             Style.Border.Width = 2
@@ -295,7 +295,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1
             Style.Padding = 5
             Style.TextAlign = ctaCenter
             Style.BorderRadius.All = '12'
-            AutoSizeXY = asXY
+            AutoSizeXY = asY
             PreferDownStyles = True
             Options = [loDownIfMenu, loDownIfMouseDown, loDownIfURL]
             LinkPage = feedback
@@ -1203,7 +1203,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1
           Left = 192
           Top = 96
           Width = 488
-          Height = 3136
+          Height = 3236
           AutoSizeXY = asNone
           UseIFrame = False
           object Label5: TdhLabel
@@ -1670,8 +1670,8 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1
             Text = 
               '<en><code>New in version 6'#10'* Import styles from a stylesheet fil' +
               'e '#10'  (context menu on stylesheet object)'#10'</code></en><de><code>N' +
-              'eu in version 6:'#10'* Styheet-Datei kann importiert werden '#10'  (im K' +
-              'ontextmen'#252' des Stylesheetobjects)'#10'</code></de>'
+              'eu in version 6:'#10'* Import von Stylesheet-Dateien '#10'  (Kontextmen'#252 +
+              ' des Stylesheetobjects)'#10'</code></de>'
             Style.PaddingRight = 2
             Style.WhiteSpace = cwsPre
             Style.Color = Red
@@ -2337,14 +2337,14 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1
           end
           object Label27: TdhLabel
             Left = 24
-            Top = 88
+            Top = 80
             Width = 314
             Height = 48
             Text = 
               '<en><code>New in version 6'#10'* Import styles from a stylesheet fil' +
               'e '#10'  (context menu on stylesheet object)'#10'</code></en><de><code>N' +
-              'eu in version 6:'#10'* Styheet-Datei kann importiert werden '#10'  (im K' +
-              'ontextmen'#252' des Stylesheetobjects)'#10'</code></de>'
+              'eu in version 6:'#10'* Import von Stylesheet-Dateien '#10'  (Kontextmen'#252 +
+              ' des Stylesheetobjects)'#10'</code></de>'
             Style.PaddingRight = 2
             Style.WhiteSpace = cwsPre
             Style.Color = Red

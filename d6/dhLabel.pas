@@ -1484,9 +1484,9 @@ function TdhCustomLabel.GetAutoRectPoint(AllowModifyX,AllowModifyY:boolean; NewW
 var Avail,Req:TPoint;
     IsHorzScrollBarVisible,IsVertScrollBarVisible:boolean;
 begin
- Req:=Point(NewWidth,NewHeight);
+ Req:=GR32.Point(NewWidth,NewHeight);
  GetInnerAutoRect(AllowModifyX,AllowModifyY,Req.X,Req.Y);
- Avail:=Point(NewWidth,NewHeight);
+ Avail:=GR32.Point(NewWidth,NewHeight);
  AddScrollbarPlace(IsHorzScrollBarVisible,IsVertScrollBarVisible,AllowModifyX,AllowModifyY,Avail,Req);
  Result:=Avail;
 end;
@@ -1518,7 +1518,7 @@ begin
 
     if GetSuperiorAutoRect(AllowModifyX,AllowModifyY,NewWidth,NewHeight) then exit;
 
-    Rect.TopLeft:=Point(0,0);
+    Rect.TopLeft:=GR32.Point(0,0);
     Rect.Right:=NewWidth;
     Rect.Bottom:=maxint;
 
@@ -2650,8 +2650,8 @@ begin
    for ti:=0 to ActLine.AllTrees.Count-1 do
    if FocContainer(ActLine,ti,rct,brct,ConstraintsRect.Bottom-ConstraintsRect.Top) then
    begin
-   OffsetRect(rct,ConstraintsRect.Left,ConstraintsRect.Top);
-   OffsetRect(brct,ConstraintsRect.Left,ConstraintsRect.Top);
+   GR32.OffsetRect(rct,ConstraintsRect.Left,ConstraintsRect.Top);
+   GR32.OffsetRect(brct,ConstraintsRect.Left,ConstraintsRect.Top);
    StyleTree:=TStyleTree(ActLine.AllTrees[ti]);
    UseStyleTree:=StyleTree;
    if StyleTree=TopStyleTree then
@@ -2660,12 +2660,12 @@ begin
    end else
    if Visibility then
    begin
-    OffsetRect(brct,-HPos,-VPos);
-    OffsetRect(rct,-HPos,-VPos);
+    GR32.OffsetRect(brct,-HPos,-VPos);
+    GR32.OffsetRect(rct,-HPos,-VPos);
     if Display=cdsListItem then
      PaintListItem(Canvas,brct);
     IntersectRect(rct2,rct,ClpRct);
-    if not IsRectEmpty(rct2) then
+    if not GR32.IsRectEmpty(rct2) then
      SpecialPaintBorder(rct,brct);
     rct:=rct2;
     rct3:=brct;
@@ -2735,7 +2735,7 @@ begin
      HelpB:=TBitmap32.Create;
      HelpB.Canvas.Brush.Style:=bsClear;
     end;
-    TextSizes:=Point(AddP(vn,bs)+AddP(bs-1,bs){at italics font the last char},UseStyleTree.ContentHeight);
+    TextSizes:=GR32.Point(AddP(vn,bs)+AddP(bs-1,bs){at italics font the last char},UseStyleTree.ContentHeight);
     HelpB.Width:=max(HelpB.Width,TextSizes.X);
     HelpB.Height:=max(HelpB.Height,TextSizes.Y);
     HelpB.FillRect(0,0,TextSizes.X,TextSizes.Y,$FFFFFFFF);
@@ -2760,7 +2760,7 @@ begin
     if _AntiAliasing then
      level:=AALevel else
      level:=0;
-    ActTopGraph.RenderTextExtended(TextRct.Left, TextRct.Top, copy(gltext,vn,bs-vn), level,CSSColorToColor32(FontColor),Point(TextRct.Right-TextRct.Left,TextRct.Bottom-TextRct.Top),AddP(bs-1,bs),LetterSpacing,WordSpacing);
+    ActTopGraph.RenderTextExtended(TextRct.Left, TextRct.Top, copy(gltext,vn,bs-vn), level,CSSColorToColor32(FontColor),GR32.Point(TextRct.Right-TextRct.Left,TextRct.Bottom-TextRct.Top),AddP(bs-1,bs),LetterSpacing,WordSpacing);
     ActTopGraph.ClipRect:=OldClipRect;
    end;
 
@@ -2993,7 +2993,7 @@ begin
 
  P:=Mouse.CursorPos;
  DecPt(P,GetCBound(Self).TopLeft);
- IncPt(P,Point(HPos,VPos));
+ IncPt(P,GR32.Point(HPos,VPos));
  R:=Rect(0,0,Width,Height);
  DoDrawText(R,true);
  OldClientStyleTree:=ClientStyleTree;
@@ -3055,7 +3055,7 @@ end;
 begin
  P:=Mouse.CursorPos;
  DecPt(P,GetCBound(Self).TopLeft);
- IncPt(P,Point(HPos,VPos));
+ IncPt(P,GR32.Point(HPos,VPos));
  R:=Rect(0,0,Width,Height);
  result:=GetSelChar;
 end;

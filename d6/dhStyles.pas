@@ -10,7 +10,7 @@ uses
 {$IFDEF CLX}
   GIFImage, QControls,  Qt, QGraphics, QDialogs,
 {$ELSE}
- {$IFDEF VER210}GIFImg{$ELSE}GIFImage{$ENDIF},Windows,Controls, Graphics, Dialogs,
+ {$IF CompilerVersion >= 21}GIFImg{$ELSE}GIFImage{$IFEND},Windows,Controls, Graphics, Dialogs,
 {$ENDIF}
   math,
   GR32,dhBitmap32,dhStrUtils,WideStrUtils,dhGraphicFormats,Consts;
@@ -1653,9 +1653,9 @@ begin
  if Owner.Owner.IsDesigning then
  begin
   TGIFImage(GetGraphic).Animate:=false;
-{$IFNDEF VER210}
+{$IF CompilerVersion < 21}
   TGIFImage(GetGraphic).ForceFrame:=0;
-{$ENDIF}
+{$IFEND}
  end else
  begin
   TGIFImage(GetGraphic).Animate:=true;

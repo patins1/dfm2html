@@ -11,7 +11,7 @@ uses
   QControls, QGraphics, QForms, QDialogs, QStdCtrls, QExtCtrls, QClipbrd, Qt,
   QMask, QComCtrls, QTntStdCtrls,
 {$ELSE}
-  {$IFDEF VER210}GIFImg{$ELSE}GIFImage{$ENDIF},Controls,  Messages, Graphics, Forms, Dialogs,
+  {$IF CompilerVersion >= 21}GIFImg{$ELSE}GIFImage{$IFEND},Controls,  Messages, Graphics, Forms, Dialogs,
   ShellAPI, Mask, ExtCtrls, StdCtrls,  Variants, clipbrd, ComCtrls,  DKLang, UnicodeCtrls,
 {$ENDIF}
 
@@ -1079,7 +1079,7 @@ begin
   result:=Point(Owner.Control.Width,Owner.Control.Height) else
   result:=Owner.StyleArr[NextStyleOld[Owner.DownOverlayOver,OwnState]]._ContentWidthHeight; }
  case Self.OwnState of
-  hsNormal: result:=Point(Owner.Width,Owner.Height);
+  hsNormal: result:=GR32.Point(Owner.Width,Owner.Height);
   hsOver,hsDown: result:=TFakeStyle(Owner.StyleArr[hsNormal])._ContentWidthHeight;
   hsOverDown:
   begin
@@ -1590,11 +1590,11 @@ begin
   begin
    if {(Self=Owner.FStyle) or }RealAutoSizeXY(Owner)=asXY then
    begin
-     Self._ContentWidthHeight:=Point(NoWH,NoWH);
+     Self._ContentWidthHeight:=GR32.Point(NoWH,NoWH);
    end else
    begin
     //pn.CalcStrongToWeak(ALeft,ATop,_ContentWidthHeight.X,_ContentWidthHeight.Y);
-     Self._ContentWidthHeight:=Point(Owner.Width,Owner.Height);
+     Self._ContentWidthHeight:=GR32.Point(Owner.Width,Owner.Height);
    end;
    ShrinkWH(false);
   end;
@@ -1616,7 +1616,7 @@ begin
 
   if Owner.IsScrollArea and Owner.EdgesInScrolledArea then
   begin
-   Self._ContentWidthHeight:=Point(NoWH,NoWH);
+   Self._ContentWidthHeight:=GR32.Point(NoWH,NoWH);
   end;
 
 

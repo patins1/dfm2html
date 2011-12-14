@@ -1850,22 +1850,22 @@ begin
  if Bold then
   Bitmap.Canvas.Font.Style:=Bitmap.Canvas.Font.Style+[fsBold];
  tab.Caption:='';
-{$IFDEF VER210}
+{$IF CompilerVersion >= 21}
  TextWidth:=Bitmap.Canvas.TextWidth(tab.Hint);
 {$ELSE}
  TextWidth:=WideCanvasTextWidth(Bitmap.Canvas,tab.Hint);
-{$ENDIF}
+{$IFEND}
  {if Bold and (TextWidth>ImageList.Width) then
  begin
   //Bitmap.Canvas.Font.Size:=Bitmap.Canvas.Font.Size-2;
   //Bitmap.Canvas.Font.Style:=Bitmap.Canvas.Font.Style-[fsBold]+[fsUnderline];
   //TextWidth:=WideCanvasTextWidth(Bitmap.Canvas,tab.Hint); //Bitmap.Canvas.TextWidth(tab.Hint);
  end;  }
-{$IFDEF VER210}
+{$IF CompilerVersion >= 21}
  Bitmap.Canvas.TextOut((ImageList.Width-TextWidth) div 2,0,tab.Hint);
 {$ELSE}
  WideCanvasTextOut(Bitmap.Canvas,(ImageList.Width-TextWidth) div 2,0,tab.Hint);
-{$ENDIF}
+{$IFEND}
  ImageList.AddMasked(Bitmap,Bitmap.Canvas.Brush.Color);
 end;
 

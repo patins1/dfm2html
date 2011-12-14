@@ -199,7 +199,7 @@ begin
  if Color=clNone then exit;
  PaintRect := Rect(Width-24, 4, Width-4, Height-4);
  if (FState in [bsDown]) then
-  OffsetRect(PaintRect,1,1);
+  GR32.OffsetRect(PaintRect,1,1);
  Canvas.Brush.Style := bsSolid;
  Canvas.Brush.Color := Color;
  Canvas.FillRect(PaintRect);

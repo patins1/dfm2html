@@ -6,11 +6,11 @@ uses
   {$IFDEF CLX}
   QControls, QGraphics, QStdCtrls, QMask, Qt, QComCtrls, QTntStdCtrls,
   {$ELSE}
-  Controls, Windows, Messages, Graphics, StdCtrls, ShellAPI, Mask, ComCtrls,Buttons,Forms,Menus,ExtCtrls, {$IFNDEF VER210}TntComCtrls,TntForms,{$ENDIF}
+  Controls, Windows, Messages, Graphics, StdCtrls, ShellAPI, Mask, ComCtrls,Buttons,Forms,Menus,ExtCtrls, {$IF CompilerVersion < 21}TntComCtrls,TntForms,{$IFEND}
   {$ENDIF}
   SysUtils, Classes;
 
-{$IFDEF VER210}
+{$IF CompilerVersion >= 21}
 type
   TTntToolButton = class(TToolButton) end;
   TTntSpeedButton = class(TSpeedButton) end;
@@ -30,7 +30,7 @@ type
   TTntRadioButton = class(TRadioButton) end;
   TTntRadioGroup = class(TRadioGroup) end;
   TTntListBox = class(TListBox) end;
-{$ENDIF}
+{$IFEND}
 
 procedure Register;
 
@@ -38,7 +38,7 @@ implementation
 
 procedure Register;
 begin
-{$IFDEF VER210}
+{$IF CompilerVersion >= 21}
   RegisterComponents('TNT', [TTntToolBar]);
   RegisterComponents('TNT', [TTntMainMenu]);
   RegisterComponents('TNT', [TTntPopupMenu]);
@@ -49,7 +49,7 @@ begin
   RegisterComponents('TNT', [TTntRadioButton]);
   RegisterComponents('TNT', [TTntRadioGroup]);
   RegisterComponents('TNT', [TTntListBox]);
-{$ENDIF}
+{$IFEND}
 end;
 
 end.

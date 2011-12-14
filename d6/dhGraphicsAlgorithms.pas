@@ -7,7 +7,7 @@ uses
 {$IFDEF CLX}
   QGraphics,
 {$ELSE}
-  Graphics,
+  Graphics, Windows,
 {$ENDIF}
   math,
   GR32,GR32_Transforms,gauss,GR32_Blend,GR32_LowLevel,dhBitmap32, dhStyles, dhColorUtils;

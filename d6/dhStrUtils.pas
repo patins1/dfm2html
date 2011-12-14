@@ -31,7 +31,7 @@ const
       FileContentsStart=1;
 
 type
-{$IFDEF VER210}
+{$IF CompilerVersion >= 21}
   WException=Exception;
 {$ELSE}
   WException=class (Exception)
@@ -40,7 +40,7 @@ type
     constructor Create(const Value:WideString);
     property Message: WideString read WMessage write WMessage;
   end;
-{$ENDIF}
+{$IFEND}
 
 
 function CharPos(const S: AnsiString; const C: AnsiChar; Index: Integer): Integer; overload;
@@ -204,13 +204,13 @@ begin
  end;
 end;
 
-{$IFNDEF VER210}
+{$IF CompilerVersion < 21}
 constructor WException.Create(const Value: WideString);
 begin
  inherited Create(Value+' (ANSI error message)');
  WMessage:=Value;
 end;
-{$ENDIF}
+{$IFEND}
 
 
 end.

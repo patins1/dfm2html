@@ -11,13 +11,13 @@ uses
   GIFImage,QControls, QForms, Qt, QGraphics, QDialogs, QExtCtrls,
   QComCtrls, QStdCtrls, QTypes,
 {$ELSE}
- {$IFDEF VER210}GIFImg{$ELSE}GIFImage{$ENDIF},Controls, Forms, Windows, Messages, Graphics, Dialogs, ExtCtrls, appevnts{Application.OnIdle:= überschreiben mit eigenem code},
+ {$IF CompilerVersion >= 21}GIFImg{$ELSE}GIFImage{$IFEND},Controls, Forms, Windows, Messages, Graphics, Dialogs, ExtCtrls, appevnts{Application.OnIdle:= überschreiben mit eigenem code},
   ComCtrls, CommCtrl, StdCtrls, clipbrd,
 {$ENDIF}
   math,
   GR32,GR32_Transforms,gauss,GR32_Blend,GR32_LowLevel,dhBitmap32,dhStrUtils,WideStrUtils;
 
-{$IFDEF VER210}
+{$IF CompilerVersion >= 21}
 type TPatchedGIFRenderer=class(TGIFRenderer)
   public
     procedure Draw(ACanvas: TCanvas; const Rect: TRect); override;
@@ -31,7 +31,7 @@ type TPatchedGifImage=class(TGifImage)
   strict protected
     function CreateRenderer: TCustomGIFRenderer; override;
 end;
-{$ENDIF}
+{$IFEND}
 
 function GetAs32(Graphic:TGraphic):TdhBitmap32;
 procedure SaveGraphic(g:TGraphic; const FileName: TPathName);
@@ -317,11 +317,11 @@ begin
   if WasTransparent then
    bt:=ReduceColorsWithTransparentColorReservation(gif,bt);
 
-{$IFDEF VER210}
+{$IF CompilerVersion >= 21}
   GIFSubImage:=GIF.Add(bt);
 {$ELSE}
   GIFSubImage:=GIF.Images[GIF.Add(bt)];
-{$ENDIF}
+{$IFEND}
   bt.Free;
 
   result:=GIFSubImage;

@@ -7,7 +7,7 @@ uses
 {$IFDEF CLX}
   QControls, QForms, Qt, QGraphics, QDialogs, QExtCtrls, QComCtrls,  QStdCtrls, QMask, QButtons,
 {$ELSE}
-  Controls, Forms, Windows, Messages, Graphics, Dialogs, ExtCtrls, clipbrd, Buttons, {$IFDEF VER210}GIFImg{$ELSE}GIFImage{$ENDIF}, JPeg,
+  Controls, Forms, Windows, Messages, Graphics, Dialogs, ExtCtrls, clipbrd, Buttons, {$IF CompilerVersion >= 21}GIFImg{$ELSE}GIFImage{$IFEND}, JPeg,
   ComCtrls, CommCtrl, StdCtrls, ShellAPI, pngimage,  Menus,
   {Mask,} ToolWin, ImgList, AppEvnts,
 {$ENDIF}

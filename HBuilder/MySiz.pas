@@ -497,7 +497,7 @@ begin
   result:=GetCBoundClient(p).TopLeft;
   if not IsSelf then
   if p is TdhCustomPanel then
-   with TdhCustomPanel(p) do IncPt(result,Point(-HorzPosition,-VertPosition));
+   with TdhCustomPanel(p) do IncPt(result,GR32.Point(-HorzPosition,-VertPosition));
 end;
 
 
@@ -511,7 +511,7 @@ begin
   ARect.Top := YGridAdjust(GridBase,ARect.Top);
   ARect.Left := XGridAdjust(GridBase,ARect.Left);
   DecPt(ARect.TopLeft,GetPBound(c).TopLeft);
-  ARect.BottomRight:=Point(ARect.Left+c.Width,ARect.Top+c.Height);
+  ARect.BottomRight:=GR32.Point(ARect.Left+c.Width,ARect.Top+c.Height);
   result:=ARect;
 end;
 
@@ -537,7 +537,7 @@ begin
    }
    ARect.Top := YGridAdjust(GridBase,ARect.Top+p.Y-FDragOffset.Y);
    ARect.Left := XGridAdjust(GridBase,ARect.Left+p.X-FDragOffset.X);
-   ARect.BottomRight:=Point(ARect.Left+c.Width,ARect.Top+c.Height);
+   ARect.BottomRight:=GR32.Point(ARect.Left+c.Width,ARect.Top+c.Height);
   end else
   begin
 
@@ -747,7 +747,7 @@ end;
 function TMySiz.GetSelRect(MouseCursorPos:TPoint):TRect;
 var GridBase:TPoint;
 begin
-       MouseCursorPos:=Point(InClip(MouseCursorPos.X,ClipSizing.Left,ClipSizing.Right),InClip(MouseCursorPos.Y,ClipSizing.Top,ClipSizing.Bottom));
+       MouseCursorPos:=GR32.Point(InClip(MouseCursorPos.X,ClipSizing.Left,ClipSizing.Right),InClip(MouseCursorPos.Y,ClipSizing.Top,ClipSizing.Bottom));
        Result.TopLeft:=FDragOffset;
        Result.BottomRight:=MouseCursorPos;
        NormalizeRect(result);
@@ -834,8 +834,8 @@ begin
           AControl := TControl(FChildList.Items[i]);
           rct:=GetModifiedRect(AControl,MouseCursorPos);
           DecPt(rct.TopLeft,ClientOrigin);
-          DecPt(rct.TopLeft,Point(-Canvas.Pen.Width div 2,-Canvas.Pen.Width div 2));
-          DecPt(rct.BottomRight,Point(Canvas.Pen.Width-1,Canvas.Pen.Width-1));
+          DecPt(rct.TopLeft,GR32.Point(-Canvas.Pen.Width div 2,-Canvas.Pen.Width div 2));
+          DecPt(rct.BottomRight,GR32.Point(Canvas.Pen.Width-1,Canvas.Pen.Width-1));
           Canvas.Rectangle(rct.Left,rct.Top,rct.Left+rct.Right,rct.Top+rct.Bottom);
       end;
  end else
@@ -1180,7 +1180,7 @@ var p:TWinControl;
 function InArea(X,Y:integer):boolean;
 begin
  result:=false;
- if PtInRect(rs,Point(X,Y)) then
+ if PtInRect(rs,GR32.Point(X,Y)) then
   result:=True else
  if (Y>=rs.Bottom) then
  if (Y>=rs.Bottom+(rs.Left-X)) and (Y>=rs.Bottom+(X-rs.Right)) then
@@ -1212,7 +1212,7 @@ begin
  result:=false;
  p:=s.Parent;
  rs:=ConvertRect(s.BoundsRect);
- smid:=Point((rs.Right-rs.Left) div 2,rs.Bottom);
+ smid:=GR32.Point((rs.Right-rs.Left) div 2,rs.Bottom);
  BestDist:=maxint;
  for i:=0 to p.ControlCount-1 do
  begin
@@ -2369,7 +2369,7 @@ end;
 
 class function TMySiz.GridAdjust(const GridBase: TPoint; Pt: TPoint): TPoint;
 begin
- result:=Point(XGridAdjust(GridBase,Pt.X),YGridAdjust(GridBase,Pt.Y));
+ result:=GR32.Point(XGridAdjust(GridBase,Pt.X),YGridAdjust(GridBase,Pt.Y));
 end;
 
 procedure TMySiz.WriteState(Writer: TWriter);

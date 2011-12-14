@@ -730,6 +730,7 @@ begin
   exit;
  end;
  Inherited;
+ ReleaseResourcesRecursively(self);
 end;
 
 {$IFNDEF CLX}

@@ -1483,6 +1483,14 @@ begin
  for state:=low(TState) to high(TState) do
   if StyleArr[state]<>nil then
    StyleArr[state].BackgroundImage.ReleaseResources;
+ BackIsValid:=false;
+ TopIsValid:=false;
+ TransparentTopIsValid:=false;
+ if BackGraph=TopGraph then
+  TopGraph:=nil;
+ FreeAndNil(TopGraph);
+ FreeAndNil(BackGraph);
+ FreeAndNil(TransparentTop);
 end;
 
 function TdhCustomPanel.VariableSize:boolean;

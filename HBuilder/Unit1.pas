@@ -2784,7 +2784,7 @@ begin
  begin
   StringToFile(DragURL,AsString(HttpCli1.RcvdStream as TMemoryStream));
   LoadDragURL(true);
-  DeleteFile(PChar(DragURL));
+  //DeleteFile(PChar(DragURL));
  end;
   {  if HttpCli1<>nil then
     begin

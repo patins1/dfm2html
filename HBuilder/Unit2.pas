@@ -377,7 +377,6 @@ type
     cImageFormat: TTntRadioGroup;
     IGNORE_cDoAction: ThComboBox;
     IGNORE_Button9: TTntButton;
-    Label31: TdhLabel;
     eText: ThSynMemo;
     STYLE_Link2: TdhLink;
     STYLE_dhLabel10: TdhLabel;
@@ -393,7 +392,6 @@ type
     SampleBorder: TdhPanel;
     dhPanel5: TdhPanel;
     AnchorPureHTML: TTntTabSheet;
-    Label32: TdhLabel;
     ePureHTML: ThSynMemo;
     IGNORE_dhDirectHTML1: TdhDirectHTML;
     STYLE_Label33: TdhLabel;
@@ -663,8 +661,10 @@ type
     procedure mSetBackgroundColorTransparentClick(Sender: TObject);
     procedure mCopyOverStylesToDownStylesClick(Sender: TObject);
     procedure mLoadStylesheetClick(Sender: TObject);
+    procedure Panel1Resize(Sender: TObject);
   private
     FAdjusting:boolean;
+    LastClientWidth,LastClientHeight:Integer;
 
     procedure AssignFontColor;
     procedure AssignBackgroundColor(Sender: TObject);
@@ -3473,8 +3473,20 @@ begin
 // PageControl1DrawTab(Control,TabIndex,Rect,Active);
 end;
 
-
-
+procedure TTabs.Panel1Resize(Sender: TObject);
+begin
+ if IsFloating and (PageControl1.ActivePage<>nil) then
+ if (PageControl1.ActivePage=AnchorText) or (PageControl1.ActivePage=AnchorPureHTML) then
+ begin
+  if PropsAlign=alNone then
+  begin
+   LastClientWidth:=Tabs.ClientWidth;
+  end else
+  begin
+   LastClientHeight:=Tabs.ClientHeight;
+  end;
+ end;
+end;
 
 procedure TTabs.PageControl1DrawTab(Control: TCustomTabControl;
   TabIndex: Integer; const Rect: TRect; Active: Boolean);
@@ -4043,10 +4055,6 @@ begin
   Tabs.STYLE_Label33.Style.BorderRadius.BottomLeft:='0';
   Tabs.STYLE_Label33.Style.BorderLeft.Style:=cbsNone;
   Tabs.STYLE_Label33.Style.BorderTop.Style:=Tabs.STYLE_dhLabel11.Style.BorderTop.Style;
-  Tabs.ePureHTML.Width:=500;
-  Tabs.ePureHTML.Height:=89;
-  Tabs.eText.Width:=500;
-  Tabs.eText.Height:=89;
  end else
  begin
 //  PageControl1.TabPosition:=tpLeft;
@@ -4070,10 +4078,6 @@ begin
   Tabs.STYLE_Label33.Style.BorderRadius.TopRight:='0';
   Tabs.STYLE_Label33.Style.BorderTop.Style:=cbsNone;
   Tabs.STYLE_Label33.Style.BorderLeft.Style:=Tabs.STYLE_dhLabel11.Style.BorderLeft.Style;
-  Tabs.ePureHTML.Width:=209;
-  Tabs.ePureHTML.Height:=289;
-  Tabs.eText.Width:=209;
-  Tabs.eText.Height:=289;
  end;
 
  Tabs.Panel1.Style.BorderLeft.Style:=NeedWhite[PropsAlign in [alRight]];
@@ -4208,6 +4212,18 @@ begin
  if IsFloating and (Panel1.Parent=dhMainForm) then exit;
 
  if IsFloating and (PageControl1.ActivePage<>nil) then
+ if (PageControl1.ActivePage=AnchorText) or (PageControl1.ActivePage=AnchorPureHTML) then
+ begin
+  if PropsAlign=alNone then
+  begin
+   if LastClientWidth<>0 then
+    Tabs.ClientWidth:=LastClientWidth;
+  end else
+  begin
+   if LastClientHeight<>0 then
+    Tabs.ClientHeight:=LastClientHeight;
+  end;
+ end else
  begin
   Y:=0;
   X:=0;
@@ -5630,8 +5646,7 @@ begin
  STYLE_dhLabel11.Style.BorderRight.Assign(STYLE_dhLink2.StyleDown.BorderRight);
  //dhLabel11.Style.BorderRadius.Assign(dhLink2.StyleDown.BorderRadius);
  STYLE_dhLabel11.Style.BackgroundImage.Assign(STYLE_dhLink2.StyleDown.BackgroundImage);
- 
- FixDialogBorderStyleToTool(Self);
+
 {$IFDEF CLX}
  PageControl1.Color:=clRed;
  PageControl1.Color:=clBtnFace;

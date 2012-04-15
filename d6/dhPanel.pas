@@ -1483,9 +1483,8 @@ begin
  for state:=low(TState) to high(TState) do
   if StyleArr[state]<>nil then
    StyleArr[state].BackgroundImage.ReleaseResources;
- BackIsValid:=false;
- TopIsValid:=false;
- TransparentTopIsValid:=false;
+ InvalBack;
+ InvalTop(true,true);
  if BackGraph=TopGraph then
   TopGraph:=nil;
  FreeAndNil(TopGraph);

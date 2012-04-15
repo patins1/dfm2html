@@ -1135,9 +1135,9 @@ begin
  Adjusting:=true;
 
  pn:=TObject(Selection[0]) as TControl;
+ SamplePosition.Align:=pn.Align;
  SamplePosition.Anchors:=pn.Anchors;
  //SamplePosition.Center:=(pn is TdhCustomPanel) and TdhCustomPanel(pn).Center;
- SamplePosition.Align:=pn.Align;
 
  //cCenter.Checked:=SamplePosition.Center;
  cNone.Checked:=SamplePosition.Align=alNone;

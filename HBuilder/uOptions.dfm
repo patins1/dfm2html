@@ -183,7 +183,7 @@ object Options: TOptions
         Items.Strings = (
           'iexplore'
           'firefox'
-          'netscape')
+          'chrome')
       end
       object cCSS3: TTntCheckBox
         Left = 8

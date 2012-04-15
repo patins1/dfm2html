@@ -2222,6 +2222,7 @@ end;
 
 procedure TPageContainer.AlignControls(AControl: TControl; var Rect: TRect);
 begin
+ if csDestroying in ComponentState then exit;
  Inherited;
  Tabs.ActBoundsChanged;
 end;

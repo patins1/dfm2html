@@ -180,7 +180,6 @@ end;
 procedure TPageWizard.FormCreate(Sender: TObject);
 begin
  PageControl1.ActivePageIndex:=0;  
- FixDialogBorderStyle(Self);
 end;
 
 procedure TPageWizard.eBackgroundSoundForeverClick(Sender: TObject);

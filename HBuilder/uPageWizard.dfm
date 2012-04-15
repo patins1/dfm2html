@@ -26,10 +26,13 @@ object PageWizard: TPageWizard
     Width = 403
     Height = 238
     ActivePage = TabSheet3
-    Anchors = [akLeft, akTop, akBottom]
+    Anchors = [akLeft, akTop, akRight, akBottom]
     TabOrder = 0
     object TabSheet1: TTntTabSheet
       Caption = 'General'
+      DesignSize = (
+        395
+        210)
       object Label6: TdhLabel
         Left = 8
         Top = 16
@@ -43,6 +46,7 @@ object PageWizard: TPageWizard
         Top = 8
         Width = 249
         Height = 21
+        Anchors = [akLeft, akTop, akRight]
         TabOrder = 0
       end
       object Panel1: TPanel
@@ -50,9 +54,13 @@ object PageWizard: TPageWizard
         Top = 48
         Width = 385
         Height = 161
+        Anchors = [akLeft, akTop, akRight]
         BevelOuter = bvNone
         ParentColor = True
         TabOrder = 1
+        DesignSize = (
+          385
+          161)
         object Label7: TdhLabel
           Left = 8
           Top = 16
@@ -112,6 +120,7 @@ object PageWizard: TPageWizard
           Top = 8
           Width = 249
           Height = 21
+          Anchors = [akLeft, akTop, akRight]
           TabOrder = 0
         end
         object eRemote: TTntEdit
@@ -119,6 +128,7 @@ object PageWizard: TPageWizard
           Top = 56
           Width = 249
           Height = 21
+          Anchors = [akLeft, akTop, akRight]
           Color = clBtnFace
           ReadOnly = True
           TabOrder = 1
@@ -128,6 +138,7 @@ object PageWizard: TPageWizard
           Top = 56
           Width = 25
           Height = 17
+          Anchors = [akTop, akRight]
           Caption = '...'
           TabOrder = 2
           OnClick = Button2Click
@@ -137,6 +148,7 @@ object PageWizard: TPageWizard
           Top = 8
           Width = 25
           Height = 17
+          Anchors = [akTop, akRight]
           Caption = '...'
           TabOrder = 3
           OnClick = Button32Click
@@ -146,6 +158,7 @@ object PageWizard: TPageWizard
           Top = 104
           Width = 249
           Height = 21
+          Anchors = [akLeft, akTop, akRight]
           Color = clWhite
           TabOrder = 4
         end
@@ -154,6 +167,9 @@ object PageWizard: TPageWizard
     object TabSheet2: TTntTabSheet
       Caption = 'Meta Tags'
       ImageIndex = 1
+      DesignSize = (
+        395
+        210)
       object Label1: TdhLabel
         Left = 8
         Top = 16
@@ -183,6 +199,7 @@ object PageWizard: TPageWizard
         Top = 8
         Width = 281
         Height = 21
+        Anchors = [akLeft, akTop, akRight]
         TabOrder = 0
       end
       object eKeywords: TTntEdit
@@ -190,6 +207,7 @@ object PageWizard: TPageWizard
         Top = 40
         Width = 281
         Height = 21
+        Anchors = [akLeft, akTop, akRight]
         TabOrder = 1
       end
       object eDescription: TTntEdit
@@ -197,6 +215,7 @@ object PageWizard: TPageWizard
         Top = 72
         Width = 281
         Height = 21
+        Anchors = [akLeft, akTop, akRight]
         TabOrder = 2
       end
       object GroupBox1: TMyGroupBox
@@ -204,6 +223,7 @@ object PageWizard: TPageWizard
         Top = 112
         Width = 378
         Height = 89
+        Anchors = [akLeft, akTop, akRight]
         Caption = 'Redirection'
         TabOrder = 6
         DesignSize = (
@@ -218,13 +238,12 @@ object PageWizard: TPageWizard
           AutoSizeXY = asXY
         end
         object Label10: TdhLabel
+          Left = 65
           Top = 60
           Width = 30
           Height = 13
           Text = 'Delay:'
           AutoSizeXY = asXY
-          Anchors = [akTop, akRight]
-          Right = 283
         end
         object eForwardingDelay: TMySpinEdit
           Left = 104
@@ -242,6 +261,7 @@ object PageWizard: TPageWizard
           Top = 20
           Width = 233
           Height = 21
+          Anchors = [akLeft, akTop, akRight]
           TabOrder = 3
         end
       end
@@ -249,20 +269,28 @@ object PageWizard: TPageWizard
     object TabSheet3: TTntTabSheet
       Caption = 'Insert HTML'
       ImageIndex = 2
+      DesignSize = (
+        395
+        210)
       object PageControlHTML: TTntPageControl
         Left = 8
         Top = 8
         Width = 378
         Height = 194
         ActivePage = TabSheetHTML3
+        Anchors = [akLeft, akTop, akRight, akBottom]
         TabOrder = 0
         object TabSheetHTML3: TTntTabSheet
           Caption = 'At the very top'
+          DesignSize = (
+            370
+            166)
           object eTop: TSynMemo
             Left = 8
             Top = 8
             Width = 352
             Height = 149
+            Anchors = [akLeft, akTop, akRight, akBottom]
             Font.Charset = DEFAULT_CHARSET
             Font.Color = clWindowText
             Font.Height = -13
@@ -282,11 +310,15 @@ object PageWizard: TPageWizard
         end
         object TabSheetHTML1: TTntTabSheet
           Caption = 'Before </HEAD>'
+          DesignSize = (
+            370
+            166)
           object eHead: TSynMemo
             Left = 8
             Top = 8
             Width = 352
             Height = 149
+            Anchors = [akLeft, akTop, akRight, akBottom]
             Font.Charset = DEFAULT_CHARSET
             Font.Color = clWindowText
             Font.Height = -13
@@ -306,11 +338,15 @@ object PageWizard: TPageWizard
         end
         object TabSheetHTML2: TTntTabSheet
           Caption = 'After <BODY>'
+          DesignSize = (
+            370
+            166)
           object eBody: TSynMemo
             Left = 8
             Top = 8
             Width = 352
             Height = 149
+            Anchors = [akLeft, akTop, akRight, akBottom]
             Font.Charset = DEFAULT_CHARSET
             Font.Color = clWindowText
             Font.Height = -13
@@ -331,11 +367,15 @@ object PageWizard: TPageWizard
         object TabSheet5: TTabSheet
           Caption = 'Before </BODY>'
           ImageIndex = 3
+          DesignSize = (
+            370
+            166)
           object eBodyClose: TSynMemo
             Left = 8
             Top = 8
             Width = 352
             Height = 149
+            Anchors = [akLeft, akTop, akRight, akBottom]
             Font.Charset = DEFAULT_CHARSET
             Font.Color = clWindowText
             Font.Height = -13
@@ -357,6 +397,9 @@ object PageWizard: TPageWizard
     end
     object TabSheet4: TTntTabSheet
       Caption = 'Paths'
+      DesignSize = (
+        395
+        210)
       object dhLabel1: TdhLabel
         Left = 8
         Top = 72
@@ -370,6 +413,7 @@ object PageWizard: TPageWizard
         Top = 64
         Width = 273
         Height = 21
+        Anchors = [akLeft, akTop, akRight]
         TabOrder = 1
         OnChange = eImageFolderChange
       end
@@ -386,6 +430,7 @@ object PageWizard: TPageWizard
         Top = 110
         Width = 273
         Height = 21
+        Anchors = [akLeft, akTop, akRight]
         TabOrder = 3
         OnChange = eJavaScriptFileChange
       end
@@ -426,6 +471,7 @@ object PageWizard: TPageWizard
         Top = 160
         Width = 273
         Height = 21
+        Anchors = [akLeft, akTop, akRight]
         TabOrder = 8
         OnChange = eCSSFileChange
       end
@@ -444,7 +490,7 @@ object PageWizard: TPageWizard
     Top = 255
     Width = 75
     Height = 25
-    Anchors = [akLeft, akBottom]
+    Anchors = [akRight, akBottom]
     Caption = 'OK'
     Default = True
     ModalResult = 1
@@ -455,7 +501,7 @@ object PageWizard: TPageWizard
     Top = 255
     Width = 75
     Height = 25
-    Anchors = [akLeft, akBottom]
+    Anchors = [akRight, akBottom]
     Caption = 'Cancel'
     ModalResult = 2
     TabOrder = 2

@@ -1,5 +1,5 @@
 <*project
-      version = 4 civer = "Free v4.14.5" winver = "2.6/5.1.2600" > 
+      version = 4 civer = "Free v4.14.5" winver = "2.8/6.1.7601" > 
    <output> c:\Delphi\HBuilder\CreateInstall</>
    <exename> dfm2html_inst.exe</>
    <digitsign> </>
@@ -112,7 +112,7 @@
    <mreg listview >
       
    </mreg>
-   <macros> version= 6
+   <macros> version= 6.1
 appname = DFM2HTML v#version#
 progname = DFM2HTML</>
 </project>

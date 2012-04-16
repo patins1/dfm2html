@@ -305,7 +305,6 @@ object PageWizard: TPageWizard
             Gutter.Font.Style = []
             Gutter.Width = 0
             Highlighter = SynHTMLSyn1
-            ScrollBars = ssVertical
           end
         end
         object TabSheetHTML1: TTntTabSheet
@@ -333,7 +332,6 @@ object PageWizard: TPageWizard
             Gutter.Font.Style = []
             Gutter.Width = 0
             Highlighter = SynHTMLSyn1
-            ScrollBars = ssVertical
           end
         end
         object TabSheetHTML2: TTntTabSheet
@@ -361,7 +359,6 @@ object PageWizard: TPageWizard
             Gutter.Font.Style = []
             Gutter.Width = 0
             Highlighter = SynHTMLSyn1
-            ScrollBars = ssVertical
           end
         end
         object TabSheet5: TTabSheet
@@ -390,7 +387,6 @@ object PageWizard: TPageWizard
             Gutter.Font.Style = []
             Gutter.Width = 0
             Highlighter = SynHTMLSyn1
-            ScrollBars = ssVertical
           end
         end
       end

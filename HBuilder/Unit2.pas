@@ -1420,6 +1420,8 @@ end;
 constructor TTabs.Create(AOwner: TComponent);
 begin
 
+  LastClientWidth:=670;
+  LastClientHeight:=300;
 
   inherited;      
 
@@ -3476,7 +3478,7 @@ end;
 procedure TTabs.Panel1Resize(Sender: TObject);
 begin
  if IsFloating and (PageControl1.ActivePage<>nil) then
- if (PageControl1.ActivePage=AnchorText) or (PageControl1.ActivePage=AnchorPureHTML) then
+ if ((PageControl1.ActivePage=AnchorText) or (PageControl1.ActivePage=AnchorPureHTML)) and not dhMainForm.AlignDisabled then
  begin
   if PropsAlign=alNone then
   begin

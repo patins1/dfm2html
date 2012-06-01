@@ -22,7 +22,7 @@ const directIE=false;
 type TBounds=record Left, Top, Width, Height: Longint; end;
 
 var DFM2HTML_VERSION
-:string='DFM2HTML v6.1';
+:string='DFM2HTML v6.2';
 var Registered:boolean=false;
 //var DFM2HTML_REG:string='';
 
@@ -2707,7 +2707,7 @@ begin
 // ns:=UTF8Encode(WideString(ns));
  {if pos(endl_space,ns)>0 then
   StringToFile(SaveDir+filename,SubstText(endl_main,endl,ns)) else }
- if Assigned(glStringToFile) then glStringToFile(filename,ShouldBeFileContents(AnsiSubstText(endl_main,endl,ns)));
+ if Assigned(glStringToFile) then glStringToFile(filename,ShouldBeFileContents(AnsiSubstText(endl_main,endl,AnsiSubstText(endl_space,'',ns))));
  AllPCs.Free;
  end;
 

@@ -1,7 +1,6 @@
 object ColorPicker: TColorPicker
   Left = 643
   Top = 259
-  AutoScroll = False
   Caption = 'Color Picker'
   ClientHeight = 202
   ClientWidth = 148

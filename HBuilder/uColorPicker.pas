@@ -141,9 +141,12 @@ begin
 {$ELSE}
  col:=GrabCursorPixel;
 {$ENDIF}
+ try
  Panel1.Style.BackgroundColor:=col;
  if [ssCtrl]*GetShiftState<>[] then
   Panel2.Style.BackgroundColor:=col;
+ except
+ end;
 end;
 
 procedure TColorPicker.FormShow(Sender: TObject);

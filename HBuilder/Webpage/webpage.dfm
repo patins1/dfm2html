@@ -1,4 +1,4 @@
-object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1
+object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1
   Left = -4
   Top = -23
   HorzScrollBar.Tracking = True
@@ -45,12 +45,12 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1
     object Panel4: TdhPanel
       Top = 36
       Width = 1030
-      Height = 612
+      Height = 1448
       ImageType = bitTile
       Style.Border.Width = 1
       Style.Border.Color = 15461355
       Style.Border.Style = cbsSolid
-      Style.BackgroundImage.Path = 'D:\downloads\dfm\home_nm.jpg'
+      Style.BackgroundImage.Path = 'Images\home_nm.jpg'
       Style.BackgroundImage.State = isAnalyzed
       Style.BackgroundImage.Width = 1000
       Style.BackgroundImage.Height = 550
@@ -58,7 +58,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1
       Style.BackgroundRepeat = cbrNoRepeat
       Style.Padding = 0
       Style.Margin = '14'
-      Style.BackgroundColor = 14869218
+      Style.BackgroundColor = -1
       Style.Effects.OuterShadow.Enabled = True
       Style.Effects.OuterShadow.DeciRadius = 30
       Style.Effects.OuterShadow.Distance = 4
@@ -87,13 +87,14 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1
         Top = 88
         Width = 24
         Height = 24
-        ActivePage = Page1
+        ActivePage = FAQ
         FixedHeight = False
         object Page1: TdhPage
           Left = 192
           Top = 96
           Width = 488
           Height = 392
+          Style.BackgroundRepeat = cbrRepeatX
           Style.TextAlign = ctaJustify
           AutoSizeXY = asNone
           UseIFrame = False
@@ -2494,20 +2495,42 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1
         Left = 15
         Top = 15
         Width = 120
+        ImageType = bitTile
+        ImageFormat = ifSemiTransparent
+        Style.Border.Width = 4
+        Style.Border.Color = 9041148
+        Style.Border.Style = cbsSolid
         Style.BorderRight.Width = 0
         Style.BorderRight.Color = 14408667
         Style.BorderRight.Style = cbsSolid
-        Style.BackgroundImage.Path = 'C:\Delphi\HBuilder\icon.gif'
-        Style.BackgroundImage.State = isAnalyzed
-        Style.BackgroundImage.Width = 32
-        Style.BackgroundImage.Height = 32
+        Style.BackgroundImage.Data = {
+          0954506E67496D61676589504E470D0A1A0A0000000D49484452000000010000
+          022D0806000000F8E410ED000001E84944415478DA55C467F008041C00507F3B
+          454646215991196515D9222924642419659364656F85289528D9D2B02A0A217B
+          963D8B86902D33F3AEBBDEDDEF7D7809D72F8C4894F07F094AAC244AAA644A1E
+          4BA194BA43A97467EC2EA5561ADDADB44A174BAF0CBA4719952996595974AFEE
+          5356658B65D7FDCAA1079433964BB9954779F5A0F2C5F2EB21155041158A1556
+          1115D5C32AA6E2B147F4A84AA8A44AC54AAB8C1ED3E32AAB72B127545E155451
+          955439564555554D4FAA7AAC869E524D3DAD5A7A26F6AC6AAB8EEAEAB9583D3D
+          AFFA6AA0867A21D6488DD5444DF562AC995E5273BDAC166A196BA5D67A45AFAA
+          4DACADDAA9BD3AA8A33AC53AAB8B5E5357BD1EEBA637D45D3DD453BD62BDF5A6
+          FAA8AFFAA97F6C80066A90066B486CA88669B84668A4DE8ABDAD511AAD317A27
+          3656E3F4AEDED378BD1FFB401F6A823ED2C4D8247DAC4F34599F6A4A6CAAA669
+          BA6668666C9666EB33CDD1E7FA22F6A5BED25CCDD3FCD8022DD4D7FA46DF6A51
+          6CB1BED3F75AA2A5B165FA41CBB5422BF5636C95566B8DD66A9DD6C73668A336
+          69B3B6C4B6EA27FDAC6DDAAE1DB19DDAA5DDDAA3BDB17DDAAF033AA85FF46BEC
+          900EEB37FDAE3F627FEA88FED2511DD3F1D8DF3AA1933AA5D3B1333AAB733AAF
+          7F74217651977459577435F6AFAEE9BA6EE8A66EFDD76D92F37937BD2AD0EA00
+          00000049454E44AE426082}
+        Style.BackgroundPosition = '0% 100%'
+        Style.BackgroundRepeat = cbrRepeatX
         Style.PaddingTop = 49
         AutoSizeXY = asNone
         Anchors = [akLeft, akTop, akBottom]
         Bottom = 40
         object Anchor1: TdhLink
-          Left = 0
-          Top = 49
+          Left = 4
+          Top = 53
           Height = 30
           Text = 'Home'
           Style.BorderTop.Width = 1
@@ -2521,8 +2544,8 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1
           LinkPage = Page1
         end
         object Anchor3: TdhLink
-          Left = 0
-          Top = 79
+          Left = 4
+          Top = 83
           Height = 29
           Text = 'Tutorial'
           Use = Link3
@@ -2535,8 +2558,8 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1
           Target = '_blank'
         end
         object Link7: TdhLink
-          Left = 0
-          Top = 108
+          Left = 4
+          Top = 112
           Height = 29
           Text = '<en>User Pages</en><de>Benutzer- seiten</de>'
           Use = Link3
@@ -2548,8 +2571,8 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1
           LinkPage = userpages
         end
         object Link20: TdhLink
-          Left = 0
-          Top = 137
+          Left = 4
+          Top = 141
           Height = 45
           Text = '<en>Version history</en>'#10'<de>Versions- historie</de>'
           Use = Link3
@@ -2561,8 +2584,8 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1
           LinkPage = history
         end
         object Link19: TdhLink
-          Left = 0
-          Top = 182
+          Left = 4
+          Top = 186
           Height = 29
           Text = 'FAQ'
           Use = Link3
@@ -2574,8 +2597,8 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1
           LinkPage = FAQ
         end
         object Link13: TdhLink
-          Left = 0
-          Top = 211
+          Left = 4
+          Top = 215
           Height = 29
           Text = 'Tips & Tricks'
           Use = Link3
@@ -2587,8 +2610,8 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1
           LinkPage = tips
         end
         object Link4: TdhLink
-          Left = 0
-          Top = 240
+          Left = 4
+          Top = 244
           Height = 29
           Text = '<en>Contact</en><de>Impressum</de>'
           Use = Link3
@@ -2600,8 +2623,8 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1
           LinkPage = feedback
         end
         object TdhAnchor2: TdhLink
-          Left = 0
-          Top = 269
+          Left = 4
+          Top = 273
           Height = 29
           Text = '<en>Disclaimer</en>'#10'<de>Haftungs- ausschluss</de>'
           Use = Link3
@@ -2616,8 +2639,8 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1
           Target = '_blank'
         end
         object Link40: TdhLink
-          Left = 0
-          Top = 298
+          Left = 4
+          Top = 302
           Height = 45
           Text = '<en>More Programs</en><de>Weitere Programme</de>'
           Use = Link3
@@ -2629,8 +2652,8 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1
           LinkPage = more
         end
         object Link31: TdhLink
-          Left = 0
-          Top = 343
+          Left = 4
+          Top = 347
           Height = 29
           Text = '<en>Host</en><de>Host</de>'
           Use = Link3
@@ -2642,10 +2665,11 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1
           LinkPage = host
         end
         object Link59: TdhLink
-          Left = 0
-          Top = 372
+          Left = 4
+          Top = 376
           Height = 32
           Text = 'Forum <sup><Label7>new</Label7></sup>'
+          Style.BorderRadius.BottomLeft = '21'
           Use = Link3
           AutoSizeXY = asY
           Align = alTop
@@ -2656,8 +2680,8 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1
           Target = '_blank'
         end
         object Link56: TdhLink
-          Left = 0
-          Top = 404
+          Left = 4
+          Top = 408
           Height = 32
           Text = 'Chat <sup><Label7>new</Label7></sup>'
           Style.Display = cdsNone
@@ -2709,7 +2733,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1
           Style.Effects.AntiAliasing = True
           AutoSizeXY = asXY
           Align = alTop
-          Right = 0
+          Right = -13
           StyleDown.BackgroundColor = 9041148
           StyleOver.TextDecoration = [ctdUnderline]
           PreferDownStyles = True
@@ -2904,18 +2928,13 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1
         Left = 15
         Top = 15
         Width = 1000
-        Height = 49
+        Height = 53
         ImageType = bitTile
         Style.BackgroundImage.Data = {
           0954506E67496D61676589504E470D0A1A0A0000000D49484452000000010000
-          00310802000000940D5473000000AC4944415478DA0DC36B4B02411880519E9F
-          2F114A8884181121628448442112518488441122228AC4DE77679DBD4D6EAE7D
-          E83D70F833358EE68463714A55D4A9F20687FC4C36F9CD5AF29C326B53A61DF6
-          E985BCE427B9C224D718DDA5D03DD927DFDDC85BB2782087A4F11DA9BA27510F
-          68F5888E46ECA2B17C220E9FE50B2A78956F44C184C89F12FA3302EF5D7EE07B
-          9FF8EE179E3B970B5C67295738CE1AC7DE60DB5B6CEB1BCBB2FE019A3A7DAA55
-          D1357E0000000049454E44AE426082}
-        Style.BackgroundRepeat = cbrRepeatX
+          000108060000001F15C4890000000D4944415478DA63FCF3A5F33F0008E7037A
+          C84506100000000049454E44AE426082}
+        Style.BackgroundRepeat = cbrRepeat
         Style.FontSize = '13'
         Style.Margin = '0'
         Style.BackgroundColor = Transparent
@@ -2923,7 +2942,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1
         Style.Effects.Blur.Enabled = True
         Style.Effects.Blur.DeciRadius = 0
         Style.BorderRadius.BottomRight = '0'
-        Style.BorderRadius.TopRight = '200'
+        Style.BorderRadius.TopRight = '49'
         Use = Label22
         AutoSizeXY = asNone
         object Label1: TdhLabel

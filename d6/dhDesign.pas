@@ -86,7 +86,6 @@ type
   TMultiLineCaptionProperty = class(TCaptionProperty)
   protected
     procedure MemoChange(Sender: TObject);
-    procedure _Proc(const S: AnsiString);
   public
     function GetAttributes: TPropertyAttributes; override;
 {$IFDEF WIN32}
@@ -184,12 +183,6 @@ type
     //procedure SetValue(const Value: AString); override;
     procedure GetValues(Proc: TGetStrProc); override;
   end;
-
-  TJvHintProperty = class(TStringProperty)
-  public
-    function GetAttributes: TPropertyAttributes; override;
-    procedure Edit; override;
-  end;  
 
 
 
@@ -414,21 +407,18 @@ end;
 
 procedure Register;
 begin
-//  RegisterPropertyEditor(TypeInfo(AnsiString), TdhPanel, 'Hint', TMultiLineCaptionProperty);
   RegisterComponentEditor(TdhStyleSheet,TdhComponentEditor);
   RegisterComponentEditor(TdhCustomPanel,TdhComponentEditor);
   RegisterComponentEditor(TdhLink,TdhLabelEditor);
   RegisterComponentEditor(TdhLabel,TdhLabelEditor);
   //RegisterComponentEditor(TdhDirectHTML,TdhLabelEditor);
-  RegisterPropertyEditor(TypeInfo(AnsiString), TdhCustomPanel, 'Text', TMultiLineCaptionProperty);
-  RegisterPropertyEditor(TypeInfo(HypeString), TdhDirectHTML, 'InnerHTML', TJvHintProperty);
-  RegisterPropertyEditor(TypeInfo(AnsiString), TdhPage, 'HTMLBody', TJvHintProperty);
-  RegisterPropertyEditor(TypeInfo(AnsiString), TdhPage, 'HTMLHead', TJvHintProperty);
-  RegisterPropertyEditor(TypeInfo(AnsiString), TdhPage, 'MetaDescription', TJvHintProperty);
-  RegisterPropertyEditor(TypeInfo(AnsiString), TdhPage, 'MetaKeywords', TJvHintProperty);
-//  RegisterPropertyEditor(TypeInfo(AnsiString), TdhPureHTML, 'InsertText', TMultiLineCaptionProperty);
-//  RegisterPropertyEditor(TypeInfo(AnsiString), TdhCustomPanel, 'Log', TMultiLineCaptionProperty);
-//  RegisterPropertyEditor(TypeInfo(TForm), TdhPanel, 'AForm', TFormComponentProperty);
+  RegisterPropertyEditor(TypeInfo(HypeString), TdhPanel, 'Hint', TMultiLineCaptionProperty);
+  RegisterPropertyEditor(TypeInfo(HypeString), TdhCustomPanel, 'Text', TMultiLineCaptionProperty);
+  RegisterPropertyEditor(TypeInfo(HypeString), TdhDirectHTML, 'InnerHTML', TMultiLineCaptionProperty);
+  RegisterPropertyEditor(TypeInfo(HypeString), TdhPage, 'HTMLBody', TMultiLineCaptionProperty);
+  RegisterPropertyEditor(TypeInfo(HypeString), TdhPage, 'HTMLHead', TMultiLineCaptionProperty);
+  RegisterPropertyEditor(TypeInfo(HypeString), TdhPage, 'MetaDescription', TMultiLineCaptionProperty);
+  RegisterPropertyEditor(TypeInfo(HypeString), TdhPage, 'MetaKeywords', TMultiLineCaptionProperty);
   RegisterPropertyEditor(TypeInfo(TStyle), TdhCustomPanel, '', TStyleClassProperty);
 
   RegisterPropertyEditor(TypeInfo(TCSSBorder), TStyle, '', TBorderClassProperty);
@@ -464,7 +454,6 @@ begin
   RegisterPropertyEditor(TypeInfo(AnsiString), TdhLink, 'Target', TTargetProperty);
   RegisterPropertyEditor(TypeInfo(TControl), TdhCustomPanel, 'Use', TUseProperty);
 
-//  RegisterPropertyEditor(TypeInfo(TdhTabSheet), TdhCustomPanel, 'LinkTab', TBasedFormProperty);
   RegisterPropertyEditor(TypeInfo(TdhLink), TdhCustomPanel, 'LinkAnchor', TBasedFormProperty);
 
 end;
@@ -529,46 +518,35 @@ begin
 end;
 {$ENDIF}
 
-procedure TMultiLineCaptionProperty._Proc(const S: AnsiString);
-begin
- {dhStrEditDlg.VisitProc(Designer.GetComponent(S));
- }
-end;
 
 procedure TMultiLineCaptionProperty.Edit;
 var
-  Temp: HypeString;
+  OriginalValue: HypeString;
   Comp: TPersistent;
-  ii:integer;
-  ls:TList;
 begin
- {ls:=TList.Create;
- try
-  ls.Add(GetComponent(0) as TdhLabel);
-  if not dhStrEditDlg.Prepare2(ls) then exit;
-  Designer.GetComponentNames(GetTypeData(TypeInfo(TdhLabel)), _Proc);
-  dhStrEditDlg.Execute(Temp);
-  SetStrValue(Temp);
- finally
-  ls.Free;
- end;
- }
+  with TdhMultiLine.Create(Application) do
+  try
+    Comp := GetComponent(0);
+    if Comp is TComponent then
+      Caption := TComponent(Comp).Name + '.' + GetName
+    else
+      Caption := GetName;
+    OriginalValue := GetStrValue;
+    Memo.Lines.Text := OriginalValue;
+    Memo.OnChange := Self.MemoChange;
+    if ShowModal = mrOk then
+      SetStrValue(Memo.Text) else
+      SetStrValue(OriginalValue);
+  finally
+    Free;
+  end;
 end;
 
 
 
 procedure TMultiLineCaptionProperty.MemoChange(Sender: TObject);
-var
-  Temp: AnsiString;
-begin    
-{      Temp := dhStrEditDlg.Memo1.Text;
-
-      while (Length(Temp) > 0) and (Temp[Length(Temp)] < ' ') do
-        Delete(Temp, Length(Temp), 1);
-      SetStrValue(Temp);
-
-      (GetComponent(0) as TControl).update;
-}
+begin
+ SetStrValue((Sender as TMemo).Text);
 end;
 
 
@@ -678,15 +656,6 @@ begin
  if SameText(Prop.GetName,'CAPTION') or SameText(Prop.GetName,'HTML')  or SameText(Prop.GetName,'InnerHTML') then
   MyFirst:=Prop;
 end;
-
-
-// GetPropInfo(Component,'Caption');
-//end;
-
-
-
-
-
 
 function TStyleClassProperty.GetValue: AString;
 var
@@ -1069,37 +1038,6 @@ begin
   result:= inherited GetValue;
 end;
 
-function TJvHintProperty.GetAttributes: TPropertyAttributes;
-begin
-  Result := {inherited GetAttributes +} [paDialog];
-end;
-
-procedure TJvHintProperty.Edit;
-var
-  Temp: AString;
-  Comp: TPersistent;
-begin
-  with TJvStrEditDlg.Create(Application) do
-  try
-    Comp := GetComponent(0);
-    if Comp is TComponent then
-      Caption := TComponent(Comp).Name + '.' + GetName
-    else
-      Caption := GetName;
-    Temp := GetStrValue;
-    Memo.Lines.Text := Temp;
-    UpdateStatus(nil);
-    if ShowModal = mrOk then
-    begin
-      Temp := Memo.Text;
-      while (Length(Temp) > 0) and (Temp[Length(Temp)] < ' ') do
-        System.Delete(Temp, Length(Temp), 1);
-      SetStrValue(Temp);
-    end;
-  finally
-    Free;
-  end;
-end;
 
 initialization
 

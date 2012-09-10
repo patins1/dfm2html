@@ -1,8 +1,24 @@
+{-------------------------------------------------------------------------------
+The contents of this file are subject to the Mozilla Public License
+Version 1.1 (the "License"); you may not use this file except in compliance
+with the License. You may obtain a copy of the License at
+http://www.mozilla.org/MPL/
+
+Software distributed under the License is distributed on an "AS IS" basis,
+WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License for
+the specific language governing rights and limitations under the License.
+
+The Original Code is DFM2HTML
+
+The Initial Developer of the Original Code is Joerg Kiegeland
+
+You may retrieve the latest version of this file at the DFM2HTML home page,
+located at http://www.dfm2html.com
+
+-------------------------------------------------------------------------------}
+
+
 {$A+,B-,C+,D+,E-,F-,G+,H+,I+,J-,K-,L+,M-,N+,O+,P+,Q-,R-,S-,T-,U-,V+,W-,X+,Y+,Z1}
-{$MINSTACKSIZE $00004000}
-{$MAXSTACKSIZE $00100000}
-{$IMAGEBASE $00400000}
-{$APPTYPE GUI}
 unit dhPanel;
 
 interface
@@ -11,7 +27,6 @@ interface
 {$UNSAFECODE ON}
 {$ENDIF}
 
-{.$DEFINE Q}
 {.$IFNDEF CLX}
 {.$DEFINE SYNC_PROP}
 {.$ENDIF}
@@ -7453,8 +7468,6 @@ initialization
  ObjIdleProc:=TObjIdleProc.Create;
  Application.OnIdle:=ObjIdleProc.DoMouseIdle;
  end;
-
-// inttohex((GetBlendMemEx(i+{ $FF0000FF}$80008A84,$FFFFFFFF,{255 shl 16 div 255 + 1}255)),8);
 
 finalization
  if ObjIdleProc<>nil then

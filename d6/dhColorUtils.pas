@@ -131,6 +131,7 @@ begin
   Col:=CSSColorToColor32(Color);
   if IsOpaqueColor(Color) then
    Result:='#'+inttohex(RedComponent(Col),2)+inttohex(GreenComponent(Col),2)+inttohex(BlueComponent(Col),2) else
+  {$IFDEF VER240}with FormatSettings do{$ENDIF}
   begin
    SaveSeparator := DecimalSeparator;
    DecimalSeparator := '.';

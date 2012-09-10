@@ -124,6 +124,12 @@
 { VERXXX to SYN_COMPILERX, SYN_DELPHIX and SYN_CPPBX mappings                  }
 {------------------------------------------------------------------------------}
 
+{$IFDEF VER240}
+  {$DEFINE SYN_COMPILER_14}
+  {$DEFINE SYN_DELPHI}
+  {$DEFINE SYN_DELPHI_2010}
+{$ENDIF}
+
 {$IFDEF VER230}
   {$DEFINE SYN_COMPILER_14}
   {$DEFINE SYN_DELPHI}

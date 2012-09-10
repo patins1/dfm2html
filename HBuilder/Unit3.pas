@@ -160,6 +160,8 @@ type
 {$ELSE}
     procedure CMMouseLeave(var Message: TMessage); message CM_MOUSELEAVE;
 {$ENDIF}
+    function IsSelected(AControl: TControl): Boolean;
+    procedure DrawSelectionMarks(AControl: TControl);
 
     //property IsControl: Boolean read GetIsControl write SetIsControl;
     //property Form: TCustomForm read GetCustomForm write SetCustomForm;
@@ -198,7 +200,11 @@ begin
  Accept:=(Source is TControl) and (TControl(Source).Owner=Presets);
 end;
                       
-procedure TPageContainer.DoDragDrop(Sender, Source: TObject; X, Y: Integer);     
+procedure TPageContainer.DrawSelectionMarks(AControl: TControl);
+begin
+end;
+
+procedure TPageContainer.DoDragDrop(Sender, Source: TObject; X, Y: Integer);
 var lLock:boolean;
 begin                                        
  glLockWindowUpdate(true,lLock);
@@ -1407,6 +1413,11 @@ end;
 function TPageContainer.IsLiveModified:boolean;
 begin
  result:=LiveReason<>EmptyStr;
+end;
+
+function TPageContainer.IsSelected(AControl: TControl): Boolean;
+begin
+ result:=MySiz.IsSelected(AControl);
 end;
 
 function TPageContainer.CanUndo: boolean;

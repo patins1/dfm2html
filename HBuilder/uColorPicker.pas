@@ -182,6 +182,7 @@ begin
   icol:=Longint(Color32ToCSSColor(TColor32(icol) or $FF000000));
  end else
  if g.init(s) and g.Over('rgba(') and g.SaveOverPos(',',sred) and g.SaveOverPos(',',sgreen) and g.SaveOverPos(',',sblue) and g.SaveOverPos(')',salpha) then
+ with FormatSettings do
  begin
    SaveSeparator := DecimalSeparator;
    DecimalSeparator := '.';

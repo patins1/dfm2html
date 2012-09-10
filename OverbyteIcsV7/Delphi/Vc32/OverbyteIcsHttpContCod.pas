@@ -512,6 +512,7 @@ begin
                 if AddQuality then begin
                     QualStr := FormatFloat('0.###', ContItem.Quality);
                     { Force the point as decimal separator }
+                    with FormatSettings do
                     if DecimalSeparator <> '.' then begin
                         DecPos := Pos(DecimalSeparator, QualStr);
                         if DecPos > 0 then

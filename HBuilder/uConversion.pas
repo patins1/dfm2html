@@ -759,8 +759,8 @@ var
 begin
   NestingLevel := 0;
   Reader := TReader.Create(Input, 4096);
-  SaveSeparator := DecimalSeparator;
-  DecimalSeparator := '.';
+  SaveSeparator := FormatSettings.DecimalSeparator;
+  FormatSettings.DecimalSeparator := '.';
   try
     Writer := TWriter.Create(Output, 4096);
     try
@@ -770,7 +770,7 @@ begin
       Writer.Free;
     end;
   finally
-    DecimalSeparator := SaveSeparator;
+    FormatSettings.DecimalSeparator := SaveSeparator;
     Reader.Free;
   end;
 end;

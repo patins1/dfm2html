@@ -1,240 +1,240 @@
-﻿	<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-		<PropertyGroup>
-			<ProjectGuid>{D450DDA2-6669-41FB-91B0-AE76832EF4E3}</ProjectGuid>
-			<MainSource>DFM2HTML.dpr</MainSource>
-			<Config Condition="'$(Config)'==''">Debug</Config>
-			<DCC_DCCCompiler>DCC32</DCC_DCCCompiler>
-			<ProjectVersion>13.4</ProjectVersion>
-			<FrameworkType>VCL</FrameworkType>
-			<Base>True</Base>
-			<Platform Condition="'$(Platform)'==''">Win32</Platform>
-			<TargetedPlatforms>1</TargetedPlatforms>
-			<AppType>Application</AppType>
-		</PropertyGroup>
-		<PropertyGroup Condition="'$(Config)'=='Base' or '$(Base)'!=''">
-			<Base>true</Base>
-		</PropertyGroup>
-		<PropertyGroup Condition="('$(Platform)'=='Win64' and '$(Base)'=='true') or '$(Base_Win64)'!=''">
-			<Base_Win64>true</Base_Win64>
-			<CfgParent>Base</CfgParent>
-			<Base>true</Base>
-		</PropertyGroup>
-		<PropertyGroup Condition="('$(Platform)'=='Win32' and '$(Base)'=='true') or '$(Base_Win32)'!=''">
-			<Base_Win32>true</Base_Win32>
-			<CfgParent>Base</CfgParent>
-			<Base>true</Base>
-		</PropertyGroup>
-		<PropertyGroup Condition="'$(Config)'=='Release' or '$(Cfg_1)'!=''">
-			<Cfg_1>true</Cfg_1>
-			<CfgParent>Base</CfgParent>
-			<Base>true</Base>
-		</PropertyGroup>
-		<PropertyGroup Condition="'$(Config)'=='Debug' or '$(Cfg_2)'!=''">
-			<Cfg_2>true</Cfg_2>
-			<CfgParent>Base</CfgParent>
-			<Base>true</Base>
-		</PropertyGroup>
-		<PropertyGroup Condition="('$(Platform)'=='Win32' and '$(Cfg_2)'=='true') or '$(Cfg_2_Win32)'!=''">
-			<Cfg_2_Win32>true</Cfg_2_Win32>
-			<CfgParent>Cfg_2</CfgParent>
-			<Cfg_2>true</Cfg_2>
-			<Base>true</Base>
-		</PropertyGroup>
-		<PropertyGroup Condition="'$(Base)'!=''">
-			<VerInfo_MajorVer>6</VerInfo_MajorVer>
-			<VerInfo_Locale>1031</VerInfo_Locale>
-			<VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=6.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
-			<VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
-			<DCC_Namespace>Vcl;Vcl.Imaging;Vcl.Touch;Vcl.Samples;Vcl.Shell;System;Xml;Data;Datasnap;Web;Soap;Winapi;$(DCC_Namespace)</DCC_Namespace>
-			<DCC_IntegerOverflowCheck>true</DCC_IntegerOverflowCheck>
-			<DCC_IMPLICIT_STRING_CAST_LOSS>error</DCC_IMPLICIT_STRING_CAST_LOSS>
-			<DCC_SYMBOL_DEPRECATED>false</DCC_SYMBOL_DEPRECATED>
-			<DCC_UNIT_DEPRECATED>false</DCC_UNIT_DEPRECATED>
-			<DCC_WIDECHAR_REDUCED>false</DCC_WIDECHAR_REDUCED>
-			<DCC_DependencyCheckOutputName>DFM2HTML.exe</DCC_DependencyCheckOutputName>
-			<DCC_UnitSearchPath>$(DELPHI)\Lib\Debug;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
-			<DCC_GARBAGE>false</DCC_GARBAGE>
-			<DCC_ImageBase>00400000</DCC_ImageBase>
-			<DCC_RangeChecking>true</DCC_RangeChecking>
-			<DCC_Platform>x86</DCC_Platform>
-			<DCC_Hints>false</DCC_Hints>
-			<DCC_UsePackage>vcl;rtl;vclx;indy;inet;xmlrtl;vclie;inetdbbde;inetdbxpress;dbrtl;dsnap;dsnapcon;vcldb;soaprtl;VclSmp;dbexpress;dbxcds;inetdb;bdertl;vcldbx;webdsnap;websnap;adortl;ibxpress;teeui;teedb;tee;dss;visualclx;visualdbclx;vclactnband;vclshlctrls;dclOfficeXP;GR32_D7;GR32_DSGN_D7;dhcomps;TntUnicodeVcl_R70;dklang7;hbcomps;$(DCC_UsePackage)</DCC_UsePackage>
-			<DCC_K>false</DCC_K>
-			<DCC_F>false</DCC_F>
-			<DCC_S>false</DCC_S>
-			<DCC_N>true</DCC_N>
-			<DebugSourcePath>$(DELPHI)\source\vcl;$(DELPHI)\Source\Rtl;$(DELPHI)\source\rtl\Corba45;$(DELPHI)\source\rtl\Sys;$(DELPHI)\source\rtl\Win;$(DELPHI)\source\rtl\common;$(DELPHI)\source\Internet;$(DELPHI)\source\clx;$(DELPHI)\source\websnap;$(DELPHI)\Source\WebMidas;$(DELPHI)\Source\Indy;$(DELPHI)\Source\IntraWeb;$(DELPHI)\Source\Samples;$(DELPHI)\Source\Soap;$(DELPHI)\Source\ToolsAPI;$(DELPHI)\Source\Xml;$(DebugSourcePath)</DebugSourcePath>
-			<DCC_GenerateStackFrames>true</DCC_GenerateStackFrames>
-			<DCC_E>false</DCC_E>
-			<DCC_SymbolReferenceInfo>1</DCC_SymbolReferenceInfo>
-		</PropertyGroup>
-		<PropertyGroup Condition="'$(Base_Win64)'!=''">
-			<Icon_MainIcon>DFM2HTML_Icon.ico</Icon_MainIcon>
-		</PropertyGroup>
-		<PropertyGroup Condition="'$(Base_Win32)'!=''">
-			<VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
-			<Icon_MainIcon>DFM2HTML_Icon.ico</Icon_MainIcon>
-			<DCC_Namespace>System.Win;Data.Win;Datasnap.Win;Web.Win;Soap.Win;Xml.Win;Bde;$(DCC_Namespace)</DCC_Namespace>
-			<VerInfo_Locale>1033</VerInfo_Locale>
-			<Manifest_File>$(BDS)\bin\default_app.manifest</Manifest_File>
-			<VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
-		</PropertyGroup>
-		<PropertyGroup Condition="'$(Cfg_1)'!=''">
-			<DCC_LocalDebugSymbols>false</DCC_LocalDebugSymbols>
-			<DCC_Define>RELEASE;$(DCC_Define)</DCC_Define>
-			<DCC_SymbolReferenceInfo>0</DCC_SymbolReferenceInfo>
-			<DCC_DebugInformation>false</DCC_DebugInformation>
-		</PropertyGroup>
-		<PropertyGroup Condition="'$(Cfg_2)'!=''">
-			<DCC_MapFile>3</DCC_MapFile>
-			<DCC_Define>DEBUG;madExcept;$(DCC_Define)</DCC_Define>
-		</PropertyGroup>
-		<PropertyGroup Condition="'$(Cfg_2_Win32)'!=''">
-			<VerInfo_MinorVer>2</VerInfo_MinorVer>
-			<VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=6.2.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
-			<VerInfo_Locale>1033</VerInfo_Locale>
-		</PropertyGroup>
-		<ItemGroup>
-			<DelphiCompile Include="$(MainSource)">
-				<MainSource>MainSource</MainSource>
-			</DelphiCompile>
-			<DCCReference Include="Unit1.pas">
-				<Form>dhMainForm</Form>
-			</DCCReference>
-			<DCCReference Include="Unit2.pas">
-				<Form>Tabs</Form>
-				<DesignClass>Frame</DesignClass>
-			</DCCReference>
-			<DCCReference Include="Unit3.pas">
-				<Form>DChild</Form>
-			</DCCReference>
-			<DCCReference Include="uGradientWizard.pas">
-				<Form>GradientWizard</Form>
-			</DCCReference>
-			<DCCReference Include="uWarnings.pas">
-				<Form>FormWarnings</Form>
-			</DCCReference>
-			<DCCReference Include="uOptions.pas">
-				<Form>Options</Form>
-			</DCCReference>
-			<DCCReference Include="uTransparencyWizard.pas">
-				<Form>TransparencyWizard</Form>
-			</DCCReference>
-			<DCCReference Include="uStyleInfo.pas">
-				<Form>StyleInfo</Form>
-			</DCCReference>
-			<DCCReference Include="uPageWizard.pas">
-				<Form>PageWizard</Form>
-			</DCCReference>
-			<DCCReference Include="uPublishFTP.pas">
-				<Form>PublishFTP</Form>
-			</DCCReference>
-			<DCCReference Include="uPublishLog.pas">
-				<Form>PublishLog</Form>
-			</DCCReference>
-			<DCCReference Include="uTemplates.pas">
-				<Form>TemplatesWizard</Form>
-			</DCCReference>
-			<DCCReference Include="uColorizeImg.pas">
-				<Form>ColorizeImg</Form>
-			</DCCReference>
-			<DCCReference Include="uBorderRadiusWizard.pas">
-				<Form>BorderRadiusWizard</Form>
-			</DCCReference>
-			<DCCReference Include="uPresets.pas">
-				<Form>Presets</Form>
-			</DCCReference>
-			<DCCReference Include="uMoreMisc.pas">
-				<Form>MoreMisc</Form>
-			</DCCReference>
-			<DCCReference Include="uStartUp.pas">
-				<Form>StartUp</Form>
-			</DCCReference>
-			<DCCReference Include="uColorPicker.pas">
-				<Form>ColorPicker</Form>
-			</DCCReference>
-			<DCCReference Include="uFind.pas">
-				<Form>FindText</Form>
-			</DCCReference>
-			<DCCReference Include="UIConstants.pas"/>
-			<DCCReference Include="dhMultilineCaptionEdit.pas">
-				<Form>dhMultilineCaptionEdit2</Form>
-			</DCCReference>
-			<DCCReference Include="..\d6\BasicHTMLElements.pas"/>
-			<DCCReference Include="uChooseWide.pas">
-				<Form>ChooseUnicode</Form>
-			</DCCReference>
-			<DCCReference Include="uObjectExplorer.pas">
-				<Form>ObjectExplorer</Form>
-			</DCCReference>
-			<DCCReference Include="uResourceExplorer.pas">
-				<Form>ResourceExplorer</Form>
-			</DCCReference>
-			<DCCReference Include="uMetaWriter.pas"/>
-			<BuildConfiguration Include="Debug">
-				<Key>Cfg_2</Key>
-				<CfgParent>Base</CfgParent>
-			</BuildConfiguration>
-			<BuildConfiguration Include="Base">
-				<Key>Base</Key>
-			</BuildConfiguration>
-			<BuildConfiguration Include="Release">
-				<Key>Cfg_1</Key>
-				<CfgParent>Base</CfgParent>
-			</BuildConfiguration>
-		</ItemGroup>
-		<Import Condition="Exists('$(BDS)\Bin\CodeGear.Delphi.Targets')" Project="$(BDS)\Bin\CodeGear.Delphi.Targets"/>
-		<ProjectExtensions>
-			<Borland.Personality>Delphi.Personality.12</Borland.Personality>
-			<Borland.ProjectType>VCLApplication</Borland.ProjectType>
-			<BorlandProject>
-				<Delphi.Personality>
-					<Source>
-						<Source Name="MainSource">DFM2HTML.dpr</Source>
-					</Source>
-					<Parameters>
-						<Parameters Name="UseLauncher">False</Parameters>
-						<Parameters Name="LoadAllSymbols">True</Parameters>
-						<Parameters Name="LoadUnspecifiedSymbols">False</Parameters>
-					</Parameters>
-					<VersionInfo>
-						<VersionInfo Name="IncludeVerInfo">True</VersionInfo>
-						<VersionInfo Name="AutoIncBuild">False</VersionInfo>
-						<VersionInfo Name="MajorVer">6</VersionInfo>
-						<VersionInfo Name="MinorVer">0</VersionInfo>
-						<VersionInfo Name="Release">0</VersionInfo>
-						<VersionInfo Name="Build">0</VersionInfo>
-						<VersionInfo Name="Debug">False</VersionInfo>
-						<VersionInfo Name="PreRelease">False</VersionInfo>
-						<VersionInfo Name="Special">False</VersionInfo>
-						<VersionInfo Name="Private">False</VersionInfo>
-						<VersionInfo Name="DLL">False</VersionInfo>
-						<VersionInfo Name="Locale">1031</VersionInfo>
-						<VersionInfo Name="CodePage">1252</VersionInfo>
-					</VersionInfo>
-					<VersionInfoKeys>
-						<VersionInfoKeys Name="CompanyName"/>
-						<VersionInfoKeys Name="FileDescription"/>
-						<VersionInfoKeys Name="FileVersion">6.0.0.0</VersionInfoKeys>
-						<VersionInfoKeys Name="InternalName"/>
-						<VersionInfoKeys Name="LegalCopyright"/>
-						<VersionInfoKeys Name="LegalTrademarks"/>
-						<VersionInfoKeys Name="OriginalFilename"/>
-						<VersionInfoKeys Name="ProductName"/>
-						<VersionInfoKeys Name="ProductVersion">1.0.0.0</VersionInfoKeys>
-						<VersionInfoKeys Name="Comments"/>
-					</VersionInfoKeys>
-					<Excluded_Packages>
-						<Excluded_Packages Name="$(BDSBIN)\dcloffice2k160.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
-						<Excluded_Packages Name="$(BDSBIN)\dclofficexp160.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
-					</Excluded_Packages>
-				</Delphi.Personality>
-				<Platforms>
-					<Platform value="Win64">False</Platform>
-					<Platform value="Win32">True</Platform>
-				</Platforms>
-			</BorlandProject>
-			<ProjectFileVersion>12</ProjectFileVersion>
-		</ProjectExtensions>
-		<Import Condition="Exists('$(APPDATA)\Embarcadero\$(BDSAPPDATABASEDIR)\$(PRODUCTVERSION)\UserTools.proj')" Project="$(APPDATA)\Embarcadero\$(BDSAPPDATABASEDIR)\$(PRODUCTVERSION)\UserTools.proj"/>
-	</Project>
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <ProjectGuid>{D450DDA2-6669-41FB-91B0-AE76832EF4E3}</ProjectGuid>
+        <MainSource>DFM2HTML.dpr</MainSource>
+        <Config Condition="'$(Config)'==''">Debug</Config>
+        <DCC_DCCCompiler>DCC32</DCC_DCCCompiler>
+        <ProjectVersion>14.3</ProjectVersion>
+        <FrameworkType>VCL</FrameworkType>
+        <Base>True</Base>
+        <Platform Condition="'$(Platform)'==''">Win32</Platform>
+        <TargetedPlatforms>1</TargetedPlatforms>
+        <AppType>Application</AppType>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Config)'=='Base' or '$(Base)'!=''">
+        <Base>true</Base>
+    </PropertyGroup>
+    <PropertyGroup Condition="('$(Platform)'=='Win32' and '$(Base)'=='true') or '$(Base_Win32)'!=''">
+        <Base_Win32>true</Base_Win32>
+        <CfgParent>Base</CfgParent>
+        <Base>true</Base>
+    </PropertyGroup>
+    <PropertyGroup Condition="('$(Platform)'=='Win64' and '$(Base)'=='true') or '$(Base_Win64)'!=''">
+        <Base_Win64>true</Base_Win64>
+        <CfgParent>Base</CfgParent>
+        <Base>true</Base>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Config)'=='Release' or '$(Cfg_1)'!=''">
+        <Cfg_1>true</Cfg_1>
+        <CfgParent>Base</CfgParent>
+        <Base>true</Base>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Config)'=='Debug' or '$(Cfg_2)'!=''">
+        <Cfg_2>true</Cfg_2>
+        <CfgParent>Base</CfgParent>
+        <Base>true</Base>
+    </PropertyGroup>
+    <PropertyGroup Condition="('$(Platform)'=='Win32' and '$(Cfg_2)'=='true') or '$(Cfg_2_Win32)'!=''">
+        <Cfg_2_Win32>true</Cfg_2_Win32>
+        <CfgParent>Cfg_2</CfgParent>
+        <Cfg_2>true</Cfg_2>
+        <Base>true</Base>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Base)'!=''">
+        <VerInfo_MajorVer>6</VerInfo_MajorVer>
+        <VerInfo_Locale>1031</VerInfo_Locale>
+        <VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=6.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
+        <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
+        <DCC_Namespace>Vcl;Vcl.Imaging;Vcl.Touch;Vcl.Samples;Vcl.Shell;System;Xml;Data;Datasnap;Web;Soap;Winapi;$(DCC_Namespace)</DCC_Namespace>
+        <DCC_IntegerOverflowCheck>true</DCC_IntegerOverflowCheck>
+        <DCC_IMPLICIT_STRING_CAST_LOSS>error</DCC_IMPLICIT_STRING_CAST_LOSS>
+        <DCC_SYMBOL_DEPRECATED>false</DCC_SYMBOL_DEPRECATED>
+        <DCC_UNIT_DEPRECATED>false</DCC_UNIT_DEPRECATED>
+        <DCC_WIDECHAR_REDUCED>false</DCC_WIDECHAR_REDUCED>
+        <DCC_DependencyCheckOutputName>DFM2HTML.exe</DCC_DependencyCheckOutputName>
+        <DCC_UnitSearchPath>$(DELPHI)\Lib\Debug;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
+        <DCC_GARBAGE>false</DCC_GARBAGE>
+        <DCC_ImageBase>00400000</DCC_ImageBase>
+        <DCC_RangeChecking>true</DCC_RangeChecking>
+        <DCC_Platform>x86</DCC_Platform>
+        <DCC_Hints>false</DCC_Hints>
+        <DCC_UsePackage>vcl;rtl;vclx;indy;inet;xmlrtl;vclie;inetdbbde;inetdbxpress;dbrtl;dsnap;dsnapcon;vcldb;soaprtl;VclSmp;dbexpress;dbxcds;inetdb;bdertl;vcldbx;webdsnap;websnap;adortl;ibxpress;teeui;teedb;tee;dss;visualclx;visualdbclx;vclactnband;vclshlctrls;dclOfficeXP;GR32_D7;GR32_DSGN_D7;dhcomps;TntUnicodeVcl_R70;dklang7;hbcomps;$(DCC_UsePackage)</DCC_UsePackage>
+        <DCC_K>false</DCC_K>
+        <DCC_F>false</DCC_F>
+        <DCC_S>false</DCC_S>
+        <DCC_N>true</DCC_N>
+        <DebugSourcePath>$(DELPHI)\source\vcl;$(DELPHI)\Source\Rtl;$(DELPHI)\source\rtl\Corba45;$(DELPHI)\source\rtl\Sys;$(DELPHI)\source\rtl\Win;$(DELPHI)\source\rtl\common;$(DELPHI)\source\Internet;$(DELPHI)\source\clx;$(DELPHI)\source\websnap;$(DELPHI)\Source\WebMidas;$(DELPHI)\Source\Indy;$(DELPHI)\Source\IntraWeb;$(DELPHI)\Source\Samples;$(DELPHI)\Source\Soap;$(DELPHI)\Source\ToolsAPI;$(DELPHI)\Source\Xml;$(DebugSourcePath)</DebugSourcePath>
+        <DCC_GenerateStackFrames>true</DCC_GenerateStackFrames>
+        <DCC_E>false</DCC_E>
+        <DCC_SymbolReferenceInfo>1</DCC_SymbolReferenceInfo>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Base_Win32)'!=''">
+        <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
+        <Icon_MainIcon>DFM2HTML_Icon.ico</Icon_MainIcon>
+        <DCC_Namespace>System.Win;Data.Win;Datasnap.Win;Web.Win;Soap.Win;Xml.Win;Bde;$(DCC_Namespace)</DCC_Namespace>
+        <VerInfo_Locale>1033</VerInfo_Locale>
+        <Manifest_File>$(BDS)\bin\default_app.manifest</Manifest_File>
+        <VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Base_Win64)'!=''">
+        <Icon_MainIcon>DFM2HTML_Icon.ico</Icon_MainIcon>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Cfg_1)'!=''">
+        <DCC_LocalDebugSymbols>false</DCC_LocalDebugSymbols>
+        <DCC_Define>RELEASE;$(DCC_Define)</DCC_Define>
+        <DCC_SymbolReferenceInfo>0</DCC_SymbolReferenceInfo>
+        <DCC_DebugInformation>false</DCC_DebugInformation>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Cfg_2)'!=''">
+        <DCC_MapFile>3</DCC_MapFile>
+        <DCC_Define>DEBUG;madExcept;$(DCC_Define)</DCC_Define>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Cfg_2_Win32)'!=''">
+        <VerInfo_MinorVer>2</VerInfo_MinorVer>
+        <VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=6.2.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
+        <VerInfo_Locale>1033</VerInfo_Locale>
+    </PropertyGroup>
+    <ItemGroup>
+        <DelphiCompile Include="$(MainSource)">
+            <MainSource>MainSource</MainSource>
+        </DelphiCompile>
+        <DCCReference Include="Unit1.pas">
+            <Form>dhMainForm</Form>
+        </DCCReference>
+        <DCCReference Include="Unit2.pas">
+            <Form>Tabs</Form>
+            <DesignClass>Frame</DesignClass>
+        </DCCReference>
+        <DCCReference Include="Unit3.pas">
+            <Form>DChild</Form>
+        </DCCReference>
+        <DCCReference Include="uGradientWizard.pas">
+            <Form>GradientWizard</Form>
+        </DCCReference>
+        <DCCReference Include="uWarnings.pas">
+            <Form>FormWarnings</Form>
+        </DCCReference>
+        <DCCReference Include="uOptions.pas">
+            <Form>Options</Form>
+        </DCCReference>
+        <DCCReference Include="uTransparencyWizard.pas">
+            <Form>TransparencyWizard</Form>
+        </DCCReference>
+        <DCCReference Include="uStyleInfo.pas">
+            <Form>StyleInfo</Form>
+        </DCCReference>
+        <DCCReference Include="uPageWizard.pas">
+            <Form>PageWizard</Form>
+        </DCCReference>
+        <DCCReference Include="uPublishFTP.pas">
+            <Form>PublishFTP</Form>
+        </DCCReference>
+        <DCCReference Include="uPublishLog.pas">
+            <Form>PublishLog</Form>
+        </DCCReference>
+        <DCCReference Include="uTemplates.pas">
+            <Form>TemplatesWizard</Form>
+        </DCCReference>
+        <DCCReference Include="uColorizeImg.pas">
+            <Form>ColorizeImg</Form>
+        </DCCReference>
+        <DCCReference Include="uBorderRadiusWizard.pas">
+            <Form>BorderRadiusWizard</Form>
+        </DCCReference>
+        <DCCReference Include="uPresets.pas">
+            <Form>Presets</Form>
+        </DCCReference>
+        <DCCReference Include="uMoreMisc.pas">
+            <Form>MoreMisc</Form>
+        </DCCReference>
+        <DCCReference Include="uStartUp.pas">
+            <Form>StartUp</Form>
+        </DCCReference>
+        <DCCReference Include="uColorPicker.pas">
+            <Form>ColorPicker</Form>
+        </DCCReference>
+        <DCCReference Include="uFind.pas">
+            <Form>FindText</Form>
+        </DCCReference>
+        <DCCReference Include="UIConstants.pas"/>
+        <DCCReference Include="dhMultilineCaptionEdit.pas">
+            <Form>dhMultilineCaptionEdit2</Form>
+        </DCCReference>
+        <DCCReference Include="..\d6\BasicHTMLElements.pas"/>
+        <DCCReference Include="uChooseWide.pas">
+            <Form>ChooseUnicode</Form>
+        </DCCReference>
+        <DCCReference Include="uObjectExplorer.pas">
+            <Form>ObjectExplorer</Form>
+        </DCCReference>
+        <DCCReference Include="uResourceExplorer.pas">
+            <Form>ResourceExplorer</Form>
+        </DCCReference>
+        <DCCReference Include="uMetaWriter.pas"/>
+        <BuildConfiguration Include="Debug">
+            <Key>Cfg_2</Key>
+            <CfgParent>Base</CfgParent>
+        </BuildConfiguration>
+        <BuildConfiguration Include="Base">
+            <Key>Base</Key>
+        </BuildConfiguration>
+        <BuildConfiguration Include="Release">
+            <Key>Cfg_1</Key>
+            <CfgParent>Base</CfgParent>
+        </BuildConfiguration>
+    </ItemGroup>
+    <Import Condition="Exists('$(BDS)\Bin\CodeGear.Delphi.Targets')" Project="$(BDS)\Bin\CodeGear.Delphi.Targets"/>
+    <ProjectExtensions>
+        <Borland.Personality>Delphi.Personality.12</Borland.Personality>
+        <Borland.ProjectType>VCLApplication</Borland.ProjectType>
+        <BorlandProject>
+            <Delphi.Personality>
+                <Source>
+                    <Source Name="MainSource">DFM2HTML.dpr</Source>
+                </Source>
+                <Parameters>
+                    <Parameters Name="UseLauncher">False</Parameters>
+                    <Parameters Name="LoadAllSymbols">True</Parameters>
+                    <Parameters Name="LoadUnspecifiedSymbols">False</Parameters>
+                </Parameters>
+                <VersionInfo>
+                    <VersionInfo Name="IncludeVerInfo">True</VersionInfo>
+                    <VersionInfo Name="AutoIncBuild">False</VersionInfo>
+                    <VersionInfo Name="MajorVer">6</VersionInfo>
+                    <VersionInfo Name="MinorVer">0</VersionInfo>
+                    <VersionInfo Name="Release">0</VersionInfo>
+                    <VersionInfo Name="Build">0</VersionInfo>
+                    <VersionInfo Name="Debug">False</VersionInfo>
+                    <VersionInfo Name="PreRelease">False</VersionInfo>
+                    <VersionInfo Name="Special">False</VersionInfo>
+                    <VersionInfo Name="Private">False</VersionInfo>
+                    <VersionInfo Name="DLL">False</VersionInfo>
+                    <VersionInfo Name="Locale">1031</VersionInfo>
+                    <VersionInfo Name="CodePage">1252</VersionInfo>
+                </VersionInfo>
+                <VersionInfoKeys>
+                    <VersionInfoKeys Name="CompanyName"/>
+                    <VersionInfoKeys Name="FileDescription"/>
+                    <VersionInfoKeys Name="FileVersion">6.0.0.0</VersionInfoKeys>
+                    <VersionInfoKeys Name="InternalName"/>
+                    <VersionInfoKeys Name="LegalCopyright"/>
+                    <VersionInfoKeys Name="LegalTrademarks"/>
+                    <VersionInfoKeys Name="OriginalFilename"/>
+                    <VersionInfoKeys Name="ProductName"/>
+                    <VersionInfoKeys Name="ProductVersion">1.0.0.0</VersionInfoKeys>
+                    <VersionInfoKeys Name="Comments"/>
+                </VersionInfoKeys>
+                <Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\dcloffice2k160.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\dclofficexp160.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
+                </Excluded_Packages>
+            </Delphi.Personality>
+            <Platforms>
+                <Platform value="Win32">True</Platform>
+                <Platform value="Win64">False</Platform>
+            </Platforms>
+        </BorlandProject>
+        <ProjectFileVersion>12</ProjectFileVersion>
+    </ProjectExtensions>
+    <Import Condition="Exists('$(APPDATA)\Embarcadero\$(BDSAPPDATABASEDIR)\$(PRODUCTVERSION)\UserTools.proj')" Project="$(APPDATA)\Embarcadero\$(BDSAPPDATABASEDIR)\$(PRODUCTVERSION)\UserTools.proj"/>
+</Project>

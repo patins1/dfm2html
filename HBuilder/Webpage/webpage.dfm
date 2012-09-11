@@ -30,7 +30,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage
     Right = 0
     Bottom = 0
     UseIFrame = False
-    Title = 'Web Design Software DFM2HTML Version 6.2'
+    Title = 'Web Design Software DFM2HTML Version 6.3'
     OutputDirectory = 'www2\'
     MetaAuthor = 'J'#246'rg Kiegeland'
     MetaDescription = 'An WYSIWYG HTML editor'
@@ -45,7 +45,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage
     object Panel4: TdhPanel
       Top = 36
       Width = 1030
-      Height = 1448
+      Height = 1468
       ImageType = bitTile
       Style.Border.Width = 1
       Style.Border.Color = 15461355
@@ -129,7 +129,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage
             Top = 304
             Width = 224
             Height = 22
-            Text = 'Download DFM2HTML 6.2'
+            Text = 'Download DFM2HTML 6.3'
             Style.FontSize = '19'
             AutoSizeXY = asXY
             PreferDownStyles = True
@@ -378,6 +378,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage
               AutoSizeXY = asY
               Align = alTop
               Right = 0
+              Text = ''
             end
             object Label14: TdhLabel
               Left = 0
@@ -441,6 +442,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage
                 Width = 256
                 Height = 240
                 AutoSizeXY = asNone
+                Action = ''
                 Method = fmtPost
                 object Submit1: TdhLink
                   Left = 8
@@ -469,6 +471,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage
                   Width = 160
                   Height = 23
                   AutoSizeXY = asY
+                  Text = ''
                 end
                 object Label32: TdhLabel
                   Left = 8
@@ -484,6 +487,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage
                   Width = 160
                   Height = 23
                   AutoSizeXY = asY
+                  Text = ''
                 end
                 object Label33: TdhLabel
                   Left = 8
@@ -499,6 +503,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage
                   Width = 240
                   Height = 96
                   AutoSizeXY = asNone
+                  Text = ''
                 end
                 object Link28: TdhLink
                   Top = 208
@@ -655,6 +660,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage
             Top = 953
             Width = 144
             Height = 144
+            Text = ''
             ImageType = bitStretch
             Style.BackgroundImage.Path = 'Images\Image1_nm.png'
             Style.BackgroundImage.State = isAnalyzed
@@ -672,6 +678,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage
             Top = 1657
             Width = 144
             Height = 144
+            Text = ''
             ImageType = bitStretch
             Style.BackgroundImage.Path = 'Images\Link6_nm.png'
             Style.BackgroundImage.State = isAnalyzed
@@ -689,6 +696,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage
             Top = 1305
             Width = 144
             Height = 144
+            Text = ''
             ImageType = bitStretch
             Style.BackgroundImage.Path = 'Images\Link11_nm.png'
             Style.BackgroundImage.State = isAnalyzed
@@ -1098,6 +1106,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage
             Top = 1481
             Width = 144
             Height = 144
+            Text = ''
             ImageType = bitStretch
             Style.BackgroundImage.Path = 'Images\Link14_nm.png'
             Style.BackgroundImage.State = isAnalyzed
@@ -1154,6 +1163,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage
             Top = 1129
             Width = 144
             Height = 144
+            Text = ''
             ImageType = bitStretch
             Style.BackgroundImage.Path = 'Images\Link10_nm.png'
             Style.BackgroundImage.State = isAnalyzed
@@ -1171,6 +1181,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage
             Top = 777
             Width = 144
             Height = 144
+            Text = ''
             ImageType = bitStretch
             Style.BackgroundImage.Path = 'Images\Link27_nm.png'
             Style.BackgroundImage.State = isAnalyzed
@@ -1193,7 +1204,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage
           UseIFrame = False
           object Label5: TdhLabel
             Left = 24
-            Top = 3200
+            Top = 3288
             Width = 360
             Height = 80
             Text = 
@@ -1206,7 +1217,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage
           end
           object Label25: TdhLabel
             Left = 24
-            Top = 2960
+            Top = 3048
             Width = 446
             Height = 212
             Text = 
@@ -1227,7 +1238,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage
           end
           object Label20: TdhLabel
             Left = 24
-            Top = 2736
+            Top = 2824
             Width = 442
             Height = 193
             Text = 
@@ -1246,7 +1257,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage
           end
           object Label21: TdhLabel
             Left = 24
-            Top = 2544
+            Top = 2632
             Width = 418
             Height = 161
             Text = 
@@ -1264,7 +1275,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage
           end
           object Label28: TdhLabel
             Left = 32
-            Top = 2424
+            Top = 2512
             Width = 434
             Height = 81
             Text = 
@@ -1278,7 +1289,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage
           end
           object Label11: TdhLabel
             Left = 24
-            Top = 2224
+            Top = 2312
             Width = 354
             Height = 64
             Text = 
@@ -1292,7 +1303,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage
           end
           object Label12: TdhLabel
             Left = 24
-            Top = 2320
+            Top = 2408
             Width = 330
             Height = 80
             Text = 
@@ -1306,7 +1317,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage
           end
           object Label13: TdhLabel
             Left = 24
-            Top = 2104
+            Top = 2192
             Width = 450
             Height = 96
             Text = 
@@ -1321,7 +1332,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage
           end
           object Label37: TdhLabel
             Left = 24
-            Top = 2032
+            Top = 2120
             Width = 426
             Height = 49
             Text = 
@@ -1334,7 +1345,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage
           end
           object Label38: TdhLabel
             Left = 24
-            Top = 1944
+            Top = 2032
             Width = 210
             Height = 65
             Text = 
@@ -1347,7 +1358,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage
           end
           object Label41: TdhLabel
             Left = 24
-            Top = 1872
+            Top = 1960
             Width = 338
             Height = 48
             Text = 
@@ -1360,7 +1371,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage
           end
           object Label42: TdhLabel
             Left = 24
-            Top = 1752
+            Top = 1840
             Width = 426
             Height = 97
             Text = 
@@ -1376,7 +1387,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage
           end
           object Label6: TdhLabel
             Left = 24
-            Top = 1680
+            Top = 1768
             Width = 442
             Height = 48
             Text = 
@@ -1390,7 +1401,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage
           end
           object Label44: TdhLabel
             Left = 24
-            Top = 1608
+            Top = 1696
             Width = 386
             Height = 49
             Text = 
@@ -1406,7 +1417,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage
           end
           object Label46: TdhLabel
             Left = 24
-            Top = 1520
+            Top = 1608
             Width = 346
             Height = 65
             Text = 
@@ -1422,7 +1433,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage
           end
           object Label50: TdhLabel
             Left = 24
-            Top = 1360
+            Top = 1448
             Width = 370
             Height = 129
             Text = 
@@ -1443,7 +1454,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage
           end
           object Label47: TdhLabel
             Left = 24
-            Top = 1200
+            Top = 1288
             Width = 394
             Height = 160
             Text = 
@@ -1465,7 +1476,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage
           end
           object Label48: TdhLabel
             Left = 24
-            Top = 1016
+            Top = 1104
             Width = 386
             Height = 176
             Text = 
@@ -1489,7 +1500,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage
           end
           object Label23: TdhLabel
             Left = 24
-            Top = 848
+            Top = 936
             Width = 354
             Height = 160
             Text = 
@@ -1510,7 +1521,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage
           end
           object Label43: TdhLabel
             Left = 24
-            Top = 760
+            Top = 848
             Width = 402
             Height = 80
             Text = 
@@ -1528,7 +1539,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage
           end
           object Label45: TdhLabel
             Left = 24
-            Top = 688
+            Top = 776
             Width = 322
             Height = 64
             Text = 
@@ -1543,7 +1554,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage
           end
           object Label49: TdhLabel
             Left = 24
-            Top = 600
+            Top = 688
             Width = 370
             Height = 80
             Text = 
@@ -1560,7 +1571,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage
           end
           object Label53: TdhLabel
             Left = 24
-            Top = 528
+            Top = 616
             Width = 338
             Height = 64
             Text = 
@@ -1575,7 +1586,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage
           end
           object Label54: TdhLabel
             Left = 24
-            Top = 464
+            Top = 552
             Width = 362
             Height = 32
             Text = 
@@ -1590,7 +1601,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage
           end
           object Label55: TdhLabel
             Left = 24
-            Top = 400
+            Top = 488
             Width = 314
             Height = 48
             Text = 
@@ -1605,7 +1616,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage
           end
           object Label57: TdhLabel
             Left = 24
-            Top = 344
+            Top = 432
             Width = 282
             Height = 32
             Text = 
@@ -1619,7 +1630,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage
           end
           object Label56: TdhLabel
             Left = 24
-            Top = 280
+            Top = 368
             Width = 354
             Height = 48
             Text = 
@@ -1634,7 +1645,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage
           end
           object Label29: TdhLabel
             Left = 24
-            Top = 216
+            Top = 304
             Width = 314
             Height = 32
             Text = 
@@ -1649,7 +1660,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage
           end
           object Label58: TdhLabel
             Left = 24
-            Top = 152
+            Top = 240
             Width = 314
             Height = 48
             Text = 
@@ -1665,7 +1676,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage
           end
           object Label59: TdhLabel
             Left = 24
-            Top = 88
+            Top = 176
             Width = 442
             Height = 48
             Text = 
@@ -1682,7 +1693,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage
           end
           object Label60: TdhLabel
             Left = 22
-            Top = 24
+            Top = 112
             Width = 394
             Height = 48
             Text = 
@@ -1691,6 +1702,24 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage
               '</code></en><de><code>Neu in version 6.2:'#10'* Seitendialog und Obj' +
               'ekteigenschaften-Dialog '#10'  groessenverstellbar, an das sich Edit' +
               'ierfelder anpassen'#10'</code></de>'
+            Style.PaddingRight = 2
+            Style.WhiteSpace = cwsPre
+            Style.Color = Black
+            AutoSizeXY = asXY
+          end
+          object Label62: TdhLabel
+            Left = 22
+            Top = 16
+            Width = 410
+            Height = 80
+            Text = 
+              '<en><code>New in version 6.3'#10'* Open sourced DFM2HTML Delphi comp' +
+              'onents'#10'* Compiled against Delphi XE3'#10'* New homepage layout (than' +
+              'ks to Carlos Cruz)'#10'* Czech language is added (thanks to Radovan ' +
+              'Pl'#353'ek)'#10'</code></en><de><code>Neu in version 6.3:'#10'* DFM2HTML Delp' +
+              'hi Komponenten als Open Source verf'#252'gbar'#10'* Kompiliert mit Delphi' +
+              ' XE3'#10'* Neues Homepagelayout (Dank Carlos Cruz)  '#10'* Tschechische ' +
+              'Sprache hinzugef'#252'gt (Dank Radovan Pl'#353'ek)'#10'</code></de>'
             Style.PaddingRight = 2
             Style.WhiteSpace = cwsPre
             Style.Color = Red
@@ -2425,6 +2454,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage
             Top = 72
             Width = 80
             Height = 80
+            Text = ''
             ImageType = bitImage
             Style.BackgroundImage.Path = 'Images\lg-1and1.png'
             Style.BackgroundImage.State = isAnalyzed
@@ -2440,6 +2470,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage
             Top = 232
             Width = 211
             Height = 64
+            Text = ''
             ImageType = bitImage
             Style.BackgroundImage.Path = 'Images\tagline-logo-211x64.gif'
             Style.BackgroundImage.State = isAnalyzed
@@ -2472,6 +2503,77 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage
               ' fuer Ihre Website? Diese Dienste sind 100% kompatible mit DFM2H' +
               'TML:'#10'</de>'
             Style.TextAlign = ctaJustify
+            AutoSizeXY = asY
+          end
+        end
+        object source: TdhPage
+          Left = 192
+          Top = 96
+          Width = 488
+          Height = 360
+          AutoSizeXY = asNone
+          UseIFrame = False
+          object dhcomps: TdhFile
+            Left = 312
+            Top = 24
+            Width = 27
+            Height = 22
+            AutoSizeXY = asXY
+            FileName = 'C:\dev\dhcomps.zip'
+            Linked = True
+          end
+          object Link86: TdhLink
+            Left = 8
+            Top = 8
+            Width = 266
+            Height = 16
+            Text = 'Download the DFM2HTML Delphi components'
+            AutoSizeXY = asXY
+            PreferDownStyles = True
+            Options = [loDownIfMenu, loDownIfMouseDown, loDownIfURL]
+            LinkAnchor = dhcomps
+          end
+          object Image4: TdhLink
+            Left = 0
+            Top = 48
+            Width = 488
+            Height = 295
+            Text = ''
+            ImageType = bitStretch
+            Style.BackgroundImage.Path = 'Images\dhcomps.png'
+            Style.BackgroundImage.State = isAnalyzed
+            Style.BackgroundImage.Width = 673
+            Style.BackgroundImage.Height = 431
+            AutoSizeXY = asXY
+            PreferDownStyles = True
+            Options = [loDownIfMenu, loDownIfMouseDown, loDownIfURL]
+          end
+          object Label64: TdhLabel
+            Left = 3
+            Top = 344
+            Width = 205
+            Height = 13
+            Text = '(editing DFM2HTML components in Delphi)'
+            Style.FontSize = '10'
+            AutoSizeXY = asXY
+          end
+        end
+        object todo: TdhPage
+          Left = 192
+          Top = 96
+          Width = 488
+          Height = 360
+          AutoSizeXY = asNone
+          UseIFrame = False
+          object Label63: TdhLabel
+            Left = 32
+            Top = 24
+            Width = 320
+            Height = 90
+            Text = 
+              'Features of DFM2HTML in the future:'#10'<ul>'#10'<li>LIQUID OR FIXED LAY' +
+              'OUT + AUTO-HEIGHT PAGE (FOR DYNAMIC CONTENT)'#10'</li>'#10'<li>Use CSS g' +
+              'radients (with multiple color steps)'#10'</li>'#10'</ul>'
             AutoSizeXY = asY
           end
         end
@@ -2655,7 +2757,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage
           Left = 4
           Top = 347
           Height = 29
-          Text = '<en>Host</en><de>Host</de>'
+          Text = 'Host'
           Use = Link3
           AutoSizeXY = asY
           Align = alTop
@@ -2664,12 +2766,24 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage
           Options = [loDownIfMenu, loDownIfMouseDown, loDownIfURL]
           LinkPage = host
         end
-        object Link59: TdhLink
+        object Link87: TdhLink
           Left = 4
           Top = 376
-          Height = 32
-          Text = 'Forum <sup><Label7>new</Label7></sup>'
-          Style.BorderRadius.BottomLeft = '21'
+          Height = 29
+          Text = 'Todo'
+          Use = Link3
+          AutoSizeXY = asY
+          Align = alTop
+          Right = 0
+          PreferDownStyles = True
+          Options = [loDownIfMenu, loDownIfMouseDown, loDownIfURL]
+          LinkPage = todo
+        end
+        object Link85: TdhLink
+          Left = 4
+          Top = 405
+          Height = 29
+          Text = 'Forum'
           Use = Link3
           AutoSizeXY = asY
           Align = alTop
@@ -2679,9 +2793,23 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage
           Link = 'http://www.dfm2html.com/forum'
           Target = '_blank'
         end
+        object Link59: TdhLink
+          Left = 4
+          Top = 434
+          Height = 48
+          Text = 'Open <br/>Source <sup><Label7>new</Label7></sup>'
+          Style.BorderRadius.BottomLeft = '21'
+          Use = Link3
+          AutoSizeXY = asY
+          Align = alTop
+          Right = 0
+          PreferDownStyles = True
+          Options = [loDownIfMenu, loDownIfMouseDown, loDownIfURL]
+          LinkPage = source
+        end
         object Link56: TdhLink
           Left = 4
-          Top = 408
+          Top = 482
           Height = 32
           Text = 'Chat <sup><Label7>new</Label7></sup>'
           Style.Display = cdsNone
@@ -2733,7 +2861,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage
           Style.Effects.AntiAliasing = True
           AutoSizeXY = asXY
           Align = alTop
-          Right = -13
+          Right = 0
           StyleDown.BackgroundColor = 9041148
           StyleOver.TextDecoration = [ctdUnderline]
           PreferDownStyles = True
@@ -2744,6 +2872,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage
           Top = 29
           Width = 32
           Height = 32
+          Text = ''
           ImageType = bitImage
           Style.BackgroundImage.Path = 'Images\Link45_nm.gif'
           Style.BackgroundImage.State = isAnalyzed

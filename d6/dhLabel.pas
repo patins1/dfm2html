@@ -2683,12 +2683,12 @@ begin
     GR32.OffsetRect(rct,-HPos,-VPos);
     if Display=cdsListItem then
      PaintListItem(Canvas,brct);
-    IntersectRect(rct2,rct,ClpRct);
+    GR32.IntersectRect(rct2,rct,ClpRct);
     if not GR32.IsRectEmpty(rct2) then
      SpecialPaintBorder(rct,brct);
     rct:=rct2;
     rct3:=brct;
-    IntersectRect(brct,brct,ClpRct);
+    GR32.IntersectRect(brct,brct,ClpRct);
     SpecialBg(rct3,rct3,ActTopGraph,brct,false);
    end;
    end;
@@ -2808,7 +2808,7 @@ begin
       rct:=InflRect(brct,BorderPure);
       SpecialPaintBorder(rct,brct,PC_Cursor);
       rct3:=brct;
-      IntersectRect(brct,brct,ClpRct);
+      GR32.IntersectRect(brct,brct,ClpRct);
       SpecialBg(rct3,rct3,ActTopGraph,brct,false);
      finally
        FreeAndNil(UseStyleTree);
@@ -2982,7 +2982,7 @@ begin
    ActLine:=@Lines[l];
    for ti:=0 to ActLine.AllTrees.Count-1 do
    if FocContainer(ActLine,ti,rct,brct,height) then
-   if PtInRect(rct,P) then
+   if GR32.PtInRect(rct,P) then
     best_ti:=ti;
    if best_ti>=1 then
    begin

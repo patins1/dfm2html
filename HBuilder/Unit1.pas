@@ -694,6 +694,29 @@ begin
  end;
 end;
 
+function GetVersionNumber(Filename: String): String;
+var Major, Minor: Word;
+    VerInfoSize, VerValueSize, Dummy: DWORD;
+    VerInfo: Pointer;
+    VerValue: PVSFixedFileInfo;
+begin
+ VerInfoSize := GetFileVersionInfoSize(PChar(FileName), Dummy);
+ GetMem(VerInfo, VerInfoSize);
+ GetFileVersionInfo(PChar(Filename), 0, VerInfoSize, VerInfo);
+ if not VerQueryValue(VerInfo, '\', Pointer(VerValue), VerValueSize) then Result := '' else
+ with VerValue^ do
+ begin
+  Major := dwFileVersionMS shr 16;
+  Minor := dwFileVersionMS and $FFFF;
+  Result := IntToStr(Major) + '.' + IntToStr(Minor);
+ end;
+ FreeMem(VerInfo, VerInfoSize);
+end;
+
+function DFM2HTML_VERSION: String;
+begin
+ Result := 'DFM2HTML v'+GetVersionNumber(Application.ExeName);
+end;
 
 procedure TdhMainForm.WriteConfig;
 var IniFile:TMemIniFile;

@@ -5,7 +5,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage
   VertScrollBar.Tracking = True
   Anchors = [akLeft, akTop, akRight, akBottom]
   Caption = 'webpage.dfm'
-  ClientHeight = 775
+  ClientHeight = 735
   ClientWidth = 1920
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clBlack
@@ -45,7 +45,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage
     object Panel4: TdhPanel
       Top = 36
       Width = 1030
-      Height = 1468
+      Height = 3676
       ImageType = bitTile
       Style.Border.Width = 1
       Style.Border.Color = 15461355
@@ -87,7 +87,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage
         Top = 88
         Width = 24
         Height = 24
-        ActivePage = FAQ
+        ActivePage = history
         FixedHeight = False
         object Page1: TdhPage
           Left = 192
@@ -1713,13 +1713,13 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage
             Width = 410
             Height = 80
             Text = 
-              '<en><code>New in version 6.3'#10'* Open sourced DFM2HTML Delphi comp' +
-              'onents'#10'* Compiled against Delphi XE3'#10'* New homepage layout (than' +
-              'ks to Carlos Cruz)'#10'* Czech language is added (thanks to Radovan ' +
-              'Pl'#353'ek)'#10'</code></en><de><code>Neu in version 6.3:'#10'* DFM2HTML Delp' +
-              'hi Komponenten als Open Source verf'#252'gbar'#10'* Kompiliert mit Delphi' +
-              ' XE3'#10'* Neues Homepagelayout (Dank Carlos Cruz)  '#10'* Tschechische ' +
-              'Sprache hinzugef'#252'gt (Dank Radovan Pl'#353'ek)'#10'</code></de>'
+              '<en><code>New in version 6.3'#10'* Open sourced DFM2HTML Components ' +
+              'Suite'#10'* Compiled against Delphi XE3'#10'* New homepage layout (thank' +
+              's to Carlos Cruz)'#10'* Czech language is added (thanks to Radovan P' +
+              'l'#353'ek)'#10'</code></en><de><code>Neu in version 6.3:'#10'* DFM2HTML Compo' +
+              'nents Suite als Open Source verf'#252'gbar'#10'* Kompiliert mit Delphi XE' +
+              '3'#10'* Neues Homepagelayout (Dank Carlos Cruz)  '#10'* Tschechische Spr' +
+              'ache hinzugef'#252'gt (Dank Radovan Pl'#353'ek)'#10'</code></de>'
             Style.PaddingRight = 2
             Style.WhiteSpace = cwsPre
             Style.Color = Red
@@ -2523,11 +2523,11 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage
             Linked = True
           end
           object Link86: TdhLink
-            Left = 8
+            Left = 0
             Top = 8
-            Width = 266
+            Width = 262
             Height = 16
-            Text = 'Download the DFM2HTML Delphi components'
+            Text = 'Download the DFM2HTML Components Suite'
             AutoSizeXY = asXY
             PreferDownStyles = True
             Options = [loDownIfMenu, loDownIfMouseDown, loDownIfURL]

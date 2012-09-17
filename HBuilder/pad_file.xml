@@ -46,7 +46,7 @@
 		<Program_Cost_Dollars>0.00</Program_Cost_Dollars>
 		<Program_Categories />
 		<Program_Specific_Category>Development Tools</Program_Specific_Category>
-		<Program_Change_Info>open sourced DFM2HTML Delphi components</Program_Change_Info>
+		<Program_Change_Info>Open sourced DFM2HTML Components Suite for Delphi</Program_Change_Info>
 		<Program_Language>German,English,French,Italian,Portuguese,Slovak,Spanish</Program_Language>
 		<Program_OS_Support>Win2000,Win7 x32,WinVista,WinVista x64,WinXP</Program_OS_Support>
 		<Program_Install_Support>Install and Uninstall</Program_Install_Support>
@@ -59,8 +59,8 @@
 			<Filename_Generic>dfm2html.exe</Filename_Generic>
 			<Filename_Versioned>dfm2v1_3.exe</Filename_Versioned>
 			<Filename_Previous>dfm2v1_3.exe</Filename_Previous>
-			<File_Size_Bytes>4151813</File_Size_Bytes>
-			<File_Size_K>4054</File_Size_K>
+			<File_Size_Bytes>4156188</File_Size_Bytes>
+			<File_Size_K>4058</File_Size_K>
 			<File_Size_MB>3.96</File_Size_MB>
 		</File_Info>
 		<Expire_Info>

@@ -844,6 +844,29 @@ begin
  end;
 end;
 
+function SortWithNumbers(List:TStringList; Index1, Index2:Integer):Integer;
+var String1, String2: String;
+    Numbers1, Numbers2, Val1, Val2:integer;
+begin
+  String1:=List[Index1];
+  String2:=List[Index2];
+  Numbers1:=0;
+  Numbers2:=0;
+  while (Length(String1)-Numbers1>=1) and (String1[Length(String1)-Numbers1] in ['1','2','3','4','5','6','7','8','9','0']) do Inc(Numbers1);
+  while (Length(String2)-Numbers2>=1) and (String2[Length(String2)-Numbers2] in ['1','2','3','4','5','6','7','8','9','0']) do Inc(Numbers2);
+  Result:=CompareStr(Copy(String1,1,Length(String1)-Numbers1),Copy(String2,1,Length(String2)-Numbers2));
+  if Result=0 then
+  begin
+   Val1:=0;
+   if Numbers1>=1 then
+     Val1:=StrToInt(Copy(String1,Length(String1)+1-Numbers1, MaxInt));
+   Val2:=0;        
+   if Numbers2>=1 then
+     Val2:=StrToInt(Copy(String2,Length(String2)+1-Numbers2, MaxInt));
+   Result:=Val1-Val2;
+  end;
+end;
+
 procedure GetRefs_(cb:ThComboBox; cl:TClass; c,find:TControl; SecFilter:TSecFilter; ClearValue:boolean);
 var sl:TStringList;
 begin
@@ -853,7 +876,7 @@ begin
  GetAllNames(sl,GetParentForm(c),c,cl,SecFilter);
  {if (c<>find) and (sl.IndexOf(c.Name)<>-1) then
   sl.Delete(sl.IndexOf(c.Name)); }
- sl.Sort;
+ sl.CustomSort(SortWithNumbers);
  cb.Items.Assign(sl);
  if cb is ThComboBox then
  begin  

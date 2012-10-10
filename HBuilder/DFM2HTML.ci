@@ -1,112 +1,821 @@
-<*project
-      version = 4 civer = "Free v4.14.5" winver = "2.8/6.1.7601" > 
-   <output> c:\Delphi\HBuilder\CreateInstall</>
-   <exename> dfm2html_inst.exe</>
-   <digitsign> </>
-   <appname> DFM2HTML</>
-   <password> </>
-   <addlang> </>
-   <icon> Default</>
-   <selfextr> 1</>
-   <voltype> nolimit</>
-   <volsize> </>
-   <volpattern> disk%i.pak</>
-   <load> </>
-   <loadtime> 1000</>
-   <checktype> admin</>
-   <chkname> </>
-   <chkmsg> </>
-   <dlgfont> Verdana,8</>
-   <lang> english</>
-   <theme> Color</>
-   <iface> leftlogo</>
-   <leftlogo> </>
-   <logo> </>
-   <vb> </>
-   <dao> </>
-   <background> 0</>
-   <dlgwelcome> 1</>
-   <dlgreadme> C:\Delphi\HBuilder\Readme.txt</>
-   <dlglic> C:\Delphi\HBuilder\LICENSE.TXT</>
-   <dlgcustpath> </>
-   <dlgenfpath> </>
-   <dlgsavepath> 1</>
-   <dlgautoprog> 1</>
-   <dlgfinish> 1</>
-   <comptype> ppmdmax</>
-   <solid> 1</>
-   <srcfolder> </>
-   <ifexist> </>
-   <runafter> dfm2html.exe</>
-   <runconfirm> 1</>
-   <uninclude> 1</>
-   <unicon> Uninstall</>
-   <unshortcut> 1</>
-   <unrun> </>
-   <silent> 0</>
-   <unfeed> </>
-   <unautoclose> 0</>
-   <unfinish> 0</>
-   <bl> CreateInstall Free</>
-   <blurl> </>
-   <bghead> </>
-   <bgfoot> </> 
-   <bgback> </>
-   <files listview >
-      <_><src>C:\Delphi\HBuilder\DFM2HTML.exe</><dest>inst</><custom></><ifexist>over</><recurs>0</></>
-<_><src>C:\Delphi\HBuilder\colorpicker\Absolute Color Picker ActiveX Control\AColorPickerAXOEM.ocx</><dest>inst</><custom></><ifexist>over</><recurs>0</></>
-<_><src>C:\Delphi\HBuilder\Tutorial\*.dfm</><dest>custom</><custom>#setuppath#\Tutorial</><ifexist>over</><recurs>0</></>
-<_><src>C:\Delphi\HBuilder\Tutorial\Images\*</><dest>custom</><custom>#setuppath#\Tutorial\Images</><ifexist>over</><recurs>0</></>
-<_><src>C:\Delphi\HBuilder\TutorialMenus\*.dfm</><dest>custom</><custom>#setuppath#\TutorialMenus</><ifexist>over</><recurs>0</></>
-<_><src>C:\Delphi\HBuilder\Guide\*.dfm</><dest>custom</><custom>#setuppath#\Guide</><ifexist>over</><recurs>0</></>
-<_><src>C:\Delphi\HBuilder\Guide\Images\*</><dest>custom</><custom>#setuppath#\Guide\Images</><ifexist>over</><recurs>0</></>
-<_><src>C:\Delphi\HBuilder\GuideExamples\*.dfm</><dest>custom</><custom>#setuppath#\GuideExamples</><ifexist>over</><recurs>0</></>
-<_><src>C:\Delphi\HBuilder\Readme.txt</><dest>inst</><custom></><ifexist>over</><recurs>0</></>
-<_><src>C:\Delphi\HBuilder\LICENSE.TXT</><dest>inst</><custom></><ifexist>over</><recurs>0</></>
-<_><src>C:\Delphi\HBuilder\Presets\*.dfm</><dest>custom</><custom>#setuppath#\Presets</><ifexist>over</><recurs>0</></>
-<_><src>C:\Delphi\HBuilder\Presets\Images\Links\*</><dest>custom</><custom>#setuppath#\Presets\Images\Links</><ifexist>over</><recurs>0</></>
-<_><src>C:\Delphi\HBuilder\Templates\Frames\*.dfm</><dest>custom</><custom>#setuppath#\Templates\Frames</><ifexist>overnewer</><recurs>0</></>
-<_><src>C:\Delphi\HBuilder\Templates\No Frames\*.dfm</><dest>custom</><custom>#setuppath#\Templates\No Frames</><ifexist>overnewer</><recurs>0</></>
-<_><src>C:\Delphi\HBuilder\Templates\Workshop</><dest>custom</><custom>#setuppath#\Templates</><ifexist>overnewer</><recurs>0</></>
-<_><src>C:\Delphi\HBuilder\DFM2HTML.dklang</><dest>inst</><custom></><ifexist>over</><recurs>0</></>
-<_><src>C:\Delphi\HBuilder\Language\*</><dest>custom</><custom>#setuppath#\Language</><ifexist>overnewer</><recurs>0</></>
-
-   </files>
-   <runx listview >
-      <_ disable = 1><type>app</><path>inst</><file>dfm2html.exe</><cmdline></><wait>0</><workdir>def</><custdir></><when>end</></>
-
-   </runx>
-   <registry listview >
-      <_><root>curuser</><subkey>Software\Microsoft\Internet Explorer\Main\FeatureControl\FEATURE_LOCALMACHINE_LOCKDOWN</><valname>iexplore.exe</><valtype>num</><valdata>0</></>
-
-   </registry>
-   <shcut listview >
-      <_><shpath>prog</><shname>DFM2HTML</><tarpath>inst</><tarname>dfm2html.exe</><cmdline></><workpath>def</><workcust></><icon></></>
-<_><shpath>prog</><shname>Uninstall</><tarpath>inst</><tarname>uninstall.exe</><cmdline></><workpath>def</><workcust></><icon></></>
-<_><shpath>desk</><shname>DFM2HTML</><tarpath>inst</><tarname>dfm2html.exe</><cmdline></><workpath>def</><workcust></><icon></></>
-
-   </shcut>
-   <ini listview >
-      
-   </ini>
-   <copy listview >
-      
-   </copy>
-   <activex listview >
-      <_><path>inst</><name>AColorPickerAXOEM.ocx</></>
-
-   </activex>
-   <font listview >
-      
-   </font>
-   <ext listview >
-      <_><ext>dfm</><path>inst</><name>dfm2html.exe</><cmdline></></>
-
-   </ext>
-   <mreg listview >
-      
-   </mreg>
-   <macros> version= 6.3
-appname = DFM2HTML v#version#
-progname = DFM2HTML</>
-</project>
+﻿<project version = 9 civer = 5.14.1 winver = "2.9/6.1.7601" >
+   <autorun >1</>
+   <autoclose >0</>
+   <compname ></>
+   <produrl ></>
+   <ver ></>
+   <supurl ></>
+   <updurl ></>
+   <dlgfont >verdana</>
+   <headlogo >default - 1</>
+   <dlgfontsize >s8</>
+   <output >c:\Delphi\HBuilder\CreateInstall</>
+   <exename >dfm2html_inst.exe</>
+   <beffile ></>
+   <aftfile ></>
+   <uninclude >1</>
+   <lang >english</>
+   <addlang ></>
+   <selfextr >1</>
+   <instpath ></>
+   <voltype >nolimit</>
+   <volsize ></>
+   <volpattern >disk%i.pak</>
+   <password ></>
+   <progname ></>
+   <appname >DFM2HTML</>
+   <bl ></>
+   <blurl ></>
+   <unpath >inst</>
+   <unexe >uninstall.exe</>
+   <unlog >uninstall.ini</>
+   <installroot sorttype = 0 >
+      <children >
+         <install id = install expanded = 2 >
+            <children >
+               <_ id = varset >
+                  <desc ></>
+                  <varlist >
+                     <rows >
+                        <_ >
+                           <varname >runapp</>
+                           <value >1</>
+                           <if ></>
+                        </>
+                        <_ >
+                           <varname >version</>
+                           <value >6.3</>
+                           <if ></>
+                        </>
+                        <_ >
+                           <varname >appname</>
+                           <value >DFM2HTML v#version#</>
+                           <if ></>
+                        </>
+                        <_ >
+                           <varname >progname</>
+                           <value >DFM2HTML</>
+                           <if ></>
+                        </>
+                     </>
+                  </>
+               </>
+               <_ id = regget >
+                  <desc ></>
+                  <root >curuser</>
+                  <subkey >Software\#progname#</>
+                  <reglist >
+                     <rows >
+                        <_ >
+                           <valname >InstPath</>
+                           <varname >setuppath</>
+                           <defval >#setuppath#</>
+                        </>
+                     </>
+                  </>
+                  <wow64 >0</>
+               </>
+               <_ id = dlgwel >
+                  <desc ></>
+                  <buttons >nc</>
+                  <design >left</>
+                  <headlogo ></>
+                  <varlist >
+                     <rows ></>
+                  </>
+                  <head ></>
+                  <headtext ></>
+                  <dlgtext ></>
+                  <if ></>
+               </>
+               <_ id = dlgread disabled = 1 >
+                  <desc ></>
+                  <file >C:\Delphi\HBuilder\Readme.txt</>
+                  <print >1</>
+                  <buttons >pnc</>
+                  <design >left</>
+                  <headlogo ></>
+                  <varlist >
+                     <rows >
+                        <_ >
+                           <varname >Readcolor</>
+                           <value >1</>
+                        </>
+                     </>
+                  </>
+                  <head ></>
+                  <headtext ></>
+                  <if ></>
+               </>
+               <_ id = dlglic >
+                  <desc ></>
+                  <file >C:\Delphi\HBuilder\LICENSE.TXT</>
+                  <print >1</>
+                  <iagree >check</>
+                  <buttons >pnc</>
+                  <design >left</>
+                  <headlogo ></>
+                  <varlist >
+                     <rows >
+                        <_ >
+                           <varname >Liccolor</>
+                           <value >1</>
+                        </>
+                     </>
+                  </>
+                  <head ></>
+                  <headtext ></>
+                  <if ></>
+               </>
+               <_ id = dlgpath >
+                  <desc ></>
+                  <buttons >pnc</>
+                  <design >left</>
+                  <headlogo ></>
+                  <chlist >
+                     <rows >
+                        <_ >
+                           <varname >runapp</>
+                           <value >Launch #appname# after installation</>
+                        </>
+                     </>
+                  </>
+                  <varlist >
+                     <rows ></>
+                  </>
+                  <head ></>
+                  <headtext ></>
+                  <dlgtext ></>
+                  <pathadd ></>
+                  <enforce >0</>
+                  <savepath >0</>
+                  <if ></>
+               </>
+               <_ id = dlgprog expanded = 2 >
+                  <children >
+                     <_ id = regset >
+                        <desc ></>
+                        <root >curuser</>
+                        <subkey >Software\#progname#</>
+                        <reglist >
+                           <rows >
+                              <_ >
+                                 <valname >InstPath</>
+                                 <regtype >str</>
+                                 <value >#setuppath#</>
+                              </>
+                           </>
+                        </>
+                     </>
+                     <_ id = unpack >
+                        <desc ></>
+                        <comptype >ppmd</>
+                        <ratio >r10</>
+                        <solid >1</>
+                        <varlist >
+                           <rows ></>
+                        </>
+                        <srclist >
+                           <rows >
+                              <_ >
+                                 <filename >C:\Delphi\HBuilder\DFM2HTML.exe</>
+                                 <recurse >0</>
+                                 <justfile >0</>
+                                 <emptydir >0</>
+                                 <exclude ></>
+                              </>
+                           </>
+                        </>
+                        <path >inst</>
+                        <custpath ></>
+                        <ifexist >over</>
+                        <if ></>
+                     </>
+                     <_ id = unpack >
+                        <desc ></>
+                        <comptype >ppmd</>
+                        <ratio >r10</>
+                        <solid >1</>
+                        <varlist >
+                           <rows ></>
+                        </>
+                        <srclist >
+                           <rows >
+                              <_ >
+                                 <filename >C:\Delphi\HBuilder\colorpicker\Absolute Color Picker ActiveX Control\AColorPickerAXOEM.ocx</>
+                                 <recurse >0</>
+                                 <justfile >0</>
+                                 <emptydir >0</>
+                                 <exclude ></>
+                              </>
+                           </>
+                        </>
+                        <path >inst</>
+                        <custpath ></>
+                        <ifexist >over</>
+                        <if ></>
+                     </>
+                     <_ id = unpack >
+                        <desc ></>
+                        <comptype >ppmd</>
+                        <ratio >r10</>
+                        <solid >1</>
+                        <varlist >
+                           <rows ></>
+                        </>
+                        <srclist >
+                           <rows >
+                              <_ >
+                                 <filename >C:\Delphi\HBuilder\Tutorial\*.dfm</>
+                                 <recurse >0</>
+                                 <justfile >0</>
+                                 <emptydir >0</>
+                                 <exclude ></>
+                              </>
+                           </>
+                        </>
+                        <path >custom</>
+                        <custpath >#setuppath#\Tutorial</>
+                        <ifexist >over</>
+                        <if ></>
+                     </>
+                     <_ id = unpack >
+                        <desc ></>
+                        <comptype >ppmd</>
+                        <ratio >r10</>
+                        <solid >1</>
+                        <varlist >
+                           <rows ></>
+                        </>
+                        <srclist >
+                           <rows >
+                              <_ >
+                                 <filename >C:\Delphi\HBuilder\Tutorial\Images\*</>
+                                 <recurse >0</>
+                                 <justfile >0</>
+                                 <emptydir >0</>
+                                 <exclude ></>
+                              </>
+                           </>
+                        </>
+                        <path >custom</>
+                        <custpath >#setuppath#\Tutorial\Images</>
+                        <ifexist >over</>
+                        <if ></>
+                     </>
+                     <_ id = unpack >
+                        <desc ></>
+                        <comptype >ppmd</>
+                        <ratio >r10</>
+                        <solid >1</>
+                        <varlist >
+                           <rows ></>
+                        </>
+                        <srclist >
+                           <rows >
+                              <_ >
+                                 <filename >C:\Delphi\HBuilder\TutorialMenus\*.dfm</>
+                                 <recurse >0</>
+                                 <justfile >0</>
+                                 <emptydir >0</>
+                                 <exclude ></>
+                              </>
+                           </>
+                        </>
+                        <path >custom</>
+                        <custpath >#setuppath#\TutorialMenus</>
+                        <ifexist >over</>
+                        <if ></>
+                     </>
+                     <_ id = unpack >
+                        <desc ></>
+                        <comptype >ppmd</>
+                        <ratio >r10</>
+                        <solid >1</>
+                        <varlist >
+                           <rows ></>
+                        </>
+                        <srclist >
+                           <rows >
+                              <_ >
+                                 <filename >C:\Delphi\HBuilder\Guide\*.dfm</>
+                                 <recurse >0</>
+                                 <justfile >0</>
+                                 <emptydir >0</>
+                                 <exclude ></>
+                              </>
+                           </>
+                        </>
+                        <path >custom</>
+                        <custpath >#setuppath#\Guide</>
+                        <ifexist >over</>
+                        <if ></>
+                     </>
+                     <_ id = unpack >
+                        <desc ></>
+                        <comptype >ppmd</>
+                        <ratio >r10</>
+                        <solid >1</>
+                        <varlist >
+                           <rows ></>
+                        </>
+                        <srclist >
+                           <rows >
+                              <_ >
+                                 <filename >C:\Delphi\HBuilder\Guide\Images\*</>
+                                 <recurse >0</>
+                                 <justfile >0</>
+                                 <emptydir >0</>
+                                 <exclude ></>
+                              </>
+                           </>
+                        </>
+                        <path >custom</>
+                        <custpath >#setuppath#\Guide\Images</>
+                        <ifexist >over</>
+                        <if ></>
+                     </>
+                     <_ id = unpack >
+                        <desc ></>
+                        <comptype >ppmd</>
+                        <ratio >r10</>
+                        <solid >1</>
+                        <varlist >
+                           <rows ></>
+                        </>
+                        <srclist >
+                           <rows >
+                              <_ >
+                                 <filename >C:\Delphi\HBuilder\GuideExamples\*.dfm</>
+                                 <recurse >0</>
+                                 <justfile >0</>
+                                 <emptydir >0</>
+                                 <exclude ></>
+                              </>
+                           </>
+                        </>
+                        <path >custom</>
+                        <custpath >#setuppath#\GuideExamples</>
+                        <ifexist >over</>
+                        <if ></>
+                     </>
+                     <_ id = unpack >
+                        <desc ></>
+                        <comptype >ppmd</>
+                        <ratio >r10</>
+                        <solid >1</>
+                        <varlist >
+                           <rows ></>
+                        </>
+                        <srclist >
+                           <rows >
+                              <_ >
+                                 <filename >C:\Delphi\HBuilder\Readme.txt</>
+                                 <recurse >0</>
+                                 <justfile >0</>
+                                 <emptydir >0</>
+                                 <exclude ></>
+                              </>
+                           </>
+                        </>
+                        <path >inst</>
+                        <custpath ></>
+                        <ifexist >over</>
+                        <if ></>
+                     </>
+                     <_ id = unpack >
+                        <desc ></>
+                        <comptype >ppmd</>
+                        <ratio >r10</>
+                        <solid >1</>
+                        <varlist >
+                           <rows ></>
+                        </>
+                        <srclist >
+                           <rows >
+                              <_ >
+                                 <filename >C:\Delphi\HBuilder\LICENSE.TXT</>
+                                 <recurse >0</>
+                                 <justfile >0</>
+                                 <emptydir >0</>
+                                 <exclude ></>
+                              </>
+                           </>
+                        </>
+                        <path >inst</>
+                        <custpath ></>
+                        <ifexist >over</>
+                        <if ></>
+                     </>
+                     <_ id = unpack >
+                        <desc ></>
+                        <comptype >ppmd</>
+                        <ratio >r10</>
+                        <solid >1</>
+                        <varlist >
+                           <rows ></>
+                        </>
+                        <srclist >
+                           <rows >
+                              <_ >
+                                 <filename >C:\Delphi\HBuilder\Presets\*.dfm</>
+                                 <recurse >0</>
+                                 <justfile >0</>
+                                 <emptydir >0</>
+                                 <exclude ></>
+                              </>
+                           </>
+                        </>
+                        <path >custom</>
+                        <custpath >#setuppath#\Presets</>
+                        <ifexist >over</>
+                        <if ></>
+                     </>
+                     <_ id = unpack >
+                        <desc ></>
+                        <comptype >ppmd</>
+                        <ratio >r10</>
+                        <solid >1</>
+                        <varlist >
+                           <rows ></>
+                        </>
+                        <srclist >
+                           <rows >
+                              <_ >
+                                 <filename >C:\Delphi\HBuilder\Presets\Images\Links\*</>
+                                 <recurse >0</>
+                                 <justfile >0</>
+                                 <emptydir >0</>
+                                 <exclude ></>
+                              </>
+                           </>
+                        </>
+                        <path >custom</>
+                        <custpath >#setuppath#\Presets\Images\Links</>
+                        <ifexist >over</>
+                        <if ></>
+                     </>
+                     <_ id = unpack >
+                        <desc ></>
+                        <comptype >ppmd</>
+                        <ratio >r10</>
+                        <solid >1</>
+                        <varlist >
+                           <rows ></>
+                        </>
+                        <srclist >
+                           <rows >
+                              <_ >
+                                 <filename >C:\Delphi\HBuilder\Templates\Frames\*.dfm</>
+                                 <recurse >0</>
+                                 <justfile >0</>
+                                 <emptydir >0</>
+                                 <exclude ></>
+                              </>
+                           </>
+                        </>
+                        <path >custom</>
+                        <custpath >#setuppath#\Templates\Frames</>
+                        <ifexist >overnewer</>
+                        <if ></>
+                     </>
+                     <_ id = unpack >
+                        <desc ></>
+                        <comptype >ppmd</>
+                        <ratio >r10</>
+                        <solid >1</>
+                        <varlist >
+                           <rows ></>
+                        </>
+                        <srclist >
+                           <rows >
+                              <_ >
+                                 <filename >C:\Delphi\HBuilder\Templates\No Frames\*.dfm</>
+                                 <recurse >0</>
+                                 <justfile >0</>
+                                 <emptydir >0</>
+                                 <exclude ></>
+                              </>
+                           </>
+                        </>
+                        <path >custom</>
+                        <custpath >#setuppath#\Templates\No Frames</>
+                        <ifexist >overnewer</>
+                        <if ></>
+                     </>
+                     <_ id = unpack >
+                        <desc ></>
+                        <comptype >ppmd</>
+                        <ratio >r10</>
+                        <solid >1</>
+                        <varlist >
+                           <rows ></>
+                        </>
+                        <srclist >
+                           <rows >
+                              <_ >
+                                 <filename >C:\Delphi\HBuilder\Templates\Workshop</>
+                                 <recurse >0</>
+                                 <justfile >0</>
+                                 <emptydir >0</>
+                                 <exclude ></>
+                              </>
+                           </>
+                        </>
+                        <path >custom</>
+                        <custpath >#setuppath#\Templates</>
+                        <ifexist >overnewer</>
+                        <if ></>
+                     </>
+                     <_ id = unpack >
+                        <desc ></>
+                        <comptype >ppmd</>
+                        <ratio >r10</>
+                        <solid >1</>
+                        <varlist >
+                           <rows ></>
+                        </>
+                        <srclist >
+                           <rows >
+                              <_ >
+                                 <filename >C:\Delphi\HBuilder\DFM2HTML.dklang</>
+                                 <recurse >0</>
+                                 <justfile >0</>
+                                 <emptydir >0</>
+                                 <exclude ></>
+                              </>
+                           </>
+                        </>
+                        <path >inst</>
+                        <custpath ></>
+                        <ifexist >over</>
+                        <if ></>
+                     </>
+                     <_ id = unpack >
+                        <desc ></>
+                        <comptype >ppmd</>
+                        <ratio >r10</>
+                        <solid >1</>
+                        <varlist >
+                           <rows ></>
+                        </>
+                        <srclist >
+                           <rows >
+                              <_ >
+                                 <filename >C:\Delphi\HBuilder\Language\*</>
+                                 <recurse >0</>
+                                 <justfile >0</>
+                                 <emptydir >0</>
+                                 <exclude ></>
+                              </>
+                           </>
+                        </>
+                        <path >custom</>
+                        <custpath >#setuppath#\Language</>
+                        <ifexist >overnewer</>
+                        <if ></>
+                     </>
+                     <_ id = regset >
+                        <desc ></>
+                        <root >curuser</>
+                        <subkey >Software\Microsoft\Internet Explorer\Main\FeatureControl\FEATURE_LOCALMACHINE_LOCKDOWN</>
+                        <reglist >
+                           <rows >
+                              <_ >
+                                 <valname >iexplore.exe</>
+                                 <regtype >num</>
+                                 <value >0</>
+                              </>
+                           </>
+                        </>
+                        <wow64 >0</>
+                     </>
+                     <_ id = shcut >
+                        <desc ></>
+                        <shpath >prog</>
+                        <shfile >DFM2HTML</>
+                        <path >inst</>
+                        <file >dfm2html.exe</>
+                        <icon ></>
+                        <cmdline ></>
+                        <comment ></>
+                        <work >default</>
+                        <defwork ></>
+                        <runas >norm</>
+                     </>
+                     <_ id = shcut >
+                        <desc ></>
+                        <shpath >prog</>
+                        <shfile >Uninstall</>
+                        <path >inst</>
+                        <file >uninstall.exe</>
+                        <icon ></>
+                        <cmdline ></>
+                        <comment ></>
+                        <work >default</>
+                        <defwork ></>
+                        <runas >norm</>
+                     </>
+                     <_ id = shcut >
+                        <desc ></>
+                        <shpath >desk</>
+                        <shfile >DFM2HTML</>
+                        <path >inst</>
+                        <file >dfm2html.exe</>
+                        <icon ></>
+                        <cmdline ></>
+                        <comment ></>
+                        <work >default</>
+                        <defwork ></>
+                        <runas >norm</>
+                     </>
+                     <_ id = uninstexe >
+                        <desc ></>
+                     </>
+                     <_ id = unar >
+                        <desc ></>
+                        <name ></>
+                        <path >inst</>
+                        <ifile >uninstall.exe</>
+                     </>
+                     <_ id = shcut >
+                        <desc ></>
+                        <shpath >prog</>
+                        <shfile >#lunname#</>
+                        <path >inst</>
+                        <file >uninstall.exe</>
+                        <icon ></>
+                        <cmdline ></>
+                        <comment ></>
+                        <work >inst</>
+                        <defwork ></>
+                        <runas >norm</>
+                     </>
+                     <_ id = regdll disabled = 0 >
+                        <desc ></>
+                        <dlllist >
+                           <rows >
+                              <_ >
+                                 <path >inst</>
+                                 <file >AColorPickerAXOEM.ocx</>
+                                 <if ></>
+                                 <regsvr ></>
+                              </>
+                              <_ >
+                                 <path >custom</>
+                                 <file ></>
+                                 <if ></>
+                                 <regsvr ></>
+                              </>
+                           </>
+                        </>
+                     </>
+                     <_ id = ext disabled = 1 >
+                        <desc ></>
+                        <ext >dfm</>
+                        <path >inst</>
+                        <name >dfm2html.exe</>
+                        <cmdline ></>
+                        <if ></>
+                        <exticon ></>
+                        <extdesc ></>
+                        <extfile ></>
+                     </>
+                  </>
+                  <desc ></>
+                  <auto >1</>
+                  <buttons >nc</>
+                  <design >left</>
+                  <headlogo ></>
+                  <varlist >
+                     <rows ></>
+                  </>
+               </>
+               <_ id = dlgfin >
+                  <desc ></>
+                  <buttons >c</>
+                  <design >left</>
+                  <headlogo ></>
+                  <chlist >
+                     <rows ></>
+                  </>
+                  <varlist >
+                     <rows ></>
+                  </>
+                  <head ></>
+                  <headtext ></>
+                  <dlgtext >You can help DFM2HTML. Donate now on our website</>
+               </>
+               <_ id = sources expanded = 2 disabled = 1 >
+                  <children >
+                     <_ id = run >
+                        <desc ></>
+                        <path >inst</>
+                        <name >dfm2html.exe</>
+                        <cmdline ></>
+                        <work >inst</>
+                        <defwork ></>
+                        <wait >0</>
+                        <runas >norm</>
+                        <if ></>
+                     </>
+                  </>
+                  <desc ></>
+                  <ext >0</>
+                  <src >if macrox_getint("runapp")
+{
+	$body$
+}</>
+               </>
+               <_ id = run disabled = 0 >
+                  <desc ></>
+                  <path >inst</>
+                  <name >dfm2html.exe</>
+                  <cmdline ></>
+                  <work >default</>
+                  <defwork ></>
+                  <wait >0</>
+                  <runas >norm</>
+                  <if >#runapp#</>
+               </>
+            </>
+            <icofile >Default</>
+            <resfile ></>
+            <leftimg >install - 1</>
+            <caption ></>
+            <verinfo >1</>
+            <noadmin >0</>
+            <selfdelete >0</>
+         </>
+      </>
+   </>
+   <uninstallroot sorttype = 0 >
+      <children >
+         <uninstall id = uninstall expanded = 2 >
+            <children >
+               <_ id = varset >
+                  <desc ></>
+                  <varlist >
+                     <rows >
+                        <_ >
+                           <varname >runapp</>
+                           <value >1</>
+                        </>
+                        <_ >
+                           <varname >version</>
+                           <value >6.3</>
+                        </>
+                        <_ >
+                           <varname >appname</>
+                           <value >DFM2HTML v#version#</>
+                        </>
+                        <_ >
+                           <varname >progname</>
+                           <value >DFM2HTML</>
+                        </>
+                     </>
+                  </>
+               </>
+               <_ id = dlguconf >
+                  <desc ></>
+                  <buttons >c</>
+                  <design >left</>
+                  <headlogo ></>
+                  <varlist >
+                     <rows ></>
+                  </>
+               </>
+               <_ id = dlguprog expanded = 2 >
+                  <children >
+                     <_ id = unprocess >
+                        <desc ></>
+                     </>
+                  </>
+                  <desc ></>
+                  <auto >0</>
+                  <buttons >nc</>
+                  <design >left</>
+                  <headlogo ></>
+                  <varlist >
+                     <rows ></>
+                  </>
+               </>
+               <_ id = dlgundel >
+                  <desc ></>
+                  <buttons >nc</>
+                  <design >left</>
+                  <headlogo ></>
+                  <varlist >
+                     <rows ></>
+                  </>
+               </>
+            </>
+            <unicon >Uninstall</>
+            <unresfile ></>
+            <leftimg >uninstall - 1</>
+            <caption ></>
+            <noadmin >0</>
+         </>
+      </>
+   </>
+</>

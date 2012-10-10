@@ -3,7 +3,7 @@ object dhMainForm: TdhMainForm
   Left = 382
   Top = 93
   Caption = 'DFM2HTML'
-  ClientHeight = 766
+  ClientHeight = 785
   ClientWidth = 907
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -332,7 +332,7 @@ object dhMainForm: TdhMainForm
   end
   object StatusBar: TStatusBar
     Left = 0
-    Top = 747
+    Top = 766
     Width = 907
     Height = 19
     Panels = <
@@ -515,7 +515,7 @@ object dhMainForm: TdhMainForm
     Left = 668
     Top = 48
     Bitmap = {
-      494C010121002800080018001800FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010121003000180018001800FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       000000000000360000002800000060000000D800000001002000000000000044
       0100000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -3209,6 +3209,7 @@ object dhMainForm: TdhMainForm
       Caption = 'File'
       object mNew: TTntMenuItem
         Caption = 'New'
+        ShortCut = 16462
         OnClick = mNewClick
       end
       object mNewFromTemplate: TTntMenuItem
@@ -3217,6 +3218,7 @@ object dhMainForm: TdhMainForm
       end
       object mOpen: TTntMenuItem
         Caption = 'Open'
+        ShortCut = 16463
         OnClick = mOpenClick
       end
       object mReopen: TTntMenuItem
@@ -3352,6 +3354,7 @@ object dhMainForm: TdhMainForm
       end
       object mPublish: TTntMenuItem
         Caption = 'Publish'
+        ShortCut = 120
         OnClick = mPublishClick
       end
       object mViewOnline: TTntMenuItem
@@ -3367,6 +3370,7 @@ object dhMainForm: TdhMainForm
       end
       object mPageProperties: TTntMenuItem
         Caption = 'Page Properties'
+        ShortCut = 24698
         OnClick = mPagePropertiesClick
       end
     end
@@ -3481,7 +3485,7 @@ object dhMainForm: TdhMainForm
         OnClick = mAboutClick
       end
       object mDonate: TMenuItem
-        Caption = 'Donate'
+        Caption = 'Buy me a beer'
         OnClick = mDonateClick
       end
       object mRegister: TTntMenuItem

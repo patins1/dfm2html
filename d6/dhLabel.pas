@@ -1529,7 +1529,7 @@ procedure TdhCustomLabel.GetInnerAutoRect(AllowModifyX,AllowModifyY:boolean; var
 var
   Rect: TRect;
   Transformations:TTransformations;
-  T: TdhAffineTransformation;
+  T: TAffineTransformation;
   HorzRotated,VertRotated:boolean;
 begin
     if (csLoading in ComponentState) then exit;

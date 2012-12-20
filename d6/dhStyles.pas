@@ -32,7 +32,7 @@ uses
  {$IF CompilerVersion >= 21}GIFImg{$ELSE}GIFImage{$IFEND},Windows,Controls, Graphics, Dialogs,
 {$ENDIF}
   math,
-  GR32,dhBitmap32,dhStrUtils,WideStrUtils,dhGraphicFormats,Consts;
+  GR32,GR32_Transforms,dhBitmap32,dhStrUtils,WideStrUtils,dhGraphicFormats,Consts;
 
 const
   CSSAlphaInverter=$FF000000;
@@ -414,7 +414,7 @@ type
     FontFamily:TCSSFontFamily;
     Other:HypeString;
     FontSize:TCSSFontSize;
-    glAT:TdhAffineTransformation;
+    glAT:TAffineTransformation;
     glATAlpha,glATShiftX,glATShiftY:single;
     ValStyle:TPersistent;
     TopTextDecoration,ParentTextDecoration:TCSSTextDecorations;

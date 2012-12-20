@@ -41,15 +41,6 @@ uses
 
 
 type
-  TdhAffineTransformation = class(TAffineTransformation)
-  protected
-{$IFDEF COMPILER2009}
-    procedure PrepareTransform; override;
-{$ENDIF}
-  public
-    function GetTransformedBoundsF: TFloatRect; overload;
-    function GetTransformedBoundsF(const ASrcRect: TFloatRect): TFloatRect; overload;
-  end;
 
   TdhBitmap32 = class (TBitmap32)
   protected
@@ -485,49 +476,8 @@ begin
 {$ENDIF}
 end;
 
-function TdhAffineTransformation.GetTransformedBoundsF: TFloatRect;
-begin
-  Result := GetTransformedBoundsF(SrcRect);
-end;
-
-function TdhAffineTransformation.GetTransformedBoundsF(const ASrcRect: TFloatRect): TFloatRect;
-var
-  V1, V2, V3, V4: TVector3f;
-begin
-{$IFDEF COMPILER2009}
-  Result := GetTransformedBounds(ASrcRect);
-{$ELSE}
-  V1[0] := ASrcRect.Left;  V1[1] := ASrcRect.Top;    V1[2] := 1;
-  V2[0] := ASrcRect.Right; V2[1] := V1[1];           V2[2] := 1;
-  V3[0] := V1[0];          V3[1] := ASrcRect.Bottom; V3[2] := 1;
-  V4[0] := V2[0];          V4[1] := V3[1];           V4[2] := 1;
-  V1 := VectorTransform(Matrix, V1);
-  V2 := VectorTransform(Matrix, V2);
-  V3 := VectorTransform(Matrix, V3);
-  V4 := VectorTransform(Matrix, V4);
-  Result.Left   := Min(Min(V1[0], V2[0]), Min(V3[0], V4[0]));
-  Result.Right  := Max(Max(V1[0], V2[0]), Max(V3[0], V4[0]));
-  Result.Top    := Min(Min(V1[1], V2[1]), Min(V3[1], V4[1]));
-  Result.Bottom := Max(Max(V1[1], V2[1]), Max(V3[1], V4[1]));
-{$ENDIF}
-end;
-
 
 {$IFDEF COMPILER2009}
-procedure TdhAffineTransformation.PrepareTransform;
-begin
-  FInverseMatrix := Matrix;
-  GR32_Transforms.Invert(FInverseMatrix);
-
-  FInverseMatrix[2,0] := FInverseMatrix[2,0] + (FInverseMatrix[0,0] + FInverseMatrix[1,0])/2 - 0.5;
-  FInverseMatrix[2,1] := FInverseMatrix[2,1] + (FInverseMatrix[0,1] + FInverseMatrix[1,1])/2 - 0.5;
-
-  // calculate a fixed point (65536) factors
-  FInverseFixedMatrix := FixedMatrix(FInverseMatrix);
-  FFixedMatrix := FixedMatrix(Matrix);
-
-  TransformValid := True;
-end;
 
 function TMyKernelResampler.GetSampleFloat(X: Single; Y: Single): TColor32;
 var
@@ -554,9 +504,9 @@ var
   FOuterColor: TColor32;
   FKernel: TMyCustomKernel;
 begin
-  if KernelMode<>kmDynamic then
+  if true or (KernelMode<>kmDynamic) then
   begin
-    Result := Inherited;
+    Result := Inherited GetSampleFloat(X,Y);
     exit;
   end;
   FOuterColor := Bitmap.OuterColor;

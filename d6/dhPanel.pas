@@ -117,7 +117,7 @@ type
     procedure InvalTop(IncludeChildren,IncludeSelf:boolean);
     procedure InvalBack; overload;
     procedure InvalBack(const R2:TRect); overload;
-    function GetAffine: TdhAffineTransformation;
+    function GetAffine: TAffineTransformation;
     function GetBold: boolean;
     procedure SetBold(const Value: boolean);
     function GetItalic: boolean;
@@ -383,7 +383,7 @@ type
     function TextOnly: boolean; virtual;
     function TextExclude: boolean; virtual;
     function CustomSizesForEffects:boolean; virtual;
-    function EasyBounds(var Transformations: TTransformations; var T: TdhAffineTransformation; var W,H:Integer; var HorzRotated, VertRotated: boolean): boolean;
+    function EasyBounds(var Transformations: TTransformations; var T: TAffineTransformation; var W,H:Integer; var HorzRotated, VertRotated: boolean): boolean;
     procedure ProcessMouseMove(StateChanged:boolean); virtual;
     function AdjustZIndex(ChildPos,ParentControlCount:integer):integer; virtual;
     procedure AdjustScrolling(var R: TRect);
@@ -4706,11 +4706,11 @@ begin
   result:=cbaScroll;
 end;
 
-function TdhCustomPanel.GetAffine:TdhAffineTransformation;
+function TdhCustomPanel.GetAffine:TAffineTransformation;
 begin
  with Cascaded do
  begin
-  glAT:=TdhAffineTransformation.Create;
+  glAT:=TAffineTransformation.Create;
   glATAlpha:=1;
   glATShiftX:=0;
   glATShiftY:=0;
@@ -4724,7 +4724,7 @@ procedure TdhCustomPanel.AdjustLittle(var W,H:integer; infl:boolean; adj:boolean
 var
   SrcR: Integer;
   SrcB: Integer;
-  T: TdhAffineTransformation;
+  T: TAffineTransformation;
   Scale, ScaleX,ScaleY: Single;
   Transformations:TTransformations;
 begin
@@ -4738,8 +4738,8 @@ begin
     SrcB := H-1;
     T:=GetAffine;
     T.SrcRect:=FloatRect(0, 0, SrcR + 1, SrcB + 1);
-    with T.GetTransformedBoundsf do T.Translate(-Left,-Top);
-    with T.GetTransformedBoundsf do
+    with T.GetTransformedBounds do T.Translate(-Left,-Top);
+    with T.GetTransformedBounds do
     begin
     ScaleX:=0;
     ScaleY:=0;
@@ -4756,22 +4756,22 @@ begin
      scale:=1;
     if not adj then
     begin
-    W := Round(T.GetTransformedBoundsf.Right);
-    H := Round(T.GetTransformedBoundsf.Bottom);
+    W := Round(T.GetTransformedBounds.Right);
+    H := Round(T.GetTransformedBounds.Bottom);
     end else
-    with T.GetTransformedBoundsf do
+    with T.GetTransformedBounds do
     begin
     W := Round(W/Scale);
     H := Round(H/Scale);
     end;
  end else
  begin
-    with T.GetTransformedBoundsf do
+    with T.GetTransformedBounds do
     begin        
-    W := Round(T.GetTransformedBoundsf.Right);
-    H := Round(T.GetTransformedBoundsf.Bottom);
-    W := Round(T.GetTransformedBoundsf.Right);
-    H := Round(T.GetTransformedBoundsf.Bottom);
+    W := Round(T.GetTransformedBounds.Right);
+    H := Round(T.GetTransformedBounds.Bottom);
+    W := Round(T.GetTransformedBounds.Right);
+    H := Round(T.GetTransformedBounds.Bottom);
     end;
  end;
  T.Free;
@@ -5126,7 +5126,7 @@ begin
 end;
 
 
-function TdhCustomPanel.EasyBounds(var Transformations:TTransformations;var T: TdhAffineTransformation; var W,H:Integer; var HorzRotated,VertRotated:boolean): boolean;
+function TdhCustomPanel.EasyBounds(var Transformations:TTransformations;var T: TAffineTransformation; var W,H:Integer; var HorzRotated,VertRotated:boolean): boolean;
 begin
   result:=true;
   if not HasTransformations(Transformations) then
@@ -5185,7 +5185,7 @@ end;
 
 function TdhCustomPanel.TransPainting(nWidth:integer=-1; nHeight:integer=-1):TdhBitmap32;
 var Src:TdhBitmap32;
-var T: TdhAffineTransformation;
+var T: TAffineTransformation;
     Transformations:TTransformations;
     bWidth,bHeight:integer;
     cr:TRect;
@@ -5307,7 +5307,7 @@ begin
   Dec(bHeight,cr.Top+cr.Bottom);
 
   T.SrcRect:=FloatRect(cr.Left,cr.Top,bWidth+cr.Left,bHeight+cr.Top);
-  with T.GetTransformedBoundsf do
+  with T.GetTransformedBounds do
   if not IsEasy and HorzRotated then
    T.Translate(-Left+(nWidth/2)-((bWidth+nWidth) mod 2 / 2)-(Right-Left)/2,-Top+(nHeight/2)-((bHeight+nHeight) mod 2 / 2)-(Bottom-Top)/2) else
   if not IsEasy and VertRotated then
@@ -5348,7 +5348,7 @@ begin
     begin
      with EqArea do
       T.SrcRect:=FloatRect(Left,Top,Right,Bottom);
-     EqAreaF:=T.GetTransformedBoundsF;
+     EqAreaF:=T.GetTransformedBounds;
      EqArea.Left:=Between(Round(EqAreaF.Left),0,Src.Width);
      EqArea.Right:=Between(Round(EqAreaF.Right),0,Src.Width);
      EqArea.Top:=Between(Round(EqAreaF.Top),0,Src.Height);

@@ -7526,7 +7526,7 @@ begin
               if Command = ecLineBreak then
               begin
                 InternalCaretXY := BufferCoord(1, CaretY +1);
-                if SpaceCount2 > 0 then
+                if SpaceCount2 >={custom code, instead of >} 0 then
                 begin
                   SpaceBuffer := Copy(Lines[BackCounter], 1, SpaceCount2);
                   for i := 1 to Length(SpaceBuffer) do

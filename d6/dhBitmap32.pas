@@ -490,7 +490,7 @@ var
   WrapProcVert: TWrapProcEx absolute Filter;
   WrapProcHorz: TWrapProcEx;
   Colors: PColor32EntryArray;
-  Width, W, Wv, I, J, P, Incr, Dev, AlphaI, Wi, SumWi: Integer;
+  KWidth, W, Wv, I, J, P, Incr, Dev, AlphaI, Wi, SumWi: Integer;
   SrcP: PColor32Entry;
   C: TColor32Entry absolute SrcP;
   LoX, HiX, LoY, HiY, MappingY: Integer;
@@ -504,7 +504,7 @@ var
   FOuterColor: TColor32;
   FKernel: TMyCustomKernel;
 begin
-  if true or (KernelMode<>kmDynamic) then
+  if KernelMode<>kmDynamic then
   begin
     Result := Inherited GetSampleFloat(X,Y);
     exit;
@@ -512,7 +512,7 @@ begin
   FOuterColor := Bitmap.OuterColor;
   FKernel := TMyCustomKernel(Kernel);
 
-  Width := Ceil(FKernel.GetWidth);
+  KWidth := Ceil(FKernel.GetWidth);
 
   clX := Ceil(X);
   clY := Ceil(Y);
@@ -520,8 +520,8 @@ begin
   case PixelAccessMode of
     pamUnsafe, pamWrap:
       begin
-        LoX := -Width; HiX := Width;
-        LoY := -Width; HiY := Width;
+        LoX := -KWidth; HiX := KWidth;
+        LoY := -KWidth; HiY := KWidth;
       end;
 
     pamSafe, pamTransparentEdge:
@@ -532,37 +532,37 @@ begin
           begin
             Edge := False;
 
-            if clX - Width < Left then
+            if clX - KWidth < Left then
             begin
               LoX := Left - clX;
               Edge := True;
             end
             else
-              LoX := -Width;
+              LoX := -KWidth;
 
-            if clX + Width >= Right then
+            if clX + KWidth >= Right then
             begin
               HiX := Right - clX - 1;
               Edge := True;
             end
             else
-              HiX := Width;
+              HiX := KWidth;
 
-            if clY - Width < Top then
+            if clY - KWidth < Top then
             begin
               LoY := Top - clY;
               Edge := True;
             end
             else
-              LoY := -Width;
+              LoY := -KWidth;
 
-            if clY + Width >= Bottom then
+            if clY + KWidth >= Bottom then
             begin
               HiY := Bottom - clY - 1;
               Edge := True;
             end
             else
-              HiY := Width;
+              HiY := KWidth;
 
           end
           else
@@ -589,7 +589,7 @@ begin
         PVertKernel := @VertKernel;
 
         Dev := -256;
-        for I := -Width to Width do
+        for I := -KWidth to KWidth do
         begin
           W := Round(Filter(I + fracXS) * 256);
           HorzKernel[I] := W;
@@ -598,7 +598,7 @@ begin
         Dec(HorzKernel[0], Dev);
 
         Dev := -256;
-        for I := -Width to Width do
+        for I := -KWidth to KWidth do
         begin
           W := Round(Filter(I + fracYS) * 256);
           VertKernel[I] := W;
@@ -649,12 +649,12 @@ begin
         if (PixelAccessMode <> pamUnsafe) and Edge then
         begin
           if PixelAccessMode = pamSafe then
-           for I := -Width to Width do
+           for I := -KWidth to KWidth do
            begin
              Wv := PVertKernel[I];
              if Wv <> 0 then
              begin
-               for J := -Width to Width do
+               for J := -KWidth to KWidth do
                if (J < LoX) or (J > HiX) or (I < LoY) or (I > HiY) then
                begin
                  Wi := PHorzKernel[J] * Wv div 4;
@@ -669,13 +669,13 @@ begin
              end;
            end
           else
-           for I := -Width to Width do
+           for I := -KWidth to KWidth do
            begin
              Wv := PVertKernel[I];
              if Wv <> 0 then
              begin
                HorzEntry := EMPTY_ENTRY;
-               for J := -Width to Width do
+               for J := -KWidth to KWidth do
                if (J < LoX) or (J > HiX) or (I < LoY) or (I > HiY) then
                begin
                  Wi := PHorzKernel[J] * Wv div 4;
@@ -693,10 +693,10 @@ begin
         WrapProcHorz := GetWrapProcEx(Bitmap.WrapMode, ClipRect.Left, ClipRect.Right - 1);
         WrapProcVert := GetWrapProcEx(Bitmap.WrapMode, ClipRect.Top, ClipRect.Bottom - 1);
 
-        for I := -Width to Width do
+        for I := -KWidth to KWidth do
           MappingX[I] := WrapProcHorz(clX + I, ClipRect.Left, ClipRect.Right - 1);
 
-        for I := -Width to Width do
+        for I := -KWidth to KWidth do
         begin
           Wv := PVertKernel[I];
           if Wv <> 0 then
@@ -704,7 +704,7 @@ begin
             MappingY := WrapProcVert(clY + I, ClipRect.Top, ClipRect.Bottom - 1);
             Colors := PColor32EntryArray(Bitmap.ScanLine[MappingY]);
             HorzEntry := EMPTY_ENTRY;
-            for J := -Width to Width do
+            for J := -KWidth to KWidth do
             begin
               C := Colors[MappingX[J]];
               Wi := PHorzKernel[J] * Wv div 4;

@@ -9,7 +9,6 @@ uses
   madListHardware,
   madListProcesses,
   madListModules,
-  uMutex,
   Forms,
   Dialogs,
   sysutils,
@@ -39,7 +38,8 @@ uses
   uChooseWide in 'uChooseWide.pas' {ChooseUnicode},
   uObjectExplorer in 'uObjectExplorer.pas' {ObjectExplorer},
   uResourceExplorer in 'uResourceExplorer.pas' {ResourceExplorer},
-  uMetaWriter in 'uMetaWriter.pas';
+  uMetaWriter in 'uMetaWriter.pas',
+  uBella in 'uBella.pas' {Bella};
 
 {$ELSE}
 
@@ -71,6 +71,5 @@ begin
   Application.HelpFile := '';
   Application.CreateForm(TdhMainForm, dhMainForm);
   Application.CreateForm(TTabs, Tabs);
-  Application.CreateForm(TResourceExplorer, ResourceExplorer);
   Application.Run;
 end.

@@ -1828,6 +1828,8 @@ begin
   AddStyle('left',bo.Left-Client.Left);
  if akBottom in nest.Anchors then
  begin
+  if nest.HasProp('ForceBottom') then
+  AddAttr('forcebottom',inttostr(Client.Bottom+nest.HeightDiff-(bo.Top+bo.Height))) else
   AddStyle('bottom',Client.Bottom+nest.HeightDiff-(bo.Top+bo.Height));
   if directIE then if not (akTop in nest.Anchors) then AddStyle('bottom','expression('+inttostr(Client.Bottom-(bo.Top+bo.Height))+'-'+nest.offsetParent+'.clientHeight % 2)');
  end;

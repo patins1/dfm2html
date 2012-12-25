@@ -1437,6 +1437,8 @@ begin
  end;
  Filer.DefineStringProperty('RealAutoSizeXY', sASXY[RealAutoSizeXY(Self)], sASXY[self.FAutoSize]);
  Filer.DefineBooleanProperty('NeedBlock', Self.GetVal(pcDisplay) and (Cascaded.Display=cdsInline));
+ if (Self.AutoSizeXY in [asY,asXY]) and (Self.Anchors*[akTop,akBottom]=[akTop,akBottom]) then
+  Filer.DefineBooleanProperty('ForceBottom',{Self.Parent.Height-(Self.Top+Self.Height)}true);
 
  NeedClientArea:=Self.ChildHasAnchor([akLeft, akTop, akRight, akBottom]) and (HasRastering=rsNo);
  if NeedClientArea then

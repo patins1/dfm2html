@@ -19,7 +19,7 @@ uses
   MySpeedButton, dhPanel, htmlrout, {$IFDEF MSWINDOWS}OverbyteIcsHttpProt,{$ELSE}{IcsUrl,}{$ENDIF}
   funcutils, dhHTMLForm,  dhPageControl,  dhStyleSheet,
   dhMenu, dhLabel, dhEdit, MySpinEdit,
-  UseFastStrings, crc, math,
+  UseFastStrings, crc, math, uBella,
   MySiz, Unit3, uConversion,
   dhRadioButton, dhMemo, dhFileField,  MyToolButton,
   dhColorPicker,IniFiles,gr32, uOptions, menuhelper,
@@ -1738,6 +1738,8 @@ begin
   begin
    PublishLog.Log('        '+RasteringFile);
   end;
+  dhMainForm.StatusBar.Panels[StatusBar_ObjPos].Text:='Write '+RasteringFile;
+  dhMainForm.StatusBar.Update;
   NeedSave:=false;
   server_crc:=_crc;//calc_crc32_String(RasteringFile,_crc);
   RasteringFile:=CutCurrentDir(GoodWebPathDelimiters(RasteringFile));
@@ -1799,7 +1801,9 @@ function TdhMainForm.GeneratedHTML(View:Boolean):TPathName;
 var content:TFileContents;
     pa,PureFileName:TPathName;
     sStatus:string;
+    StartGeneration,StopGeneration:DWORD;
 begin
+ StartGeneration:=GetTickCount;
  FreeAndNil(GeneratedFiles);
  GeneratedFiles:=TStringList.Create;
  SetSaveDir;
@@ -1840,6 +1844,12 @@ begin
  if View then
   Browse(pa,FuncSettings.FViewer,true);
  Result:=RasteringSaveDir;
+ StopGeneration:=GetTickCount;
+ if StopGeneration>=StartGeneration then
+ begin
+  if PublishLog<>nil then PublishLog.Log('        ('+inttostr(StopGeneration-StartGeneration)+' milliseconds)');
+  StatusBar.Panels[StatusBar_ObjPos].Text:='Generated in '+inttostr(StopGeneration-StartGeneration)+' milliseconds';
+ end;
 end;
 
 procedure TdhMainForm.mExitClick(Sender: TObject);
@@ -2879,6 +2889,12 @@ begin
  begin
   if Open(ParamStr(1),false)<>nil then
    exit;
+ end;
+
+ //LateCreateForm(TBella,Bella);
+ //if Bella.ShowModal=mrOk then
+ begin
+  Browse('http://www.dfm2html.com/launch/shop.html?langid='+inttostr(_LANGID),FuncSettings.FViewer,false);
  end;
 
  su:=suLastPage;

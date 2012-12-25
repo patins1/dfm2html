@@ -732,13 +732,6 @@ begin
      if (Components[i] is TdhCustomPanel) then
      begin
       pn:=TdhCustomPanel(Components[i]);
-      with AdjustedClientRect(pn.Parent) do
-      begin
-       if pn.Align in [alTop,alBottom,alClient] then
-        pn.Width:=Right-Left;
-       if pn.Align in [alLeft,alRight,alClient] then
-        pn.Height:=Bottom-Top;
-      end;
       pn.MyRealign;
      end;
      for i:=0 to ControlCount-1 do

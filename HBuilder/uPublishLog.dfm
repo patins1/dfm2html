@@ -1,10 +1,10 @@
 object PublishLog: TPublishLog
   Left = 231
   Top = 131
-  Width = 424
-  Height = 293
   ActiveControl = RichEdit1
   Caption = 'Log'
+  ClientHeight = 266
+  ClientWidth = 416
   Color = clBtnFace
   Constraints.MinHeight = 100
   Constraints.MinWidth = 100

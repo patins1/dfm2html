@@ -82,13 +82,11 @@ uses
 {$ENDIF}
   GR32_DrawingEx;
 
-{$IFDEF COMPILER2009}
 type TMyKernelResampler = class(TKernelResampler)
   public
     function GetSampleFloat(X: Single; Y: Single): TColor32; override;
 end;
 type TMyCustomKernel=class(TCustomKernel);
-{$ENDIF}
   
 var
   StockBitmap: TBitmap;
@@ -153,11 +151,7 @@ begin
           B2.Font := StockCanvas.Font;
           B2.Font.Color := clWhite;
           B2.TextoutW(0, 0, Text, LetterSpacing, WordSpacing);
-{$IFDEF COMPILER2009}
           TLinearResampler.Create(B2);
-{$ELSE}
-          B2.StretchFilter := sfLinear;
-{$ENDIF}
           B.SetSize(SzOri.x+XPadding, SzOri.y);
           TextScaleDownExtended(B, B2, Color{, tm_big.tmAscent});
         finally
@@ -456,28 +450,15 @@ end;
 
 procedure TdhBitmap32.DrawTo(Dst: TBitmap32; const DstRect, DstClip, SrcRect: TRect);
 begin
-{$IFDEF COMPILER2009}
   StretchTransfer(Dst, DstRect, DstClip, Self, SrcRect, Resampler, DrawMode, OnPixelCombine);
-{$ELSE}
-  if Empty or Dst.Empty then Exit;
-  StretchTransfer(Dst, DstRect, DstClip, Self, SrcRect, StretchFilter, DrawMode, OnPixelCombine);
-  Dst.Changed;
-{$ENDIF}
 end;
 
 procedure TdhBitmap32.ApplyGoodStrechFilter;
 begin
-{$IFDEF COMPILER2009}
   TMyKernelResampler.Create(Self);
   with Resampler as TKernelResampler do
    Kernel := TMitchellKernel.Create;
-{$ELSE}
-  StretchFilter:=sfLanczos;
-{$ENDIF}
 end;
-
-
-{$IFDEF COMPILER2009}
 
 function TMyKernelResampler.GetSampleFloat(X: Single; Y: Single): TColor32;
 var
@@ -760,7 +741,6 @@ begin
   // Result.B = E(Bi*Ai*Wi) / E(Ai*Wi)
 
 end;
-{$ENDIF}
 
 
 initialization

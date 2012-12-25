@@ -67,16 +67,9 @@ type
     property Wrap:boolean read FWrap write SetWrap default true;
   end;
 
-procedure Register;
-
 implementation
 
 uses BasicHTMLElements;
-
-procedure Register;
-begin
-  RegisterComponents('DFM2HTML', [TdhMemo]);
-end;
 
 constructor TdhMemo.Create(AOwner: TComponent);
 begin

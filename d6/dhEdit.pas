@@ -94,16 +94,9 @@ type
     property Text:HypeString read FHTMLText write SetHTMLText;
   end;
 
-procedure Register;
-
 implementation
 
 uses BasicHTMLElements;
-
-procedure Register;
-begin
-  RegisterComponents('DFM2HTML', [TdhEdit]);
-end;
 
 procedure TdhCustomEdit.NearestMod(m,frame:integer; var n,times:integer);
 begin

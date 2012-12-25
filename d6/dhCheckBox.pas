@@ -55,14 +55,7 @@ type
     property Value:HypeString read FValue write FValue;
   end;
 
-procedure Register;
-
 implementation
-
-procedure Register;
-begin
-  RegisterComponents('DFM2HTML', [TdhCheckBox]);
-end;
 
 procedure TdhCheckBox.Click;
 begin

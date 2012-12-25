@@ -208,8 +208,6 @@ var  GridDefinition: record
      GridDisplay:TGridDisplay;
 end;
 
-procedure Register;
-
 function GoodLocalPath(const path:TPathName):TPathName;
 function GoodPathDelimiters(const path:TPathName):TPathName;
 
@@ -221,11 +219,6 @@ uses dhMenu,dhDirectHTML;
 var PageControlBitmap:TBitmap=nil;
 
 var StopAdjusting:boolean;
-
-procedure Register;
-begin
-  RegisterComponents('DFM2HTML', [TdhPageControl,TdhPage]);
-end;
 
 function TdhPage.HeightDiff:integer;
 begin

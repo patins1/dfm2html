@@ -98,16 +98,9 @@ type
     property OnStartDrag;
   end;
 
-procedure Register;
-
 implementation
 
 var PageControlBitmap:TBitmap=nil;
-
-procedure Register;
-begin
-  RegisterComponents('DFM2HTML', [TdhFile]);
-end;
 
 constructor TdhFile.Create(AOwner: TComponent);
 begin

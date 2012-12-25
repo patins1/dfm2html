@@ -259,8 +259,6 @@ type
 
 function GetParentPage(P:TControl; SameLevel:boolean=false; AllowPage:boolean=true):TWinControl;
 
-procedure Register;
-
 implementation
 
 uses BasicHTMLElements,dhHTMLForm;
@@ -1683,13 +1681,6 @@ end;
 procedure TdhMenu.AlignDone;
 begin
     ControlStyle:=ControlStyle+[csAcceptsControls];
-end;
-
-procedure Register;
-begin
-  RegisterComponents('DFM2HTML', [TdhLink]);
-  RegisterComponents('DFM2HTML', [TdhMenu]);
-  RegisterClasses([TdhMenu]);
 end;
 
 procedure TdhDynLabel.SetLayout(const Value: TLinkType);

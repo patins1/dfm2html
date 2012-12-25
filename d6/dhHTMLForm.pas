@@ -52,16 +52,9 @@ type
     property Target:TPathName read FTarget write SetTarget;
   end;
 
-procedure Register;
-
 implementation
 
 uses BasicHTMLElements;
-
-procedure Register;
-begin
- RegisterComponents('DFM2HTML', [TdhHTMLForm]);
-end;
 
 function GoodForm(const s:WideString):WideString;
 var i:integer;

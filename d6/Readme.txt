@@ -1,6 +1,6 @@
-This is version 6.3 of the DFM2HTML Components Suite.
+This is version 8 of the DFM2HTML Components Suite.
 
-For installation in Delphi XE3 (Delphi versions down to Delphi 2010 should also still work), install dhcomps.dpk. Requirements: Graphics32 v1.7 to v1.9.1 (Graphics32 components do not need to be installed, but should be on the library path)
+For installation in Delphi XE3 (Delphi versions down to Delphi 2010 should also still work), install dhcomps.dpk. Requirements: Graphics32 v1.9.1 (Graphics32 components do not need to be installed, but should be on the library path)
 
 SUPPORT
 -------

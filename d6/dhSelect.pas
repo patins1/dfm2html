@@ -146,16 +146,9 @@ type
 {$ENDIF}
   end;
 
-procedure Register;
-
 implementation
 
 uses BasicHTMLElements;
-
-procedure Register;
-begin
-  RegisterComponents('DFM2HTML', [TdhSelect]);
-end;
 
 constructor TdhSelect.Create(AOwner: TComponent);
 begin

@@ -35,14 +35,7 @@ type
   published
   end;
 
-procedure Register;
-
 implementation
-
-procedure Register;
-begin
-  RegisterComponents('DFM2HTML', [TdhRadioButton]);
-end;
 
 procedure TdhRadioButton.Click;
 begin

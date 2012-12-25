@@ -79,8 +79,6 @@ function InStyleSheet(p:TControl; var StyleSheet:TdhStyleSheet):boolean;
 function UsefulUse(c,comp:TPersistent; ForInline:boolean; var pn:TdhCustomPanel):boolean; overload;
 function UsefulUse(c:TPersistent; Comps:TList; ForInline:boolean; var pn:TdhCustomPanel):boolean; overload;
 
-procedure Register;
-
 var UndoRedoLoad:boolean=false;
 
 implementation
@@ -141,11 +139,6 @@ end;
 function TdhStyleSheet.AdjustZIndex(ChildPos,ParentControlCount:integer):integer;
 begin
  result:=maxint-1000-2*ParentControlCount+ChildPos;
-end;
-
-procedure Register;
-begin
-  RegisterComponents('DFM2HTML', [TdhStyleSheet]);
 end;
 
 function TdhStyleSheet.AddStyle(anAnchor:boolean):TdhLabel;

@@ -741,8 +741,6 @@ procedure Browse(URL:TPathName; Viewer:TPathName; maxi:boolean; browse:boolean=f
 function ConsumeMouseWheel(c:TControl; WheelDelta: Integer):boolean;
 procedure InvalTrans(C:TControl); overload;
 
-procedure Register;
-
 const NoWH=-1;
 const NextStyle:array[boolean] of TState=(hsOver,hsDown);
 const NextStyleOld:array[boolean,TState] of TState=((hsNormal,hsNormal,hsNormal,hsOver),(hsNormal,hsNormal,hsNormal,hsDown));
@@ -2381,11 +2379,6 @@ begin
  end;
 end;
 
-procedure Register;
-begin
-  RegisterComponents('DFM2HTML', [TdhPanel]);
-end;
-
 {$IFNDEF CLX}
 procedure TdhCustomPanel.WMEraseBkgnd(var Message: TWMEraseBkgnd);
 begin
@@ -3098,6 +3091,8 @@ end;
 
 function GetSimplifiedAnchors(Anchors:TAnchors; ParentAnchors:TAnchors; StopSimplifyingRight,StopSimplifyingBottom:boolean):TAnchors;
 begin
+ StopSimplifyingRight:=true;
+ StopSimplifyingBottom:=true;
  if (akBottom in Anchors) then
  if not((akBottom in ParentAnchors) and (akTop in ParentAnchors)) and not StopSimplifyingBottom then
  begin

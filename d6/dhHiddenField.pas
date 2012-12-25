@@ -45,16 +45,9 @@ type
     property Value:HypeString read FValue write FValue;
   end;
 
-procedure Register;
-
 implementation
                         
 var PageControlBitmap:TBitmap=nil;
-
-procedure Register;
-begin
-  RegisterComponents('DFM2HTML', [TdhHiddenField]);
-end;
 
 procedure TdhHiddenField.DoTopPainting;
 begin

@@ -50,16 +50,9 @@ type
 
 {$R 'dhDirectHTML.dcr'}
 
-procedure Register;
-
 implementation
 
 var TempBitmap:TBitmap;
-
-procedure Register;
-begin
-  RegisterComponents('DFM2HTML', [TdhDirectHTML]);
-end;
 
 procedure TdhDirectHTML.SetASXY(const Value: TASXY);
 begin

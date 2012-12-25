@@ -121,18 +121,11 @@ type
   TdhOleContainer = class(TdhCustomLabel);
 {$ENDIF}
 
-procedure Register;
-
 implementation
 
 
 var
   PixPerInch: TPoint;
-
-procedure Register;
-begin
-  RegisterComponents('DFM2HTML', [TdhOleContainer]);
-end;
                
 {$IFNDEF CLX}
 

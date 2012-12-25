@@ -46,17 +46,10 @@ type
     constructor Create(AOwner: TComponent); override;
   published
   end;
- 
-procedure Register;
 
 implementation
  
 uses BasicHTMLElements,dhPageControl;
-
-procedure Register;
-begin
-  RegisterComponents('DFM2HTML', [TdhFileField]);
-end;
 
 procedure TdhFileField.AdjustMarginWidth(var i: integer;
   const Align: TEdgeAlign);

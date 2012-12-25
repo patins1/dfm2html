@@ -256,8 +256,6 @@ function AssertTags2:boolean;
 var RenamedNames:TStringList;
 var HTMLTags:TStringList;
 
-procedure Register;
-
 implementation
 
 uses dhStyleSheet,BasicHTMLElements;
@@ -549,12 +547,6 @@ const endl_main=#10;
       endl_space=#13;
       markupBreak=endl_main;
       markupEmptyEle=#2;
-
-
-procedure Register;
-begin
-  RegisterComponents('DFM2HTML', [TdhLabel]);
-end;
 
 
 function HasUnicodeName(i:integer; var CharacterName:AString):boolean;

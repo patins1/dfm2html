@@ -29,17 +29,16 @@ package dhcomps;
 {$DEFINE DEBUG}
 {$ENDIF IMPLICITBUILDING}
 {$DESCRIPTION 'DFM2HTML'}
+{$RUNONLY}
 {$IMPLICITBUILD OFF}
 
 requires
-  designide,
   vcl,
   rtl,
   vclimg;
 
 contains
   dhHTMLForm in 'dhHTMLForm.pas',
-  dhDesign in 'dhDesign.pas',
   dhMenu in 'dhMenu.pas',
   dhStyleSheet in 'dhStyleSheet.pas',
   dhLabel in 'dhLabel.pas',

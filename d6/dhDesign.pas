@@ -42,7 +42,8 @@ uses
   Consts,PicEdit,DesignIntf,DesignEditors,VCLEditors,DesignMenus,RTLConsts,
 {$ENDIF}
 {$ENDIF}
-  dhMultiLine,typinfo, dhLabel,dhMenu,dhDirectHTML,dhPageControl,dhPanel,dhStyleSheet,dhStrUtils,dhStyles,dhColorUtils;
+  dhMultiLine,typinfo, dhLabel,dhMenu,dhDirectHTML,dhPageControl,dhPanel,dhStyleSheet,dhStrUtils,dhStyles,dhColorUtils,
+  dhCheckBox,dhEdit,dhFile,dhFileField,dhHiddenField,dhHTMLForm,dhMemo,dhOleContainer,dhRadioButton,dhSelect;
 
 const StyleCol=clYellow;
 
@@ -407,6 +408,25 @@ end;
 
 procedure Register;
 begin
+
+  RegisterComponents('DFM2HTML', [TdhCheckBox]);
+  RegisterComponents('DFM2HTML', [TdhDirectHTML]);
+  RegisterComponents('DFM2HTML', [TdhEdit]);
+  RegisterComponents('DFM2HTML', [TdhFile]);
+  RegisterComponents('DFM2HTML', [TdhFileField]);
+  RegisterComponents('DFM2HTML', [TdhHiddenField]);
+  RegisterComponents('DFM2HTML', [TdhHTMLForm]);
+  RegisterComponents('DFM2HTML', [TdhLabel]);
+  RegisterComponents('DFM2HTML', [TdhMemo]);
+  RegisterComponents('DFM2HTML', [TdhLink]);
+  RegisterComponents('DFM2HTML', [TdhMenu]);
+  RegisterComponents('DFM2HTML', [TdhOleContainer]);
+  RegisterComponents('DFM2HTML', [TdhPageControl,TdhPage]);
+  RegisterComponents('DFM2HTML', [TdhPanel]);
+  RegisterComponents('DFM2HTML', [TdhRadioButton]);
+  RegisterComponents('DFM2HTML', [TdhSelect]);
+  RegisterComponents('DFM2HTML', [TdhStyleSheet]);
+
   RegisterComponentEditor(TdhStyleSheet,TdhComponentEditor);
   RegisterComponentEditor(TdhCustomPanel,TdhComponentEditor);
   RegisterComponentEditor(TdhLink,TdhLabelEditor);

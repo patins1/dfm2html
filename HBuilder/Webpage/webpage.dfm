@@ -1,11 +1,11 @@
-object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1
+object Page111_1_1_1: TPage111_1_1_1
   Left = -4
   Top = -23
   HorzScrollBar.Tracking = True
   VertScrollBar.Tracking = True
   Anchors = [akLeft, akTop, akRight, akBottom]
   Caption = 'webpage.dfm'
-  ClientHeight = 735
+  ClientHeight = 775
   ClientWidth = 1920
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clBlack
@@ -30,8 +30,17 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage
     Right = 0
     Bottom = 0
     UseIFrame = False
-    Title = 'Web Design Software DFM2HTML Version 6.3'
+    Title = 'Web Design Software DFM2HTML Version 8'
     OutputDirectory = 'www2\'
+    HTMLHead = 
+      '<script type="text/javascript">'#13#10#13#10'  var _gaq = _gaq || [];'#13#10'  _' +
+      'gaq.push(['#39'_setAccount'#39', '#39'UA-37142009-1'#39']);'#13#10'  _gaq.push(['#39'_trac' +
+      'kPageview'#39']);'#13#10#13#10'  (function() {'#13#10'    var ga = document.createEl' +
+      'ement('#39'script'#39'); ga.type = '#39'text/javascript'#39'; ga.async = true;'#13#10 +
+      '    ga.src = ('#39'https:'#39' == document.location.protocol ? '#39'https://' +
+      'ssl'#39' : '#39'http://www'#39') + '#39'.google-analytics.com/ga.js'#39';'#13#10'    var s' +
+      ' = document.getElementsByTagName('#39'script'#39')[0]; s.parentNode.inse' +
+      'rtBefore(ga, s);'#13#10'  })();'#13#10#13#10'</script>'
     MetaAuthor = 'J'#246'rg Kiegeland'
     MetaDescription = 'An WYSIWYG HTML editor'
     MetaKeywords = 
@@ -45,7 +54,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage
     object Panel4: TdhPanel
       Top = 36
       Width = 1030
-      Height = 3676
+      Height = 632
       ImageType = bitTile
       Style.Border.Width = 1
       Style.Border.Color = 15461355
@@ -66,6 +75,24 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage
       Style.BorderRadius.TopRight = '50'
       AutoSizeXY = asNone
       Anchors = [akTop]
+      object Image5: TdhLink
+        Left = 736
+        Width = 200
+        Height = 208
+        Text = ''
+        Style.Effects.ScaleX = 10
+        Style.Effects.ScaleY = 10
+        Style.Effects.Enabled = True
+        Style.Effects.AntiAliasing = False
+        Style.Effects.Text = etInclude
+        Style.BorderRadius.All = '1179'
+        AutoSizeXY = asXY
+        Anchors = [akLeft, akBottom]
+        Bottom = 120
+        PreferDownStyles = True
+        Options = [loDownIfMenu, loDownIfMouseDown, loDownIfURL]
+        Link = 'http://www.aliexpress.com/store/615006'
+      end
       object Panel6: TdhPanel
         Left = 15
         Height = 24
@@ -87,7 +114,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage
         Top = 88
         Width = 24
         Height = 24
-        ActivePage = history
+        ActivePage = Page1
         FixedHeight = False
         object Page1: TdhPage
           Left = 192
@@ -98,38 +125,12 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage
           Style.TextAlign = ctaJustify
           AutoSizeXY = asNone
           UseIFrame = False
-          object Text5: TdhLabel
-            Left = 16
-            Top = 48
-            Width = 456
-            Height = 234
-            Text = 
-              '<en>'#10'DFM2HTML is a wide-spread web design software specialized o' +
-              'n generating sophisticated web sites with at least effort possib' +
-              'le. Features:'#10'<ul>'#10'<li><Label10>freeware</Label10></li>'#10'<li>WYSI' +
-              'WYG (What You See Is What You Get)</li>'#10'<li>stylesheet-based des' +
-              'ign</li> '#10'<li>manage many HTML pages in one document</li>'#10'<li>gr' +
-              'aphical effects (e.g. anti-aliasing, shadow, glow, rounded corne' +
-              'rs)</li>'#10'<li>HTML forms</li>'#10'<li>CSS3 capable HTML code generati' +
-              'on</li>'#10'<li>Unicode</li>'#10'<li>PHP</li>'#10'<li>JavaScript menus</li>'#10 +
-              '<li>RGBA colors</li>'#10'</ul>'#10'</en>'#10'<de>'#10'DFM2HTML ist eine Webdesig' +
-              'n-Software, dessen Ziel es ist, komplizierte Webseiten mit minim' +
-              'alen Aufwand erstellen zu k'#246'nnen. Features:'#10'<ul>'#10'<li><Label10>Fr' +
-              'eeware</Label10></li>'#10'<li>WYSIWYG</li> '#10'<li>Wiederverwendung von' +
-              ' Stilen '#252'ber Stylesheet-Objekte</li>'#10'<li>Mehrere HTML-Seiten k'#246'n' +
-              'nen in einem Dokument verwaltet werden</li>'#10'<li>Graphische Effek' +
-              'te (z.B. Anti-Aliasing, Schatten, Runde Ecken)</li>'#10'<li>HTML-For' +
-              'mulare</li>'#10'<li>CSS3-f'#228'hige HTML-Code-Generierung</li>'#10'<li>Unico' +
-              'de</li>'#10'<li>PHP</li>'#10'<li>JavaScript-Men'#252's</li>'#10'<li>RGBA-Farben</' +
-              'li>'#10'</ul>'#10'</de>'
-            AutoSizeXY = asY
-          end
           object Link1: TdhLink
             Left = 16
-            Top = 304
-            Width = 224
+            Top = 280
+            Width = 280
             Height = 22
-            Text = 'Download DFM2HTML 6.3'
+            Text = 'Download DFM2HTML 8 (Win32)'
             Style.FontSize = '19'
             AutoSizeXY = asXY
             PreferDownStyles = True
@@ -263,7 +264,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage
             Linked = True
           end
           object Donate: TdhDirectHTML
-            Left = 280
+            Left = 328
             Top = 301
             Width = 20
             Height = 19
@@ -278,7 +279,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage
               'way to pay online!">'#13#10'</form>'#13#10
           end
           object DonateDE: TdhDirectHTML
-            Left = 280
+            Left = 328
             Top = 301
             Width = 20
             Height = 19
@@ -311,6 +312,55 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage
             Options = [loDownIfMenu, loDownIfMouseDown, loDownIfURL]
             LinkPage = feedback
           end
+          object Link88: TdhLink
+            Left = 16
+            Top = 304
+            Width = 280
+            Height = 22
+            Text = 'Download DFM2HTML 8 (Win64)'
+            Style.FontSize = '19'
+            AutoSizeXY = asXY
+            PreferDownStyles = True
+            Options = [loDownIfMenu, loDownIfMouseDown, loDownIfURL]
+            LinkAnchor = dfm2html_inst_win64
+          end
+          object dfm2html_inst_win64: TdhFile
+            Left = 176
+            Top = 16
+            Width = 27
+            Height = 22
+            AutoSizeXY = asXY
+            FileName = 'C:\Delphi\HBuilder\CreateInstall\dfm2html_inst_win64.exe'
+            Linked = True
+          end
+          object Text5: TdhLabel
+            Left = 16
+            Top = 48
+            Width = 456
+            Height = 234
+            Text = 
+              '<en>'#10'DFM2HTML is a wide-spread web design software specialized o' +
+              'n generating sophisticated web sites with at least effort possib' +
+              'le. Features:'#10'<ul>'#10'<li><Label10>freeware/open source</Label10></' +
+              'li>'#10'<li>WYSIWYG (What You See Is What You Get)</li>'#10'<li>Internet' +
+              ' Explorer 6 / 360 Secure Browser compatible</li>'#10'<li>stylesheet-' +
+              'based design</li> '#10'<li>manage many HTML pages in one document</l' +
+              'i>'#10'<li>graphical effects (e.g. anti-aliasing, shadow, glow, roun' +
+              'ded corners)</li>'#10'<li>HTML5/CSS3 capable HTML code generation</l' +
+              'i>'#10'<li>Unicode</li>'#10'<li>PHP</li>'#10'<li>JavaScript dhtml menus</li>' +
+              #10'<li>RGBA colors</li>'#10'</ul>'#10'</en>'#10'<de>'#10'DFM2HTML ist eine Webdesi' +
+              'gn-Software, dessen Ziel es ist, komplizierte Webseiten mit mini' +
+              'malen Aufwand erstellen zu k'#246'nnen. Features:'#10'<ul>'#10'<li><Label10>F' +
+              'reeware/Open Source</Label10></li>'#10'<li>WYSIWYG</li> '#10'<li>Interne' +
+              't Explorer 6 / 360 Secure Browser compatible</li>'#10'<li>Wiederverw' +
+              'endung von Stilen '#252'ber Stylesheet-Objekte</li>'#10'<li>Mehrere HTML-' +
+              'Seiten k'#246'nnen in einem Dokument verwaltet werden</li>'#10'<li>Graphi' +
+              'sche Effekte (z.B. Anti-Aliasing, Schatten, Runde Ecken)</li>'#10'<l' +
+              'i>HTML5/CSS3-f'#228'hige HTML-Code-Generierung</li>'#10'<li>Unicode</li>'#10 +
+              '<li>PHP</li>'#10'<li>JavaScript-Men'#252's</li>'#10'<li>RGBA-Farben</li>'#10'</ul' +
+              '>'#10'</de>'
+            AutoSizeXY = asY
+          end
         end
         object register: TdhPage
           Left = 192
@@ -342,7 +392,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage
           object Label24: TdhLabel
             Left = 24
             Top = 16
-            Width = 331
+            Width = 340
             Height = 198
             Text = 
               '<address>Copyright '#169' 2010<br/>'#10'Dipl.-Inform. J'#246'rg Kiegeland<br/>' +
@@ -447,7 +497,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage
                 object Submit1: TdhLink
                   Left = 8
                   Top = 208
-                  Width = 63
+                  Width = 92
                   Height = 24
                   Text = '<en>Submit</en><de>Abschicken</de>'
                   AutoSizeXY = asXY
@@ -460,7 +510,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage
                 object Label31: TdhLabel
                   Left = 8
                   Top = 8
-                  Width = 69
+                  Width = 68
                   Height = 16
                   Text = '<en>Your Name:</en><de>Dein Name:</de>'
                   AutoSizeXY = asXY
@@ -492,7 +542,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage
                 object Label33: TdhLabel
                   Left = 8
                   Top = 88
-                  Width = 57
+                  Width = 59
                   Height = 16
                   Text = '<en>Message:</en><de>Nachricht:</de>'
                   AutoSizeXY = asXY
@@ -507,7 +557,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage
                 end
                 object Link28: TdhLink
                   Top = 208
-                  Width = 58
+                  Width = 73
                   Height = 24
                   Text = '<en>Reset</en><de>L'#246'schen</de>'
                   AutoSizeXY = asXY
@@ -636,7 +686,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage
           object Label16: TdhLabel
             Left = 16
             Top = 24
-            Width = 274
+            Width = 115
             Height = 16
             Text = 
               #9658' <en>Contact us if your site shall be listed here</en><de>Benut' +
@@ -1204,7 +1254,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage
           UseIFrame = False
           object Label5: TdhLabel
             Left = 24
-            Top = 3288
+            Top = 3352
             Width = 360
             Height = 80
             Text = 
@@ -1217,7 +1267,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage
           end
           object Label25: TdhLabel
             Left = 24
-            Top = 3048
+            Top = 3112
             Width = 446
             Height = 212
             Text = 
@@ -1238,7 +1288,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage
           end
           object Label20: TdhLabel
             Left = 24
-            Top = 2824
+            Top = 2888
             Width = 442
             Height = 193
             Text = 
@@ -1257,7 +1307,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage
           end
           object Label21: TdhLabel
             Left = 24
-            Top = 2632
+            Top = 2696
             Width = 418
             Height = 161
             Text = 
@@ -1275,7 +1325,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage
           end
           object Label28: TdhLabel
             Left = 32
-            Top = 2512
+            Top = 2576
             Width = 434
             Height = 81
             Text = 
@@ -1289,7 +1339,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage
           end
           object Label11: TdhLabel
             Left = 24
-            Top = 2312
+            Top = 2376
             Width = 354
             Height = 64
             Text = 
@@ -1303,7 +1353,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage
           end
           object Label12: TdhLabel
             Left = 24
-            Top = 2408
+            Top = 2472
             Width = 330
             Height = 80
             Text = 
@@ -1317,7 +1367,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage
           end
           object Label13: TdhLabel
             Left = 24
-            Top = 2192
+            Top = 2256
             Width = 450
             Height = 96
             Text = 
@@ -1332,7 +1382,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage
           end
           object Label37: TdhLabel
             Left = 24
-            Top = 2120
+            Top = 2184
             Width = 426
             Height = 49
             Text = 
@@ -1345,7 +1395,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage
           end
           object Label38: TdhLabel
             Left = 24
-            Top = 2032
+            Top = 2096
             Width = 210
             Height = 65
             Text = 
@@ -1358,7 +1408,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage
           end
           object Label41: TdhLabel
             Left = 24
-            Top = 1960
+            Top = 2024
             Width = 338
             Height = 48
             Text = 
@@ -1371,7 +1421,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage
           end
           object Label42: TdhLabel
             Left = 24
-            Top = 1840
+            Top = 1904
             Width = 426
             Height = 97
             Text = 
@@ -1387,7 +1437,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage
           end
           object Label6: TdhLabel
             Left = 24
-            Top = 1768
+            Top = 1832
             Width = 442
             Height = 48
             Text = 
@@ -1401,9 +1451,9 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage
           end
           object Label44: TdhLabel
             Left = 24
-            Top = 1696
-            Width = 386
-            Height = 49
+            Top = 1760
+            Width = 442
+            Height = 64
             Text = 
               '<en><code>New in version 3.2:'#10'* The path of generated artifacts ' +
               'can be adapted'#10'* "Check for update" functionality</code></en>'#10'<d' +
@@ -1417,9 +1467,9 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage
           end
           object Label46: TdhLabel
             Left = 24
-            Top = 1608
-            Width = 346
-            Height = 65
+            Top = 1672
+            Width = 322
+            Height = 80
             Text = 
               '<en><code>New in version 3.3:'#10'* Italian language is added '#10'  (th' +
               'anks to Rinaldo M. aka Whiteshark!)'#10'* Fixed bug with IE7 and aut' +
@@ -1433,9 +1483,9 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage
           end
           object Label50: TdhLabel
             Left = 24
-            Top = 1448
-            Width = 370
-            Height = 129
+            Top = 1512
+            Width = 346
+            Height = 176
             Text = 
               '<en><code>New in version 3.4:'#10'* 83% Portuguese language support'#10 +
               '  (thanks to Alex Albino de Almeida Barros!)'#10'* adjusted dfm2html' +
@@ -1454,8 +1504,8 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage
           end
           object Label47: TdhLabel
             Left = 24
-            Top = 1288
-            Width = 394
+            Top = 1352
+            Width = 370
             Height = 160
             Text = 
               '<en><code>New in version 3.5:'#10'* Spanish language is added '#10'  (th' +
@@ -1476,7 +1526,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage
           end
           object Label48: TdhLabel
             Left = 24
-            Top = 1104
+            Top = 1168
             Width = 386
             Height = 176
             Text = 
@@ -1500,8 +1550,8 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage
           end
           object Label23: TdhLabel
             Left = 24
-            Top = 936
-            Width = 354
+            Top = 1000
+            Width = 314
             Height = 160
             Text = 
               '<en><code>New in version 4.1:'#10'* Afrikaans language is added '#10'  (' +
@@ -1521,9 +1571,9 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage
           end
           object Label43: TdhLabel
             Left = 24
-            Top = 848
-            Width = 402
-            Height = 80
+            Top = 912
+            Width = 434
+            Height = 64
             Text = 
               '<en><code>New in version 4.2:'#10'* Fixed "Access is denied" bug whe' +
               'n writing'#10'  user files under Windows Vista. User data is '#10'  now ' +
@@ -1539,9 +1589,9 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage
           end
           object Label45: TdhLabel
             Left = 24
-            Top = 776
-            Width = 322
-            Height = 64
+            Top = 840
+            Width = 370
+            Height = 48
             Text = 
               '<en><code>New in version 4.3:'#10'* Fixed bugs with FTP component'#10'* ' +
               'Updated Spanish and French translation'#10#10'</code></en><de><code>Ne' +
@@ -1554,9 +1604,9 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage
           end
           object Label49: TdhLabel
             Left = 24
-            Top = 688
-            Width = 370
-            Height = 80
+            Top = 752
+            Width = 378
+            Height = 64
             Text = 
               '<en><code>New in version 4.4:'#10'* Performance fix for HTML file ge' +
               'neration'#10'* File generation is now logged when uploading'#10'* Bundle' +
@@ -1571,9 +1621,9 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage
           end
           object Label53: TdhLabel
             Left = 24
-            Top = 616
-            Width = 338
-            Height = 64
+            Top = 680
+            Width = 298
+            Height = 48
             Text = 
               '<en><code>New in version 4.5:'#10'* New text editor with syntax high' +
               'lighting'#10'* Added Forum menu item'#10#10'</code></en><de><code>Neu in v' +
@@ -1586,9 +1636,9 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage
           end
           object Label54: TdhLabel
             Left = 24
-            Top = 552
-            Width = 362
-            Height = 32
+            Top = 616
+            Width = 338
+            Height = 48
             Text = 
               '<en><code>New in version 4.5.1'#10'* Fixed bug with insert/delete in' +
               ' new editors'#10'</code></en><de><code>Neu in version 4.5.1:'#10'* Bug-f' +
@@ -1601,8 +1651,8 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage
           end
           object Label55: TdhLabel
             Left = 24
-            Top = 488
-            Width = 314
+            Top = 552
+            Width = 434
             Height = 48
             Text = 
               '<en><code>New in version 4.5.2'#10'* Menu items Copy/Paste/Delete ca' +
@@ -1616,8 +1666,8 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage
           end
           object Label57: TdhLabel
             Left = 24
-            Top = 432
-            Width = 282
+            Top = 496
+            Width = 306
             Height = 32
             Text = 
               '<en><code>New in version 4.5.3'#10'* Added context menu to new edito' +
@@ -1630,8 +1680,8 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage
           end
           object Label56: TdhLabel
             Left = 24
-            Top = 368
-            Width = 354
+            Top = 432
+            Width = 386
             Height = 48
             Text = 
               '<en><code>New in version 5'#10'* Textual objects can now be edited d' +
@@ -1645,9 +1695,9 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage
           end
           object Label29: TdhLabel
             Left = 24
-            Top = 304
-            Width = 314
-            Height = 32
+            Top = 368
+            Width = 370
+            Height = 48
             Text = 
               '<en><code>New in version 5.1'#10'* Undo limit editable in Options di' +
               'alog'#10'</code></en><de><code>Neu in version 5.1:'#10'* Anzahl der r'#252'ck' +
@@ -1660,8 +1710,8 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage
           end
           object Label58: TdhLabel
             Left = 24
-            Top = 240
-            Width = 314
+            Top = 304
+            Width = 298
             Height = 48
             Text = 
               '<en><code>New in version 6'#10'* Import styles from a stylesheet fil' +
@@ -1676,8 +1726,8 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage
           end
           object Label59: TdhLabel
             Left = 24
-            Top = 176
-            Width = 442
+            Top = 240
+            Width = 378
             Height = 48
             Text = 
               '<en><code>New in version 6.1'#10'* Increased speed of HTML generatio' +
@@ -1693,8 +1743,8 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage
           end
           object Label60: TdhLabel
             Left = 22
-            Top = 112
-            Width = 394
+            Top = 176
+            Width = 458
             Height = 48
             Text = 
               '<en><code>New in version 6.2'#10'* Made Page dialog and Object Prope' +
@@ -1709,8 +1759,8 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage
           end
           object Label62: TdhLabel
             Left = 22
-            Top = 16
-            Width = 410
+            Top = 80
+            Width = 442
             Height = 80
             Text = 
               '<en><code>New in version 6.3'#10'* Open sourced DFM2HTML Components ' +
@@ -1720,6 +1770,21 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage
               'nents Suite als Open Source verf'#252'gbar'#10'* Kompiliert mit Delphi XE' +
               '3'#10'* Neues Homepagelayout (Dank Carlos Cruz)  '#10'* Tschechische Spr' +
               'ache hinzugef'#252'gt (Dank Radovan Pl'#353'ek)'#10'</code></de>'
+            Style.PaddingRight = 2
+            Style.WhiteSpace = cwsPre
+            Style.Color = Black
+            AutoSizeXY = asXY
+          end
+          object Label65: TdhLabel
+            Left = 22
+            Top = 16
+            Width = 250
+            Height = 48
+            Text = 
+              '<en><code>New in version 8'#10'* Win64 version (20% faster)'#10'* Suppor' +
+              't for <LiquidLayout>liquid layout</LiquidLayout>'#10'</code></en><de' +
+              '><code>Neu in version 8:'#10'* Win64 Version (20% schneller)'#10'* <Liqu' +
+              'idLayout>"Liquid-Layout"</LiquidLayout>'#10'</code></de>'
             Style.PaddingRight = 2
             Style.WhiteSpace = cwsPre
             Style.Color = Red
@@ -1746,7 +1811,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage
             Left = 16
             Top = 56
             Width = 440
-            Height = 997
+            Height = 1171
             Text = 
               '<de><FAQ_question>Wie kann ich meine Webseite ver'#246'ffentlichen?</' +
               'FAQ_question>'#10'<br/>'#10'Dazu brauchen Sie ein Webhoster, wir empfehl' +
@@ -1973,7 +2038,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage
             Left = 16
             Top = 56
             Width = 440
-            Height = 257
+            Height = 273
             Text = 
               '<en>'#10'<FAQ_question>Hot keys:</FAQ_question>'#10'<br/>'#10'<b>ESC</b> : S' +
               'elects the object'#39's parent<br/>'#10'<b>CTRL</b>+<b>Arrow key</b> : M' +
@@ -2103,7 +2168,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage
             Left = 16
             Top = 496
             Width = 440
-            Height = 49
+            Height = 65
             Text = 
               '<en>'#10'<FAQ_question>Add your own presets</FAQ_question>'#10'<br/>'#10'You' +
               ' can extend the Presets dialog with your own presets by saving y' +
@@ -2135,7 +2200,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage
             Left = 16
             Top = 720
             Width = 440
-            Height = 392
+            Height = 472
             Text = 
               '<en>'#10'<FAQ_question>Put your DFM2HTML documents under version con' +
               'trol!</FAQ_question>'#10'<br/>'#10'<ul>'#10'<li>A very good version control ' +
@@ -2249,7 +2314,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage
             Left = 24
             Top = 1216
             Width = 464
-            Height = 58
+            Height = 90
             Text = 
               '<en>'#10'<FAQ_question>More infos about DFM2HTML</FAQ_question>'#10'<br/' +
               '>'#10'<ul>'#10'<li><Link76>http://wordflex.wordgym.com/software/designin' +
@@ -2374,9 +2439,9 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage
           object Link61: TdhLink
             Left = 16
             Top = 16
-            Width = 223
+            Width = 207
             Height = 22
-            Text = 'Download DFM2HTML 6.2<br/>'
+            Text = 'Download DFM2HTML 8<br/>'
             Style.FontSize = '19'
             AutoSizeXY = asXY
             PreferDownStyles = True
@@ -2384,16 +2449,15 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage
             LinkAnchor = dfm2html_inst
           end
           object Label27: TdhLabel
-            Left = 22
-            Top = 72
-            Width = 394
+            Left = 30
+            Top = 104
+            Width = 138
             Height = 48
             Text = 
-              '<en><code>New in version 6.2'#10'* Made Page dialog and Object Prope' +
-              'rties dialog '#10'  resizeable, so that edit fields can also resize'#10 +
-              '</code></en><de><code>Neu in version 6.2:'#10'* Seitendialog und Obj' +
-              'ekteigenschaften-Dialog '#10'  groessenverstellbar, an das sich Edit' +
-              'ierfelder anpassen'#10'</code></de>'
+              '<en><code>New in version 8'#10'* Win64 version (20% faster)'#10'* Suppor' +
+              't for <LiquidLayout>liquid layout</LiquidLayout>'#10'</code></en><de' +
+              '><code>Neu in version 8:'#10'* Win64 Version'#10'* <LiquidLayout>"Liquid' +
+              '-Layout"</LiquidLayout>'#10'</code></de>'
             Style.PaddingRight = 2
             Style.WhiteSpace = cwsPre
             Style.Color = Red
@@ -2510,7 +2574,7 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage
           Left = 192
           Top = 96
           Width = 488
-          Height = 360
+          Height = 512
           AutoSizeXY = asNone
           UseIFrame = False
           object dhcomps: TdhFile
@@ -2557,6 +2621,31 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage
             Style.FontSize = '10'
             AutoSizeXY = asXY
           end
+          object Label66: TdhLabel
+            Left = 22
+            Top = 392
+            Width = 418
+            Height = 64
+            Text = 
+              '<code>New in version 8'#10'* Support to compile as Win64'#10'* splitted ' +
+              'into design time and runtime package,'#10'  as design time package c' +
+              'annot be compiled as Win64'#10'</code>'
+            Style.PaddingRight = 2
+            Style.WhiteSpace = cwsPre
+            Style.Color = Red
+            AutoSizeXY = asXY
+          end
+          object Label67: TdhLabel
+            Left = 22
+            Top = 472
+            Width = 234
+            Height = 32
+            Text = '<code>New in version 6.3'#10'* initial source code release'#10'</code>'
+            Style.PaddingRight = 2
+            Style.WhiteSpace = cwsPre
+            Style.Color = Black
+            AutoSizeXY = asXY
+          end
         end
         object todo: TdhPage
           Left = 192
@@ -2569,11 +2658,10 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage
             Left = 32
             Top = 24
             Width = 320
-            Height = 90
+            Height = 58
             Text = 
-              'Features of DFM2HTML in the future:'#10'<ul>'#10'<li>LIQUID OR FIXED LAY' +
-              'OUT + AUTO-HEIGHT PAGE (FOR DYNAMIC CONTENT)'#10'</li>'#10'<li>Use CSS g' +
-              'radients (with multiple color steps)'#10'</li>'#10'</ul>'
+              'Features of DFM2HTML in the future:'#10'<ul>'#10'<li>Use CSS gradients (' +
+              'with multiple color steps)'#10'</li>'#10'</ul>'
             AutoSizeXY = asY
           end
         end
@@ -2960,6 +3048,18 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage
           Options = [loDownIfMenu, loDownIfMouseDown, loDownIfURL]
           Link = 'http://www.kunstguss-ranft.de'
         end
+        object LiquidLayout: TdhLink
+          Left = 0
+          Top = 157
+          Height = 16
+          Text = 'LiquidLayout'
+          AutoSizeXY = asXY
+          Align = alTop
+          Right = 0
+          PreferDownStyles = True
+          Options = [loDownIfMenu, loDownIfMouseDown, loDownIfURL]
+          Link = 'http://www.dfm2html.com/liquid_demo/'
+        end
       end
       object StyleSheet3: TdhStyleSheet
         Left = 560
@@ -3104,7 +3204,6 @@ object Page11_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1_1: TPage
         Top = 0
         Height = 16
         Text = 'de'
-        Style.LineHeight = 'normal'
         Style.Display = cdsNone
         AutoSizeXY = asY
         Align = alTop

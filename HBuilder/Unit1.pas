@@ -546,6 +546,7 @@ begin
   except
   end;
   FuncSettings.FAutoUpdate:=ReadBool('Program','Monthly Check For Update',true);
+  FuncSettings.Unlocked:=ReadBool('Program','Unlocked',false);
 
   with FuncSettings do with GridDefinition do
   begin
@@ -742,6 +743,7 @@ begin
   if LastUpdateCheck<>NeverCheckedForUpdate then
    WriteString('Program','Last Update Check',DateToStr(LastUpdateCheck,GetFormatSettings));
   WriteBool('Program','Monthly Check For Update',FuncSettings.FAutoUpdate);
+  WriteBool('Program','Unlocked',FuncSettings.Unlocked);
 
 
 
@@ -2893,6 +2895,7 @@ begin
 
  //LateCreateForm(TBella,Bella);
  //if Bella.ShowModal=mrOk then
+ if not FuncSettings.Unlocked then
  begin
   Browse('http://www.dfm2html.com/launch/shop.html?langid='+inttostr(_LANGID),FuncSettings.FViewer,false);
  end;

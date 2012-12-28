@@ -24,6 +24,7 @@ type TFuncSettings=object
      FPassiveFTP:boolean;
      FAutoUpdate:boolean;
      FUndoLimit:integer;
+     Unlocked:boolean;
 end;
 
 type

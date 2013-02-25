@@ -280,6 +280,7 @@ type
     procedure UpdateMousePressed(Down:boolean; DownIfDown:boolean);
     function IsVirtualParentOf(pn:TControl):boolean;
     function GetLev:integer;
+    function IsHidden:boolean;
   protected
     FTooltip:HypeString;
     EqArea:TRect;
@@ -1141,7 +1142,8 @@ begin
   BorderChanged;
   AdjustSize;
   MyRealign;
-  RequestAlign;   //image->scale wechsel
+  //for speed: comment out, since cannot reproduce but cost computational time!
+  //RequestAlign;   //image->scale wechsel
  end;
 end;
 
@@ -1663,7 +1665,7 @@ begin
     result:=rsRounded;
     exit;
    end;
-   
+
    if not UseCSS3 and (not IsNullRect(SemiTransparentEdges) or SemiTransparent and not Transparent or not IsOpaqueColor(FontColor)) then
    begin
     result:=rsRGBA;
@@ -1937,6 +1939,7 @@ end;
 
 procedure TdhCustomPanel.PreventFlicker;
 begin
+ if IsHidden then exit;//for speed
  Invalidate;//damit Windows Hintergrundkopie nicht an einer neuer Position zeichnet ohne uns zu fragen, sonst ruckelts
             //gilt auch für CLX unter Windows
 end;
@@ -1951,6 +1954,7 @@ begin
 
  if FinalShowing and not (csReading in ComponentState) then
  begin
+ if (AWidth<>Width) or (AHeight<>Height) then
  DoAutoSize(AWidth,AHeight);  //wird schon von AdjustSize erledigt später //gibt probleme
 
  R:=GetCBound(Self);
@@ -2645,7 +2649,7 @@ var
     ParentSize: TPoint;
     mar:TRect;
     sLightBoundsChanging:boolean;
-  begin        
+  begin
       if (AAlign = alNone) then
       begin
        if Control is TdhCustomPanel then
@@ -2785,9 +2789,9 @@ var
         not (csNoDesignVisible in Control.ControlStyle){ or (Control is TdhPanel) and TdhPanel(Control).FinalShowing}) then
       begin
         if Control = AControl then Continue;
-        J := 0;
-        while (J < AlignList.Count) and not InsertBefore(Control,
-          TControl(AlignList[J]), AAlign) do Inc(J);
+        J := AlignList.Count;
+        while (J-1 >= 0) and InsertBefore(Control,
+          TControl(AlignList[J-1]), AAlign) do Dec(J);
         AlignList.Insert(J, Control);
       end;
     end;
@@ -2800,7 +2804,7 @@ var
       DoPosition(Control, AAlign, AlignInfo);
       if AAlign=alTop then
       begin
-       if GetChildPosition(Control)<>I then
+       if Control.Parent.Controls[I]<>Control then
         TFakeWinControl(Self).SetChildOrder(Control,I);
       end;
     end;
@@ -2942,7 +2946,7 @@ begin
    rOffsetRect(result,GetCBound(c.Parent).TopLeft);
   end;
  end else
- begin                
+ begin
   if (c is TWinControl) and TWinControl(c).HandleAllocated{ClientOrigin wirft sonst eien Exception, da Handle benötigt wird} then
   begin
    result:=c.ClientRect;
@@ -5945,6 +5949,24 @@ begin
      IntersectRect(Result,Result,GetOffsetRect(TdhCustomPanel(Parent).ScrollArea,-Left-DeltaX,-Top-DeltaY));
 end;
 
+//quick test if object is displayed on screen (return "false" means: could be hidden or not hidden)
+function TdhCustomPanel.IsHidden:boolean;
+var I:Integer;
+    Form:TForm;
+begin
+ if (csDesigning in ComponentState) and (Owner is TForm) then
+ begin
+  Form:=TForm(Owner);
+  for I := 0 to Form.ControlCount-1 do
+  if (Form.Controls[I].ClassName='TMySiz') and (Self<>Form.Controls[I]) then
+  begin
+   Result:=True;
+   Exit;
+  end;
+ end;
+ Result:=False;
+end;
+
 {$IFDEF CLX}
 
 procedure TdhCustomPanel.Paint;
@@ -5962,6 +5984,7 @@ end;
 
 procedure TdhCustomPanel.PaintWindow(DC: HDC);
 begin
+ if IsHidden then exit;//for speed
  AssertTop(0);
  if not TopGraph.Empty then
  begin
@@ -6282,6 +6305,7 @@ begin
   WeakToStrong(true);
   CSSBottom:=i;
  end;
+ if [akBottom,akRight]*Anchors<>[] then //for speed
  DoCalcStrongToWeak(ALeft,ATop,AWidth,AHeight,GetLocalClientBound(Parent),Anchors,CSSRight,CSSBottom);
 end;
 

@@ -437,6 +437,12 @@ begin
    for Y:=0 to png.Height-1 do
    begin
     bp:=png.AlphaScanline[Y];
+    if bp=nil then
+    for X:=0 to png.Width-1 do
+    begin
+     P^:=Color32(png.Pixels[X,Y]);
+     inc(P);
+    end else
     for X:=0 to png.Width-1 do
     begin
      P^:=SetAlpha(Color32(png.Pixels[X,Y]),bp^[X]);
@@ -608,6 +614,7 @@ begin
    for Y:=0 to png.Height-1 do
    begin
     bp:=png.AlphaScanline[Y];
+    if bp<>nil then
     for X:=0 to png.Width-1 do
     if bp^[X] in [1..254] then
     begin

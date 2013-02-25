@@ -869,13 +869,13 @@ end;
 
 procedure GetRepeatings(var BPos:TPoint; var num_across,num_down:integer; W,H:integer; const brct:TRect; RepeatX,RepeatY:boolean);
 begin
- if RepeatX then
+ if RepeatX and (W>=1) then
  begin
   BPos.X:=integral(BPos.X,brct.Left,W);
   num_across := ((brct.Right-BPos.X-1) div W) + 1;
  end else
   num_across:=1;
- if RepeatY then
+ if RepeatY and (H>=1) then
  begin
   BPos.Y:=integral(BPos.Y,brct.Top,H);
   num_down := ((brct.Bottom-BPos.Y) div H) + 1;

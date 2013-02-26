@@ -2895,10 +2895,10 @@ begin
 
  //LateCreateForm(TBella,Bella);
  //if Bella.ShowModal=mrOk then
- if not FuncSettings.Unlocked then
- begin
-  Browse('http://www.dfm2html.com/launch/shop.html?langid='+inttostr(_LANGID),FuncSettings.FViewer,false);
- end;
+ //if not FuncSettings.Unlocked then
+ //begin
+ // Browse('http://www.dfm2html.com/launch/shop.html?langid='+inttostr(_LANGID),FuncSettings.FViewer,false);
+ //end;
 
  su:=suLastPage;
  if FuncSettings.LaunchAction=suaChoice then

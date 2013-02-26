@@ -1912,9 +1912,9 @@ begin
   AddSlice(EqNaming[2,1],'repeat-y','100% 0%',-98,GetRange(EqArea,[akRight,akTop,akBottom]));
   AddSlice(EqNaming[1,2],'repeat-x','0% 100%',-98,GetRange(EqArea,[akBottom,akLeft,akRight]));
 
- end else
- if nest.IsRastered(false) and nest.HasProp('VariableSize') then//((([akLeft,akRight]*nest.Anchors)=[akLeft,akRight]){ and nest.AutoX} or (([akTop,akBottom]*nest.Anchors)=[akTop,akBottom]){ and nest.AutoY}) then
-  AddWarning(nest.id,'is variable-sized and may not work with a fixed-sized rastering image.');
+ end;// else
+ //if nest.IsRastered(false) and nest.HasProp('VariableSize') then//((([akLeft,akRight]*nest.Anchors)=[akLeft,akRight]){ and nest.AutoX} or (([akTop,akBottom]*nest.Anchors)=[akTop,akBottom]){ and nest.AutoY}) then
+ // AddWarning(nest.id,'is variable-sized and may not work with a fixed-sized rastering image.');
 
 (* if (nest.Align in [alNone,alCustom]) and (nest.parent<>nil) and not ((nest.dclass='TdhPage') or nest.parent.IsBody or (nest.parent.dclass='TdhStyleSheet') or (nest.parent.dclass='TdhStyleSheet')) then
  begin

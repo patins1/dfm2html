@@ -333,9 +333,10 @@ type
     function IsHeightStored:boolean;
     function IsWidthStored:boolean;
     function RealAnchors:TAnchors;
-    procedure StrongToWeak;
+    procedure StrongToWeak(ParentWidth,ParentHeight:integer) overload;
+    procedure StrongToWeak overload;
     function HasActiveStrong(TestAnchors:TAnchors):boolean;
-    procedure CalcStrongToWeak(var ALeft,ATop,AWidth,AHeight:integer);
+    procedure CalcStrongToWeak(var ALeft,ATop,AWidth,AHeight:integer; ParentWidth,ParentHeight:integer);
     procedure WeakToStrong(IncludeActiveStrong:boolean); overload;
     procedure SetVHPos(H,V:integer);
     function GetVertButton1: TRect;
@@ -563,6 +564,7 @@ type
     function RequiresRastering:boolean; virtual;
     property OnStateTransition:TOnStateTransition read FOnStateTransition write FOnStateTransition;
     function GetPreferDownStyles:boolean; virtual;
+    procedure ChangeScale(M, D: Integer); override;
   public
     VariableHeight:boolean;
     SUse:TComponentName;
@@ -734,7 +736,7 @@ function AdjustedClientRect(c:TWinControl):TRect;
 function GetBoundsFor(c:TControl; DeltaLeft,DeltaTop,DeltaWidth,DeltaHeight:integer):TRect;
 function _GetNotClipped(Self: TControl; OnlyOneParent:boolean=False):TRect;
 
-procedure DoCalcStrongToWeak(var ALeft,ATop,AWidth,AHeight:integer; const ClientBound:TRect; Anchors:TAnchors; const CSSRight,CSSBottom:integer);
+procedure DoCalcStrongToWeak(var ALeft,ATop,AWidth,AHeight:integer; const ParentWidth,ParentHeight:integer; Anchors:TAnchors; const CSSRight,CSSBottom:integer);
 function GetSimplifiedAnchors(Anchors:TAnchors; ParentAnchors:TAnchors; StopSimplifyingRight,StopSimplifyingBottom:boolean):TAnchors;
 function _RealAnchors(Anchors:TAnchors; img:boolean):TAnchors;
 
@@ -6033,7 +6035,7 @@ end;
               
 function TdhCustomPanel.DynamicTotalRect:TRect;
 begin
- result:=TotalRect; 
+ result:=TotalRect;
  if ActTopGraph<>nil then
  begin
   dec(result.Right,Width-ActTopGraph.Width);
@@ -6269,24 +6271,20 @@ begin
  SUse:=Reader.ReadString;
 end;
 
-procedure DoCalcStrongToWeak(var ALeft,ATop,AWidth,AHeight:integer; const ClientBound:TRect; Anchors:TAnchors; const CSSRight,CSSBottom:integer);
-var ParentWH:TPoint;
+procedure DoCalcStrongToWeak(var ALeft,ATop,AWidth,AHeight:integer; const ParentWidth,ParentHeight:integer; Anchors:TAnchors; const CSSRight,CSSBottom:integer);
 begin
- with ClientBound do
-  ParentWH:=Point(Right-Left,Bottom-Top);
-
  if akBottom in Anchors then
  if [akTop,akBottom]*Anchors=[akTop,akBottom] then
-  AHeight:=ParentWH.Y-(CSSBottom+ATop) else
-  ATop:=ParentWH.Y-(CSSBottom+AHeight);
+  AHeight:=ParentHeight-(CSSBottom+ATop) else
+  ATop:=ParentHeight-(CSSBottom+AHeight);
 
  if akRight in Anchors then
  if [akLeft,akRight]*Anchors=[akLeft,akRight] then
-  AWidth:=ParentWH.X-(CSSRight+ALeft) else
-  ALeft:=ParentWH.X-(CSSRight+AWidth);
+  AWidth:=ParentWidth-(CSSRight+ALeft) else
+  ALeft:=ParentWidth-(CSSRight+AWidth);
 end;
 
-procedure TdhCustomPanel.CalcStrongToWeak(var ALeft,ATop,AWidth,AHeight:integer);
+procedure TdhCustomPanel.CalcStrongToWeak(var ALeft,ATop,AWidth,AHeight:integer; ParentWidth,ParentHeight:integer);
 var i:integer;
 begin
  AHeight:=Height;
@@ -6306,17 +6304,24 @@ begin
   CSSBottom:=i;
  end;
  if [akBottom,akRight]*Anchors<>[] then //for speed
- DoCalcStrongToWeak(ALeft,ATop,AWidth,AHeight,GetLocalClientBound(Parent),Anchors,CSSRight,CSSBottom);
+ DoCalcStrongToWeak(ALeft,ATop,AWidth,AHeight,ParentWidth,ParentHeight,Anchors,CSSRight,CSSBottom);
 end;
 
-procedure TdhCustomPanel.StrongToWeak; //equates UpdateAnchorRules
+procedure TdhCustomPanel.StrongToWeak(ParentWidth,ParentHeight:integer); //equates UpdateAnchorRules
 var ALeft,ATop,AWidth,AHeight:integer;
 begin
  if LightBoundsChanging then exit;
- CalcStrongToWeak(ALeft,ATop,AWidth,AHeight);
+ CalcStrongToWeak(ALeft,ATop,AWidth,AHeight,ParentWidth,ParentHeight);
  LightBoundsChanging:=true;
  SetBounds(ALeft,ATop,AWidth,AHeight);
  LightBoundsChanging:=false;
+end;
+
+procedure TdhCustomPanel.StrongToWeak; //equates UpdateAnchorRules
+begin
+ if [akBottom,akRight]*Anchors=[] then exit;//for speed
+ with GetLocalClientBound(Parent) do
+  StrongToWeak(Right-Left,Bottom-Top);
 end;
 
 function TdhCustomPanel.HasActiveStrong(TestAnchors:TAnchors):boolean;
@@ -7408,6 +7413,17 @@ end;
 function TdhCustomPanel.GetPreferDownStyles:boolean;
 begin
  result:=false; // prevent compiler warning
+end;
+
+
+procedure TdhCustomPanel.ChangeScale(M, D: Integer);
+begin
+ if CSSBottom<>InvalidCSSPos then
+   CSSBottom := CSSBottom * M div D;
+ if CSSRight<>InvalidCSSPos then
+   CSSRight := CSSRight * M div D;
+ inherited;
+ StrongToWeak(Parent.Width * M div D,Parent.Height * M div D);
 end;
 
 function TdhCustomPanel.Direction: TCSSDirection;

@@ -238,12 +238,13 @@ object PageWizard: TPageWizard
           AutoSizeXY = asXY
         end
         object Label10: TdhLabel
-          Left = 65
           Top = 60
           Width = 30
           Height = 13
           Text = 'Delay:'
           AutoSizeXY = asXY
+          Anchors = [akTop, akRight]
+          Right = 282
         end
         object eForwardingDelay: TMySpinEdit
           Left = 104
@@ -305,6 +306,7 @@ object PageWizard: TPageWizard
             Gutter.Font.Style = []
             Gutter.Width = 0
             Highlighter = SynHTMLSyn1
+            FontSmoothing = fsmNone
           end
         end
         object TabSheetHTML1: TTntTabSheet
@@ -332,6 +334,7 @@ object PageWizard: TPageWizard
             Gutter.Font.Style = []
             Gutter.Width = 0
             Highlighter = SynHTMLSyn1
+            FontSmoothing = fsmNone
           end
         end
         object TabSheetHTML2: TTntTabSheet
@@ -359,6 +362,7 @@ object PageWizard: TPageWizard
             Gutter.Font.Style = []
             Gutter.Width = 0
             Highlighter = SynHTMLSyn1
+            FontSmoothing = fsmNone
           end
         end
         object TabSheet5: TTabSheet
@@ -387,6 +391,7 @@ object PageWizard: TPageWizard
             Gutter.Font.Style = []
             Gutter.Width = 0
             Highlighter = SynHTMLSyn1
+            FontSmoothing = fsmNone
           end
         end
       end
@@ -552,6 +557,9 @@ object PageWizard: TPageWizard
       436C6F736500000B0053796E48544D4C53796E310000}
   end
   object SynHTMLSyn1: TSynHTMLSyn
+    Options.AutoDetectEnabled = False
+    Options.AutoDetectLineLimit = 0
+    Options.Visible = False
     Left = 360
     Top = 8
   end

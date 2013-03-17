@@ -3113,7 +3113,7 @@ begin
  if (snest.RealParent<>nil) then
  with snest.bo do
  begin
-  DoCalcStrongToWeak(Left,Top,Width,Height,snest.RealParent.ClientBound,Anchors,iProp('Right'),iProp('Bottom'));
+  DoCalcStrongToWeak(Left,Top,Width,Height,snest.RealParent.ClientBound.Right-snest.RealParent.ClientBound.Left,snest.RealParent.ClientBound.Bottom-snest.RealParent.ClientBound.Top,Anchors,iProp('Right'),iProp('Bottom'));
   inc(Left,snest.RealParent.ClientBound.Left);
   inc(Top,snest.RealParent.ClientBound.Top);
  end;

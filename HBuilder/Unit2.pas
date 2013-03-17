@@ -1901,7 +1901,7 @@ begin
  try
  ImageList:=TImageList.Create(Self);
  ImageList.Width:=49;
- ImageList.Height:=13;
+ ImageList.Height:=13*Tabs.PixelsPerInch div 96;
  for Bold:=False to True do
  begin
  AddImage(AnchorFont);
@@ -4068,12 +4068,12 @@ begin
 {$IFDEF CLX}
   toSize.Height:=132;
 {$ELSE}
-  toSize.Height:=130;
+  toSize.Height:=130*Tabs.PixelsPerInch div 96;
 {$ENDIF}
   //PageControl1.TabWidth:=0;
   //PageControl1.Width:=790;
-  Tabs.panelpc2.Width:=513;
-  Tabs.panelpc2.Height:=100;
+  Tabs.panelpc2.Width:=513*Tabs.PixelsPerInch div 96;;
+  Tabs.panelpc2.Height:=100*Tabs.PixelsPerInch div 96;;
   Tabs.pcnav_horz.Visible:=false;
   Tabs.pcnav_vert.Visible:=true;
   Tabs.STYLE_Label33.Style.BorderRadius.TopRight:=Tabs.STYLE_dhLabel11.Style.BorderRadius.TopRight;
@@ -4086,7 +4086,7 @@ begin
 {$IFDEF CLX}
   toSize.Width:=230;
 {$ELSE}
-  toSize.Width:=224;
+  toSize.Width:=224*Tabs.PixelsPerInch div 96;
 {$ENDIF}
   //PageControl1.TabWidth:=70;
   Tabs.PageControl1.RaggedRight:=true;
@@ -4094,8 +4094,8 @@ begin
 {$IFNDEF CLX}
   Tabs.PageControl1.ScrollOpposite:=false;
 {$ENDIF}
-  Tabs.panelpc2.Width:=210;
-  Tabs.panelpc2.Height:=300;
+  Tabs.panelpc2.Width:=210*Tabs.PixelsPerInch div 96;;
+  Tabs.panelpc2.Height:=300*Tabs.PixelsPerInch div 96;;
   //PageControl1.Width:=224;
   Tabs.pcnav_horz.Visible:=true;
   Tabs.pcnav_vert.Visible:=false;
@@ -4161,32 +4161,32 @@ begin
  begin
   //PageControl2.ActivePage.Top:=-8;
   Tabs.EdgeNavigation.Top:=1;
-  Tabs.Panel3.Top:=2;
-  Tabs.Panel3.Left:=256;
-  Tabs.Panel31.Top:=2;
-  Tabs.Panel31.Left:=26;
-  Tabs.Panel5.Top:=2;
-  Tabs.Panel5.Left:=314;
+  Tabs.Panel3.Top:=2*Tabs.PixelsPerInch div 96;;
+  Tabs.Panel3.Left:=256*Tabs.PixelsPerInch div 96;
+  Tabs.Panel31.Top:=2*Tabs.PixelsPerInch div 96;
+  Tabs.Panel31.Left:=26*Tabs.PixelsPerInch div 96;
+  Tabs.Panel5.Top:=2*Tabs.PixelsPerInch div 96;
+  Tabs.Panel5.Left:=314*Tabs.PixelsPerInch div 96;
   Tabs.Panel6.Top:=Tabs.Panel5.Top;
-  Tabs.Panel6.Left:=117;
-  Tabs.dhPanel4.Top:=4;
-  Tabs.dhPanel4.Left:=0;
+  Tabs.Panel6.Left:=117*Tabs.PixelsPerInch div 96;
+  Tabs.dhPanel4.Top:=4*Tabs.PixelsPerInch div 96;
+  Tabs.dhPanel4.Left:=0*Tabs.PixelsPerInch div 96;
   Tabs.bBorderRadius.Left:=Tabs.bClearEdge.Left;
   Tabs.bBorderRadius.Top:=Tabs.bClearEdge.Top+Tabs.bClearEdge.Height+DistanceVert;
   Tabs.bMoreMisc.Left:=Tabs.bClearMore.Left;
   Tabs.bMoreMisc.Top:=Tabs.bClearMore.Top+Tabs.bClearMore.Height+DistanceVert;
  end else
  begin
-  Tabs.Panel3.Top:=107;
-  Tabs.Panel3.Left:=0;
-  Tabs.Panel31.Top:=15;
-  Tabs.Panel31.Left:=0;
-  Tabs.Panel5.Top:=190;
-  Tabs.Panel5.Left:=10;
-  Tabs.Panel6.Top:=102;
+  Tabs.Panel3.Top:=107*Tabs.PixelsPerInch div 96;
+  Tabs.Panel3.Left:=0*Tabs.PixelsPerInch div 96;
+  Tabs.Panel31.Top:=15*Tabs.PixelsPerInch div 96;
+  Tabs.Panel31.Left:=0*Tabs.PixelsPerInch div 96;
+  Tabs.Panel5.Top:=190*Tabs.PixelsPerInch div 96;
+  Tabs.Panel5.Left:=10*Tabs.PixelsPerInch div 96;
+  Tabs.Panel6.Top:=102*Tabs.PixelsPerInch div 96;
   Tabs.Panel6.Left:=Tabs.Panel5.Left;
-  Tabs.dhPanel4.Top:=5;
-  Tabs.dhPanel4.Left:=11;
+  Tabs.dhPanel4.Top:=5*Tabs.PixelsPerInch div 96;
+  Tabs.dhPanel4.Left:=11*Tabs.PixelsPerInch div 96;
   Tabs.bBorderRadius.Left:=Tabs.bClearEdge.Left+Tabs.bClearEdge.Width+DistanceHorz;
   Tabs.bBorderRadius.Top:=Tabs.bClearEdge.Top;
   Tabs.bMoreMisc.Left:=Tabs.bClearMore.Left+Tabs.bClearMore.Width+DistanceHorz;

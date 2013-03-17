@@ -690,7 +690,6 @@ object Tabs: TTabs
             Style.PaddingTop = 1
             Style.PaddingRight = 2
             Style.PaddingBottom = 1
-            Style.FontSize = '11'
             Style.MarginBottom = '1'
             Style.TextAlign = ctaCenter
             Style.BorderRadius.All = '5'

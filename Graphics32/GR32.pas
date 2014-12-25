@@ -1045,6 +1045,10 @@ type
 const
   ZERO_RECT: TRect = (Left: 0; Top: 0; Right: 0; Bottom: 0);
 
+resourcestring
+  RCStrUnmatchedReferenceCounting = 'Unmatched reference counting.';
+  RCStrCannotSetSize = 'Can''t set size from ''%s''';
+  RCStrInpropriateBackend = 'Inpropriate Backend';
 
 { Color construction and conversion functions }
 
@@ -1803,7 +1807,7 @@ end;
 procedure TPlainInterfacedPersistent.BeforeDestruction;
 begin
   if RefCounted and (RefCount <> 0) then
-    raise Exception.Create('Unmatched reference counting.');
+    raise Exception.Create(RCStrUnmatchedReferenceCounting);
 
   inherited;
 end;
@@ -1915,7 +1919,7 @@ begin
   else if Source = nil then
     Result := SetSize(0, 0)
   else
-    raise Exception.Create('Can''t set size from ''' + Source.ClassName + '''');
+    raise Exception.CreateFmt(RCStrCannotSetSize, [Source.ClassName]);
 end;
 
 procedure TCustomMap.SetWidth(NewWidth: Integer);
@@ -2200,7 +2204,7 @@ procedure TCustomBitmap32.Assign(Source: TPersistent);
       if Supports(TargetBitmap.Backend, ICanvasSupport) then
         TGraphicAccess(SrcGraphic).Draw((TargetBitmap.Backend as ICanvasSupport).Canvas,
           MakeRect(0, 0, TargetBitmap.Width, TargetBitmap.Height))
-      else raise Exception.Create('Inpropriate Backend');
+      else raise Exception.Create(RCStrInpropriateBackend);
 
       if ResetAlphaAfterDrawing then
         ResetAlpha;
@@ -3484,12 +3488,12 @@ begin
 
     if Dx > 0 then
     begin
-      If (X1 > Cx2) or (X2 < Cx1) then Exit; // segment not visible
+      if (X1 > Cx2) or (X2 < Cx1) then Exit; // segment not visible
       Sx := 1;
     end
     else
     begin
-      If (X2 > Cx2) or (X1 < Cx1) then Exit; // segment not visible
+      if (X2 > Cx2) or (X1 < Cx1) then Exit; // segment not visible
       Sx := -1;
       X1 := -X1;   X2 := -X2;   Dx := -Dx;
       Cx1 := -Cx1; Cx2 := -Cx2;
@@ -3498,12 +3502,12 @@ begin
 
     if Dy > 0 then
     begin
-      If (Y1 > Cy2) or (Y2 < Cy1) then Exit; // segment not visible
+      if (Y1 > Cy2) or (Y2 < Cy1) then Exit; // segment not visible
       Sy := 1;
     end
     else
     begin
-      If (Y2 > Cy2) or (Y1 < Cy1) then Exit; // segment not visible
+      if (Y2 > Cy2) or (Y1 < Cy1) then Exit; // segment not visible
       Sy := -1;
       Y1 := -Y1;   Y2 := -Y2;   Dy := -Dy;
       Cy1 := -Cy1; Cy2 := -Cy2;
@@ -3753,12 +3757,12 @@ begin
 
     if Dx > 0 then
     begin
-      If (X1 > Cx2) or (X2 < Cx1) then Exit; // segment not visible
+      if (X1 > Cx2) or (X2 < Cx1) then Exit; // segment not visible
       Sx := 1;
     end
     else
     begin
-      If (X2 > Cx2) or (X1 < Cx1) then Exit; // segment not visible
+      if (X2 > Cx2) or (X1 < Cx1) then Exit; // segment not visible
       Sx := -1;
       X1 := -X1;   X2 := -X2;   Dx := -Dx;
       Cx1 := -Cx1; Cx2 := -Cx2;
@@ -3767,12 +3771,12 @@ begin
 
     if Dy > 0 then
     begin
-      If (Y1 > Cy2) or (Y2 < Cy1) then Exit; // segment not visible
+      if (Y1 > Cy2) or (Y2 < Cy1) then Exit; // segment not visible
       Sy := 1;
     end
     else
     begin
-      If (Y2 > Cy2) or (Y1 < Cy1) then Exit; // segment not visible
+      if (Y2 > Cy2) or (Y1 < Cy1) then Exit; // segment not visible
       Sy := -1;
       Y1 := -Y1;   Y2 := -Y2;   Dy := -Dy;
       Cy1 := -Cy1; Cy2 := -Cy2;
@@ -3910,7 +3914,7 @@ end;
 procedure TCustomBitmap32.LineX(X1, Y1, X2, Y2: TFixed; Value: TColor32; L: Boolean);
 var
   n, i: Integer;
-  nx, ny, hyp: Integer;
+  nx, ny, hyp, hypl: Integer;
   A: TColor32;
   h: Single;
   ChangedRect: TFixedRect;
@@ -3920,9 +3924,9 @@ begin
     nx := X2 - X1; ny := Y2 - Y1;
     Inc(X1, 127); Inc(Y1, 127); Inc(X2, 127); Inc(Y2, 127);
     hyp := Hypot(nx, ny);
-    if L then Inc(hyp, 65536);
-    if hyp < 256 then Exit;
-    n := hyp shr 16;
+    hypl := hyp + (Integer(L) * FixedOne);
+    if hypl < 256 then Exit;
+    n := hypl shr 16;
     if n > 0 then
     begin
       h := 65536 / hyp;
@@ -3935,7 +3939,7 @@ begin
       end;
     end;
     A := Value shr 24;
-    hyp := hyp - n shl 16;
+    hyp := hypl - n shl 16;
     A := A * Cardinal(hyp) shl 8 and $FF000000;
     SET_T256((X1 + X2 - nx) shr 9, (Y1 + Y2 - ny) shr 9, Value and $00FFFFFF + A);
   finally
@@ -3952,7 +3956,7 @@ end;
 procedure TCustomBitmap32.LineXS(X1, Y1, X2, Y2: TFixed; Value: TColor32; L: Boolean);
 var
   n, i: Integer;
-  ex, ey, nx, ny, hyp: Integer;
+  ex, ey, nx, ny, hyp, hypl: Integer;
   A: TColor32;
   h: Single;
   ChangedRect: TFixedRect;
@@ -3989,9 +3993,9 @@ begin
       nx := X2 - X1; ny := Y2 - Y1;
       Inc(X1, 127); Inc(Y1, 127); Inc(X2, 127); Inc(Y2, 127);
       hyp := Hypot(nx, ny);
-      if L then Inc(Hyp, 65536);
-      if hyp < 256 then Exit;
-      n := hyp shr 16;
+      hypl := hyp + (Integer(L) * FixedOne);
+      if hypl < 256 then Exit;
+      n := hypl shr 16;
       if n > 0 then
       begin
         h := 65536 / hyp;
@@ -4004,7 +4008,7 @@ begin
         end;
       end;
       A := Value shr 24;
-      hyp := hyp - n shl 16;
+      hyp := hypl - n shl 16;
       A := A * Longword(hyp) shl 8 and $FF000000;
       SET_TS256(SAR_9(X1 + X2 - nx), SAR_9(Y1 + Y2 - ny), Value and $00FFFFFF + A);
     finally
@@ -4022,7 +4026,7 @@ end;
 procedure TCustomBitmap32.LineXP(X1, Y1, X2, Y2: TFixed; L: Boolean);
 var
   n, i: Integer;
-  nx, ny, hyp: Integer;
+  nx, ny, hyp, hypl: Integer;
   A, C: TColor32;
   ChangedRect: TRect;
 begin
@@ -4031,9 +4035,9 @@ begin
     nx := X2 - X1; ny := Y2 - Y1;
     Inc(X1, 127); Inc(Y1, 127); Inc(X2, 127); Inc(Y2, 127);
     hyp := Hypot(nx, ny);
-    if L then Inc(hyp, 65536);
-    if hyp < 256 then Exit;
-    n := hyp shr 16;
+    hypl := hyp + (Integer(L) * FixedOne);
+    if hypl < 256 then Exit;
+    n := hypl shr 16;
     if n > 0 then
     begin
       nx := Round(nx / hyp * 65536);
@@ -4049,7 +4053,7 @@ begin
     end;
     C := GetStippleColor;
     A := C shr 24;
-    hyp := hyp - n shl 16;
+    hyp := hypl - n shl 16;
     A := A * Longword(hyp) shl 8 and $FF000000;
     SET_T256((X1 + X2 - nx) shr 9, (Y1 + Y2 - ny) shr 9, C and $00FFFFFF + A);
     EMMS;
@@ -4068,7 +4072,7 @@ const
   StippleInc: array [Boolean] of Single = (0, 1);
 var
   n, i: Integer;
-  sx, sy, ex, ey, nx, ny, hyp: Integer;
+  sx, sy, ex, ey, nx, ny, hyp, hypl: Integer;
   A, C: TColor32;
   ChangedRect: TRect;
 begin
@@ -4110,9 +4114,9 @@ begin
     nx := X2 - X1; ny := Y2 - Y1;
     Inc(X1, 127); Inc(Y1, 127); Inc(X2, 127); Inc(Y2, 127);
     hyp := GR32_Math.Hypot(nx, ny);
-    if L then Inc(hyp, 65536);
-    if hyp < 256 then Exit;
-    n := hyp shr 16;
+    hypl := hyp + (Integer(L) * FixedOne);
+    if hypl < 256 then Exit;
+    n := hypl shr 16;
     if n > 0 then
     begin
       nx := Round(nx / hyp * 65536); ny := Round(ny / hyp * 65536);
@@ -4127,7 +4131,7 @@ begin
     end;
     C := GetStippleColor;
     A := C shr 24;
-    hyp := hyp - n shl 16;
+    hyp := hypl - n shl 16;
     A := A * Longword(hyp) shl 8 and $FF000000;
     SET_TS256(SAR_9(X1 + X2 - nx), SAR_9(Y1 + Y2 - ny), C and $00FFFFFF + A);
     EMMS;
@@ -4238,7 +4242,7 @@ begin
 
   if not FMeasuringMode then
   begin
-    If (FClipRect.Right - FClipRect.Left = 0) or
+    if (FClipRect.Right - FClipRect.Left = 0) or
        (FClipRect.Bottom - FClipRect.Top = 0) then Exit;
 
     Dx := X2 - X1; Dy := Y2 - Y1;
@@ -4339,7 +4343,7 @@ begin
       // check whether the line is partly visible
       if xd > Cx2 then
         // do we need to draw an antialiased part on the corner of the clip rect?
-        If xd <= Cx2 + tmp then
+        if xd <= Cx2 + tmp then
           CornerAA := True
         else
           Exit;
@@ -4352,7 +4356,7 @@ begin
         ED := EC - EA;
         term := SwapConstrain(xd - tmp, Cx1, Cx2);
 
-        If CornerAA then
+        if CornerAA then
         begin
           Dec(ED, (xd - Cx2 - 1) * EA);
           xd := Cx2 + 1;
@@ -4378,7 +4382,7 @@ begin
           EMMS;
         end;
 
-        If CornerAA then
+        if CornerAA then
         begin
           // we only needed to draw the visible antialiased part of the line,
           // everything else is outside of our cliprect, so exit now since
@@ -4483,7 +4487,7 @@ begin
     end;
 
     // draw special case horizontal line exit (draw only first half of exiting segment)
-    If CheckVert then
+    if CheckVert then
     try
       while xd <> rem do
       begin
@@ -5830,7 +5834,7 @@ begin
 
     DrawMode := dmBlend;
     MasterAlpha := Alpha;
-    CombineMode := CombineMode;
+    CombineMode := Self.CombineMode;
 
     DrawTo(Self, X, Y);
   finally

@@ -119,6 +119,13 @@ implementation
 uses
   GR32_Lowlevel, GR32_Blend, GR32_Transforms, GR32_Math, SysUtils;
 
+resourcestring
+  RCStrCantAllocateVectorMap = 'Can''t allocate VectorMap!';
+  RCStrBadFormat = 'Bad format - Photoshop .msh expected!';
+  RCStrFileNotFound = 'File not found!';
+  RCStrSrcIsEmpty = 'Src is empty!';
+  RCStrBaseIsEmpty = 'Base is empty!';
+
 { TVectorMap }
 
 function CombineVectorsReg(const A, B: TFixedVector; Weight: TFixed): TFixedVector;
@@ -148,7 +155,7 @@ begin
   SetLength(FVectors, NewWidth * NewHeight);
   if (NewWidth > 0) and (NewHeight > 0) then
   begin
-    if FVectors = nil then raise Exception.Create('Can''t allocate VectorMap!');
+    if FVectors = nil then raise Exception.Create(RCStrCantAllocateVectorMap);
     FillLongword(FVectors[0], NewWidth * NewHeight * 2, 0);
   end;
   Width := NewWidth;
@@ -241,9 +248,9 @@ begin
     WY := TFixedRec(Y).Frac;
     {$IFDEF HAS_NATIVEINT}
     Result := CombineVectorsReg(CombineVectorsReg(PFixedPoint(P)^,
-      PFixedPoint(NativeUInt(P) + H)^, WX), CombineVectorsReg(
-      PFixedPoint(NativeUInt(P) + W)^, PFixedPoint(NativeUInt(P) + W + H)^, WX),
-      WY);
+      PFixedPoint(NativeUInt(P) + NativeUInt(H))^, WX), CombineVectorsReg(
+      PFixedPoint(NativeUInt(P) + NativeUInt(W))^, PFixedPoint(
+        NativeUInt(P) + NativeUInt(W) + NativeUInt(H))^, WX), WY);
     {$ELSE}
     Result := CombineVectorsReg(CombineVectorsReg(PFixedPoint(P)^,
       PFixedPoint(Cardinal(P) + H)^, WX), CombineVectorsReg(
@@ -315,7 +322,7 @@ begin
     Reset(MeshFile, 1);
     BlockRead(MeshFile, Header, SizeOf(TPSLiquifyMeshHeader));
     if Lowercase(String(Header.Ident)) <> Lowercase(MeshIdent) then
-      Exception.Create('Bad format - Photoshop .msh expected!');
+      Exception.Create(RCStrBadFormat);
     with Header do
     begin
       SetSize(Width, Height);
@@ -325,7 +332,7 @@ begin
   finally
     CloseFile(MeshFile);
   end
-    else Exception.Create('File not found!');
+    else Exception.Create(RCStrFileNotFound);
 end;
 
 procedure TVectorMap.Merge(DstLeft, DstTop: Integer; Src: TVectorMap; SrcRect: TRect);
@@ -338,8 +345,8 @@ var
   DstPtr : PFixedPointArray;
   SrcPtr : PFixedPoint;
 begin
-  if Src.Empty then Exception.Create('Src is empty!');
-  if Empty then Exception.Create('Base is empty!');
+  if Src.Empty then Exception.Create(RCStrSrcIsEmpty);
+  if Empty then Exception.Create(RCStrBaseIsEmpty);
   IntersectRect( SrcRect, Src.BoundsRect, SrcRect);
 
   DstRect.Left := DstLeft;
@@ -581,12 +588,12 @@ begin
       if Int64(VectorPtr^) <> 0 then goto TopDone;
       Inc(VectorPtr);
       Inc(Top);
-    until Top = Width * Height;
+    until Top = Self.Width * Self.Height;
 
-    TopDone: Top := Top div Width;
+    TopDone: Top := Top div Self.Width;
 
     //Find Bottom
-    Bottom := Width * Height - 1;
+    Bottom := Self.Width * Self.Height - 1;
     VectorPtr := @Vectors[Bottom];
     repeat
       if Int64(VectorPtr^) <> 0 then goto BottomDone;
@@ -594,7 +601,7 @@ begin
       Dec(Bottom);
     until Bottom < 0;
 
-    BottomDone: Bottom := Bottom div Width - 1;
+    BottomDone: Bottom := Bottom div Self.Width - 1;
 
     //Find Left
     Left := 0;
@@ -605,12 +612,12 @@ begin
         Inc(J);
       until J >= Bottom;
       Inc(Left)
-    until Left >= Width;
+    until Left >= Self.Width;
 
     LeftDone:
 
     //Find Right
-    Right := Width - 1;
+    Right := Self.Width - 1;
     repeat
       J := Bottom;
       repeat

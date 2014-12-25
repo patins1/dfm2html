@@ -103,12 +103,12 @@ type
     { ITextSupport }
     procedure Textout(X, Y: Integer; const Text: String); overload;
     procedure Textout(X, Y: Integer; const ClipRect: TRect; const Text: String); overload;
-    procedure Textout(DstRect: TRect; const Flags: Cardinal; const Text: String); overload;
+    procedure Textout(var DstRect: TRect; const Flags: Cardinal; const Text: String); overload;
     function  TextExtent(const Text: String): TSize;
 
     procedure TextoutW(X, Y: Integer; const Text: Widestring); overload;
     procedure TextoutW(X, Y: Integer; const ClipRect: TRect; const Text: Widestring); overload;
-    procedure TextoutW(DstRect: TRect; const Flags: Cardinal; const Text: Widestring); overload;
+    procedure TextoutW(var DstRect: TRect; const Flags: Cardinal; const Text: Widestring); overload;
     function  TextExtentW(const Text: Widestring): TSize;
 
     { IFontSupport }
@@ -226,7 +226,7 @@ begin
   FBitmapHandle := CreateDIBSection(0, FBitmapInfo, DIB_RGB_COLORS, Pointer(FBits), FMapHandle, 0);
 
   if FBits = nil then
-    raise Exception.Create('Can''t allocate the DIB handle');
+    raise Exception.Create(RCStrCannotAllocateDIBHandle);
 
   FHDC := CreateCompatibleDC(0);
   if FHDC = 0 then
@@ -234,7 +234,7 @@ begin
     DeleteObject(FBitmapHandle);
     FBitmapHandle := 0;
     FBits := nil;
-    raise Exception.Create('Can''t create compatible DC');
+    raise Exception.Create(RCStrCannotCreateCompatibleDC);
   end;
 
   if SelectObject(FHDC, FBitmapHandle) = 0 then
@@ -244,7 +244,7 @@ begin
     FHDC := 0;
     FBitmapHandle := 0;
     FBits := nil;
-    raise Exception.Create('Can''t select an object into DC');
+    raise Exception.Create(RCStrCannotSelectAnObjectIntoDC);
   end;
 end;
 
@@ -402,7 +402,7 @@ begin
   FOwner.Changed(MakeRect(X, Y, X + Extent.cx + 1, Y + Extent.cy + 1));
 end;
 
-procedure TGDIBackend.TextoutW(DstRect: TRect; const Flags: Cardinal; const Text: Widestring);
+procedure TGDIBackend.TextoutW(var DstRect: TRect; const Flags: Cardinal; const Text: Widestring);
 begin
   UpdateFont;
 
@@ -429,7 +429,7 @@ begin
   end;
 end;
 
-procedure TGDIBackend.Textout(DstRect: TRect; const Flags: Cardinal; const Text: String);
+procedure TGDIBackend.Textout(var DstRect: TRect; const Flags: Cardinal; const Text: String);
 begin
   UpdateFont;
 

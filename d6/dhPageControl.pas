@@ -275,7 +275,7 @@ end;
 procedure TdhPageControl.GetChildren(Proc: TGetChildProc; Root: TComponent);
 var
   I: Integer;
-begin     
+begin
   for I := 0 to FPages.Count - 1 do
    Proc(TComponent(FPages[I]));
 end;
@@ -742,7 +742,8 @@ begin
   exit;
  end;
  Inherited;
- ReleaseResourcesRecursively(self);
+ if not Visible then
+  ReleaseResourcesRecursively(self);
 end;
 
 {$IFNDEF CLX}

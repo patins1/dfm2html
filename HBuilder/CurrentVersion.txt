@@ -1,1 +1,1 @@
-version=DFM2HTML v8
+version=DFM2HTML v8.2

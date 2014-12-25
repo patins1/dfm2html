@@ -97,6 +97,7 @@ type
     MySiz: TMySiz;
     procedure ValidateRename(AComponent: TComponent;
       const CurName, NewName: string); override;
+    procedure CanInsertComponent(AComponent: TComponent);
     procedure SetDesigning(Designing,Transient:boolean);
     constructor Create(AOwner:TComponent); override;
     destructor Destroy; override;
@@ -261,6 +262,11 @@ begin
  if TurnOffNameValidation then exit;
  inherited;
 end;
+
+procedure TPageContainer.CanInsertComponent(AComponent: TComponent);
+begin
+end;
+
 
 procedure TPageContainer.SetDesigning(Designing,Transient:boolean);
 var i:integer;
@@ -1278,6 +1284,7 @@ begin
 
  OldDFM:=NewDFM;
 
+ if FuncSettings.FUndoLimit>0 then
  ActDFM;
  if OldDFM=NewDFM then
  begin

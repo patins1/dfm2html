@@ -4,7 +4,7 @@
         <MainSource>dklang12.dpk</MainSource>
         <Config Condition="'$(Config)'==''">Debug</Config>
         <DCC_DCCCompiler>DCC32</DCC_DCCCompiler>
-        <ProjectVersion>14.4</ProjectVersion>
+        <ProjectVersion>16.0</ProjectVersion>
         <FrameworkType>VCL</FrameworkType>
         <Base>True</Base>
         <Platform Condition="'$(Platform)'==''">Win32</Platform>
@@ -35,6 +35,7 @@
         <Base>true</Base>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base)'!=''">
+        <SanitizedProjectName>dklang12</SanitizedProjectName>
         <VerInfo_Keys>CompanyName=DK Software;FileDescription=DKLang runtime package;FileVersion=3.0.0.16;InternalName=dklang12;LegalCopyright=Copyright ©2002-2006 DK Software;LegalTrademarks=;OriginalFilename=dklang12.bpl;ProductName=DKLang Localization Package;ProductVersion=3.0;Comments=http://www.dk-soft.org/</VerInfo_Keys>
         <VerInfo_Build>16</VerInfo_Build>
         <VerInfo_Locale>1033</VerInfo_Locale>
@@ -73,7 +74,7 @@
         <DCC_LocalDebugSymbols>false</DCC_LocalDebugSymbols>
         <DCC_Define>RELEASE;$(DCC_Define)</DCC_Define>
         <DCC_SymbolReferenceInfo>0</DCC_SymbolReferenceInfo>
-        <DCC_DebugInformation>false</DCC_DebugInformation>
+        <DCC_DebugInformation>0</DCC_DebugInformation>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2)'!=''">
         <DCC_Define>DEBUG;$(DCC_Define)</DCC_Define>

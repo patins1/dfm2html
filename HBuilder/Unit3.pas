@@ -24,6 +24,7 @@ uses
 type
   TReason=string;
   TModifyStep=class
+  public
     Reason:TReason;
     left_ok,right_ok:integer;
     repl_block:TFileContents;
@@ -33,6 +34,7 @@ type
     function GetOriginal(const NewDFM: TFileContents): TFileContents;
   end;
   THistoryStep=class
+  public
     page,selection:TComponentName;
     scrollpos:TPoint;
   end;
@@ -287,6 +289,7 @@ end;
 
 
 type TMyReader=class(TReader)
+public
  FrameClassName:string;
  AlreadyReadNames:TStringList;
  procedure ReaderSetName(Reader: TReader; Component: TComponent; var Name: string);
@@ -1814,7 +1817,7 @@ begin
    end;
    if (Message.Msg>=WM_MOUSEFIRST) and (Message.Msg<=WM_MOUSELAST) then
    begin
-   if {(message.msg=WM_MOUSEWHEEL) or (message.msg<>WM_RBUTTONDOWN) and (message.msg<>WM_RBUTTONUP) and }
+   if (message.msg=WM_MOUSEWHEEL) or {(message.msg<>WM_RBUTTONDOWN) and (message.msg<>WM_RBUTTONUP) and }
      (Sender.Perform(CM_DesignHitTest,Message.wParam,Message.lParam)<>0) then
    begin
        //Sender.Perform(Message.Msg,Message.wParam,Message.lParam);

@@ -249,6 +249,8 @@ begin
   NX:=Round(ScaleX*Denominator);
   NY:=Round(ScaleY*Denominator);
   Rarefaction:=Ceil(ScaleX*ScaleY*DeltaRange);
+  if Rarefaction=0 then Rarefaction:=1; //prevent Division by zero
+
   B2Width:=B2.Width;
 
   NNY:=0;

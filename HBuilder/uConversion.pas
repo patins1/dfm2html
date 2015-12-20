@@ -78,6 +78,7 @@ end;
 //type TStat=(stMN,stDN,stOV,stOD);
 
 type tnest= class(TList)
+  private
     id:TComponentName;
     borders:TPoint;
     InnerPos:integer;

@@ -23,7 +23,8 @@ uses
   MySiz, Unit3, uConversion,
   dhRadioButton, dhMemo, dhFileField,  MyToolButton,
   dhColorPicker,IniFiles,gr32, uOptions, menuhelper,
-  pngimage, Contnrs,hEdit,hComboBox,hMemo,hSynMemo,SynMemo, UIConstants,DKLang, OpenSave,AColorPickerAX_TLB,dhStrUtils,WideStrUtils,uMetaWriter,dhStyles,dhGraphicFormats,dhColorUtils,shlobj,Generics.Collections;
+  pngimage, Contnrs,hEdit,hComboBox,hMemo,hSynMemo,SynMemo, UIConstants,DKLang, OpenSave,AColorPickerAX_TLB,dhStrUtils,WideStrUtils,uMetaWriter,dhStyles,dhGraphicFormats,dhColorUtils,shlobj,Generics.Collections,
+  System.ImageList;
 
 //const WM_PUSHUP=WM_USER+33;
 
@@ -402,6 +403,7 @@ uses uWarnings, uPublishLog, uPublishFTP, uTemplates, uPresets, uStartUp,
 
 
 type TSaveBinItem=class
+  public
       id_crc:DWORD;
       data_crc:DWORD;
       FileAge:TDateTime;

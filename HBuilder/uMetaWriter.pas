@@ -21,6 +21,7 @@ uses
   dhStrUtils, dhBitmap32, crc, gr32, dhStyles, dhGraphicFormats, dhColorUtils;
 
 type TMyWriter=class(TWriter)
+public
     FIntegerValue:Integer;
     FStringValue:String;
     procedure OnDefineProperties(Sender: TObject);

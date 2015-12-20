@@ -190,11 +190,14 @@ function ThComboBox.DoSelect(LogChange:TLogChange):boolean;
 begin
   assert(not InEvent);
   InEvent:=true;
-  try
+   try
    try
     if Assigned(ValueChange) then ValueChange(Self,(LogChange=lcAbort) and FStoredCleared);
     if Supports(Owner,IhLogReceiver) then (Owner as IhLogReceiver).LogChange(Self,LogChange);
     Result:=true;
+   finally
+    InEvent:=false;
+   end;
    except
     on E:WException do
     begin
@@ -207,9 +210,6 @@ begin
      Result:=false;
     end;
    end;
-  finally
-   InEvent:=false;
-  end;
 end;
 
 

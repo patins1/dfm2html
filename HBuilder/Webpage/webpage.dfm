@@ -2686,7 +2686,7 @@ object Page111_1_1_1_1: TPage111_1_1_1_1
             Width = 418
             Height = 64
             Text = 
-              '<code>New in version 8'#10'* Support to compile as Win64'#10'* splitted ' +
+              '<code>New in version 8'#10'* Support to compile as Win64'#10'* split ' +
               'into design time and runtime package,'#10'  as design time package c' +
               'annot be compiled as Win64'#10'</code>'
             Style.PaddingRight = 2

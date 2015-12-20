@@ -15,6 +15,7 @@ uses
             
 type TLaunchAction=(suaChoice,suaLast,suaNone);
 type TFuncSettings=object
+  public
      DefaultFont:TFont;
      LRUfiles:TStringList;
      Compress:boolean;

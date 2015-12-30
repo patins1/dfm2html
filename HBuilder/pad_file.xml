@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <XML_DIZ_INFO>
 	<MASTER_PAD_VERSION_INFO>
 		<MASTER_PAD_EDITOR>DeuPAD 4.0.0.402 (http://www.deupad.org)</MASTER_PAD_EDITOR>
@@ -40,19 +40,19 @@
 	</Company_Info>
 	<Program_Info>
 		<Program_Name>DFM2HTML</Program_Name>
-		<Program_Version>8.2</Program_Version>
+		<Program_Version>8.3</Program_Version>
 		<Program_Type>Freeware</Program_Type>
 		<Program_Release_Status>Minor Update</Program_Release_Status>
 		<Program_Category_Class>Web Development::HTML Tools</Program_Category_Class>
-		<Program_Release_Year>2014</Program_Release_Year>
+		<Program_Release_Year>2015</Program_Release_Year>
 		<Program_Release_Month>12</Program_Release_Month>
-		<Program_Release_Day>25</Program_Release_Day>
+		<Program_Release_Day>30</Program_Release_Day>
 		<Program_Cost_Other>0.00</Program_Cost_Other>
 		<Program_Cost_Other_Code/>
 		<Program_Cost_Dollars>0.00</Program_Cost_Dollars>
 		<Program_Categories/>
 		<Program_Specific_Category>Development Tools</Program_Specific_Category>
-		<Program_Change_Info>Fast editing mode for disabled editing history</Program_Change_Info>
+		<Program_Change_Info>Several bug fixes</Program_Change_Info>
 		<Program_Language>Afrikaans,German,English,French,Italian,Portuguese,Slovak,Spanish,Czech</Program_Language>
 		<Program_OS_Support>Win2000,Win7 x32,Win7 x64,WinVista,WinVista x64,WinXP,Windows 8</Program_OS_Support>
 		<Program_Install_Support>Install and Uninstall</Program_Install_Support>

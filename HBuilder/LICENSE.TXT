@@ -1,5 +1,5 @@
 DFM2HTML
-Copyright (c) 2003-2014 Joerg Kiegeland
+Copyright (c) 2003-2015 Joerg Kiegeland
 All Rights Reserved
 
 For more information, please visit our

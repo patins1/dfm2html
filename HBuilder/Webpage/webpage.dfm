@@ -5,8 +5,8 @@ object Page111_1_1_1_1: TPage111_1_1_1_1
   VertScrollBar.Tracking = True
   Anchors = [akLeft, akTop, akRight, akBottom]
   Caption = 'webpage.dfm'
-  ClientHeight = 592
-  ClientWidth = 1600
+  ClientHeight = 593
+  ClientWidth = 1596
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clBlack
   Font.Height = -13
@@ -130,7 +130,7 @@ object Page111_1_1_1_1: TPage111_1_1_1_1
             Top = 280
             Width = 296
             Height = 22
-            Text = 'Download DFM2HTML 8.2 (Win32)'
+            Text = 'Download DFM2HTML 8.3 (Win32)'
             Style.FontSize = '19'
             AutoSizeXY = asXY
             PreferDownStyles = True
@@ -317,7 +317,7 @@ object Page111_1_1_1_1: TPage111_1_1_1_1
             Top = 304
             Width = 296
             Height = 22
-            Text = 'Download DFM2HTML 8.2 (Win64)'
+            Text = 'Download DFM2HTML 8.3 (Win64)'
             Style.FontSize = '19'
             AutoSizeXY = asXY
             PreferDownStyles = True
@@ -1272,7 +1272,7 @@ object Page111_1_1_1_1: TPage111_1_1_1_1
           UseIFrame = False
           object Label5: TdhLabel
             Left = 24
-            Top = 3552
+            Top = 3656
             Width = 360
             Height = 80
             Text = 
@@ -1285,7 +1285,7 @@ object Page111_1_1_1_1: TPage111_1_1_1_1
           end
           object Label25: TdhLabel
             Left = 24
-            Top = 3312
+            Top = 3416
             Width = 446
             Height = 212
             Text = 
@@ -1306,7 +1306,7 @@ object Page111_1_1_1_1: TPage111_1_1_1_1
           end
           object Label20: TdhLabel
             Left = 24
-            Top = 3088
+            Top = 3192
             Width = 442
             Height = 193
             Text = 
@@ -1325,7 +1325,7 @@ object Page111_1_1_1_1: TPage111_1_1_1_1
           end
           object Label21: TdhLabel
             Left = 24
-            Top = 2896
+            Top = 3000
             Width = 418
             Height = 161
             Text = 
@@ -1343,7 +1343,7 @@ object Page111_1_1_1_1: TPage111_1_1_1_1
           end
           object Label28: TdhLabel
             Left = 32
-            Top = 2776
+            Top = 2880
             Width = 434
             Height = 81
             Text = 
@@ -1357,7 +1357,7 @@ object Page111_1_1_1_1: TPage111_1_1_1_1
           end
           object Label11: TdhLabel
             Left = 24
-            Top = 2576
+            Top = 2680
             Width = 354
             Height = 64
             Text = 
@@ -1371,7 +1371,7 @@ object Page111_1_1_1_1: TPage111_1_1_1_1
           end
           object Label12: TdhLabel
             Left = 24
-            Top = 2672
+            Top = 2776
             Width = 330
             Height = 80
             Text = 
@@ -1385,7 +1385,7 @@ object Page111_1_1_1_1: TPage111_1_1_1_1
           end
           object Label13: TdhLabel
             Left = 24
-            Top = 2456
+            Top = 2560
             Width = 450
             Height = 96
             Text = 
@@ -1400,7 +1400,7 @@ object Page111_1_1_1_1: TPage111_1_1_1_1
           end
           object Label37: TdhLabel
             Left = 24
-            Top = 2384
+            Top = 2488
             Width = 426
             Height = 49
             Text = 
@@ -1413,7 +1413,7 @@ object Page111_1_1_1_1: TPage111_1_1_1_1
           end
           object Label38: TdhLabel
             Left = 24
-            Top = 2296
+            Top = 2400
             Width = 210
             Height = 65
             Text = 
@@ -1426,7 +1426,7 @@ object Page111_1_1_1_1: TPage111_1_1_1_1
           end
           object Label41: TdhLabel
             Left = 24
-            Top = 2224
+            Top = 2328
             Width = 338
             Height = 48
             Text = 
@@ -1439,7 +1439,7 @@ object Page111_1_1_1_1: TPage111_1_1_1_1
           end
           object Label42: TdhLabel
             Left = 24
-            Top = 2104
+            Top = 2208
             Width = 426
             Height = 97
             Text = 
@@ -1455,7 +1455,7 @@ object Page111_1_1_1_1: TPage111_1_1_1_1
           end
           object Label6: TdhLabel
             Left = 24
-            Top = 2032
+            Top = 2136
             Width = 442
             Height = 48
             Text = 
@@ -1469,7 +1469,7 @@ object Page111_1_1_1_1: TPage111_1_1_1_1
           end
           object Label44: TdhLabel
             Left = 24
-            Top = 1960
+            Top = 2064
             Width = 386
             Height = 49
             Text = 
@@ -1485,7 +1485,7 @@ object Page111_1_1_1_1: TPage111_1_1_1_1
           end
           object Label46: TdhLabel
             Left = 24
-            Top = 1872
+            Top = 1976
             Width = 346
             Height = 65
             Text = 
@@ -1501,7 +1501,7 @@ object Page111_1_1_1_1: TPage111_1_1_1_1
           end
           object Label50: TdhLabel
             Left = 24
-            Top = 1712
+            Top = 1816
             Width = 370
             Height = 129
             Text = 
@@ -1522,7 +1522,7 @@ object Page111_1_1_1_1: TPage111_1_1_1_1
           end
           object Label47: TdhLabel
             Left = 24
-            Top = 1552
+            Top = 1656
             Width = 394
             Height = 160
             Text = 
@@ -1544,7 +1544,7 @@ object Page111_1_1_1_1: TPage111_1_1_1_1
           end
           object Label48: TdhLabel
             Left = 24
-            Top = 1368
+            Top = 1472
             Width = 386
             Height = 176
             Text = 
@@ -1568,7 +1568,7 @@ object Page111_1_1_1_1: TPage111_1_1_1_1
           end
           object Label23: TdhLabel
             Left = 24
-            Top = 1200
+            Top = 1304
             Width = 354
             Height = 160
             Text = 
@@ -1589,7 +1589,7 @@ object Page111_1_1_1_1: TPage111_1_1_1_1
           end
           object Label43: TdhLabel
             Left = 24
-            Top = 1112
+            Top = 1216
             Width = 402
             Height = 80
             Text = 
@@ -1607,7 +1607,7 @@ object Page111_1_1_1_1: TPage111_1_1_1_1
           end
           object Label45: TdhLabel
             Left = 24
-            Top = 1040
+            Top = 1144
             Width = 322
             Height = 64
             Text = 
@@ -1622,7 +1622,7 @@ object Page111_1_1_1_1: TPage111_1_1_1_1
           end
           object Label49: TdhLabel
             Left = 24
-            Top = 952
+            Top = 1056
             Width = 370
             Height = 80
             Text = 
@@ -1639,7 +1639,7 @@ object Page111_1_1_1_1: TPage111_1_1_1_1
           end
           object Label53: TdhLabel
             Left = 24
-            Top = 880
+            Top = 984
             Width = 338
             Height = 64
             Text = 
@@ -1654,7 +1654,7 @@ object Page111_1_1_1_1: TPage111_1_1_1_1
           end
           object Label54: TdhLabel
             Left = 24
-            Top = 816
+            Top = 920
             Width = 362
             Height = 32
             Text = 
@@ -1669,7 +1669,7 @@ object Page111_1_1_1_1: TPage111_1_1_1_1
           end
           object Label55: TdhLabel
             Left = 24
-            Top = 752
+            Top = 856
             Width = 314
             Height = 48
             Text = 
@@ -1684,7 +1684,7 @@ object Page111_1_1_1_1: TPage111_1_1_1_1
           end
           object Label57: TdhLabel
             Left = 24
-            Top = 696
+            Top = 800
             Width = 282
             Height = 32
             Text = 
@@ -1698,7 +1698,7 @@ object Page111_1_1_1_1: TPage111_1_1_1_1
           end
           object Label56: TdhLabel
             Left = 24
-            Top = 632
+            Top = 736
             Width = 354
             Height = 48
             Text = 
@@ -1713,7 +1713,7 @@ object Page111_1_1_1_1: TPage111_1_1_1_1
           end
           object Label29: TdhLabel
             Left = 24
-            Top = 568
+            Top = 672
             Width = 314
             Height = 32
             Text = 
@@ -1728,7 +1728,7 @@ object Page111_1_1_1_1: TPage111_1_1_1_1
           end
           object Label58: TdhLabel
             Left = 24
-            Top = 504
+            Top = 608
             Width = 314
             Height = 48
             Text = 
@@ -1744,7 +1744,7 @@ object Page111_1_1_1_1: TPage111_1_1_1_1
           end
           object Label59: TdhLabel
             Left = 24
-            Top = 440
+            Top = 544
             Width = 442
             Height = 48
             Text = 
@@ -1761,7 +1761,7 @@ object Page111_1_1_1_1: TPage111_1_1_1_1
           end
           object Label60: TdhLabel
             Left = 22
-            Top = 376
+            Top = 480
             Width = 394
             Height = 48
             Text = 
@@ -1777,7 +1777,7 @@ object Page111_1_1_1_1: TPage111_1_1_1_1
           end
           object Label62: TdhLabel
             Left = 22
-            Top = 280
+            Top = 384
             Width = 410
             Height = 80
             Text = 
@@ -1795,7 +1795,7 @@ object Page111_1_1_1_1: TPage111_1_1_1_1
           end
           object Label65: TdhLabel
             Left = 22
-            Top = 216
+            Top = 320
             Width = 226
             Height = 48
             Text = 
@@ -1811,7 +1811,7 @@ object Page111_1_1_1_1: TPage111_1_1_1_1
           end
           object Label68: TdhLabel
             Left = 22
-            Top = 104
+            Top = 208
             Width = 370
             Height = 96
             Text = 
@@ -1830,7 +1830,7 @@ object Page111_1_1_1_1: TPage111_1_1_1_1
           end
           object Label69: TdhLabel
             Left = 22
-            Top = 16
+            Top = 120
             Width = 466
             Height = 64
             Text = 
@@ -1841,6 +1841,25 @@ object Page111_1_1_1_1: TPage111_1_1_1_1
               'itieren bei deaktivierter Historie'#10'  (Anzahl r'#252'ckg'#228'ngig zu mache' +
               'nder Schritte = 0)'#10'* Update auf Delphi XE7 und graphics32-1-9-1-' +
               'fixes-r2148'#10'</code></de>'
+            Style.PaddingRight = 2
+            Style.BackgroundColor = Transparent
+            Style.WhiteSpace = cwsPre
+            Style.Color = Black
+            AutoSizeXY = asXY
+          end
+          object Label70: TdhLabel
+            Left = 22
+            Top = 16
+            Width = 410
+            Height = 80
+            Text = 
+              '<en><code>New in version 8.3'#10'* Compiled with Delphi Seattle'#10'* Fi' +
+              'xed mouse wheel in Design Mode under Windows 10'#10'* Fixed combo bo' +
+              'x assertion exception'#10'* Fixed division by zero bug for bitmap re' +
+              'ndering'#10'</code></en><de><code>Neu in version 8.3:'#10'* Delphi-Seatt' +
+              'le kompiliert'#10'* Bugfix f'#252'r Mausrad im Design Mode unter Windows ' +
+              '10'#10'* Bugfix f'#252'r Combobox assertion code '#10'* Bugfix f'#252'r Null-Divis' +
+              'ion im Bitmaprenderer'#10'</code></de>'
             Style.PaddingRight = 2
             Style.WhiteSpace = cwsPre
             Style.Color = Red
@@ -2497,26 +2516,26 @@ object Page111_1_1_1_1: TPage111_1_1_1_1
             Top = 16
             Width = 223
             Height = 22
-            Text = 'Download DFM2HTML 8.2<br/>'
+            Text = 'Download DFM2HTML 8.3<br/>'
             Style.FontSize = '19'
             AutoSizeXY = asXY
             PreferDownStyles = True
             Options = [loDownIfMenu, loDownIfMouseDown, loDownIfURL]
             LinkAnchor = dfm2html_inst
           end
-          object Label27: TdhLabel
-            Left = 22
-            Top = 72
-            Width = 466
-            Height = 64
+          object Label71: TdhLabel
+            Left = 30
+            Top = 88
+            Width = 410
+            Height = 80
             Text = 
-              '<en><code>New in version 8.2'#10'* Activate fast-editing mode when "' +
-              'Undo limit" is set to 0'#10'  (esp. useful when dealing with large p' +
-              'rojects)'#10'* Updated to Delphi XE7 and graphics32-1-9-1-fixes-r214' +
-              '8'#10'</code></en><de><code>Neu in version 8.2:'#10'* Ultra-schnelles Ed' +
-              'itieren bei deaktivierter Historie'#10'  (Anzahl r'#252'ckg'#228'ngig zu mache' +
-              'nder Schritte = 0)'#10'* Update auf Delphi XE7 und graphics32-1-9-1-' +
-              'fixes-r2148'#10'</code></de>'
+              '<en><code>New in version 8.3'#10'* Compiled with Delphi Seattle'#10'* Fi' +
+              'xed mouse wheel in Design Mode under Windows 10'#10'* Fixed combo bo' +
+              'x assertion exception'#10'* Fixed division by zero bug for bitmap re' +
+              'ndering'#10'</code></en><de><code>Neu in version 8.3:'#10'* Delphi-Seatt' +
+              'le kompiliert'#10'* Bugfix f'#252'r Mausrad im Design Mode unter Windows ' +
+              '10'#10'* Bugfix f'#252'r Combobox assertion code '#10'* Bugfix f'#252'r Null-Divis' +
+              'ion im Bitmaprenderer'#10'</code></de>'
             Style.PaddingRight = 2
             Style.WhiteSpace = cwsPre
             Style.Color = Red
@@ -2686,9 +2705,9 @@ object Page111_1_1_1_1: TPage111_1_1_1_1
             Width = 418
             Height = 64
             Text = 
-              '<code>New in version 8'#10'* Support to compile as Win64'#10'* split ' +
-              'into design time and runtime package,'#10'  as design time package c' +
-              'annot be compiled as Win64'#10'</code>'
+              '<code>New in version 8'#10'* Support to compile as Win64'#10'* split int' +
+              'o design time and runtime package,'#10'  as design time package cann' +
+              'ot be compiled as Win64'#10'</code>'
             Style.PaddingRight = 2
             Style.WhiteSpace = cwsPre
             Style.Color = Red

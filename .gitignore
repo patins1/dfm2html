@@ -3,9 +3,10 @@
 **/__history/**
 **/*.identcache
 **/*.dproj.local
+**/*.class
 HBuilder/DFM2HTML.drc
 HBuilder/DFM2HTML.exe
 HBuilder/DFM2HTML.map
 HBuilder/DFM2HTML.log
+HBuilder/DFM2HTML.rsm
 HBuilder/CreateInstall/**
-HBuilder/dfm2html.report/**

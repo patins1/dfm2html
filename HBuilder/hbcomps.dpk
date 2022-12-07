@@ -38,7 +38,7 @@ requires
   dsnap,
   dbrtl,
   vcldb,
-  SynEdit_RXE3;
+  SynEdit_R;
 
 contains
   MyToolButton in 'MyToolButton.pas',

@@ -361,7 +361,7 @@ begin
        end;
 end;
 
-function _CombineReg(X, Y, W: TColor32): TColor32;
+function _CombineReg(X, Y: TColor32; W: Cardinal): TColor32;
 var r1,r2,g1,g2,b1,b2,a1,a2,r,g,b,alpha:integer;
 begin
  if W=0 then

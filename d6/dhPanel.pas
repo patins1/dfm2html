@@ -317,9 +317,9 @@ type
     procedure PaintHidden;
     procedure BeginPainting(bmp:TdhBitmap32);
     procedure EndPainting;
-    procedure PixelCombineNormal(F: TColor32; var B: TColor32; M: TColor32);
-    procedure PixelCombineMultiply(F: TColor32; var B: TColor32; M: TColor32);
-    procedure PixelCombineNegativeMultiply(F: TColor32; var B: TColor32; M: TColor32);
+    procedure PixelCombineNormal(F: TColor32; var B: TColor32; M: Cardinal);
+    procedure PixelCombineMultiply(F: TColor32; var B: TColor32; M: Cardinal);
+    procedure PixelCombineNegativeMultiply(F: TColor32; var B: TColor32; M: Cardinal);
     function TransPainting(nWidth:integer=-1; nHeight:integer=-1): TdhBitmap32;
     procedure SetImageType(const Value: TImageType);
     procedure WriteSUse(Writer: TWriter);
@@ -358,8 +358,8 @@ type
     procedure SetEdgesInScrolledArea(const Value: boolean);
     function GetAnchors: TAnchors;
     function IsAnchorsStored: Boolean;
-    procedure PixelCombineUnderpaint(F: TColor32; var B: TColor32; M: TColor32);
-    procedure PixelCombineInner(F: TColor32; var B: TColor32; M: TColor32);
+    procedure PixelCombineUnderpaint(F: TColor32; var B: TColor32; M: Cardinal);
+    procedure PixelCombineInner(F: TColor32; var B: TColor32; M: Cardinal);
     procedure PreventFlicker;
     procedure TransFromBlackWhite_BG(bmp: TdhBitmap32);
     procedure TransFromBlackWhite_TP(bmp:TdhBitmap32);
@@ -5061,22 +5061,22 @@ begin
  result:=Align<>alTop;
 end;
 
-procedure TdhCustomPanel.PixelCombineUnderpaint(F: TColor32; var B: TColor32; M: TColor32);
+procedure TdhCustomPanel.PixelCombineUnderpaint(F: TColor32; var B: TColor32; M: Cardinal);
 begin
  B:=GetPixelCombineNormal(B,F,$FF);
 end;
 
-procedure TdhCustomPanel.PixelCombineInner(F: TColor32; var B: TColor32; M: TColor32);
+procedure TdhCustomPanel.PixelCombineInner(F: TColor32; var B: TColor32; M: Cardinal);
 begin
  B:=GetPixelCombineNormal(F and $FFFFFF or max(0,round((F shr 24 - ($FF-B shr 24)*eigen))) shl 24,B or $FF000000,$FF) and $FFFFFF or (B and $FF000000);
 end;
 
-procedure TdhCustomPanel.PixelCombineNormal(F: TColor32; var B: TColor32; M: TColor32);
+procedure TdhCustomPanel.PixelCombineNormal(F: TColor32; var B: TColor32; M: Cardinal);
 begin
  B:=GetPixelCombineNormal(F,B,M);
 end;
 
-procedure TdhCustomPanel.PixelCombineNegativeMultiply(F: TColor32; var B: TColor32; M: TColor32);
+procedure TdhCustomPanel.PixelCombineNegativeMultiply(F: TColor32; var B: TColor32; M: Cardinal);
 var B2:TColor32;
     alpha:Cardinal;
 begin
@@ -5085,7 +5085,7 @@ begin
  B:=GetOriginalRGB(B2,alpha);
 end;
 
-procedure TdhCustomPanel.PixelCombineMultiply(F: TColor32; var B: TColor32; M: TColor32);
+procedure TdhCustomPanel.PixelCombineMultiply(F: TColor32; var B: TColor32; M: Cardinal);
 begin
  B:=ExtractAlphaColor(ColorMult(F,GetBlendMemEx(B,$FF000000,$FF),M),ColorMult(F,GetBlendMemEx(B,$FFFFFFFF,$FF),M));
 end;

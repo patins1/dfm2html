@@ -80,7 +80,7 @@ uses
 {$ELSE}
   Clipbrd,
 {$ENDIF}
-  GR32_DrawingEx;
+  GR32_Gamma;
 
 type TMyKernelResampler = class(TKernelResampler)
   public

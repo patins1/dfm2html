@@ -108,7 +108,7 @@ type
 {$IFNDEF CLX}
     procedure WMGetDlgCode(var Message: TWMGetDlgCode); message WM_GETDLGCODE;
 {$ENDIF}
-    procedure PC_Cursor(F: TColor32; var B: TColor32; M: TColor32);
+    procedure PC_Cursor(F: TColor32; var B: TColor32; M: Cardinal);
   protected
     FOldHTMLText:HypeString;
     FHTMLText:HypeString;
@@ -3444,7 +3444,7 @@ begin
 end;
 {$ENDIF}
 
-procedure TdhCustomLabel.PC_Cursor(F: TColor32; var B: TColor32; M: TColor32);
+procedure TdhCustomLabel.PC_Cursor(F: TColor32; var B: TColor32; M: Cardinal);
 begin
   if IsOpaqueColor(Color32ToCSSColor(F)) then
     B := B xor (F and $00FFFFFF);

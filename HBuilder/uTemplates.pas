@@ -12,7 +12,7 @@ uses
   Controls, Windows, Messages, Graphics, Forms, ComCtrls, ExtCtrls, StdCtrls, Dialogs,Buttons,UnicodeCtrls,
 {$ENDIF}
   GR32, math, pngimage,dhPanel,Contnrs, dhPageControl,dhMenu, dhLabel,
-  dhStyleSheet, DKLang, MyForm, dhStrUtils, dhStyles{$IFDEF COMPILER2009}, GR32_Resamplers{$ENDIF};
+  dhStyleSheet, DKLang, MyForm, dhStrUtils, dhStyles, GR32_Resamplers;
 
 type
   TTemplatesWizard = class(TMyForm)
@@ -89,11 +89,7 @@ begin
     b.Width:=ScrollBox1.Width-16-(Left+Right);
    with STYLE_Link1.AllEdgesPure do
     b.Height:=min(maxint,Ceil(b.Width/graph.Width*graph.Height));
-{$IFDEF COMPILER2009}
    TDraftResampler.Create(bmp);
-{$ELSE}
-   bmp.StretchFilter:=sfDraft;
-{$ENDIF}
    bmp2:=TBitmap32.Create;
    bmp2.SetSize(b.Width,b.Height);
    bmp.DrawTo(bmp2,bmp2.BoundsRect,bmp.BoundsRect);

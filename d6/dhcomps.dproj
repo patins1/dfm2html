@@ -101,7 +101,7 @@
         <DCCReference Include="vcl.dcp"/>
         <DCCReference Include="rtl.dcp"/>
         <DCCReference Include="vclimg.dcp"/>
-        <DCCReference Include="GR32_RSXE5.dcp"/>
+        <DCCReference Include="GR32_R.dcp"/>
         <DCCReference Include="dhHTMLForm.pas"/>
         <DCCReference Include="dhMenu.pas"/>
         <DCCReference Include="dhStyleSheet.pas"/>

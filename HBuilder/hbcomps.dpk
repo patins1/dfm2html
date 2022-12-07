@@ -32,13 +32,13 @@ requires
   vcl,
   VclSmp,
   dhcomps,
-  dklang12,
   vclactnband,
   vclx,
   dsnap,
   dbrtl,
   vcldb,
-  SynEdit_R;
+  SynEdit_R,
+  dklang240;
 
 contains
   MyToolButton in 'MyToolButton.pas',

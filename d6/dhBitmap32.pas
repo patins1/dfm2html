@@ -1,4 +1,4 @@
-{-------------------------------------------------------------------------------
+ï»¿{-------------------------------------------------------------------------------
 The contents of this file are subject to the Mozilla Public License
 Version 1.1 (the "License"); you may not use this file except in compliance
 with the License. You may obtain a copy of the License at
@@ -37,7 +37,7 @@ uses
 {$ELSE}
   Messages, Controls, Graphics
 {$ENDIF},
- Gr32, Gr32_Transforms{$IFDEF COMPILER2009}, GR32_Resamplers{$ENDIF};
+ Gr32, Gr32_Transforms, GR32_Resamplers;
 
 
 type
@@ -434,7 +434,7 @@ begin
     Result := GET_T256(X,Y)
   else
     //Result := FOuterColor;
-    begin//°!°
+    begin//ï¿½!ï¿½
       celx := X and $FF xor 255;
       cely := Y and $FF xor 255;
       X:=SAR_8(X);

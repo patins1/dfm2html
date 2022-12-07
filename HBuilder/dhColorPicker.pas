@@ -8,7 +8,7 @@ uses
   {$ELSE}
   Forms, Controls, Windows, Messages, Graphics, StdCtrls, ShellAPI, Mask, dialogs,Buttons, UnicodeCtrls,
   {$ENDIF}
-  SysUtils, Classes, types, uColorPicker, funcutils,AColorPickerAX_TLB, dhPanel, gr32, dhStyles, dhColorUtils;
+  SysUtils, Classes, types, uColorPicker, funcutils, dhPanel, gr32, dhStyles, dhColorUtils;
 
 type
   //TNotifyEvent = procedure(Sender: TObject; Color:TColor) of object;
@@ -63,24 +63,24 @@ end;
 
 function GetCSSColorFromDialog:TCSSColor;
 begin            
- if ColorDialog is TAColorDialog then
-  result:=Color32ToCSSColor(Color32(TAColorDialog(ColorDialog).RGB_R,TAColorDialog(ColorDialog).RGB_G,TAColorDialog(ColorDialog).RGB_B,TAColorDialog(ColorDialog).Alpha)) else
+// if ColorDialog is TAColorDialog then
+//  result:=Color32ToCSSColor(Color32(TAColorDialog(ColorDialog).RGB_R,TAColorDialog(ColorDialog).RGB_G,TAColorDialog(ColorDialog).RGB_B,TAColorDialog(ColorDialog).Alpha)) else
   result:=ColorToCSSColor(TColorDialog(ColorDialog).Color);
 end;
 
 const MyLicenseKey=('HP25W0-D98KR4-DQCM31-9ZQXQR-04PMG4-C6PMA7-CC47EE-EDF383-FAE388-769053-44D5E4-528106');
 
-type TMyAColorDialog=class(TAColorDialog)
-  protected
-    procedure InitControlData; override;
-  end;
-  TFakeWinControl=class(TWinControl);
-
-procedure TMyAColorDialog.InitControlData;
-begin
-  inherited;
-  ControlData.LicenseKey:=PChar(MyLicenseKey);
-end;
+//type TMyAColorDialog=class(TAColorDialog)
+//  protected
+//    procedure InitControlData; override;
+//  end;
+//  TFakeWinControl=class(TWinControl);
+//
+//procedure TMyAColorDialog.InitControlData;
+//begin
+//  inherited;
+//  ControlData.LicenseKey:=PChar(MyLicenseKey);
+//end;
 
 
 { TdhColorPicker }
@@ -89,26 +89,26 @@ procedure TdhColorPicker.Click;
 var Executed:Boolean;   
     backup:TList;
     backupCSSColor:TCSSColor;
-    AColorDialog:TAColorDialog;
+//    AColorDialog:TAColorDialog;
     NormalColorDialog:TColorDialog;
 begin
   inherited;
   if ColorDialog=nil then
-  try
-   AColorDialog:= TMyAColorDialog.Create(nil);
-   AColorDialog.UseAlpha:=true;
-   AColorDialog.Caption:='';
-   ColorDialog:=AColorDialog;
-  except
+//  try
+//   AColorDialog:= TMyAColorDialog.Create(nil);
+//   AColorDialog.UseAlpha:=true;
+//   AColorDialog.Caption:='';
+//   ColorDialog:=AColorDialog;
+//  except
    NormalColorDialog:=TColorDialog.Create(nil);
    NormalColorDialog.CustomColors.AddStrings(FCustomColors);
    ColorDialog:=NormalColorDialog;
-  end;
+//  end;
 
   backupCSSColor:=CSSColor;
   if CSSColor<>colTransparent then
-  if ColorDialog is TAColorDialog then
-   TAColorDialog(ColorDialog).RGBA:=Integer(CSSColor xor CSSAlphaInverter) else
+//  if ColorDialog is TAColorDialog then
+//   TAColorDialog(ColorDialog).RGBA:=Integer(CSSColor xor CSSAlphaInverter) else
    TColorDialog(ColorDialog).Color:=CSSColorToColor(CSSColor);
 
   Parent.SetFocus; //CommitChanges purpose
@@ -119,8 +119,8 @@ begin
    DoBackup(backup,false);
    ActivePicker:=Self;
    try
-    if ColorDialog is TAColorDialog then
-     Executed:=TAColorDialog(ColorDialog).Execute else
+//    if ColorDialog is TAColorDialog then
+//     Executed:=TAColorDialog(ColorDialog).Execute else
      Executed:=TColorDialog(ColorDialog).Execute;
    finally
     ActivePicker:=nil;
@@ -148,8 +148,8 @@ end;
 
 procedure TdhColorPicker.DoPreviewColorChange;
 begin
-   if ColorDialog is TAColorDialog then
-    TAColorDialog(ColorDialog).RGB_R:=TAColorDialog(ColorDialog).RGB_R; //update TAColorDialog.Alpha
+//   if ColorDialog is TAColorDialog then
+//    TAColorDialog(ColorDialog).RGB_R:=TAColorDialog(ColorDialog).RGB_R; //update TAColorDialog.Alpha
    Self.CSSColor:=GetCSSColorFromDialog;
    if Assigned(FOnPreviewColorChanged) then
     FOnPreviewColorChanged(Self);

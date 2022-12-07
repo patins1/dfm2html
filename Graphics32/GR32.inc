@@ -58,7 +58,7 @@
    NOTE: Support for this will be dropped at some time and is only provided
    for transition *)
 
-  {-$DEFINE DEPRECATEDMODE}
+  {$DEFINE DEPRECATEDMODE}
 
 
 

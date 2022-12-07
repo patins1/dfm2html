@@ -10,6 +10,7 @@ uses
   Controls, Windows, Messages, Graphics, Forms, ComCtrls, Dialogs,
   ShellAPI, Mask, ExtCtrls, StdCtrls,  Variants, clipbrd, Spin, Buttons, UnicodeCtrls,
 {$ENDIF}
+  IdGlobalProtocols,
   UseFastStrings,SysUtils, Classes, {$IFDEF MSWINDOWS}OverbyteIcsFtpCli,OverbyteIcsUrl,OverbyteIcsWSocket,OverbyteIcsFtpSrvT,{$ELSE}{IcsUrl,}{$ENDIF} dhPageControl,
   DKLang, UIConstants, MyForm,dhStrUtils, uOptions, uMetaWriter, Consts, dhStyles, uConversion;
 
@@ -264,15 +265,7 @@ var
     SR : TSearchRec;
     TempSize: TULargeInteger ;  // 64-bit integer record
 begin
-    if FindFirst(FileName, faReadOnly or faHidden or
-                 faSysFile or faArchive, SR) = 0 then begin
-        TempSize.LowPart  := SR.FindData.nFileSizeLow;
-        TempSize.HighPart := SR.FindData.nFileSizeHigh;
-        Result := TempSize.QuadPart;
-        FindClose(SR);
-    end
-    else
-        Result := -1;
+    Result := FileSizeByName(FileName);
 end;
 
 procedure TPublishLog.FtpClient1RequestDone(Sender: TObject;

@@ -30,12 +30,13 @@ package dhcomps;
 {$ENDIF IMPLICITBUILDING}
 {$DESCRIPTION 'DFM2HTML'}
 {$RUNONLY}
-{$IMPLICITBUILD OFF}
+{$IMPLICITBUILD ON}
 
 requires
   vcl,
   rtl,
-  vclimg;
+  vclimg,
+  GR32_RSXE5;
 
 contains
   dhHTMLForm in 'dhHTMLForm.pas',

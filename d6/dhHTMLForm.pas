@@ -61,7 +61,7 @@ var i:integer;
 begin
  result:='';
  for i:=1 to length(s) do
- if (s[i] in ['"','<','>','%','\','^','[',']','`','+','$',','   ,';','/','?',':','@','=','&','#']) or (ord(s[i])<=31) or (ord(s[i])>=127) then
+ if SysUtils.CharInSet(s[i], ['"','<','>','%','\','^','[',']','`','+','$',','   ,';','/','?',':','@','=','&','#']) or (ord(s[i])<=31) or (ord(s[i])>=127) then
   result:=result+'%'+inttohex(ord(s[i]),2) else
   result:=result+s[i];
 end;

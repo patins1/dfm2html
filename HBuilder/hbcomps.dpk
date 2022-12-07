@@ -1,6 +1,7 @@
 package hbcomps;
 
 {$R *.res}
+{$R 'AColorPickerAX_TLB.dcr'}
 {$IFDEF IMPLICITBUILDING This IFDEF should not be used by users}
 {$ALIGN 8}
 {$ASSERTIONS ON}
@@ -60,7 +61,8 @@ contains
   MyPanel in 'MyPanel.pas',
   MyForm in 'MyForm.pas',
   UnicodeCtrls in 'UnicodeCtrls.pas',
-  hSynMemo in 'hSynMemo.pas';
+  hSynMemo in 'hSynMemo.pas',
+  AColorPickerAX_TLB in 'AColorPickerAX_TLB.pas';
 
 end.
 

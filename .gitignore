@@ -6,4 +6,6 @@
 HBuilder/DFM2HTML.drc
 HBuilder/DFM2HTML.exe
 HBuilder/DFM2HTML.map
-SynEdit/Packages/DelphiXE3.groupproj.local
+HBuilder/DFM2HTML.log
+HBuilder/CreateInstall/**
+HBuilder/dfm2html.report/**
